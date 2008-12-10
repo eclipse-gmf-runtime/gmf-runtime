@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 import org.eclipse.draw2d.AbstractBorder;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -36,7 +37,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
  */
 public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchorableFigure {
 
-	private boolean diagrsamLinkMode = false;
+	private boolean diagramLinkMode = false;
 
 
 	private boolean withDanglingCorner = true;
@@ -59,13 +60,31 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	/**
 	 * Border for notes. Defines paint method and insets that depend on line width and
 	 * given margin.
+	 * @since 1.2
 	 */
-	private class NoteFigureBorder extends AbstractBorder {
+	public class NoteFigureBorder extends AbstractBorder {
 		private Insets margin;
 		NoteFigureBorder(Insets insets) {
 			margin = insets;
-		}
+		}	
 		
+		/**
+		 * Returns margin for this border
+		 * @return margin as Insets
+		 */
+		public Insets getMargin() {
+			return margin;
+		}
+
+		/**
+		 * Sets the margin for this border 
+		 * @param margin as Insets
+		 */
+		public void setMargin(Insets margin) {
+			this.margin = margin;
+		}
+
+
 		/*
 		 * @see org.eclipse.draw2d.Border#getInsets(org.eclipse.draw2d.IFigure)
 		 */
@@ -114,7 +133,22 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 		// appropriately as the line width changes
 		setBorder(new NoteFigureBorder(insets)); 
 
-		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
+		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout() {
+			// Override to ensure that children's size is not taken into account
+			// when calculating minimum size (otherwise, if WrappingLabel is a
+			// child, the smallest rectangle we could get would be big enough to
+			// fit the label of minimum size = three dots and icon if there is
+			// one). 
+			public Dimension calculateMinimumSize(IFigure container, int wHint,
+					int hHint) {
+				Insets aNinsets = container.getInsets();
+				Dimension aMminSize = new Dimension(0, 0);
+				return transposer
+					.t(aMminSize)
+					.expand(aNinsets.getWidth(), aNinsets.getHeight())
+					.union(getBorderPreferredSize(container));
+			}			
+		};
 		layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
 		layout.setSpacing(insets.top);
 		setLayoutManager(layout);
@@ -178,14 +212,14 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	 * @return the old diagram Link mode state
 	 */
 	public boolean setDiagramLinkMode(boolean diagramLinkMode) {
-		boolean bOldDiagramLinkMode = this.diagrsamLinkMode;
+		boolean bOldDiagramLinkMode = this.diagramLinkMode;
 		ConstrainedToolbarLayout layout = (ConstrainedToolbarLayout)getLayoutManager();
 		if (diagramLinkMode){
 			layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_CENTER);
 		}else {
 			layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
 		}
-		this.diagrsamLinkMode = diagramLinkMode;
+		this.diagramLinkMode = diagramLinkMode;
 		return bOldDiagramLinkMode;
 	}
 	
@@ -193,7 +227,7 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	 * @return true is in diagram Link mode, otherwise false
 	 */
 	public boolean isDiagramLinkMode() {
-		return diagrsamLinkMode;
+		return diagramLinkMode;
 	}
 
    /*
