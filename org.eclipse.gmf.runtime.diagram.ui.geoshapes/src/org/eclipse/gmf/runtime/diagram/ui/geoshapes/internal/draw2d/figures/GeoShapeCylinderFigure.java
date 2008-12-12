@@ -48,8 +48,9 @@ public class GeoShapeCylinderFigure extends GeoShapeFigure implements IPolygonAn
 	 */
 	protected void paintFigure(Graphics g) {
 		
-		Rectangle r = getBounds();
-
+		Rectangle r = getBounds().getCopy();
+		r.shrink(getLineWidth() / 2, getLineWidth() / 2);
+		
 		int height = (int) (r.height * 0.25);
 		
 		Rectangle ellipse = new Rectangle( r.x, r.y, r.width, height );

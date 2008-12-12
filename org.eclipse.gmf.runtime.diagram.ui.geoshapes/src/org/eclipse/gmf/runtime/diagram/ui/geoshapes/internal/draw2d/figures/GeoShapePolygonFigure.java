@@ -42,7 +42,7 @@ public abstract class GeoShapePolygonFigure
 	 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
 	 */
 	protected void paintFigure(Graphics g) {
-		PointList points = calculatePoints(getBounds().getCopy());
+		PointList points = calculatePoints(getWidthSpecificBounds());
 		g.fillPolygon(points);
 		
 		// set the line type and line width
@@ -59,6 +59,16 @@ public abstract class GeoShapePolygonFigure
 	 */
 	public PointList getPolygonPoints() {
 		return calculatePoints(getBounds().getCopy());
+	}
+	
+	/**
+	 * Returns bounds used for painting the figure. Normally, the bounds decreases as the line width increases
+	 * in order to avoid cropping of shape outline.
+	 * 
+	 * @return customized bounds
+	 */
+	protected Rectangle getWidthSpecificBounds() {
+		return getBounds().getCopy().shrink(getLineWidth() / 2, getLineWidth() / 2);
 	}
 
 }

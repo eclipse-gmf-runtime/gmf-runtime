@@ -67,6 +67,7 @@ public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure implements IP
 		g.setLineWidth(getLineWidth());
 		
 		// Draw the rectangle outline
+		r.shrink(getLineWidth() / 2, getLineWidth() / 2);
 		g.drawRoundRectangle( r, cornerRadius, cornerRadius );
    	}
       

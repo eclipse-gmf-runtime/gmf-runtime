@@ -46,7 +46,7 @@ public class GeoShape3DRectangleFigure extends GeoShapeFigure
 	 */
 	protected void paintFigure(Graphics g) {
 
-		List points = computePoints( getBounds() );
+		List points = computePoints( getBounds().getCopy().shrink(getLineWidth() / 2, getLineWidth() / 2) );
 
 		PointList outline = new PointList();
 		for( int index = 0; index < 6; index++ ) {
