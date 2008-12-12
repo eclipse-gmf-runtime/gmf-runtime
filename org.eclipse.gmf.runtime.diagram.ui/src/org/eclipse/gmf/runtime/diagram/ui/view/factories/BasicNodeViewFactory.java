@@ -125,6 +125,7 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
                     }
                 };
                 try {
+                	operation.setReuseParentTransaction(true);
                     operation.execute(new NullProgressMonitor(), null);
                 } catch (ExecutionException e) {
                     Trace.catching(DiagramUIPlugin.getInstance(),
@@ -165,6 +166,7 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
         			}
         		};
         		try {
+        			operation.setReuseParentTransaction(true);
         			operation.execute(new NullProgressMonitor(), null);
         		} catch (ExecutionException e) {
         			Trace.catching(DiagramUIPlugin.getInstance(),

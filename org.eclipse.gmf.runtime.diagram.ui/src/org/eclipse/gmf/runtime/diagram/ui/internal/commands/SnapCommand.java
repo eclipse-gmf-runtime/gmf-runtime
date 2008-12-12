@@ -30,11 +30,14 @@ import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.LayoutConstraint;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -88,7 +91,7 @@ public class SnapCommand extends AbstractTransactionalCommand {
 			IProgressMonitor progressMonitor, IAdaptable info)
 			throws ExecutionException {
 
-		CompoundCommand snapCommand = new CompoundCommand();
+		CompositeTransactionalCommand snapCommand = new CompositeTransactionalCommand(getEditingDomain(), getLabel());
 
 		for (Iterator iter = editparts.iterator(); iter.hasNext();) {
 			IGraphicalEditPart newEditPart = (IGraphicalEditPart) iter.next();
@@ -143,13 +146,13 @@ public class SnapCommand extends AbstractTransactionalCommand {
 						request.setMoveDelta(moveDelta);
 					}
 
-					snapCommand.add(newEditPart.getCommand(request));
+					snapCommand.add(new CommandProxy(newEditPart.getCommand(request)));
 				}
 			}
 		}
 
 		if (snapCommand != null && snapCommand.canExecute()) {
-			snapCommand.execute();
+			snapCommand.execute(progressMonitor, info);
 		}
 		return CommandResult.newOKCommandResult();
 	}

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -196,6 +197,10 @@ public class DeferredLayoutCommand
 
 		if (layoutCmd != null && layoutCmd.canExecute()) {
             ICommand optimizedCommand = optimizeCommand(layoutCmd);
+            
+            if (optimizedCommand instanceof AbstractEMFOperation) {
+            	((AbstractTransactionalCommand) optimizedCommand).setReuseParentTransaction(true);
+            }
 			optimizedCommand.execute(progressMonitor, info);
             optimizedCommand = null;
 		}
