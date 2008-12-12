@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,9 +100,9 @@ public class BaseSlidableAnchor
 	private String composeTerminalString(PrecisionPoint p) {
 		StringBuffer s = new StringBuffer(24);
 		s.append(TERMINAL_START_CHAR); 		// 1 char
-		s.append((float)p.preciseX);		// 10 chars
+		s.append(p.preciseX);		// 10 chars
 		s.append(TERMINAL_DELIMITER_CHAR);	// 1 char
-		s.append((float)p.preciseY);		// 10 chars
+		s.append(p.preciseY);		// 10 chars
 		s.append(TERMINAL_END_CHAR);		// 1 char
 		return s.toString();				// 24 chars max (+1 for safety, i.e. for string termination)
 	}
@@ -278,24 +278,24 @@ public class BaseSlidableAnchor
 			return new PrecisionPoint(0.5, 0.5);
 		}
 		PrecisionPoint relLocation;
-		Point temp = new Point(p);
+		PrecisionPoint temp = new PrecisionPoint(p);
 		if (p.x < bounds.x || p.x > bounds.x + bounds.width
 			|| p.y < bounds.y || p.y > bounds.y + bounds.height) {
 			if (p.x < bounds.x || p.x > bounds.x + bounds.width) {
-				temp.x = p.x < bounds.x ? bounds.x
+				temp.preciseX = p.x < bounds.x ? bounds.x
 					: bounds.x + bounds.width;
 			}
 			if (p.y < bounds.y || p.y > bounds.y + bounds.height) {
-				temp.y = p.y < bounds.y ? bounds.y
+				temp.preciseY = p.y < bounds.y ? bounds.y
 					: bounds.y + bounds.height;
 			}
-			relLocation = new PrecisionPoint((double) (temp.x - bounds.x)
-				/ bounds.width, (double) (temp.y - bounds.y)
+			relLocation = new PrecisionPoint((temp.preciseX - bounds.x)
+				/ bounds.width, (temp.preciseY - bounds.y)
 				/ bounds.height);
 		} else {
 
-		relLocation = new PrecisionPoint((double) (temp.x - bounds.x)
-				/ bounds.width, (double) (temp.y - bounds.y)
+		relLocation = new PrecisionPoint((temp.preciseX - bounds.x)
+				/ bounds.width, (temp.preciseY - bounds.y)
 				/ bounds.height);
 		}
 		return relLocation;
@@ -334,10 +334,10 @@ public class BaseSlidableAnchor
 	 */
 	public static PrecisionPoint parseTerminalString(String terminal) {
 		try {
-			return new PrecisionPoint(Float.parseFloat(terminal.substring(
+			return new PrecisionPoint(Double.parseDouble(terminal.substring(
 				terminal.indexOf(BaseSlidableAnchor.TERMINAL_START_CHAR) + 1,
 				terminal.indexOf(BaseSlidableAnchor.TERMINAL_DELIMITER_CHAR))),
-				Float.parseFloat(terminal.substring(terminal
+				Double.parseDouble(terminal.substring(terminal
 					.indexOf(BaseSlidableAnchor.TERMINAL_DELIMITER_CHAR) + 1,
 					terminal.indexOf(BaseSlidableAnchor.TERMINAL_END_CHAR))));
 		} catch (Exception e) {
