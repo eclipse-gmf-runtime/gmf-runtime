@@ -241,17 +241,30 @@ abstract public class SemanticListCompartmentEditPart
 			if (NotificationUtil.isElementAddedToSlot(event) ||
 				NotificationUtil.isMove(event)){
 				refreshChildren();
+			} else if (NotificationUtil.isElementRemovedFromSlot(event)) {
+				if (event.getOldValue() instanceof Collection) {
+					 for (Iterator iter = ((Collection) event
+	                         .getOldValue()).iterator(); iter.hasNext();) {
+	                         EObject removedObject = (EObject) iter.next();
+	                         semanticChildRemoved(removedObject);
+					 }									
+				} else if (event.getOldValue() instanceof  EObject){
+					semanticChildRemoved((EObject)event.getOldValue());
+				}
+		
 			}
-			else if(NotificationUtil.isElementRemovedFromSlot(event) &&
-				event.getOldValue() instanceof  EObject){
-				semanticChildRemoved((EObject)event.getOldValue());
-			
-			}
-		}else if(NotificationUtil.isElementRemovedFromSlot(event) &&
-				event.getOldValue() instanceof  EObject &&
-				!getChildren().isEmpty()){
-				semanticChildRemoved((EObject)event.getOldValue());
-		}
+		} else if (NotificationUtil.isElementRemovedFromSlot(event))
+			if (!getChildren().isEmpty()) {
+				if (event.getOldValue() instanceof Collection) {
+					 for (Iterator iter = ((Collection) event
+	                         .getOldValue()).iterator(); iter.hasNext();) {
+	                         EObject removedObject = (EObject) iter.next();
+	                         semanticChildRemoved(removedObject);
+					 }					
+				} else if (event.getOldValue() instanceof  EObject) {
+					semanticChildRemoved((EObject)event.getOldValue()); 
+			    }
+		   }
 	}
 	
 	/**
