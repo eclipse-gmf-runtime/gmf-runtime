@@ -134,6 +134,13 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/CommandProxy.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/TopGraphicEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart">
         <filter id="576725006">
             <message_arguments>
@@ -144,13 +151,6 @@
         <filter id="337682486">
             <message_arguments>
                 <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/CommandProxy.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy">
-        <filter id="337682486">
-            <message_arguments>
-                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy"/>
             </message_arguments>
         </filter>
     </resource>
@@ -168,13 +168,6 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/SemanticCreateCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand">
-        <filter id="337682486">
-            <message_arguments>
-                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/CreateCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand">
         <filter id="337682486">
             <message_arguments>
@@ -182,10 +175,10 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/SemanticListCompartmentEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.SemanticListCompartmentEditPart">
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/SemanticCreateCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand">
         <filter id="337682486">
             <message_arguments>
-                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editparts.SemanticListCompartmentEditPart"/>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand"/>
             </message_arguments>
         </filter>
     </resource>
@@ -196,10 +189,10 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/BorderedBorderItemEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedBorderItemEditPart">
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/SemanticListCompartmentEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.SemanticListCompartmentEditPart">
         <filter id="337682486">
             <message_arguments>
-                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedBorderItemEditPart"/>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editparts.SemanticListCompartmentEditPart"/>
             </message_arguments>
         </filter>
     </resource>
@@ -207,6 +200,13 @@
         <filter id="337682486">
             <message_arguments>
                 <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/BorderedBorderItemEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedBorderItemEditPart">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedBorderItemEditPart"/>
             </message_arguments>
         </filter>
     </resource>
@@ -278,15 +278,15 @@
         </filter>
     </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/figures/BorderedNodeFigure.java" type="org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure">
-        <filter id="337682486">
-            <message_arguments>
-                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure"/>
-            </message_arguments>
-        </filter>
         <filter id="576725006">
             <message_arguments>
                 <message_argument value="IExpandableFigure"/>
                 <message_argument value="BorderedNodeFigure"/>
+            </message_arguments>
+        </filter>
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure"/>
             </message_arguments>
         </filter>
     </resource>
@@ -357,19 +357,6 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/PromptForConnectionAndEndCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand$EndLabelProvider">
-        <filter id="576720909">
-            <message_arguments>
-                <message_argument value="ElementTypeLabelProvider"/>
-                <message_argument value="EndLabelProvider"/>
-            </message_arguments>
-        </filter>
-        <filter id="338849923">
-            <message_arguments>
-                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand.EndLabelProvider"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/PromptForConnectionAndEndCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand$ConnectionAndEndLabelProvider">
         <filter id="576720909">
             <message_arguments>
@@ -380,6 +367,19 @@
         <filter id="338849923">
             <message_arguments>
                 <message_argument value="org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand.ConnectionAndEndLabelProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/PromptForConnectionAndEndCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand$EndLabelProvider">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="ElementTypeLabelProvider"/>
+                <message_argument value="EndLabelProvider"/>
+            </message_arguments>
+        </filter>
+        <filter id="338849923">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand.EndLabelProvider"/>
             </message_arguments>
         </filter>
     </resource>
@@ -400,19 +400,6 @@
         <filter id="337682486">
             <message_arguments>
                 <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editpolicies/TetherConnectionEditPolicy.java" type="org.eclipse.gmf.runtime.diagram.ui.editpolicies.TetherConnectionEditPolicy">
-        <filter id="576720909">
-            <message_arguments>
-                <message_argument value="GraphicalEditPolicyEx"/>
-                <message_argument value="TetherConnectionEditPolicy"/>
-            </message_arguments>
-        </filter>
-        <filter id="338849923">
-            <message_arguments>
-                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editpolicies.TetherConnectionEditPolicy"/>
             </message_arguments>
         </filter>
     </resource>
@@ -501,6 +488,13 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/IBorderItemEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart">
+        <filter id="404791350">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/DiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart$DiagramScalableFreeformLayeredPane">
         <filter id="338849923">
             <message_arguments>
@@ -550,13 +544,6 @@
                 <message_argument value="PageBreakEditPart"/>
                 <message_argument value="DiagramRootEditPart"/>
                 <message_argument value="getPageBreakEditPart()"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/IBorderItemEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart">
-        <filter id="404791350">
-            <message_arguments>
-                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart"/>
             </message_arguments>
         </filter>
     </resource>

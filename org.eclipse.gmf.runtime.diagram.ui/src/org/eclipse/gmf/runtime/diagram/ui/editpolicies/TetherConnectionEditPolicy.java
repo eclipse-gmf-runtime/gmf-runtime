@@ -45,7 +45,7 @@ public class TetherConnectionEditPolicy
 	 * 
 	 * @return the <code>Polyline</code>
 	 */
-	private Polyline getConnection() {
+	public Polyline getConnection() {
 		if (tether == null) {
 			tether = new PolylineConnectionEx();
 			tether.setLineStyle(Graphics.LINE_DASH);			
