@@ -142,6 +142,9 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
                <documentation>
                   The I18N display name for this metamodel element type.
                </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="eclass" type="string" use="required">
@@ -209,6 +212,9 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
                <documentation>
                   The I18N display name for this specialization element type.
                </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="edithelperadvice" type="string">
