@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -197,10 +196,6 @@ public class DeferredLayoutCommand
 
 		if (layoutCmd != null && layoutCmd.canExecute()) {
             ICommand optimizedCommand = optimizeCommand(layoutCmd);
-            
-            if (optimizedCommand instanceof AbstractEMFOperation) {
-            	((AbstractTransactionalCommand) optimizedCommand).setReuseParentTransaction(true);
-            }
 			optimizedCommand.execute(progressMonitor, info);
             optimizedCommand = null;
 		}
