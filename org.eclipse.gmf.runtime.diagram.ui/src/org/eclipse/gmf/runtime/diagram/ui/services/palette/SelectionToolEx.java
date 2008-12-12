@@ -17,7 +17,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-import org.eclipse.gef.tools.SelectionTool;
+import org.eclipse.gef.tools.PanningSelectionTool;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.BorderItemContainerFigure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -33,7 +33,7 @@ import org.eclipse.swt.events.TraverseEvent;
  * @author crevells
  */
 public class SelectionToolEx
-    extends SelectionTool {
+    extends PanningSelectionTool {
 
     /**
      * Are the traverse handles being used? That is, has the '.' key been

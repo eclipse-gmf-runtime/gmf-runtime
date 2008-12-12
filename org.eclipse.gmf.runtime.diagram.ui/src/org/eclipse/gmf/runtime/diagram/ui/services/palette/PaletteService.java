@@ -24,7 +24,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.gef.palette.SelectionToolEntry;
+import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
@@ -182,7 +182,7 @@ public class PaletteService extends Service implements IPaletteProvider {
 		PaletteSeparator standardSeparator = new PaletteSeparator(SEPARATOR_STANDARD);
 		standardGroup.add(standardSeparator);
 
-		ToolEntry selectTool = new SelectionToolEntry();
+		ToolEntry selectTool = new PanningSelectionToolEntry();
 		selectTool.setId(TOOL_SELECTION);
 		selectTool.setToolClass(SelectionToolEx.class);
 		standardGroup.add(selectTool);
