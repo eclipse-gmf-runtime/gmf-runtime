@@ -585,8 +585,8 @@ public class ColorsAndFontsPropertySection
 				if (ep != null) {
 
                     boolean isReadOnly = isReadOnly();
-                    lineColorButton.setEnabled(!isReadOnly);
-                    fillColorButton.setEnabled(!isReadOnly);
+                    lineColorButton.setEnabled((ep.getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle()) != null) && !isReadOnly);
+                    fillColorButton.setEnabled((ep.getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle()) != null) && !isReadOnly);
 
 					Style style = ep.getNotationView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
 					boolean enableFontWidgets = (style != null) && !isReadOnly;
