@@ -46,7 +46,6 @@ import org.eclipse.gmf.runtime.diagram.core.internal.commands.BringForwardComman
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.BringToFrontCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendBackwardCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendToBackCommand;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
@@ -81,7 +80,6 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
-import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;

@@ -12,20 +12,18 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts;
 
-import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeFigure;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeRectangleFigure;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeLineStyleBorder;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 	
 /**
- * @author jschofie
- *
  * Controls the interactions between the figure and
  * its underlying view 
+ *
+ * @author jschofie
  */
 public class RectangleEditPart extends GeoShapeEditPart {
 

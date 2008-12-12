@@ -17,13 +17,12 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IOvalAnchorableFigure;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.SlidableOvalAnchor;
 
 /**
- * @author jschofie
- * 
  * This Figure represents a Ellipse Figure
+ * 
+ * @author jschofie
  */
 public class GeoShapeEllipseFigure extends GeoShapeFigure implements
 		IOvalAnchorableFigure {

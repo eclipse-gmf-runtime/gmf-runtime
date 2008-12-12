@@ -30,7 +30,6 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LayoutTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCanonicalTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCreationTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicDiagramTests;
-import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicShapeTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTransientViewsTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.PaletteTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.TextAlignmentTests;

@@ -12,13 +12,9 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.dialogs;
 
 
-import java.awt.print.PageFormat;
-import java.awt.print.Paper;
-import java.awt.print.PrinterJob;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.ILabels;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupPageType;
