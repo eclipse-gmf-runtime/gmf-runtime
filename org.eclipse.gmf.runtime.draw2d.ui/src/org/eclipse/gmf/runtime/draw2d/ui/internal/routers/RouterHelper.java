@@ -157,8 +157,7 @@ class RouterHelper {
      * @return
      */
     private ShortestPathConnectionRouter getRouter(IFigure figContainer, boolean createNew) {
-        ShortestPathConnectionRouter shortestPathRouter = (ShortestPathConnectionRouter) routers
-            .get(figContainer);
+        ShortestPathConnectionRouter shortestPathRouter = routers.get(figContainer);
         if (shortestPathRouter == null && createNew) {
             shortestPathRouter = new ShortestPathConnectionRouter(figContainer);
             shortestPathRouter.setSpacing(MapModeUtil.getMapMode(figContainer)
@@ -179,7 +178,7 @@ class RouterHelper {
      * @return the router to use for routing conn
      */
     protected ShortestPathConnectionRouter getConnRouter(Connection conn, boolean forRouting) {
-        ShortestPathConnectionRouter lur = (ShortestPathConnectionRouter) lastUsedRouter.get(conn);    	
+        ShortestPathConnectionRouter lur = lastUsedRouter.get(conn);    	
     	// First, get the container for this connection
     	// Rule: both source and target figures have to belong to the same container. 
     	IFigure container = null;
@@ -250,7 +249,7 @@ class RouterHelper {
     public PointList routeFromConstraint(Connection conn) {
     	if (useGEFRouter && lastUsedRouter.get(conn) != null) {
     		// User just unselected Avoid obstacles options for this connection, clean up.
-    		cleanUpAvoidObstaclesRouter((ShortestPathConnectionRouter)lastUsedRouter.get(conn), conn);
+    		cleanUpAvoidObstaclesRouter(lastUsedRouter.get(conn), conn);
     	}
         List bendpoints = (List)conn.getConnectionRouter().getConstraint(conn);
         if (bendpoints == null)
@@ -284,7 +283,7 @@ class RouterHelper {
     public PointList routeClosestDistance(Connection conn) {
     	if (useGEFRouter && lastUsedRouter.get(conn) != null) {
     		// User just unselected Avoid obstacles options for this connection, clean up.
-    		cleanUpAvoidObstaclesRouter((ShortestPathConnectionRouter)lastUsedRouter.get(conn), conn);
+    		cleanUpAvoidObstaclesRouter(lastUsedRouter.get(conn), conn);
     	}
         PointList newLine = routeFromConstraint(conn);
         
@@ -517,8 +516,8 @@ class RouterHelper {
         conn.translateToRelative(sourceAnchorPoint);
         conn.translateToRelative(targetAnchorPoint);
         
-        newLine.setPoint(new Point(Math.round(sourceAnchorPoint.preciseX), Math.round(sourceAnchorPoint.preciseY)), 0);
-        newLine.setPoint(new Point(Math.round(targetAnchorPoint.preciseX), Math.round(targetAnchorPoint.preciseY)), newLine.size() - 1);
+        newLine.setPoint(sourceAnchorPoint,0);
+        newLine.setPoint(targetAnchorPoint,newLine.size() - 1);
     }
 
     private final static int ROUTER_OBSTRUCTION_BUFFER = 12;
