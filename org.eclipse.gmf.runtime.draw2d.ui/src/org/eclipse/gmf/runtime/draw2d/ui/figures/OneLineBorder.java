@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -117,19 +117,31 @@ public class OneLineBorder extends LineBorder {
 			tempRect.width--;
 			tempRect.height--;
 		}
-		tempRect.shrink(getWidth() / 2, getWidth() / 2);
 		graphics.setLineWidth(getWidth());
+		graphics.setLineStyle(getStyle());
 		switch (position) {
 			case PositionConstants.TOP :
-				graphics.drawLine(tempRect.getTopLeft(), tempRect.getTopRight());
+				// move down by width/2 to ensure the border will fit;
+				// no need to change x
+				tempRect.y += getWidth() / 2;				
+				graphics.drawLine(tempRect.getTopLeft(), tempRect.getTopRight());				
 				break;
-			case PositionConstants.BOTTOM :
+			case PositionConstants.BOTTOM :	
+				// move up by width/2 to ensure the border will fit;
+				// no need to change x			
+				tempRect.y -= getWidth() / 2;
 				graphics.drawLine(tempRect.getBottomLeft(), tempRect.getBottomRight());
 				break;
 			case PositionConstants.LEFT :
+				// move right by width/2 to ensure the border will fit;
+				// no need to change y			
+				tempRect.x += getWidth() / 2;
 				graphics.drawLine(tempRect.getTopLeft(), tempRect.getBottomLeft());
 				break;
 			case PositionConstants.RIGHT :
+				// move left by width/2 to ensure the border will fit;
+				// no need to change y						
+				tempRect.x -= getWidth() / 2;
 				graphics.drawLine(tempRect.getTopRight(), tempRect.getBottomRight());
 				break;
 		}

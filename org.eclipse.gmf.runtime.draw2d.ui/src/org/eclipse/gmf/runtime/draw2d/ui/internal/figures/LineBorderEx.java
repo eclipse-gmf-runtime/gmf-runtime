@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Color;
 
@@ -70,14 +71,13 @@ public class LineBorderEx
 	 */
 	public void paint(IFigure figure, Graphics graphics, Insets insets) {
 		tempRect.setBounds(getPaintRectangle(figure, insets));
-		if (getWidth() % 2 == 1) {
-			tempRect.width -= MapModeUtil.getMapMode(figure).DPtoLP(1);
-			tempRect.height -= MapModeUtil.getMapMode(figure).DPtoLP(1);
-		}
-		int shrinkWidth = MapModeUtil.getMapMode(figure).DPtoLP( getWidth() / 2 );
-		tempRect.shrink(shrinkWidth, shrinkWidth);
+		IMapMode mm = MapModeUtil.getMapMode(figure);
+		// width is in pixels (as stated in constructors), convert it
+		int lpWidth = mm.DPtoLP(getWidth());
+		tempRect.shrink(lpWidth / 2, lpWidth / 2);
 
-		graphics.setLineWidth(getWidth());
+		graphics.setLineWidth(lpWidth);
+		graphics.setLineStyle(getStyle());
 		if (getColor() != null)
 			graphics.setForegroundColor(getColor());
 

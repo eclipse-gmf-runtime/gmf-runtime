@@ -158,6 +158,7 @@ public class RectangularDropShadowLineBorder
 			tempRect.setBounds(getPaintRectangle(figure, insets));
 			tempRect.shrink(getWidth()/2, getWidth()/2);
 			g.setLineWidth(getWidth());
+			g.setLineStyle(getStyle());
 			g.drawRectangle(tempRect);			
 		}
 	}
@@ -183,7 +184,8 @@ public class RectangularDropShadowLineBorder
 			tempRect.width -= mm.DPtoLP(getShadowWidth());
 			tempRect.height -= mm.DPtoLP(getShadowHeight());
 			tempRect.shrink(getWidth() / 2, getWidth() / 2);
-			g.setLineWidth(getWidth());			
+			g.setLineWidth(getWidth());	
+			g.setLineStyle(getStyle());
 
 			if (getColor() != null) {
 				g.setForegroundColor(getColor());

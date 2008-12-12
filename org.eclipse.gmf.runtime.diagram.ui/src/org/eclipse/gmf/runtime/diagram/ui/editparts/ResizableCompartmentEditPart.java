@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LineBorder;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ExposeHelper;
@@ -70,6 +72,8 @@ public abstract class ResizableCompartmentEditPart
 		refreshShowCompartmentTitle();
 		refreshCollapsed();
 		refreshRatio();
+		refreshLineWidth();
+		refreshLineType();		
 	}
 
 	/**
@@ -138,7 +142,11 @@ public abstract class ResizableCompartmentEditPart
                 NotationPackage.eINSTANCE.getFontStyle_Bold().equals(feature) ||
                 NotationPackage.eINSTANCE.getFontStyle_Italic().equals(feature)) {
 			refreshFont();
-		} else
+        } else if (NotationPackage.eINSTANCE.getLineStyle_LineWidth().equals(feature)){
+			refreshLineWidth();
+		} else if (NotationPackage.eINSTANCE.getLineTypeStyle_LineType().equals(feature)) {
+			refreshLineType();
+		} else 
 			super.handleNotificationEvent(event);
 	}
 		
@@ -229,6 +237,29 @@ public abstract class ResizableCompartmentEditPart
 		if (getCompartmentFigure()!=null)
 			getCompartmentFigure().setFontColor(color);
 	}
+	
+	/**
+	 * Sets the line width for the shape's border
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#setLineWidth(int)
+	 */
+	protected void setLineWidth(int width) {
+		Border border = getFigure().getBorder();
+		if (border instanceof LineBorder) {
+			((LineBorder) border).setWidth(getMapMode().DPtoLP(width));
+			getFigure().revalidate();
+		}		
+	}
+	
+	/**
+	 * Sets the line type for the shape's border
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#setLineType(int)
+	 */
+	protected void setLineType(int type) {
+		Border border = getFigure().getBorder();
+		if (border instanceof LineBorder) {
+			((LineBorder) border).setStyle(type);
+		}
+	}	
 
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#addNotationalListeners()
