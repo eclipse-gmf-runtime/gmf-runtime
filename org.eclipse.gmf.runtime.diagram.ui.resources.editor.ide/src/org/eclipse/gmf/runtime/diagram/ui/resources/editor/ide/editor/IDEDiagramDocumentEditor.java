@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -118,8 +118,20 @@ public class IDEDiagramDocumentEditor
 				ErrorDialog.openError(shell, EditorMessages.Editor_error_saving_title2, EditorMessages.Editor_error_saving_message2, x.getStatus());
 		} finally {
 			provider.changed(newInput);
-			if (success)
+			if (success) {
 				setInput(newInput);
+				/*
+				 * Bugzilla 255264: If nothing was selected on the diagram this
+				 * implies that contents editpart is selected. When the diagram
+				 * is "saved as" to another file new editparts are created and
+				 * old ones disposed. Consequently, views displaying data about
+				 * selected objects on the diaqram must be updated - it a
+				 * another diagram editpart selected now. Threfore, we need to
+				 * call deselectAll() such that the selection event is fired
+				 * with the implicitly selected diagram editpart.
+				 */
+				getGraphicalViewer().deselectAll();
+			}
 		}
 
 		if (progressMonitor != null)
