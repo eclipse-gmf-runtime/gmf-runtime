@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -234,6 +234,11 @@ public class CopyToImageDialog extends Dialog {
 	 * The id for the persistent overwrite existing setting for this dialog.
 	 */
 	private static final String DIALOG_SETTINGS_HTML = "CopyToImageDialog.exportToHTML"; //$NON-NLS-1$
+	
+	/**
+	 * The root of the filesystem
+	 */
+	private static final String DEFAULT_FILESYSTEM_ROOT = "/"; //$NON-NLS-1$
 	
 	/**
 	 * Creates an instance of the copy to image dialog.
@@ -655,7 +660,7 @@ public class CopyToImageDialog extends Dialog {
 			if (path == null) {
 				// By default, the folder will be the root of the filesystem,
 				// where ever that may be on a system.
-				folder = "/"; //$NON-NLS-1$
+				folder = DEFAULT_FILESYSTEM_ROOT;
 			} else {
 				folder = path.toOSString();
 			}
@@ -681,13 +686,17 @@ public class CopyToImageDialog extends Dialog {
 	 */
 	private void saveDialogSettings() {
 		IDialogSettings dialogSettings = getDialogSettings();
-		if (! path.toOSString().equals(folder)) {
-			// only persist the folder if the user changed the value.
-			// We like to save diagrams in a folder different to the 
-			// <workspace>/project_name folder and have the Save As 
-			// Image File dialog remember this setting and display 
-			// it as the new default. 
+		if (path == null && !folder.trim().equals(DEFAULT_FILESYSTEM_ROOT))
 			dialogSettings.put(DIALOG_SETTINGS_FOLDER, folder);
+		else {
+			if (!path.toOSString().equals(folder)) {
+				// only persist the folder if the user changed the value.
+				// We like to save diagrams in a folder different to the
+				// <workspace>/project_name folder and have the Save As
+				// Image File dialog remember this setting and display
+				// it as the new default.
+				dialogSettings.put(DIALOG_SETTINGS_FOLDER, folder);
+			}
 		}
 		dialogSettings.put(
 			DIALOG_SETTINGS_IMAGE_FORMAT,
