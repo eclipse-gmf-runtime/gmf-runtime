@@ -28,6 +28,8 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.transaction.DemultiplexingListener;
 import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -115,6 +117,18 @@ public abstract class AbstractModelerPropertySection
 			|| selection.equals(getInput()))
 			return;
 
+        /*
+         * Update editing domain
+         */
+		IEditingDomainProvider provider = (IEditingDomainProvider) part
+				.getAdapter(IEditingDomainProvider.class);
+		if (provider != null) {
+			EditingDomain theEditingDomain = provider.getEditingDomain();
+			if (theEditingDomain instanceof TransactionalEditingDomain) {
+				setEditingDomain((TransactionalEditingDomain) theEditingDomain);
+			}
+		}
+		
 		input = new ArrayList();
 
 		eObjectList = new ArrayList();
