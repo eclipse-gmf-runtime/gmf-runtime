@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,7 +100,11 @@ public class PopupBarTool
 			((CreateRequest) theRequest).setLocation(thePoint);
 		}
 
-		Command theCmd = getHost().getCommand(theRequest);
+		EditPart target = getHost().getTargetEditPart(theRequest);
+		if (target == null){
+			target = getHost();
+		}
+		Command theCmd = target.getCommand(theRequest);
 		// if we return a cmd that cannot execute then later downstream an
 		// NPE can be generated.
 		if (theCmd != null && theCmd.canExecute()) {
