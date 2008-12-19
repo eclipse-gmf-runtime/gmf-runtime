@@ -104,25 +104,16 @@ public class BorderedNodeFigure
 			return getMainFigure().getBounds().getCopy();
 		}
 	}
-
+	
 	/**
 	 * Give the main figure the entire bounds of the wrapper.
 	 */
 	protected void layout() {
 		if (!this.getBounds().equals(getMainFigure().getBounds())) {
 			getMainFigure().setBounds(this.getBounds().getCopy());
+			getBorderItemContainer().invalidateTree();
+			erase();
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.draw2d.Figure#invalidate()
-	 */
-	public void invalidate() {
-		super.invalidate();
-		
-		// When parent resizes, cause the border items to be relocated.
-		getBorderItemContainer().invalidateTree();
-		erase();
 	}
 
 	/**
