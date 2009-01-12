@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.common.core.command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 
 /**
@@ -29,7 +30,7 @@ import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 public class UnexecutableCommand extends AbstractCommand {
 
 	/**
-	 * The singleton instance.
+	 * The shared instance.
 	 */
 	public static final UnexecutableCommand INSTANCE = new UnexecutableCommand();
 
@@ -38,6 +39,17 @@ public class UnexecutableCommand extends AbstractCommand {
 	 */
 	protected UnexecutableCommand() {
 		super(StringStatics.BLANK, null);
+	}
+	
+	/**
+	 * Specific instances of the UnexecutableCommand can be created in order 
+	 * to provide feedback.  If no feedback is required, the shared instance should be used.
+	 * 
+	 * @since 1.2
+	 */
+	public UnexecutableCommand(IStatus status) {
+		super(StringStatics.BLANK);
+		setResult(new CommandResult(status));
 	}
 
 	/**

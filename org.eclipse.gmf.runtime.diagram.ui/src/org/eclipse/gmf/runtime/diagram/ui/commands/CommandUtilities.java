@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,19 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 
 /**
@@ -101,6 +106,88 @@ public class CommandUtilities {
 			return result;
 		}
 		return Collections.EMPTY_LIST;
+	}
+	
+	/**
+	 * A helper that inspects the command for the most severe command result.
+	 * 
+	 * @param command
+	 * @return IStatus in the command or null if no result can be obtained from the command.
+	 * @since 1.2
+	 */
+	public static IStatus getMostSevereStatus(Command command) {
+		IStatus status = null;
+
+		ICommand iCommand = null;
+
+		if (command instanceof CompoundCommand) {
+
+			List<IStatus> statusList = new ArrayList<IStatus>(
+					((CompoundCommand) command).size());
+
+			Iterator<?> iter = ((CompoundCommand) command).getCommands()
+					.iterator();
+			while (iter.hasNext()) {
+				Command nextCommand = (Command) iter.next();
+				status = getMostSevereStatus(nextCommand);
+				if (status != null) {
+					statusList.add(status);
+				}
+			}
+			return aggregateStatuses(statusList);
+			
+		} else if (command instanceof ICommand) {
+			iCommand = (ICommand) command;
+			
+		} else if (command instanceof ICommandProxy) {
+			iCommand = ((ICommandProxy) command).getICommand();
+		}
+
+		if (iCommand != null) {
+			CommandResult commandResult = iCommand.getCommandResult();
+			if (commandResult != null) {
+				status = commandResult.getStatus();
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * Creates a suitable aggregate from these statuses. If there are no
+	 * statuses to aggregate, then an null status is returned. If there is a
+	 * single status to aggregate, then it is returned. Otherwise, a
+	 * multi-status is returned with the provided statuses as children.
+	 * 
+	 * @param statuses
+	 *            the statuses to aggregate. May have zero, one, or more
+	 *            elements (all must be {@link IStatus}es)
+	 * 
+	 * @return the multi-status or null
+	 * @since 1.2
+	 */
+	protected static IStatus aggregateStatuses(List<IStatus> statuses) {
+		final IStatus result;
+
+		if (statuses.isEmpty()) {
+			result = null;
+		} else if (statuses.size() == 1) {
+			result = ((IStatus) statuses.get(0));
+		} else {
+			// find the most severe status, to use its plug-in, code, and
+			// message
+			IStatus[] statusArray = (IStatus[]) statuses
+					.toArray(new IStatus[statuses.size()]);
+
+			IStatus worst = statusArray[0];
+			for (int i = 1; i < statusArray.length; i++) {
+				if (statusArray[i].getSeverity() > worst.getSeverity()) {
+					worst = statusArray[i];
+				}
+			}
+			result = new MultiStatus(worst.getPlugin(), worst.getCode(),
+					statusArray, worst.getMessage(), null);
+		}
+		return result;
 	}
 
 }

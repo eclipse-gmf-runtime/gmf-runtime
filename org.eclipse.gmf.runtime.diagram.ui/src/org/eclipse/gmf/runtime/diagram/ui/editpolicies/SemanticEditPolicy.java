@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -138,18 +138,25 @@ public class SemanticEditPolicy
             shouldPromptOnDestroy = ((DestroyRequest) completedRequest).isConfirmationRequired();
             ((DestroyRequest) completedRequest).setConfirm(false);
         }
-		
+		     
+        ICommand semanticCommand = null;
+       Object editHelperContext =  completedRequest.getEditHelperContext();
 		IElementType elementType = ElementTypeRegistry.getInstance()
-			.getElementType(completedRequest.getEditHelperContext());
-		
-		ICommand semanticCommand = (elementType != null) ? elementType
-			.getEditCommand(completedRequest)
-			: null;
+			.getElementType(editHelperContext);
 
-		if (semanticCommand == null)
+		if(elementType == null && editHelperContext instanceof ICommand){
+			semanticCommand = (ICommand)editHelperContext ;
+		} else {
+			semanticCommand = (elementType != null)
+				? elementType.getEditCommand(completedRequest)
+				: null;
+		}
+						
+		if(semanticCommand == null){
 			return null;
+		}
 		
-        if (completedRequest instanceof DestroyRequest) {
+      if (completedRequest instanceof DestroyRequest) {
             ((DestroyRequest) completedRequest).setConfirm(shouldPromptOnDestroy);
         }
 		

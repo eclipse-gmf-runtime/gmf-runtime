@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -429,7 +429,9 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 	 * executed, at which point it can return the real context element, if a new
 	 * one needs to be created.
 	 * 
-	 * @return the edit helper context
+	 * @return The edit helper context which can be either the context object or type of
+     *          context object or a command which is not executable that could contain 
+     * 	        status information.
 	 */
 	public Object getEditHelperContext() {
 		
@@ -441,7 +443,7 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 		if (contextCommand != null && contextCommand.canExecute()) {
 			return getEditContextRequest().getEditContext();
 		}
-		return null;
+		return contextCommand;
 	}
 
 	public void setParameter(String parameterName, Object value) {

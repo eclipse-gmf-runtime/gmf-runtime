@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,6 +63,26 @@ public class SemanticCreateCommand extends AbstractCommand {
 		// propagate the contexts from the wrapped command
 		recomputeContexts();
 	}
+
+	/**
+	 * If the command was properly executed, the result will be set during
+	 * execution. If the command failed execution, the result may contain status
+	 * information for feedback purposes.
+	 * 
+	 * @return 
+	 * 		The command result either from this command executed
+	 * 		properly or the wrapped realSemanticCommand in case status information
+	 * 		needs to be returned.
+	 */
+	@Override
+	public CommandResult getCommandResult() {
+		CommandResult result = super.getCommandResult();
+		if (result == null) {
+			return realSemanticCommand.getCommandResult();
+		}
+		return result;
+	}
+	
 
 	protected CommandResult doExecuteWithResult(
             IProgressMonitor progressMonitor, IAdaptable info)

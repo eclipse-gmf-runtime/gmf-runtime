@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,6 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.IdentityCommand;
-import org.eclipse.gmf.runtime.common.core.command.UnexecutableCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
@@ -168,11 +167,13 @@ public abstract class AbstractEditHelper
                 
                 if (beforeAdvice != null) {
 
-                    if (!beforeAdvice.canExecute()) {
-                        // The operation is not permitted
-                        return UnexecutableCommand.INSTANCE;
+                    if (beforeAdvice.canExecute()) {
+                    	  command.compose(beforeAdvice);
+                       
+                    } else {
+                    	return beforeAdvice;
                     }
-                    command.compose(beforeAdvice);
+                       
                 }
             }
         }
@@ -186,13 +187,13 @@ public abstract class AbstractEditHelper
             ICommand insteadCommand = getInsteadCommand(req);
 
             if (insteadCommand != null) {
-                
-                if (!insteadCommand.canExecute()) {
-                    // The operation is not permitted
-                	return UnexecutableCommand.INSTANCE;
-                }
-                command.compose(insteadCommand);
-            }
+
+				if (insteadCommand.canExecute()) {
+					command.compose(insteadCommand);
+				} else {
+					return insteadCommand;
+				}
+			}
         }
         
         // Get 'after' commands from matching element type
@@ -205,13 +206,13 @@ public abstract class AbstractEditHelper
                 ICommand afterAdvice = nextAdvice.getAfterEditCommand(req);
 
                 if (afterAdvice != null) {
-                    
-                    if (!afterAdvice.canExecute()) {
-                        // The operation is not permitted
-                    	return UnexecutableCommand.INSTANCE;
-                    }
-                    command.compose(afterAdvice);
-                }
+
+					if (afterAdvice.canExecute()) {
+						command.compose(afterAdvice);
+					} else {
+						return afterAdvice;
+					}
+				}
             }
         }
         

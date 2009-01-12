@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -937,4 +937,33 @@ public class CompositeCommand
             return iter.hasPrevious();
         }
     }
+    
+	@Override
+	public CommandResult getCommandResult() {
+		
+		CommandResult commandResult = super.getCommandResult();
+		if (commandResult == null) {
+			
+			List<IStatus> statusList = new ArrayList<IStatus>(size());
+
+			for (Iterator<?> i = iterator(); i.hasNext();) {
+				IUndoableOperation operation = (IUndoableOperation) i.next();
+
+				if (operation instanceof ICommand) {
+					ICommand command = (ICommand) operation;
+
+					CommandResult result = command.getCommandResult();
+					if (result != null) {
+						statusList.add(result.getStatus());
+					}
+				}
+			}
+			
+			// Don't set the command explicitly since the intermediate command could
+			// have children added later.
+			return new CommandResult(aggregateStatuses(statusList),
+				getReturnValues());
+		}
+		return commandResult;
+	}
 }

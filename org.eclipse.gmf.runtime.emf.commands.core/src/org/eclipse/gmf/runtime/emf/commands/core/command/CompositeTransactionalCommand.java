@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -139,11 +139,34 @@ public class CompositeTransactionalCommand
         return new ArrayList(result);
     }
 
-    // Documentation copied from the interface
-    public CommandResult getCommandResult() {
-        return commandResult;
-    }
+	public CommandResult getCommandResult() {
+		
+		if (commandResult == null) {
+			
+			List<IStatus> statusList = new ArrayList<IStatus>(size());
 
+			for (Iterator<?> i = iterator(); i.hasNext();) {
+				IUndoableOperation operation = (IUndoableOperation) i.next();
+
+				if (operation instanceof ICommand) {
+					ICommand command = (ICommand) operation;
+
+					CommandResult result = command.getCommandResult();
+					if (result != null) {
+						statusList.add(result.getStatus());
+					}
+				}
+			}
+			
+			// Don't set the command explicitly since the intermediate command could
+			// have children added later.
+			return new CommandResult(super.aggregateStatuses(statusList),
+				getReturnValues());
+		}
+		return commandResult;
+	}
+	
+	
     /**
      * Sets the command result.
      * 
@@ -302,4 +325,5 @@ public class CompositeTransactionalCommand
     public void internalSetResult(CommandResult result) {
         this.commandResult = result;
     }
+    
 }
