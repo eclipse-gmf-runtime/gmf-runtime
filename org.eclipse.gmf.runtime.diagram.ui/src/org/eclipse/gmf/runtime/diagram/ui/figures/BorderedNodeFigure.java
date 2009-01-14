@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Mariot Chauvin <mariot.chauvin@obeo.fr> - bug 259507
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.figures;
@@ -37,6 +38,8 @@ public class BorderedNodeFigure
 	private BorderItemContainerFigure borderItemContainer;
 
 	private IFigure mainFigure;
+	
+	private Rectangle extendedBounds = new Rectangle();
 
 	/**
 	 * Creates a new BorderedNodeFigure figure.
@@ -236,12 +239,32 @@ public class BorderedNodeFigure
 		return parent;
 	}
     
-
     public Rectangle getExtendedBounds() {
-        Rectangle rect = getBounds().getCopy();
-         if (borderItemContainer!=null){
-            return rect.union(borderItemContainer.getExtendedBounds().getCopy());
+        if (extendedBounds == null) {
+	        Rectangle rect = getBounds().getCopy();
+	         if (borderItemContainer!=null){
+	            rect = rect.union(borderItemContainer.getExtendedBounds());
+	        }
+	         extendedBounds = rect;
         }
-        return rect;
+        return extendedBounds;
+    }
+    
+    @Override
+    public void invalidate() {
+        extendedBounds = null;
+    	super.invalidate();
+    }
+    
+    @Override
+    public void validate() {
+        extendedBounds = null;
+    	super.validate();
+    }
+    
+    @Override
+    protected void fireFigureMoved() {
+    	super.fireFigureMoved();
+        extendedBounds = null;
     }
 }
