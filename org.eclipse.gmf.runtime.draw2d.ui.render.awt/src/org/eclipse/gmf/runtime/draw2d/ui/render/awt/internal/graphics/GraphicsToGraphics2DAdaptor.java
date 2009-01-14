@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -104,7 +105,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		/**
 		 * cached line width
 		 */
-		public int lineWidth = 1;
+		public float lineWidth = 1;
 		/**
 		 * cached xor mode value
 		 */
@@ -789,6 +790,10 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	public int getLineWidth() {
 		return swtGraphics.getLineWidth();
 	}
+	
+	public float getLineWidthFloat() {
+		return swtGraphics.getLineWidthFloat();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -840,7 +845,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		setBackgroundColor(state.bgColor);
 		setForegroundColor(state.fgColor);
 		setLineStyle(state.lineStyle);
-		setLineWidth(state.lineWidth);
+		setLineWidthFloat(state.lineWidth);
 		setXORMode(state.XorMode);
 		
 		setClipAbsolute(state.clipX, state.clipY, state.clipW, state.clipH);
@@ -928,6 +933,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * 
 	 * @see org.eclipse.draw2d.Graphics#setFont(org.eclipse.swt.graphics.Font)
 	 */
+	@Override
 	public void setFont(Font f) {
 
 		swtGraphics.setFont(f);
@@ -970,6 +976,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * 
 	 * @see org.eclipse.draw2d.Graphics#setForegroundColor(org.eclipse.swt.graphics.Color)
 	 */
+	@Override
 	public void setForegroundColor(Color rgb) {
 		currentState.fgColor = rgb;
 		swtGraphics.setForegroundColor(rgb);
@@ -982,11 +989,18 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * @param dash the pixel pattern
 	 * 
 	 */
-	public void setLineDash(int dash[]) {
+	@Override
+	public void setLineDash(int[] dash) {
 		float dashFlt[] = new float[dash.length];
-		for (int i=0; i<dash.length; i++)
+		for (int i=0; i<dash.length; i++) {
 			dashFlt[i] = dash[i];
+		}
 		currentState.lineDash = dashFlt;
+	}
+	
+	@Override
+	public void setLineDash(float[] dash) {
+		currentState.lineDash = dash;
 	}
 	
 	/*
@@ -994,6 +1008,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * 
 	 * @see org.eclipse.draw2d.Graphics#setLineStyle(int)
 	 */
+	@Override
 	public void setLineStyle(int style) {
 		currentState.lineStyle = style;
 		
@@ -1036,15 +1051,45 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 		getGraphics2D().setStroke(stroke);
 	}
+	
+	/**
+	 * ignored
+	 */
+	@Override
+	public void setLineMiterLimit(float miterLimit) {
+		// do nothing
+	}
+	
+	/**
+	 * ignored
+	 */
+	@Override
+	public void setLineCap(int cap) {
+		// do nothing
+	}
+	
+	/**
+	 * ignored
+	 */
+	@Override
+	public void setLineJoin(int join) {
+		// do nothing
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.draw2d.Graphics#setLineWidth(int)
 	 */
+	@Override
 	public void setLineWidth(int width) {
+		setLineWidthFloat(width);
+	}
+	
+	@Override
+	public void setLineWidthFloat(float width) {
 		currentState.lineWidth = width;
-		swtGraphics.setLineWidth(width);
+		swtGraphics.setLineWidthFloat(width);
 
 		stroke =
 			new BasicStroke(
@@ -1057,12 +1102,21 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 		getGraphics2D().setStroke(stroke);
 	}
-
+	
+	@Override
+	public void setLineAttributes(LineAttributes lineAttributes) {
+		swtGraphics.setLineAttributes(lineAttributes);
+		setLineWidthFloat(lineAttributes.width);
+		setLineStyle(lineAttributes.style);
+		setLineDash(lineAttributes.dash);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.draw2d.Graphics#setXORMode(boolean)
 	 */
+	@Override
 	public void setXORMode(boolean xorMode) {
 		currentState.XorMode = xorMode;
 		swtGraphics.setXORMode(xorMode);
@@ -1085,6 +1139,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * (non-Javadoc)
 	 * @see org.eclipse.draw2d.Graphics#translate(int, int)
 	 */
+	@Override
 	public void translate(int dx, int dy) {
 		swtGraphics.translate(dx, dy);
 
@@ -1111,6 +1166,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * (non-Javadoc)
 	 * @see org.eclipse.draw2d.Graphics#fillGradient(int, int, int, int, boolean)
 	 */
+	@Override
 	public void fillGradient(int x, int y, int w, int h, boolean vertical) {
 		GradientPaint gradient;
 		
@@ -1190,6 +1246,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
      * (non-Javadoc)
      * @see org.eclipse.draw2d.Graphics#getAntialias()
      */
+	@Override
     public int getAntialias() {
         Object antiAlias = getGraphics2D().getRenderingHint(RenderingHints.KEY_ANTIALIASING);
         if (antiAlias != null) {
@@ -1208,6 +1265,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
      * (non-Javadoc)
      * @see org.eclipse.draw2d.Graphics#setAntialias(int)
      */
+	@Override
     public void setAntialias(int value) {
         if (value == SWT.ON) {
             getGraphics2D().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -1217,10 +1275,12 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
         }
     }
 
+	@Override
     public int getAlpha() {
         return swtGraphics.getAlpha();
     }
 
+	@Override
     public void setAlpha(int alpha) {
         swtGraphics.setAlpha(alpha);
         currentState.alpha = alpha;
@@ -1241,27 +1301,4 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
     	this.stroke = stroke;
     	getGraphics2D().setStroke(stroke);
     }
-
-    /*
-     * TODO: following methods need to be upgraded, and this class's
-     * functionality retested in light of the lineAttributes related
-     * changes on Graphics  
-     */
-    
-	@Override
-	public float getLineWidthFloat() {
-		return getLineWidth();
-	}
-
-	@Override
-	public void setLineMiterLimit(float miterLimit) {
-		// do nothing
-	}
-
-	@Override
-	public void setLineWidthFloat(float width) {
-		setLineWidth((int)width);
-	}
-    
-   
 }
