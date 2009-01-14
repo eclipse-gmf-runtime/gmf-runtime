@@ -44,6 +44,7 @@ public class TetherConnectionEditPolicy
 	 * given style.
 	 * 
 	 * @return the <code>Polyline</code>
+	 * @since 1.2
 	 */
 	public Polyline getConnection() {
 		if (tether == null) {
