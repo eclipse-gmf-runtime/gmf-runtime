@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Nicolas Rouquette (NASA) - Fix for Bug 260812. 
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter;
@@ -20,6 +21,7 @@ import java.util.Set;
 
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
@@ -454,10 +456,14 @@ public class FilterDialog
 						.get(i);
 					
 					if (filterMap != null && filterMap.equals(getFilterMapFromEditPart(editPart))) {					
-                        childCommands.add(new CommandProxy(editPart
-							.getCommand(filterTypeRequest)));
-                        childCommands.add(new CommandProxy(editPart
-							.getCommand(filterKeysRequest)));
+                       Command command = editPart.getCommand(filterTypeRequest);
+                       if (null != command) {
+                    	   childCommands.add(new CommandProxy(command));
+                       }
+                       command = editPart.getCommand(filterKeysRequest);
+                       if (null != command) {
+                    	   childCommands.add(new CommandProxy(command));
+                       }
 					}
 				}
 			}

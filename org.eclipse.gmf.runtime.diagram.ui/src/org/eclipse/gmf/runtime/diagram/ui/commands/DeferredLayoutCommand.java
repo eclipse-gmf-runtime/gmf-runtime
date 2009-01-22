@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Nicolas Rouquette (NASA) - Fix for Bug 260812. 
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
@@ -220,7 +221,10 @@ public class DeferredLayoutCommand
                 }
                 return transactionalCommand;
             }
-            return new CommandProxy(command);
+            if (null != command)
+            	return new CommandProxy(command);
+            else 
+            	return null;
         }
     }
 	protected void cleanup() {
