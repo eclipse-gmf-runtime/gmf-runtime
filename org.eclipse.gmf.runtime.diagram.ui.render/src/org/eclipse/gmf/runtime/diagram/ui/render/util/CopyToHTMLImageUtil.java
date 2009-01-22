@@ -302,7 +302,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		Assert.isNotNull(info);
 		StringBuffer buffer = new StringBuffer(
 				"<html>\n<body>\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"LEFT\">\n");//$NON-NLS-1$
-		String commonFileNamePath = new Path("file://", info.directory.toString()).append(info.commonTileFileName).makeAbsolute().toString(); 
+		String commonFileNamePath = new Path("file://", info.directory.toString()).append(info.commonTileFileName).makeAbsolute().toString(); //$NON-NLS-1$ 
 		for (int i = 0; i < info.tiles.y; i++) {
 			buffer.append("<tr>\n");//$NON-NLS-1$
 			for (int j = 0; j < info.tiles.x; j++) {
@@ -315,8 +315,8 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 					buffer.append("\t<td>\n\t\t<object data=\"");//$NON-NLS-1$
 					buffer.append(fileName);
 					buffer.append("\" type=\"image/svg+xml\" width=\"");//$NON-NLS-1$
-					buffer.append(info.tileSize.width);//$NON-NLS-1$
-					buffer.append("\" height=\"");
+					buffer.append(info.tileSize.width);
+					buffer.append("\" height=\""); //$NON-NLS-1$
 					buffer.append(info.tileSize.height);
 					buffer.append("\">\n");//$NON-NLS-1$
 					buffer.append("\t\t<embed src=\"");//$NON-NLS-1$
@@ -325,7 +325,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 					buffer.append(info.tileSize.width);
 					buffer.append("\" height=\"");//$NON-NLS-1$
 					buffer.append(info.tileSize.height);
-					buffer.append("\"/></td>\n");
+					buffer.append("\"/></td>\n"); //$NON-NLS-1$
 				} else {
 					buffer.append("\t<td><img src=\"");//$NON-NLS-1$
 					buffer.append(fileName);
@@ -513,7 +513,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 */
 	public static List<List<List<PartPositionInfo>>> createTilesPartsInfoList(
 			ExportInfo exportInfo) {
-		List<PartPositionInfo> partsInfo = (List<PartPositionInfo>) exportInfo.diagramGenerator.getDiagramPartInfo();
+		List<PartPositionInfo> partsInfo = exportInfo.diagramGenerator.getDiagramPartInfo();
 		List<List<List<PartPositionInfo>>> tilesPartsInfoList = Collections.emptyList();
 		if (exportInfo.diagramGenerator != null && exportInfo.tiles.x > 0
 				&& exportInfo.tiles.y > 0 && partsInfo != null) {
