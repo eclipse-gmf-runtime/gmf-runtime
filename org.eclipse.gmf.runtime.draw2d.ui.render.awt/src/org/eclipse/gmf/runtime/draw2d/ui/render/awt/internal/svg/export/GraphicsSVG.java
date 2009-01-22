@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -143,13 +143,18 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
             
 	    	if (document instanceof SVGOMDocument) {
 	    		RenderInfo info = srcImage.getRenderInfo();
-				SVGColorConverter.getInstance().replaceDocumentColors((SVGOMDocument)document, 
-					new Color(info.getBackgroundColor().red, 
-						  info.getBackgroundColor().green,
-						  info.getBackgroundColor().blue),
-					new Color(info.getForegroundColor().red, 
-						info.getForegroundColor().green,
-						info.getForegroundColor().blue));
+				if (info != null && info.getBackgroundColor() != null
+						&& info.getForegroundColor() != null) {
+					SVGColorConverter.getInstance().replaceDocumentColors(
+							(SVGOMDocument) document,
+							new Color(info.getBackgroundColor().red, info
+									.getBackgroundColor().green, info
+									.getBackgroundColor().blue),
+							new Color(info.getForegroundColor().red, info
+									.getForegroundColor().green, info
+									.getForegroundColor().blue));
+
+				}
 			}
 			Element root = document.getDocumentElement();
 
