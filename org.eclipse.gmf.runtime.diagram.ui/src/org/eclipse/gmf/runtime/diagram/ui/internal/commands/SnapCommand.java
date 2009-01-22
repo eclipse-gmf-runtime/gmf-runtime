@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Michael Golubev (Borland) - Fix for Bug 261192
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
@@ -24,6 +25,7 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 import org.eclipse.gef.SnapToHelper;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -143,7 +145,11 @@ public class SnapCommand extends AbstractTransactionalCommand {
 						request.setMoveDelta(moveDelta);
 					}
 
-					snapCommand.add(new CommandProxy(newEditPart.getCommand(request)));
+					Command gefMove = newEditPart.getCommand(request);
+					if (gefMove != null){
+						snapCommand.add(new CommandProxy(gefMove));	
+					}
+					
 				}
 			}
 		}
