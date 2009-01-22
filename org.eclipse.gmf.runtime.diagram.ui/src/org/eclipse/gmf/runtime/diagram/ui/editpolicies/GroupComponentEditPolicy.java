@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.SemanticListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.GroupRequestViaKeyboard;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
@@ -103,4 +104,30 @@ public class GroupComponentEditPolicy
         return createDeleteViewCommand(deleteRequest);
     }
 
+    @Override
+    protected boolean shouldDeleteSemantic() {
+		EditPart parent = getHost().getParent();
+        if (parent instanceof SemanticListCompartmentEditPart){
+            SemanticListCompartmentEditPart semListCompartment  = 
+                (SemanticListCompartmentEditPart)parent;
+            return semListCompartment.isCanonicalOn();
+            
+        } else {
+
+            // If the parent is a group, then we want to get the first parent
+            // that isn't a group and test for a canonical editpolicy there.
+            while (parent instanceof GroupEditPart) {
+                parent = parent.getParent();
+            }
+        }
+        
+        
+        if (parent instanceof IGraphicalEditPart) {
+			CanonicalEditPolicy cep = (CanonicalEditPolicy)parent.getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
+			if ( cep != null ) {
+				return cep.isEnabled();						
+			} 					
+		} 	
+		return false;
+	}
 }
