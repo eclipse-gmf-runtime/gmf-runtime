@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,13 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.BasicNodeViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.NoteAttachmentViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.NoteViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.optimal.BasicDecorationViewFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -36,11 +37,10 @@ public class DiagramViewProvider extends AbstractViewProvider {
 	/** list of supported shape views. */
     static private final Map nodeMap = new HashMap();
 	static {
-		nodeMap.put(CommonParserHint.DESCRIPTION, BasicNodeViewFactory.class);
-		nodeMap.put(ViewType.DIAGRAM_NAME, BasicNodeViewFactory.class);
+		nodeMap.put(CommonParserHint.DESCRIPTION, BasicDecorationViewFactory.class);
+		nodeMap.put(ViewType.DIAGRAM_NAME, BasicDecorationViewFactory.class);
 		nodeMap.put(ViewType.NOTE, NoteViewFactory.class);
 		nodeMap.put(ViewType.TEXT, TextShapeViewFactory.class);
-		nodeMap.put(NotationPackage.eINSTANCE.getDiagram(), NoteViewFactory.class);	
 	}
 	/** list of supported connection views. */
 	static private final Map connectionMap = new HashMap();
@@ -63,7 +63,11 @@ public class DiagramViewProvider extends AbstractViewProvider {
 		String semanticHint) {
 		if (semanticHint != null && semanticHint.length() > 0)
 			return (Class)nodeMap.get(semanticHint);
-		return (Class)nodeMap.get(getSemanticEClass(semanticAdapter));
+		EClass semanticEClass = getSemanticEClass(semanticAdapter);
+		if (NotationPackage.eINSTANCE.getDiagram().isSuperTypeOf(semanticEClass)) {
+			return NoteViewFactory.class;
+		}
+		return (Class)nodeMap.get(semanticEClass);
 	}
 
 	/**

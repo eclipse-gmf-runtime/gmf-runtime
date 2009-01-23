@@ -20,6 +20,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -138,7 +139,7 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 			Integer c = (Integer) notification.getNewValue();
 			setForegroundColor(DiagramColorRegistry.getInstance().getColor(c));
 		} 
-		else if (NotationPackage.eINSTANCE.getFontStyle().isInstance(notification.getNotifier()))
+		else if (NotationPackage.eINSTANCE.getFontStyle().getEAllAttributes().contains(feature))
 			refreshFont();
 		else if (notification.getFeature() == NotationPackage.eINSTANCE.getView_Element()
 		 && ((EObject)notification.getNotifier())== getNotationView())

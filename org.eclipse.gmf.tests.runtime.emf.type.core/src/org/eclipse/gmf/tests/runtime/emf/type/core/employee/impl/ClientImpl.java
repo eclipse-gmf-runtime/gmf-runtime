@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ClientImpl.java,v 1.2 2006/05/25 21:36:05 ldamus Exp $
+ * $Id: ClientImpl.java,v 1.3 2009/01/23 16:09:59 aboyko Exp $
  */
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
@@ -143,7 +143,7 @@ public class ClientImpl extends EModelElementImpl implements Client {
 	 * @generated
 	 */
 	public Customer getRepresents() {
-		if (eContainerFeatureID != EmployeePackage.CLIENT__REPRESENTS) return null;
+		if (eContainerFeatureID() != EmployeePackage.CLIENT__REPRESENTS) return null;
 		return (Customer)eContainer();
 	}
 
@@ -163,7 +163,7 @@ public class ClientImpl extends EModelElementImpl implements Client {
 	 * @generated
 	 */
 	public void setRepresents(Customer newRepresents) {
-		if (newRepresents != eInternalContainer() || (eContainerFeatureID != EmployeePackage.CLIENT__REPRESENTS && newRepresents != null)) {
+		if (newRepresents != eInternalContainer() || (eContainerFeatureID() != EmployeePackage.CLIENT__REPRESENTS && newRepresents != null)) {
 			if (EcoreUtil.isAncestor(this, newRepresents))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			NotificationChain msgs = null;
@@ -212,7 +212,7 @@ public class ClientImpl extends EModelElementImpl implements Client {
 	 * @generated
 	 */
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-		switch (eContainerFeatureID) {
+		switch (eContainerFeatureID()) {
 			case EmployeePackage.CLIENT__REPRESENTS:
 				return eInternalContainer().eInverseRemove(this, EmployeePackage.CUSTOMER__REPRESENTATIVES, Customer.class, msgs);
 		}

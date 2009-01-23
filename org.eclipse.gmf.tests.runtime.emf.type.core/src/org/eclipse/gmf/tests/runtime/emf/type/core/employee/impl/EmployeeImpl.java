@@ -314,7 +314,7 @@ public class EmployeeImpl extends EModelElementImpl implements Employee {
 	 * @generated
 	 */
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-		switch (eContainerFeatureID) {
+		switch (eContainerFeatureID()) {
 			case EmployeePackage.EMPLOYEE__DEPARTMENT:
 				return eInternalContainer().eInverseRemove(this, EmployeePackage.DEPARTMENT__MEMBERS, Department.class, msgs);
 		}
@@ -462,7 +462,7 @@ public class EmployeeImpl extends EModelElementImpl implements Employee {
 	 * @generated
 	 */
 	public Department getDepartment() {
-		if (eContainerFeatureID != EmployeePackage.EMPLOYEE__DEPARTMENT) return null;
+		if (eContainerFeatureID() != EmployeePackage.EMPLOYEE__DEPARTMENT) return null;
 		return (Department)eContainer();
 	}
 
@@ -482,7 +482,7 @@ public class EmployeeImpl extends EModelElementImpl implements Employee {
 	 * @generated
 	 */
 	public void setDepartment(Department newDepartment) {
-		if (newDepartment != eInternalContainer() || (eContainerFeatureID != EmployeePackage.EMPLOYEE__DEPARTMENT && newDepartment != null)) {
+		if (newDepartment != eInternalContainer() || (eContainerFeatureID() != EmployeePackage.EMPLOYEE__DEPARTMENT && newDepartment != null)) {
 			if (EcoreUtil.isAncestor(this, newDepartment))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			NotificationChain msgs = null;

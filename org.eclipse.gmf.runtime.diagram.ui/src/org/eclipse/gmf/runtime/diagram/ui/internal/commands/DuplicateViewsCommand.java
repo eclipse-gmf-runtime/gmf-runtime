@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.DuplicateEObjectsCommand;
 import org.eclipse.gmf.runtime.notation.Bounds;
@@ -136,21 +137,27 @@ public class DuplicateViewsCommand
             // Update the duplicated views to reference the duplicated elements.
 			assignSementicElementsDownViewTree(duplicateView);
             
+			
+			/**
+			 * TODO: sourceRefs and targetRefs seem to be completely
+			 * unnecessary. Look into removing the code below.
+			 * Commented out for now.
+			 */
 			// Remove source and target edges that were not duplicated.
-			List sourceRefs = new ArrayList(duplicateView.getSourceEdges());
-			for (Iterator iterator = sourceRefs.iterator(); iterator.hasNext();) {
-				EObject edge = (EObject) iterator.next();
-				if (!getAllDuplicatedObjectsMap().containsValue(edge)) {
-					sourceRefs.remove(edge);
-				}
-			}
-			List targetRefs = new ArrayList(duplicateView.getTargetEdges());
-			for (Iterator iterator = targetRefs.iterator(); iterator.hasNext();) {
-				EObject edge = (EObject) iterator.next();
-				if (!getAllDuplicatedObjectsMap().containsValue(edge)) {
-					targetRefs.remove(edge);
-				}
-			}
+//			List sourceRefs = new ArrayList(ViewUtil.getSourceConnections(duplicateView));
+//			for (Iterator iterator = sourceRefs.iterator(); iterator.hasNext();) {
+//				EObject edge = (EObject) iterator.next();
+//				if (!getAllDuplicatedObjectsMap().containsValue(edge)) {
+//					sourceRefs.remove(edge);
+//				}
+//			}
+//			List targetRefs = new ArrayList(ViewUtil.getTargetConnections(duplicateView));
+//			for (Iterator iterator = targetRefs.iterator(); iterator.hasNext();) {
+//				EObject edge = (EObject) iterator.next();
+//				if (!getAllDuplicatedObjectsMap().containsValue(edge)) {
+//					targetRefs.remove(edge);
+//				}
+//			}
 
 			if (duplicateView instanceof Node) {
 				// Change the location of the duplicated views.

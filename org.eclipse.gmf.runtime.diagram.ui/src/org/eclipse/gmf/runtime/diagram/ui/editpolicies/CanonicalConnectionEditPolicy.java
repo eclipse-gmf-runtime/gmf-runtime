@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -607,19 +607,13 @@ public abstract class CanonicalConnectionEditPolicy
 			}
 		}
 		
-		Iterator<Edge> sourceIter = view.getSourceEdges().listIterator();
-		while (sourceIter.hasNext()) {
-			Edge sourceEdge = sourceIter.next();
-			
+		for (Edge sourceEdge : (List<Edge>) ViewUtil.getSourceConnections(view)) {
 			if (shouldIncludeConnection(sourceEdge, viewChildren)) {
 				connections.add(sourceEdge);
 			}
 		}
 		
-		Iterator<Edge> targetIter = view.getTargetEdges().listIterator();
-		while (targetIter.hasNext()) {
-			Edge targetEdge = targetIter.next();
-			
+		for (Edge targetEdge : (List<Edge>) ViewUtil.getTargetConnections(view)) {
 			if (shouldIncludeConnection(targetEdge, viewChildren)) {
 				connections.add(targetEdge);
 			}

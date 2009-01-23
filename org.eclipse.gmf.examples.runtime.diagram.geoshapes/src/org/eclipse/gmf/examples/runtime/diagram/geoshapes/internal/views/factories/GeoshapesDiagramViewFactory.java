@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,12 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.views.factories;
 
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.optimal.StandardDiagramViewFactory;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 
 
 public class GeoshapesDiagramViewFactory
-	extends DiagramViewFactory {
+	extends StandardDiagramViewFactory {
 
 	/**
 	 * Get the measurement unit to be set in pixels implying that that units

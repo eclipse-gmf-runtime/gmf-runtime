@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -139,8 +139,7 @@ public class PasteCommand extends ClipboardCommand {
 	 * @param edges the <code>Set</code> of edges to convert the bendpoints of.
 	 */
 	private void convertEdgeBendpoints(MeasurementUnit mu, Set edges) {
-		for (Iterator i = edges.iterator(); i.hasNext();) {
-        	Edge nextEdge = (Edge)i.next();
+		for (Edge nextEdge : (Set<Edge>) edges) {
         	Bendpoints bendpoints = nextEdge.getBendpoints();
         	
         	if (bendpoints instanceof RelativeBendpoints) {
@@ -224,11 +223,13 @@ public class PasteCommand extends ClipboardCommand {
                 ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Width(), new Integer(constraintRect.width));
                 ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Height(), new Integer(constraintRect.height));
                 
-                edges.addAll(((Node)nextView).getTargetEdges());
-                edges.addAll(((Node)nextView).getSourceEdges());
+                edges.addAll(ViewUtil.getTargetConnections(nextView));
+                edges.addAll(ViewUtil.getSourceConnections(nextView));
                 
                 // recursively perform the same operation on children of the node
-                edges.addAll(convertNodesConstraint(node.getPersistedChildren(), mu, false));
+                if (node.eIsSet(NotationPackage.eINSTANCE.getView_PersistedChildren())) {
+                	edges.addAll(convertNodesConstraint(node.getPersistedChildren(), mu, false));
+                }
             }
         }
 		return edges;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,14 +22,14 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.C
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.ConnectionPointViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LEDViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LogicFlowContainerViewFactory;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LogicShapeCompartmentViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.OrGateViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.XORGateViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectionViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.ListCompartmentViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.optimal.CompartmentViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.optimal.ConnectorViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.optimal.ListCompartmentViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.optimal.StandardDiagramViewFactory;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -42,7 +42,7 @@ public class LogicViewProvider extends AbstractViewProvider {
 
 	HashMap diagramMap = new HashMap(); 
 	{
-		diagramMap.put("logic", DiagramViewFactory.class);//$NON-NLS-1$
+		diagramMap.put("logic", StandardDiagramViewFactory.class);//$NON-NLS-1$
 	}
 	
 //	 Map to hold the Node Views
@@ -59,7 +59,7 @@ public class LogicViewProvider extends AbstractViewProvider {
 		nodeMap.put( SemanticPackage.eINSTANCE.getInputOutputTerminal(), ConnectionPointViewFactory.class );
 		
 		// Shape Compartments
-		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentViewFactory.class); 
+		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, CompartmentViewFactory.class); 
 		// List Compartments
 		nodeMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, ListCompartmentViewFactory.class); 
 	}
@@ -67,7 +67,7 @@ public class LogicViewProvider extends AbstractViewProvider {
 	// Map to hold the Line/Connector Views
 	private Map connectorMap = new HashMap();
 	{
-		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), ConnectionViewFactory.class);
+		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), ConnectorViewFactory.class);
 	}
 	
 	/**

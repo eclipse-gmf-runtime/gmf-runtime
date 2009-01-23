@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,9 +94,9 @@ public abstract class AbstractDiagramMarkerNavigationProvider
     		View tmpView = (View)i.next(); 
     		view = ViewUtil.getChildByIdStr(tmpView,elementId);				
     		if(view !=null) return view;	
-    			view = getViewByIdStr(elementId,tmpView.getSourceEdges()); 
+    			view = getViewByIdStr(elementId,ViewUtil.getSourceConnections(tmpView)); 
     		if(view !=null) return view;
-    			view = getViewByIdStr(elementId,tmpView.getTargetEdges());
+    			view = getViewByIdStr(elementId,ViewUtil.getTargetConnections(tmpView));
     		if(view !=null) return view;
     	    tmpList.addAll(tmpView.getChildren());
     		if(view !=null) return view;	

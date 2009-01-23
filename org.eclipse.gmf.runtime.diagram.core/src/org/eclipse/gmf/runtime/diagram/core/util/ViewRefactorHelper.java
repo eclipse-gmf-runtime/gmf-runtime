@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -225,7 +225,9 @@ public class ViewRefactorHelper {
 	 */
 	protected void copyDiagramFeatures(Diagram oldDiagram, Diagram newDiagram) {
 		newDiagram.setName(oldDiagram.getName());
-		newDiagram.getPersistedEdges().addAll(oldDiagram.getPersistedEdges());
+		if (oldDiagram.eIsSet(NotationPackage.eINSTANCE.getDiagram_PersistedEdges())) {
+			newDiagram.getPersistedEdges().addAll(oldDiagram.getPersistedEdges());
+		}
 		copyViewFeatures(oldDiagram, newDiagram);
 	}
 
@@ -237,8 +239,12 @@ public class ViewRefactorHelper {
 	 */
 	protected void copyViewFeatures(View oldView, View newView) {
 		copyViewAppearance(oldView, newView, new ArrayList());
-		newView.getSourceEdges().addAll(oldView.getSourceEdges());
-		newView.getTargetEdges().addAll(oldView.getTargetEdges());
+		if (oldView.eIsSet(NotationPackage.eINSTANCE.getView_SourceEdges())) {
+			newView.getSourceEdges().addAll(oldView.getSourceEdges());
+		}
+		if (oldView.eIsSet(NotationPackage.eINSTANCE.getView_TargetEdges())) {
+			newView.getTargetEdges().addAll(oldView.getTargetEdges());
+		}
 		copyViewChildren(oldView, newView);
 	}
 
@@ -285,9 +291,10 @@ public class ViewRefactorHelper {
 	 * from the copy operation.
 	 */
 	protected void copyViewStyles(View oldView, View newView, List excludeStyles) {
-		for (Iterator i = oldView.getStyles().iterator(); i.hasNext();) {
-			Style oldStyle = (Style) i.next();
-			copyViewStyle(oldView, newView, oldStyle, excludeStyles);
+		if (oldView.eIsSet(NotationPackage.eINSTANCE.getView_Styles())) {
+			for (Style oldStyle : (List<Style>) oldView.getStyles()) {
+				copyViewStyle(oldView, newView, oldStyle, excludeStyles);
+			}
 		}
 	}
 	
@@ -304,9 +311,8 @@ public class ViewRefactorHelper {
 		// we really need to get the new style that has the feature; which could be of different 
 		// eClass than the source style
 		
-		Map eClassMap = new HashMap();
-		for (Iterator j = oldStyle.eClass().getEAllStructuralFeatures().iterator(); j.hasNext();) {
-			EStructuralFeature feature = (EStructuralFeature) j.next();
+		Map<EClass, Style> eClassMap = new HashMap<EClass, Style>();
+		for (EStructuralFeature feature : oldStyle.eClass().getEAllStructuralFeatures()) {
 			Style newStyle;
 			
 			EClass containingStyleEClass = feature.getEContainingClass();

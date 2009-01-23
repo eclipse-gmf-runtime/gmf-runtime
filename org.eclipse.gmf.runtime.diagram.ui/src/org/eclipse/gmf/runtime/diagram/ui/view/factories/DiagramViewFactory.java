@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,7 +73,7 @@ public class DiagramViewFactory implements DiagramFactory{
 						 String diagramKind, PreferencesHint thePreferencesHint) {
 
 		setPreferencesHint(thePreferencesHint);		
-		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
+		Diagram diagram = createDiagramView();
 		List styles = createStyles(diagram);
 		if (styles.size() > 0) {
 			diagram.getStyles().addAll(styles);
@@ -93,6 +93,16 @@ public class DiagramViewFactory implements DiagramFactory{
 		decorateView(diagram,semanticAdapter, diagramKind);
 		
 		return diagram;
+	}
+	
+	/**
+	 * Creates blank diagram view object
+	 * 
+	 * @return {@link org.eclipse.gmf.runtime.notation.Diagram}
+	 * @since 1.2
+	 */
+	protected Diagram createDiagramView() {
+		return NotationFactory.eINSTANCE.createDiagram();
 	}
 	
 	/**

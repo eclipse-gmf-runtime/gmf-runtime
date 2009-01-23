@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,17 +97,23 @@ public class NoteViewFactory
 		}
 	}
 
+	@Override
+	protected void decorateView(View containerView, View view,
+			IAdaptable semanticAdapter, String semanticHint, int index,
+			boolean persisted) {
+		ShapeStyle style = (ShapeStyle) view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
+		if (style != null) {
+			style.setLineWidth(1);
+		}
+		super.decorateView(containerView, view, semanticAdapter, semanticHint, index,
+				persisted);
+	}
+
 	/*
 	 * @see org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractShapeViewFactory#createStyles(org.eclipse.gmf.runtime.notation.View)
 	 */
 	protected List createStyles(View view) {
 		List styles = super.createStyles(view);
-		
-		ShapeStyle style = (ShapeStyle) styles.get(0);
-		if (style != null) {
-			style.setLineWidth(1);
-		}
-		
 		styles.add(NotationFactory.eINSTANCE.createTextStyle());
 		styles.add(NotationFactory.eINSTANCE.createLineTypeStyle());
 		return styles;

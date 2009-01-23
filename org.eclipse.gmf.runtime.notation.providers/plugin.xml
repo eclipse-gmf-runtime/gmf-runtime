@@ -14,7 +14,7 @@
          point="org.eclipse.gmf.runtime.emf.clipboard.core.clipboardSupport">
       <factory
             class="org.eclipse.gmf.runtime.notation.providers.internal.copypaste.ClipboardSupportFactory"
-            nsURI="http://www.eclipse.org/gmf/runtime/1.0.1/notation"
+            nsURI="http://www.eclipse.org/gmf/runtime/1.0.2/notation"
             priority="lowest">
       </factory>
    </extension>

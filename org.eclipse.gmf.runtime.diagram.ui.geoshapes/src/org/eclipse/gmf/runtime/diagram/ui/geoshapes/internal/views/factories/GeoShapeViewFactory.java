@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,9 +17,9 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -37,6 +37,11 @@ public class GeoShapeViewFactory
 	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.view.AbstractView#initializeFromPreferences(org.eclipse.jface.preference.IPreferenceStore)
 	 */
 	protected void initializeFromPreferences(View view) {
+		LineStyle style = (LineStyle) view.getStyle(NotationPackage.eINSTANCE.getLineStyle());
+		if (style != null) {
+			style.setLineWidth(1);
+		}
+		
 		super.initializeFromPreferences(view);
 
 		IPreferenceStore store = (IPreferenceStore) getPreferencesHint().getPreferenceStore();
@@ -59,11 +64,6 @@ public class GeoShapeViewFactory
 	 */
 	protected List createStyles(View view) {
 		List styles = super.createStyles(view);
-		
-		ShapeStyle style = (ShapeStyle) styles.get(0);
-		if (style != null) {
-			style.setLineWidth(1);
-		}
 		
 		styles.add(NotationFactory.eINSTANCE.createTextStyle());
 		styles.add(NotationFactory.eINSTANCE.createLineTypeStyle());

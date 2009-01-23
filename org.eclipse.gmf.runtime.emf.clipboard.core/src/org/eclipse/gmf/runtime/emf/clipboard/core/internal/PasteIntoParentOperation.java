@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -280,43 +280,45 @@ public class PasteIntoParentOperation
 		while (it.hasNext()) {
 			ref = (EReference) it.next();
 			if ((ref.isContainment() == false) && ref.isChangeable()) {
-				Object value = eObject.eGet(ref, true);
-				if (FeatureMapUtil.isMany(eObject, ref)) {
-					Collection collection = (Collection) value;
-					boolean withInverseElist = (collection instanceof EObjectWithInverseEList);
-					Iterator valIt = new ArrayList(collection).iterator();
-					while (valIt.hasNext()) {
-						EObject eObj = (EObject) valIt.next();
+				Object value = eObject.eIsSet(ref) ? eObject.eGet(ref, true) : null;
+				if (value != null) {
+					if (FeatureMapUtil.isMany(eObject, ref)) {
+						Collection collection = (Collection) value;
+						boolean withInverseElist = (collection instanceof EObjectWithInverseEList);
+						Iterator valIt = new ArrayList(collection).iterator();
+						while (valIt.hasNext()) {
+							EObject eObj = (EObject) valIt.next();
+							if (eObj.eIsProxy()) {
+								EObject resolved = ClipboardSupportUtil.resolve(eObj,
+									getLoadedResource().getIDToEObjectMapCopy());
+								if (resolved.eIsProxy() == false) {
+									//because we are resolving locally, the
+									// inverse-resolving list
+									//could get in a situation where the first
+									// element resolved itself
+									//and then added itself to the reverse list,
+									// and now we are trying to do the
+									//the same for the reversed list and hence we
+									// have this problem.
+									if (collection.contains(resolved)) {
+										collection.remove(eObj);
+									} else {
+										EcoreUtil.replace(eObject, ref, eObj,
+											resolved);
+									}
+								} else if (withInverseElist) {
+									collection.remove(eObj);
+								}
+							}
+						}
+					} else {
+						EObject eObj = (EObject) value;
 						if (eObj.eIsProxy()) {
 							EObject resolved = ClipboardSupportUtil.resolve(eObj,
 								getLoadedResource().getIDToEObjectMapCopy());
 							if (resolved.eIsProxy() == false) {
-								//because we are resolving locally, the
-								// inverse-resolving list
-								//could get in a situation where the first
-								// element resolved itself
-								//and then added itself to the reverse list,
-								// and now we are trying to do the
-								//the same for the reversed list and hence we
-								// have this problem.
-								if (collection.contains(resolved)) {
-									collection.remove(eObj);
-								} else {
-									EcoreUtil.replace(eObject, ref, eObj,
-										resolved);
-								}
-							} else if (withInverseElist) {
-								collection.remove(eObj);
+								EcoreUtil.replace(eObject, ref, eObj, resolved);
 							}
-						}
-					}
-				} else if (value != null) {
-					EObject eObj = (EObject) value;
-					if (eObj.eIsProxy()) {
-						EObject resolved = ClipboardSupportUtil.resolve(eObj,
-							getLoadedResource().getIDToEObjectMapCopy());
-						if (resolved.eIsProxy() == false) {
-							EcoreUtil.replace(eObject, ref, eObj, resolved);
 						}
 					}
 				}
