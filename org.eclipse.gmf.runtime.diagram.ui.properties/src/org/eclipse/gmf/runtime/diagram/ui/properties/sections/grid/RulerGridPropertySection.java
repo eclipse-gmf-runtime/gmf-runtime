@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,7 +75,10 @@ public class RulerGridPropertySection
 
 	private Button rulerVisibilityButton;
 
-	private Button lineColorButton;
+	/**
+	 * @since 1.2
+	 */
+	protected Button lineColorButton;
 
 	// Labels
 	private static final String GRID_ON_LABEL = DiagramUIPropertiesMessages.Grid_On_Label_Text;
@@ -106,7 +109,10 @@ public class RulerGridPropertySection
 	private static final String SPACED_DOT_LABEL = DiagramUIPropertiesMessages.Spaced_Dot_Label_Text;
 
 	// Default color for the grid.
-	private static final int LIGHT_GRAY_RGB = 12632256;
+	/**
+	 * @since 1.2
+	 */
+	protected static final int LIGHT_GRAY_RGB = 12632256;
 
 	// Ruler unit drop down
 	private CCombo rulerUnitCombo;
@@ -298,7 +304,10 @@ public class RulerGridPropertySection
 		return preferenceStore;
 	}
 
-	private void createLineColorControl(Composite composite) {
+	/**
+	 * @since 1.2
+	 */
+	protected void createLineColorControl(Composite composite) {
 		getWidgetFactory().createLabel(composite, LINE_COLOR_LABEL);
 
 		lineColorButton = new Button(composite, SWT.PUSH);
@@ -624,6 +633,13 @@ public class RulerGridPropertySection
 		int styleValue = getValue(WorkspaceViewerProperties.GRIDLINESTYLE) - 1;
 		rulerUnitCombo.setText(getUnits()[rulerValue]);
 		lineStyleCombo.setText(getStyles()[styleValue]);
+		setLineColorButtonImage();
+	}
+	
+	/**
+	 * @since 1.2
+	 */
+	protected void setLineColorButtonImage() {
 		Image overlyedImage = new ColorOverlayImageDescriptor(
 				(DiagramUIPropertiesImages.DESC_LINE_COLOR).getImageData(),
 				FigureUtilities
@@ -631,7 +647,6 @@ public class RulerGridPropertySection
 				.createImage();
 		disposeImage(lineColorButton.getImage());
 		lineColorButton.setImage(overlyedImage);
-
 	}
 
 	/**
@@ -756,7 +771,10 @@ public class RulerGridPropertySection
 		getWorkspaceViewerProperties().setValue(property, setting);
 	}
 
-	private void setWorkspaceProperty(String property, int setting) {
+	/**
+	 * @since 1.2
+	 */
+	protected void setWorkspaceProperty(String property, int setting) {
 		getWorkspaceViewerProperties().setValue(property, setting);
 	}
 
@@ -768,7 +786,10 @@ public class RulerGridPropertySection
 		return getWorkspaceViewerProperties().getString(property);
 	}
 
-	private int getWorkspacePropertyInt(String property) {
+	/**
+	 * @since 1.2
+	 */
+	protected int getWorkspacePropertyInt(String property) {
 		return getWorkspaceViewerProperties().getInt(property);
 	}
 
