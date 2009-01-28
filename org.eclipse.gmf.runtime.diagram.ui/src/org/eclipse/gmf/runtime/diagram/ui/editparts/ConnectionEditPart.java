@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1288,6 +1288,25 @@ abstract public class ConnectionEditPart
             }
         }
     }
+    
+	/**
+	 * Refreshes raduis for rounding bendpoints in rectilinear routing (radius
+	 * smaller than 1 indicates that bendpoints should not be rounded).
+	 * 
+	 * @since 1.2
+	 */
+    protected void refreshRoundedBendpoints() {
+        Connection connection = getConnectionFigure();
+        if (!(connection instanceof PolylineConnectionEx))
+            return;
+      	
+        RoutingStyle style = (RoutingStyle) ((View) getModel())
+			.getStyle(NotationPackage.Literals.ROUTING_STYLE);
+        if (style != null) {
+        	PolylineConnectionEx poly = (PolylineConnectionEx) connection;
+        	poly.setRoundedBendpointsRadius(style.getRoundedBendpointsRadius());
+        }
+    }
 
     /**
      * Method refreshJumplinks.
@@ -1365,6 +1384,7 @@ abstract public class ConnectionEditPart
         refreshForegroundColor();
         refreshRoutingStyles();
         refreshSmoothness();
+        refreshRoundedBendpoints();
         refreshJumplinks();
         refreshBendpoints();
         refreshFont();
@@ -1742,7 +1762,8 @@ abstract public class ConnectionEditPart
             || NotationPackage.Literals.ROUTING_STYLE__JUMP_LINK_TYPE.equals(
                 feature)
             || NotationPackage.Literals.ROUTING_STYLE__JUMP_LINKS_REVERSE
-                .equals(feature)) {
+                .equals(feature)
+            || NotationPackage.Literals.ROUTING_STYLE__ROUNDED_BENDPOINTS_RADIUS.equals(feature)) {
             refreshVisuals();
         } else if (NotationPackage.Literals.LINE_STYLE__LINE_COLOR.equals(
             feature)) {

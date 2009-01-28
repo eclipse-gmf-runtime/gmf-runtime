@@ -209,6 +209,12 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 					Properties.ID_ROUTING,
 					Routing.MANUAL_LITERAL);
 				flushEventQueue();
+				
+				testProperty(
+					connectorView,
+					Properties.ID_ROUNDED_BENDPOINTS_RADIUS,
+					10);
+				flushEventQueue();				
 	}
 
 }

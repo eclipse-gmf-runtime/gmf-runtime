@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DelegatingLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.OrthogonalRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -102,11 +103,12 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
     private static final int SMOOTH_FACTOR_MORE = 50;
 
     // extra routing styles
-    private static final int ROUTE_AVOID_OBSTACLE = 0x0100;
     // avoid intersection with other nodes
-    private static final int ROUTE_CLOSEST_ROUTE = 0x0200;
+    private static final int ROUTE_AVOID_OBSTACLE = 0x0100;
     // always use closest route to the destination
-    private static final int ROUTE_JUMP_LINKS = 0x0400; // jump other links
+    private static final int ROUTE_CLOSEST_ROUTE = 0x0200;    
+    // jump other links
+    private static final int ROUTE_JUMP_LINKS = 0x0400; 
 
     // jump link flags
     private static final int JUMPLINK_FLAG_SMOOTH = 0x0800;
@@ -117,9 +119,17 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
 
     private static final int JUMPLINK_DEFAULT_SMOOTHNESS = 30;
     
+    // round bendpoints radius (applicable only for rectilinear routing with no smoothness)
+    // default value 0 means that bendpoints are not rounded
+    private int roundedBendpointsRadius = 0;
+    
     private long styleBits;
     private JumpLinkSet jumpLinkSet;
     private Hashtable connectionAnchors;
+    /**
+     * When rounded bendpoints is turned on, keeping track of arcs that have smaller size than the default 
+     */
+    private Hashtable<Integer, Integer> rForBendpointArc;
 	
     static private final String szAnchor = ""; //$NON-NLS-1$
     
@@ -313,20 +323,43 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
         return PointListUtilities.findNearestLineSegIndexOfPoint(getPoints(), new Point(x, y));
     }
     
-    /**
-     * If the smooth factor is turned on, then calculate the approximated smooth polyline for display
-     * or other purposes.  It is important to note that the smoothed points are not persisted.
-     * 
-     * @return <code>PointList</code> that is a polyline approximation of a bezier curve calculated based 
-     * on the smoothness factor.
-     */
-    public PointList getSmoothPoints() {
+	/**
+	 * Returns points for this connection. If the smooth factor is turned on,
+	 * then calculate the approximated smooth polyline for display or other
+	 * purposes. If bendpoints need to be rounded, calculates points taking that
+	 * into account. In that case, if calculateAprox is true, it will also
+	 * calculate points that approximate corner arcs. If it is false, it will
+	 * replace each bendpoint with two points that represent start and end of an
+	 * arc. In any case, calculated points are not persisted.
+	 * 
+	 * @param calculateAppox
+	 *            If true, and rounding bendpoints is on, then calculate points
+	 *            that approximate bendpoint arc.
+	 * @return Resulting <code>PointList</code>. In case when sooth factor is
+	 *         on, it is a polyline approximation of a bezier curve calculated
+	 *         based on the smoothness factor.
+	 * @since 1.2
+	 */
+    public PointList getSmoothPoints(boolean calculateAppox) {
         if (getSmoothFactor() > 0) {
             return PointListUtilities.calcSmoothPolyline(getPoints(), getSmoothFactor(), PointListUtilities.DEFAULT_BEZIERLINES);
+        } else if (isRoundingBendpoints()){
+        	PointList result = getRoundedCornersPoints(calculateAppox);
+        	if (result == null) {
+        		result = PointListUtilities.copyPoints(getPoints());
+        	}
+        	return result;
         } else {
-            return PointListUtilities.copyPoints(getPoints());
+        	return PointListUtilities.copyPoints(getPoints());
         }
     }
+    
+    /**
+     * See {@link #getSmoothPoints(boolean calculateAppoxPoints)}
+     */
+    public PointList getSmoothPoints() {
+    	return getSmoothPoints(true);
+    }    
 
     /**
      * Insert a point at the given index into the polyline connection.
@@ -338,16 +371,28 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
 
     /**
      * Override the figure method "outlineShape" to draw the actual polyline connection shape.
-     * Special code to regenerate the jumplinks and to draw the polyline smooth is also done
-     * during this method call.
+     * Special code to regenerate the jumplinks, draw the polyline smooth, and round the bendpoints
+     * is also done during this method call.
      */
     protected void outlineShape(Graphics g) {
 
-        PointList displayPoints = getSmoothPoints();
+        PointList displayPoints = getSmoothPoints(false);        
+        
+        Hashtable<Point, Integer> originalDisplayPoints = null;
+        if (isRoundingBendpoints()) {
+            // If rounded bendpoints feature is turned on, remember the original points, will be 
+            // needed later.        	
+        	originalDisplayPoints = new Hashtable<Point, Integer>();   
+        	for (int i = 0; i < displayPoints.size(); i++) {
+        		originalDisplayPoints.put(displayPoints.getPoint(i), new Integer(i));        
+        	}
+        }
+        
         int incline = calculateJumpLinkIncline(isFeedbackLayer());
         
         if (shouldJumpLinks()) {
-            regenerateJumpLinks();
+       	            
+        	regenerateJumpLinks();
 
             JumpLinkSet pJumpLinkSet = getJumpLinkSet();
             if (pJumpLinkSet != null && pJumpLinkSet.m_pJumpLinks != null) {
@@ -358,6 +403,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
                 boolean bOnBottom = isJumpLinksOnBottom();
 
                 ListIterator linkIter = pJumpLinkSet.m_pJumpLinks.listIterator();
+                
                 while (linkIter.hasNext()) {
                     JumpLink pJumpLink = (JumpLink) linkIter.next();
 
@@ -374,8 +420,180 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
                 }
             }
         }
+        if (!isRoundingBendpoints()) {
+        	g.drawPolyline(displayPoints);
+        } else {
+        	// In originalDisplayPoints, each bendpoint will be replaced with two points: start and end point of the arc.
+        	// If jump links is on, then displayPoints will also contain points identifying jump links, if any.
+        	int i = 1;
+        	int rDefault = getRoundedBendpointsRadius();
+        	while (i < displayPoints.size() - 1) {
+        		// Consider points at indexes i-1, i, i+1.
+        		int x0 = 0, y0 = 0;
+        		boolean firstPointAssigned = false;
+        		if (shouldJumpLinks()) {
+        			boolean containsPoint2;
+        			boolean containsPoint3;
+        			PointList jumpLinkPoints = new PointList();
+        			do {
+        	       		// First, check if point at index i or i+1 is start point of a jump link (if the point is not in original points).
+                		// If so, draw a polyline ending at the last point of the jump link.           				
+        				containsPoint2 = true;
+        				containsPoint3 = true;
+        				if (i < displayPoints.size()) {
+        					containsPoint2 = originalDisplayPoints.containsKey(displayPoints.getPoint(i));
+        					if (i < displayPoints.size() - 1) {
+        						containsPoint3 = originalDisplayPoints.containsKey(displayPoints.getPoint(i+1));
+        					}
+        				}
+        				if (!containsPoint2 || !containsPoint3) {
+        					// start adding jump link points
+        					jumpLinkPoints.addPoint(displayPoints.getPoint(i-1));
+        					Point p; // next point to be added to jump link points
+        					int j; // index of the next point in jump link
+        					if (!containsPoint2) {
+        						// jump link starts somewhere on the segment before the arc begins
+        						j = i;
+        						p = displayPoints.getPoint(i);        			
+        					} else {
+        						// jump link starts within an arc; it means that one part of the arc will be replaced with 
+        						// a segment between points at i and i-1, and another part is replaced with the jump link,
+        						j = i + 1; 
+        						p = displayPoints.getPoint(i+1);        			
+        						jumpLinkPoints.addPoint(displayPoints.getPoint(i));
+        					}
+        					do {
+        						jumpLinkPoints.addPoint(p);
+        						j++;
+        						p = displayPoints.getPoint(j);
+        					} while (!originalDisplayPoints.containsKey(p) && j < displayPoints.size() - 1);
+        					// Now, check if p is start point of a line segment or an arc. In first case, index of p in 
+        					// the original list is even, in second it's odd.
+        					int origIndex = ((Integer)originalDisplayPoints.get(p)).intValue();
+        					firstPointAssigned = false;
+        					if (origIndex % 2 == 0) {
+        						// p is start point of a segment, it means that the jump link finished somewhere within the arc,
+        						// so one part of the arc is replaced with the jump link, and another will be replaced with a segment.
+        						jumpLinkPoints.addPoint(p);
+        						i = j + 1; 
+        					} else {
+        						// p is start point of an arc, the last point in jump link polyline becomes the first point for 
+        						// the drawing that follows (p could be the last point too)
+        						x0 = jumpLinkPoints.getLastPoint().x;
+        						y0 = jumpLinkPoints.getLastPoint().y;
+        						i = j;             			
+        						firstPointAssigned = true;        				
+        					}
+        					// Reason for the loop: we cannot be sure that points at newly founded i=j+1, or i+1 (when i == j) are
+        					// not starting points of a new jump link;
+        					// in most of the cases, though, the loop will execute just one step 
+        					// Jump link algorithm sometimes inserts duplicate points, we need to get rid of those.
+        					while (i < displayPoints.size() - 1 && 
+        							displayPoints.getPoint(i).equals(displayPoints.getPoint(i+1))) {
+        						i++;
+        					}
+        				}
+        			} while (!containsPoint2 || !containsPoint3);
+        			if (jumpLinkPoints != null) {
+        				// draw jump link
+        				g.drawPolyline(jumpLinkPoints);
+        			}
+        		}
+        		if (i < displayPoints.size() - 1) { // if we still didn't reach the end after drawing jump link polyline
+        			// Draw a segment starting at index i-1 and ending at index i, 
+        			// and arc with starting point at index i and ending point at index i+1.
+        			// But first, find points at i-1, i and i+1.
+        			if (!firstPointAssigned) {
+        				x0 = displayPoints.getPoint(i-1).x; 
+        				y0 = displayPoints.getPoint(i-1).y;
+        			}
+        			int x1;; 
+        			int y1;
+        			// If points at i-1 and i are equal (could happen if jump link algorithm 
+        			// inserts a point that already exists), just skip the point i        		
+        			while (i < displayPoints.size() - 1 && 
+        					x0 == displayPoints.getPoint(i).x && y0 == displayPoints.getPoint(i).y) {
+        				i++;
+        			}
+        			if (i < displayPoints.size() - 1) {
+        				x1 = displayPoints.getPoint(i).x; 
+        				y1 = displayPoints.getPoint(i).y;
+        			} else {
+        				break;
+        			}
+        			// The same goes for point at i and i+1         		
+        			int x2;
+        			int y2;        		
+        			while (i + 1 < displayPoints.size() - 1 && 
+        					x1 == displayPoints.getPoint(i+1).x && y1 == displayPoints.getPoint(i+1).y) {
+        				i++;
+        			}
+        			if (i < displayPoints.size() - 1) {
+        				x2 = displayPoints.getPoint(i+1).x; 
+        				y2 = displayPoints.getPoint(i+1).y;
+        			} else {
+        				break;
+        			}
+        			// Draw the segment
+        			g.drawLine(x0, y0, x1, y1);
 
-        g.drawPolyline(displayPoints);
+        			// Find out if arc size is default, or if it had to be decreased because of lack of space
+        			int r = rDefault;         			
+        			Point p = displayPoints.getPoint(i);
+        			int origIndex = ((Integer)originalDisplayPoints.get(p)).intValue();       	
+        			Object o = rForBendpointArc.get(new Integer((origIndex+1)/2));
+        			if (o != null) {
+        				r = ((Integer)o).intValue();
+        			}
+
+        			// Find out the location of enclosing rectangle (x, y), as well as staring angle of the arc.
+        			int x, y;
+        			int startAngle;        		
+        			if (x0 == x1 && x1 < x2) {
+        				x = x1;
+        				y = y1 - r;
+        				if (y1 > y2) {
+        					startAngle = 90;
+        				} else {
+        					startAngle = 180;
+        				}
+        			} else if (x0 > x1 && x1 > x2) {
+        				x = x2; 
+        				y = y2 - r;
+        				if (y1 > y2) {
+        					startAngle = 180;
+        				} else {
+        					startAngle = 90;
+        				}        		
+        			} else  if (x0 == x1  && x1 > x2) {
+        				if (y1 > y2) {
+        					x = x2 - r;
+        					y = y2;
+        					startAngle = 0;
+        				} else {
+        					x = x1 - 2*r;
+        					y = y1 - r;
+        					startAngle = 270;
+        				}        		        		
+        			} else { // x0 < x1 && x1 < x2
+        				if (y1 > y2) {
+        					x = x2 - 2*r;
+        					y = y2 - r;
+        					startAngle = 270;
+        				} else {
+        					x = x1 - r;
+        					y = y1;
+        					startAngle = 0;
+        				}        		        		         		
+        			}
+        			// Draw the arc.
+        			g.drawArc(x, y, 2*r, 2*r, startAngle, 90);
+        			i+=2;
+        		}
+        	}
+        	// Draw the last segment.
+        	g.drawLine(displayPoints.getPoint(displayPoints.size()-2), displayPoints.getLastPoint());
+        }
     }
     
     /**
@@ -793,8 +1011,8 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
 
         return 0;
     }
-
-    /**
+    
+     /**
      * Determines if this polyline connection is using closest distance routing or not.
      * 
      * @return <code>boolean</code> <code>true</code> if it should be using closest distance routing, 
@@ -839,6 +1057,41 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
             styleBits |= ROUTE_AVOID_OBSTACLE;
         } else
             styleBits &= ~ROUTE_AVOID_OBSTACLE;
+    }
+      
+    /**
+     * Determines if the bendpoints should be rounded.
+     * This option is available only when orthogonal router is used, and 
+     * when smoothness is not selected.
+     * 
+     * @return true if the option is selected and the current router is orthogonal
+     * @since 1.2
+     */
+    public boolean isRoundingBendpoints() {
+    	if (roundedBendpointsRadius > 0 && getSmoothFactor() == 0) {
+    		return getConnectionRouter() instanceof OrthogonalRouter;
+    	}
+    	return false;
+    }
+    
+    /**
+     * Sets the parameter indicating the arc radius for rounded bendpoints.
+     * 
+     * @param radius
+     * @since 1.2
+     */
+    public void setRoundedBendpointsRadius(int radius) {
+    	roundedBendpointsRadius = radius;
+    }
+    
+    /**
+     * Returns the parameter indicating the arc radius for rounded bendpoints.
+     * 
+     * @return the parameter indicating the arc radius for rounded bendpoints
+     * @since 1.2
+     */
+    public int getRoundedBendpointsRadius() {
+    	return MapModeUtil.getMapMode(this).DPtoLP(roundedBendpointsRadius);
     }
 
     /**
@@ -1256,6 +1509,29 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
 			return NO_COMMAND_SPECIAL_CURSOR;
 		return super.getCursor();
 	}
+	
+	/**
+	 * Returns the list of points for this connection when rounded bendpoints
+	 * option is selected. Each bendpoint in the result list is replaced by
+	 * start and end points of the arc, and if calculateApproxPoints is true, it
+	 * will also have arc approximation points in between.
+	 * 
+	 * @param calculateAppoxPoints
+	 *            Indicates if arcs replacing bendpoints should be approximated
+	 * @return List of connection points when rounded bendpoints option is on
+	 * @since 1.2
+	 */
+	public PointList getRoundedCornersPoints(boolean calculateAppoxPoints) {
+		if (rForBendpointArc != null) {
+			rForBendpointArc.clear();
+		} else {
+			rForBendpointArc = new Hashtable<Integer, Integer>();
+		}
+		
+		return PointListUtilities.calcRoundedCornersPolyline(getPoints(), getRoundedBendpointsRadius(), 
+				rForBendpointArc, calculateAppoxPoints);
+	}
+
 	
 }
 
