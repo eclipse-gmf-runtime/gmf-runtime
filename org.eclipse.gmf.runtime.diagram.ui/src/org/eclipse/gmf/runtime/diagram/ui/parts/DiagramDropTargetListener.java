@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.dnd.AbstractTransferDropTargetListener;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -231,20 +232,20 @@ public abstract class DiagramDropTargetListener
         }
     }
 
-    /**
+	/**
 	 * It is not a common use case to have the transfered data at the drag time,
 	 * hence live feedback cannot be provided for all types of DnD. Since the
 	 * occurrence of the data transfer at the drag time depends mostly on the
 	 * used OS and the the type of data transfer, clients are responsible to
 	 * experiment with their DnD and come up with the appropriate implementation
 	 * of this method for their specific DnD support. By default the method
-	 * returns <code>true</code>, which means that we assume that the data has
-	 * been transfered at the start of the drag
+	 * checks if there is a local selection transfer or data field in the event
+	 * is not null.
 	 * 
 	 * @return <code>true</code> if data has been transfered.
 	 */
     protected boolean isDataTransfered() {
-        return true;
+        return LocalSelectionTransfer.getTransfer().getSelection() != null || getCurrentEvent().data != null;
     }
 
 }
