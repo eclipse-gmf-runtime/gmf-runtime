@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures;
 
+import java.util.List;
+
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
+import org.eclipse.swt.graphics.Path;
 
 /**
  * Base class for polygons in the Geometric shapes palette
@@ -43,12 +46,21 @@ public abstract class GeoShapePolygonFigure
 	 */
 	protected void paintFigure(Graphics g) {
 		PointList points = calculatePoints(getWidthSpecificBounds());
-		g.fillPolygon(points);
-		
+
+		g.pushState();
+		// don't apply transparency to the outline
+		applyTransparency(g);
+		if (!isUsingGradient()) {
+			g.fillPolygon(points);
+		} else {
+			fillGradient(g, getPath(points));
+		}
+		g.popState();
+
 		// set the line type and line width
 		g.setLineStyle(getLineStyle());
 		g.setLineWidth(getLineWidth());
-		
+
 		g.drawPolygon(points);
 	}
 
@@ -71,4 +83,22 @@ public abstract class GeoShapePolygonFigure
 		return getBounds().getCopy().shrink(getLineWidth() / 2, getLineWidth() / 2);
 	}
 
+	/**
+	 * @param points
+	 * @return
+	 * @since 1.2
+	 */
+	protected Path getPath(PointList points) {
+		Path path = new Path(null);
+		if (points.size() > 2) {
+			Point pt = points.getFirstPoint();
+			path.moveTo(pt.x, pt.y);
+			for (int index = 1; index < points.size(); index++) {
+				pt = points.getPoint(index);
+				path.lineTo(pt.x, pt.y);
+			}
+			path.close();
+		}
+		return path;
+	}
 }

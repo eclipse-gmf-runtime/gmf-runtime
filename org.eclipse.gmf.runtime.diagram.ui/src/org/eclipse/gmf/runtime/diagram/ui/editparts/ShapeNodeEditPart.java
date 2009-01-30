@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
@@ -34,11 +35,17 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NoteAttachmentReorientEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.Anchor;
+import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.notation.datatype.GradientData;
+import org.eclipse.swt.graphics.Color;
 
 /*
  * @canBeSeenBy %partners
@@ -227,8 +234,14 @@ public abstract class ShapeNodeEditPart
 			refreshSourceConnections();
 		else if (NotationPackage.eINSTANCE.getView_TargetEdges().equals(feature))
 			refreshTargetConnections();
-		else
+		else if (NotationPackage.eINSTANCE.getFillStyle_Gradient().equals(feature) ||
+				NotationPackage.eINSTANCE.getFillStyle_FillColor().equals(feature)) {				
+			refreshBackgroundColor();
+		} else if (NotationPackage.eINSTANCE.getFillStyle_Transparency().equals(feature)) {
+			refreshTransparency();			
+		} else {
 			super.handleNotificationEvent(notification);
+		}
 	}
 
 	/*
@@ -239,6 +252,93 @@ public abstract class ShapeNodeEditPart
 	public boolean canAttachNote() {
 		return true;
 	}
+	
+	/**
+	 * Refresh the editpart's figure background color. Background color can be gradient, if
+	 * supported.
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#refreshBackgroundColor()
+	 * @since 1.2
+	 */
+    protected void refreshBackgroundColor() {
+        FillStyle style = (FillStyle)getPrimaryView().getStyle(NotationPackage.Literals.FILL_STYLE);
+        if ( style != null ) {
+        	if (style.getGradient() == null || !supportsGradient()) { 
+        		setBackgroundColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getFillColor())));
+        	} else {
+        		setGradient(style.getGradient());
+        	}        	
+        }
+    }
+    
+    /**
+     * Refresh figure's background transparency.
+     * @since 1.2
+     */
+    protected void refreshTransparency() {
+        FillStyle style = (FillStyle)getPrimaryView().getStyle(NotationPackage.Literals.FILL_STYLE);
+        if ( style != null ) {    	
+        	setTransparency(style.getTransparency());
+        }
+    }
+    
+	/**
+	 * Sets the figure's background color, and also indicates to the figure that
+	 * gradient should not be used.
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#setBackgroundColor(org.eclipse.swt.graphics.Color)
+	 * @since 1.2
+	 */
+	protected void setBackgroundColor(Color c) {
+		NodeFigure fig = getNodeFigure();
+		fig.setBackgroundColor(c);
+		fig.setIsUsingGradient(false);
+		fig.setGradientData(-1, -1, 0);
+	}
+    
+    /**
+ 	 * Sets the figure's gradient data, and also indicates to the figure that
+	 * gradient should be used for fill.
+     * 
+     * @param gradient GradientData object
+     * @since 1.2
+     */
+    protected void setGradient(GradientData gradient) {
+    	NodeFigure fig = getNodeFigure();
+    	if (gradient != null) {    		    		
+    		fig.setIsUsingGradient(true);
+    		fig.setGradientData(gradient.getGradientColor1(), gradient.getGradientColor2(), gradient.getGradientStyle()); 		
+    	} else {
+    		fig.setIsUsingGradient(false);
+    	}
+    }
+    
+	/**
+	 * Sets the figures background transparency. Value of -1 indicates that
+	 * transparency is not supported and will not have effect.
+	 * 
+	 * @param transp
+	 * @since 1.2
+	 */
+    protected void setTransparency(int transp) {
+		NodeFigure fig = getNodeFigure();
+		fig.setTransparency(transp);
+    }
+    
+	/**
+	 * Returns true if gradient is supported, false, otherwise. By default, this
+	 * method returns false. In order for gradient to be fully supported, figure
+	 * must support it in addition to the EditPart support. Clients who do
+	 * support gradient fully should override this method to return true. This
+	 * method can be used by UI as an indication if gradient should be available or
+	 * not.
+	 * 
+	 * @return true if gradient is supported, false otherwise
+	 * @since 1.2
+	 */
+	public boolean supportsGradient() {
+		return false;
+	}    
 
 }
 

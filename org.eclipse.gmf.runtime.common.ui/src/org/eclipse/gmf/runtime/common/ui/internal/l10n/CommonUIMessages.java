@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,6 +96,14 @@ public final class CommonUIMessages extends NLS {
 	public static String SaveAllDirtyEditorsDialog_title;
 	public static String SaveAllDirtyEditorsDialog_message;
 	public static String FileModificationValidator_OutOfSyncMessage;
+	public static String GradientSelection_Gradient;
+	public static String GradientSelection_Colors;
+	public static String GradientSelection_Color1;
+	public static String GradientSelection_Color2;
+	public static String GradientSelection_Sample;
+	public static String GradientSelection_ShadingStyle;
+	public static String GradientSelection_Vertical;
+	public static String GradientSelection_Horizontal;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CommonUIMessages.class);

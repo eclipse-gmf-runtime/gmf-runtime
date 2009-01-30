@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,9 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Path;
+import org.eclipse.swt.graphics.PathData;
 /**
  * @author jschofie
  *
@@ -56,20 +59,28 @@ public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure implements IP
 	 * @see org.eclipse.draw2d.Figure#paintBorder(org.eclipse.draw2d.Graphics)
 	 */
 	protected void paintFigure(Graphics g) {
-	    Rectangle r = getBounds().getCopy();
+		Rectangle r = getBounds().getCopy().shrink(getLineWidth() / 2, getLineWidth() / 2);
+
 		int cornerRadius = getCornerRadius();
 
-		// Draw the rectangle with the fill color
-		g.fillRoundRectangle( r, cornerRadius, cornerRadius );
-			
+		g.pushState();
+		// don't apply transparency to the outline
+		applyTransparency(g);
+		if (!isUsingGradient()) {
+			// Draw the rectangle with the fill color
+			g.fillRoundRectangle(r, cornerRadius, cornerRadius);
+		} else {
+			fillGradient(g);
+		}
+		g.popState();
+
 		// set the line type and line width
 		g.setLineStyle(getLineStyle());
 		g.setLineWidth(getLineWidth());
-		
-		// Draw the rectangle outline
-		r.shrink(getLineWidth() / 2, getLineWidth() / 2);
-		g.drawRoundRectangle( r, cornerRadius, cornerRadius );
-   	}
+
+		// Draw the rectangle outline		
+		g.drawRoundRectangle(r, cornerRadius, cornerRadius);
+	}
       
      /**
      * Estimate the anchor intersection points by using a polyline smoothed
@@ -164,6 +175,33 @@ public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure implements IP
         }
         return anchorBorderPointList.getCopy();
     }
-         
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure#getPath()
+	 * @since 1.2
+     */
+    protected Path getPath() {
+    	Path path = new Path(null);
+        
+    	int arcSize = getCornerRadius();
+        PrecisionRectangle rBounds = new PrecisionRectangle(getBounds());
+        rBounds.shrink(getLineWidth() / 2, getLineWidth() / 2);
+        int x = rBounds.x;
+        int y = rBounds.y;
+        int width = rBounds.width;
+        int height = rBounds.height;
+        
+        // start from top left "corner" and move clockwise
+        path.addArc(x, y, arcSize, arcSize, 90, 90);
+        path.lineTo(x, y + height - arcSize/2);
+		path.addArc(x, y+height-arcSize, arcSize, arcSize, 180, 90);
+		path.lineTo(x + width - arcSize/2, y + height);
+		path.addArc(x + width - arcSize, y+height-arcSize, arcSize, arcSize, 0, -90);
+		path.lineTo(x + width, y + height - arcSize/2);
+		path.addArc(x + width - arcSize, y, arcSize, arcSize, 0, 90);
+        path.close();        
+        
+    	return path;
+    }
     
 }

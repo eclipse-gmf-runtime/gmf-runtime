@@ -104,6 +104,14 @@ public interface Properties {
 	 */
 	public static String ID_FILLCOLOR = PackageUtil.getID(NotationPackage.eINSTANCE.getFillStyle_FillColor());
 	/**
+	 * the  gradient property ID
+	 */
+	public static String ID_FILLGRADIENT = PackageUtil.getID(NotationPackage.eINSTANCE.getFillStyle_Gradient());	
+	/**
+	 * the  gradient property ID
+	 */
+	public static String ID_FILLTRANSPARENCY = PackageUtil.getID(NotationPackage.eINSTANCE.getFillStyle_Transparency());			
+	/**
 	 * the  show compartment title  property ID
 	 */
 	public static String ID_SHOWCOMPARTMENTTITLE = PackageUtil.getID(NotationPackage.eINSTANCE.getTitleStyle_ShowTitle());

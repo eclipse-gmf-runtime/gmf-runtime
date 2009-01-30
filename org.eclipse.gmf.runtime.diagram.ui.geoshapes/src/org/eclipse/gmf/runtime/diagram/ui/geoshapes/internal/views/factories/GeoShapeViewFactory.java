@@ -17,9 +17,9 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -37,9 +37,10 @@ public class GeoShapeViewFactory
 	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.view.AbstractView#initializeFromPreferences(org.eclipse.jface.preference.IPreferenceStore)
 	 */
 	protected void initializeFromPreferences(View view) {
-		LineStyle style = (LineStyle) view.getStyle(NotationPackage.eINSTANCE.getLineStyle());
+		ShapeStyle style = (ShapeStyle) view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
 		if (style != null) {
 			style.setLineWidth(1);
+			style.setTransparency(0);
 		}
 		
 		super.initializeFromPreferences(view);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,8 +19,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
+import org.eclipse.swt.graphics.Path;
 
 /**
  * @author jschofie
@@ -46,37 +46,43 @@ public class GeoShape3DRectangleFigure extends GeoShapeFigure
 	 */
 	protected void paintFigure(Graphics g) {
 
-		List points = computePoints( getBounds().getCopy().shrink(getLineWidth() / 2, getLineWidth() / 2) );
+		List<Point> points = computePoints( getBounds().getCopy().shrink(getLineWidth() / 2, getLineWidth() / 2) );
 
 		PointList outline = new PointList();
 		for( int index = 0; index < 6; index++ ) {
 			outline.addPoint( (Point)points.get( index ) );
 		}
-		
-		Point p2 = (Point) points.get( 1 );
-		Point p4 = (Point) points.get( 3 );
-		Point p6 = (Point) points.get( 5 );
-		Point p7 = (Point) points.get( 6 );
 
-		// Draw the shape with the fill color
-		g.fillPolygon( outline );
-		
+		g.pushState();
+		// don't apply transparency to the outline
+		applyTransparency(g);
+		if (!isUsingGradient()) {
+			// Fill the shape with the fill color
+			g.fillPolygon(outline);
+		} else {
+			fillGradient(g, getPath(points));
+		}
+		g.popState();
+
 		// set the line type and line width
 		g.setLineStyle(getLineStyle());
 		g.setLineWidth(getLineWidth());
 		
-		// Draw the shapes outline
-		g.drawPolygon( outline );
-		
+		// Draw the shape's outline
+		g.drawPolygon(outline);
+
 		// Draw the remaining lines
-		g.drawLine( p6, p7 );
-		g.drawLine( p7, p4 );
-		g.drawLine( p7, p2 );
+		Point p2 = (Point) points.get(1);
+		Point p4 = (Point) points.get(3);
+		Point p6 = (Point) points.get(5);
+		Point p7 = (Point) points.get(6);
+		g.drawLine(p6, p7);
+		g.drawLine(p7, p4);
+		g.drawLine(p7, p2);
 	}
 
-	private List computePoints( Rectangle rect ) {
-	
-		List toReturn = new ArrayList();
+	private List<Point> computePoints( Rectangle rect ) {
+		List<Point> toReturn = new ArrayList<Point>();
 		
 		int scaleWidth  = (int) (rect.width * 0.25);
 		int scaleHeight = (int) (rect.height * 0.25);
@@ -108,7 +114,7 @@ public class GeoShape3DRectangleFigure extends GeoShapeFigure
 	 */
 	public PointList getPolygonPoints() {
 		
-		List points = computePoints( getBounds() );
+		List<Point> points = computePoints( getBounds() );
 
 		PointList outline = new PointList();
 		for( int index = 0; index < 6; index++ ) {
@@ -119,6 +125,25 @@ public class GeoShape3DRectangleFigure extends GeoShapeFigure
 		outline.addPoint( (Point)points.get( 0 ) );
 
 		return outline;
+	}
+	
+	/**
+	 * Creates the path corresponding to this figure based on given points.
+	 * 
+	 * @param points
+	 * @return created path
+	 * @since 1.2
+	 */
+	protected Path getPath(List<Point> points) {
+		Path path = new Path(null);
+		Point pt = (Point)points.get(0);
+		path.moveTo(pt.x, pt.y);
+		for( int index = 1; index < 6; index++ ) {
+			pt = (Point)points.get(index);
+			path.lineTo(pt.x, pt.y);
+		}
+		path.close();
+		return path;
 	}
 
 }

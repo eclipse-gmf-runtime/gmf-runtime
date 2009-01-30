@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,9 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IOvalAnchorableFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.SlidableOvalAnchor;
+import org.eclipse.swt.graphics.Path;
 
 /**
  * This Figure represents a Ellipse Figure
@@ -50,20 +50,25 @@ public class GeoShapeEllipseFigure extends GeoShapeFigure implements
 	protected void paintFigure(Graphics g) {
 
 		Rectangle r = getOvalBounds().getCopy();
-
-		// Draw the ellipse with the fill color
-		g.fillOval(r);
-
-		// set the line type and line width
-		g.setLineStyle(getLineStyle());
-		g.setLineWidth(getLineWidth());
-
-		// Draw the ellipse outline
-		r.width--;
-		r.height--;
-		if (getLineWidth() > 1) {
-			r.shrink((getLineWidth() - 1) / 2, (getLineWidth() - 1) / 2);
+		r.shrink(getLineWidth() / 2, getLineWidth() / 2);
+		
+		g.pushState();
+		// don't apply transparency to the outline
+		applyTransparency(g);
+		if (!isUsingGradient()) {
+			// fill the ellipse with the fill color
+			g.fillOval(r);			
+		} else {
+			// gradient		
+			fillGradient(g);			
 		}
+		g.popState();
+		
+		// Set the line type and line width for the outline
+		g.setLineStyle(getLineStyle());
+		g.setLineWidth(getLineWidth());		
+		
+		// Draw the ellipse outline
 		g.drawOval(r);
 	}
 
@@ -104,5 +109,17 @@ public class GeoShapeEllipseFigure extends GeoShapeFigure implements
 	 */
 	protected ConnectionAnchor createDefaultAnchor() {
 		return new SlidableOvalAnchor(this);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure#getPath()
+	 * @since 1.2
+	 */
+	protected Path getPath() {
+		Path path = new Path(null);	
+		Rectangle r = getOvalBounds().getCopy();
+		r.shrink(getLineWidth() / 2, getLineWidth() / 2);
+		path.addArc(r.x, r.y, r.width, r.height, 0, 360);
+		return path;
 	}
 }

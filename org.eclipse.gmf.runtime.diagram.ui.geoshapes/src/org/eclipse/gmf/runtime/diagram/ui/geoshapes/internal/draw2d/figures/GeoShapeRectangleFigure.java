@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.swt.graphics.Path;
 
 /**
  * @author jschofie
@@ -34,8 +35,16 @@ public class GeoShapeRectangleFigure extends GeoShapeFigure {
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
+	 * @since 1.2
 	 */
 	protected void paintFigure(Graphics g) {
-       g.fillRectangle(getBounds().getCopy());
+		applyTransparency(g);
+		if (!isUsingGradient()) {		
+			g.fillRectangle(getClientArea());
+		} else {
+			fillGradient(g);
+		}		
     }
+	
+
 }

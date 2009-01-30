@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ public final class DiagramUIPropertiesMessages extends NLS {
 	public static String AppearanceDetails_ReverseJumpLinksCommand_Text;
 	public static String ConnectionAppearanceDetails_SmoothnessLabel_Text;
 	public static String AppearanceDetails_SmoothnessCommand_Text;
+	public static String AppearanceDetails_RoundBendpointsCommand_Text;
 	public static String ColorPalettePopup_default;
 	public static String ColorPalettePopup_custom;
 	public static String Grid_On_Label_Text;
@@ -76,6 +77,7 @@ public final class DiagramUIPropertiesMessages extends NLS {
 	public static String Spaced_Dot_Label_Text;
 	public static String Restore_Defaults_Label_Text;
 	public static String Positive_Number_Error;
+	public static String Number_Interval_Error;
 	public static String AbstractPropertySection_UndoIntervalPropertyString;
 	public static String TextAlignmentPropertySection_AlignLeft;
 	public static String TextAlignmentPropertySection_AlignCenter;

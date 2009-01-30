@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,8 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.LineAttributes;
+import org.eclipse.swt.graphics.Path;
+import org.eclipse.swt.graphics.PathData;
 import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.graphics.TextStyle;
@@ -1041,4 +1043,90 @@ public class ScaledGraphics
 	        advancedGraphicsWarningLogged = true;
 	    }
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Graphics#setClip(org.eclipse.swt.graphics.Path)
+	 * @since 1.2
+	 */
+	public void setClip(Path path) {
+		Path scaledPath = createScaledPath(path);
+		try {
+			graphics.setClip(scaledPath);
+		} finally {
+			scaledPath.dispose();
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Graphics#fillPath(org.eclipse.swt.graphics.Path)
+	 * @since 1.2
+	 */
+	public void fillPath(Path path) {
+		Path scaledPath = createScaledPath(path);
+		try {
+			graphics.fillPath(scaledPath);
+		} finally {
+			scaledPath.dispose();
+		}
+	}	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Graphics#drawPath(org.eclipse.swt.graphics.Path)
+	 * @since 1.2
+	 */
+	public void drawPath(Path path) {
+		Path scaledPath = createScaledPath(path);
+		try {
+			graphics.drawPath(scaledPath);
+		} finally {
+			scaledPath.dispose();
+		}
+	}	
+
+	/**
+	 * Scales given path by zoom facotr
+	 * 
+	 * @param path
+	 *            Path to be scaled
+	 * @return Scaled path
+	 * @since 1.2	 
+	 */
+	private Path createScaledPath(Path path) {
+		PathData p = path.getPathData();
+		for (int i = 0; i < p.points.length; i += 2) {
+			p.points[i] = (float) (p.points[i] * zoom + fractionalX);
+			p.points[i + 1] = (float) (p.points[i + 1] * zoom + fractionalY);
+		}
+		Path scaledPath = new Path(path.getDevice());
+		int index = 0;
+		for (int i = 0; i < p.types.length; i++) {
+			byte type = p.types[i];
+			switch (type) {
+			case SWT.PATH_MOVE_TO:
+				scaledPath.moveTo(p.points[index], p.points[index + 1]);
+				index += 2;
+				break;
+			case SWT.PATH_LINE_TO:
+				scaledPath.lineTo(p.points[index], p.points[index + 1]);
+				index += 2;
+				break;
+			case SWT.PATH_CUBIC_TO:
+				scaledPath.cubicTo(p.points[index], p.points[index + 1],
+						p.points[index + 2], p.points[index + 3],
+						p.points[index + 4], p.points[index + 5]);
+				index += 6;
+				break;
+			case SWT.PATH_QUAD_TO:
+				scaledPath.quadTo(p.points[index], p.points[index + 1],
+						p.points[index + 2], p.points[index + 3]);
+				index += 4;
+				break;
+			case SWT.PATH_CLOSE:
+				scaledPath.close();
+				break;
+			}
+		}
+		return scaledPath;
+	}
+			
 }

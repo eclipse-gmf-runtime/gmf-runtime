@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
+import org.eclipse.swt.graphics.Path;
 
 /*
  * @canBeSeenBy %partners
@@ -197,11 +198,17 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	}
 
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure#paintFigure(org.eclipse.draw2d.Graphics)
+	 */
 	protected void paintFigure(Graphics g) {
 		super.paintFigure(g);
-		Rectangle r = getBounds();
-		PointList p = getPointList(r);
-		g.fillPolygon(p);			
+		applyTransparency(g);
+		if (!isUsingGradient()) {		
+			g.fillPath(getPath());
+		} else {
+			fillGradient(g);
+		}			
 	}
 
 	
@@ -237,5 +244,22 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
     public PointList getPolygonPoints() {
         return getPointList(getBounds());
     }
+    
+    /**
+     * @see org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure#getPath()
+     *
+	 * @since 1.2
+	 */
+    protected Path getPath() {
+    	Path path = new Path(null);
+    	PointList pl = getPointList(
+    			getBounds().getCopy().shrink(getLineWidth()/2, getLineWidth()/2));
+    	path.moveTo(pl.getPoint(0).x, pl.getPoint(0).y);
+    	for (int i = 0; i < pl.size(); i++) {
+    		path.lineTo(pl.getPoint(i).x, pl.getPoint(i).y);
+    	}
+    	path.close();
+    	return path;
+    }    
 
 }

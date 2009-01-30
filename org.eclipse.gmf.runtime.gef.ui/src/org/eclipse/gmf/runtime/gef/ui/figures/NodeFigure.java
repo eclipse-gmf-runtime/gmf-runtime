@@ -24,9 +24,12 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Path;
 
 /**
  * Base class that most shape figures should extend from to gain default connection anchor behavior.
@@ -51,6 +54,20 @@ public class NodeFigure
 	 * TODO: NodeFigure should have extended org.eclipse.draw2d.Shape
 	 */
 	private int lineStyle = Graphics.LINE_SOLID;
+	
+	private boolean isUsingGradient = false;
+	
+	private int gradientColor1 = -1;
+	
+	private int gradientColor2 = -1;
+	
+	private int gradientStyle = 0;
+		
+	/**
+	 * The transparency of this shape in percent.
+	 * Must be in [0, 100] range.
+	 */
+	private int transparency = 0;
 	
 	/**
 	 * <code>String</code> that is the identifier for the default anchor
@@ -301,6 +318,198 @@ public class NodeFigure
 			return;
 		lineStyle = s;
 		repaint();
+	}
+	
+	/**
+	 * @return the gradientColor1
+	 * @since 1.2
+	 */
+	public int getGradientColor1() {
+		return gradientColor1;
+	}
+	
+	/**
+	 * @return the gradientColor2
+	 * @since 1.2
+	 */
+	public int getGradientColor2() {
+		return gradientColor2;	
+	}
+
+	/**
+	 * @return the gradientStyle 
+	 * @since 1.2
+	 */
+	public int getGradientStyle() {
+		return gradientStyle;
+	}	
+
+	/**
+	 * Sets values defining gradient data.
+	 * 
+	 * @param gradientColor1
+	 * @param gradientColor2
+	 * @param gradientStyle
+	 * @since 1.2
+	 */
+	public void setGradientData(int gradientColor1, int gradientColor2, int gradientStyle) {
+		boolean doRepaint = false;
+		if (gradientColor1 != this.gradientColor1 && gradientColor1 > -1) {
+			this.gradientColor1 = gradientColor1;
+			doRepaint = true;
+		}
+		if (gradientColor2 != this.gradientColor2 && gradientColor2 > -1) {
+			this.gradientColor2 = gradientColor2;
+			doRepaint = true;
+		}
+		if (gradientStyle != this.gradientStyle) {
+			this.gradientStyle = gradientStyle;
+			doRepaint = true;
+		}
+		if (doRepaint) {
+			repaint();
+		}
+	}
+	
+	/**
+	 * Utility method that indicates if gradient should be used as a fill style or not.
+	 * 
+	 * @return true if gradient should be used, false otherwise (fill color should be used)
+	 * @since 1.2
+	 */
+	public boolean isUsingGradient() {
+		return isUsingGradient && gradientColor1 > -1 && gradientColor2 > -1;
+	}
+		
+	/**
+	 * Sets the value of isUsingGradient
+	 * 
+	 * @param b value for isUsingGradient
+	 * @since 1.2
+	 */
+	public void setIsUsingGradient(boolean b) {
+		if (b != isUsingGradient) {
+			isUsingGradient = b;
+			// this is needed, e.g. when undoing gradient clearing from Advanced tab;
+			// in cases when repaint() is already called, it doesn't matter since
+			// the actual paint happens only once
+			repaint();
+		}
+	}	
+	
+	/**
+	 * Fills given path by gradient using given fillMode
+	 * 
+	 * @param g The Graphics used to paint
+	 * @param path Path of shape to be filled with gradient
+	 * @param fillMode One of SWT.FILL_EVEN_ODD and SWT.FILL_WINDING
+	 * @since 1.2
+	 */
+	protected void fillGradient(Graphics g, Path path, int fillMode) {
+		if (path != null) {
+			g.pushState();
+			g.setForegroundColor(FigureUtilities.integerToColor(new Integer(getGradientColor1())));
+			g.setBackgroundColor(FigureUtilities.integerToColor(new Integer(getGradientColor2())));
+			if (fillMode == SWT.FILL_EVEN_ODD || fillMode == SWT.FILL_WINDING) {
+				g.setFillRule(fillMode);
+			}
+			g.setClip(path);
+			g.fillGradient(getBounds(), getGradientStyle() == 0);	
+			path.dispose();
+			g.popState();
+		}
+	}
+	
+	/**
+	 * Fills gradient using default mode SWT.FILL_EVEN_ODD and getPath() to
+	 * obtain path to fill.
+	 * 
+	 * @param g The Graphics used to paint
+	 * @since 1.2
+	 */
+	protected void fillGradient(Graphics g) {
+		// use the default mode if one is not provided
+		fillGradient(g, getPath(), SWT.FILL_EVEN_ODD);
+	}
+
+	/**
+	 * Fills gradient using default mode SWT.FILL_EVEN_ODD. Use this method when
+	 * getPath() doesn't return desired path.
+	 * 
+	 * @param g The Graphics used to paint
+	 * @param path Path of shape to be filled with gradient
+	 * @since 1.2
+	 */
+	protected void fillGradient(Graphics g, Path path) {
+		// use the default mode if one is not provided
+		fillGradient(g, path, SWT.FILL_EVEN_ODD);
+	}
+
+	/**
+	 * Fills gradient using getPath() to obtain path to fill. Use this method
+	 * when default fill mode SWT.FILL_EVEN_ODD is not appropriate.
+	 * 
+	 * @param g The Graphics used to paint
+	 * @param fillMode One of SWT.FILL_EVEN_ODD and SWT.FILL_WINDING
+	 * @since 1.2
+	 */
+	protected void fillGradient(Graphics g, int fillMode) {
+		fillGradient(g, getPath(), fillMode);
+	}
+	
+	/**
+	 * This method creates and returns figure's path. Default implementation defines path
+	 * based on figure's bounds and insets. Subclasses should override if
+	 * needed.
+	 * 
+	 * @return Created path
+	 * @since 1.2
+	 */
+	protected Path getPath() {
+		if (!isOpaque()) {
+			return null;
+		}
+		Path path = new Path(null);
+		Rectangle tempRect = getClientArea();
+		path.addRectangle(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+		return path;
+	}
+
+	
+	/**
+	 * Returns transparency value (belongs to [0, 100] interval)
+	 * 
+	 * @return transparency
+	 * @since 1.2
+	 */
+	public int getTransparency() {
+		return transparency;
+	}
+
+	/**
+	 * Sets the transparency if the given parameter is in [0, 100] range
+	 * 
+	 * @param transparency The transparency to set
+	 * @since 1.2
+	 */
+	public void setTransparency(int transparency) {
+		if (transparency != this.transparency &&
+				transparency >= 0 && transparency <= 100) {
+			this.transparency = transparency;
+			repaint();
+		}
+	}
+			
+	/**
+	 * Converts transparency value from percent range [0, 100] to alpha range
+	 * [0, 255] and applies converted value. 0% corresponds to alpha 255 and
+	 * 100% corresponds to alpha 0.
+	 * 
+	 * @param g The Graphics used to paint
+	 * @since 1.2
+	 */
+	protected void applyTransparency(Graphics g) {
+		g.setAlpha(255 - transparency * 255 / 100);
 	}
 
 }

@@ -104,6 +104,7 @@ public class NoteViewFactory
 		ShapeStyle style = (ShapeStyle) view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
 		if (style != null) {
 			style.setLineWidth(1);
+			style.setTransparency(0);
 		}
 		super.decorateView(containerView, view, semanticAdapter, semanticHint, index,
 				persisted);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Path;
 
 /**
  * @author jschofie
@@ -47,38 +49,43 @@ public class GeoShapeCylinderFigure extends GeoShapeFigure implements IPolygonAn
 	 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
 	 */
 	protected void paintFigure(Graphics g) {
-		
+		g.pushState();
+		// don't apply transparency to the outline
+		applyTransparency(g);
+		if (!isUsingGradient()) {
+			// Fill cylinder with fill color
+			g.setFillRule(SWT.FILL_WINDING);
+			g.fillPath(getPath());
+		} else {
+			// Use gradient info to fill the cylinder with gradient
+			fillGradient(g, SWT.FILL_WINDING);
+		}
+		g.popState();
+
+		// Now draw the border
 		Rectangle r = getBounds().getCopy();
 		r.shrink(getLineWidth() / 2, getLineWidth() / 2);
-		
-		int height = (int) (r.height * 0.25);
-		
-		Rectangle ellipse = new Rectangle( r.x, r.y, r.width, height );
-		Rectangle middle = new Rectangle( r.x, r.y + ( height / 2 ), r.width, r.height - height + 1 ); 
-		Rectangle lowerArc = new Rectangle( r.x, r.y + r.height - height - 1, r.width, height );
+		int height = getTopHeight(r);
+		Rectangle ellipse = new Rectangle(r.x, r.y, r.width, height + 1);
+		Rectangle middle = new Rectangle(r.x, r.y + (height / 2), r.width,
+				r.height - height);
+		Rectangle lowerArc = new Rectangle(r.x, r.y + r.height - height - 1,
+				r.width - 1, height);
 
-		// Draw the ellipse with the fill color
-		g.fillOval( ellipse );
-		
-		// Draw the middle section with the fill color
-		g.fillRectangle( middle );
-		
-		// Draw the lower arc with the fill color
-		g.fillArc( lowerArc, 180, 180 );
-	
 		// set the line type and line width
 		g.setLineStyle(getLineStyle());
 		g.setLineWidth(getLineWidth());
-		
+
 		// Draw the ellipse outline
-		g.drawOval( ellipse.x, ellipse.y, ellipse.width - 1, ellipse.height - 1 );
-		
+		g.drawOval(ellipse.x, ellipse.y, ellipse.width - 1, ellipse.height - 1);
+
 		// Draw the middle section
-		g.drawLine( middle.x, middle.y, middle.x, middle.y + middle.height );
-		g.drawLine( middle.x + middle.width - 1, middle.y, middle.x + middle.width - 1, middle.y + middle.height );
-		
+		g.drawLine(middle.x, middle.y, middle.x, middle.y + middle.height);
+
 		// Draw the lower arc outline
-		g.drawArc( lowerArc, 180, 180 );
+		g.drawLine(middle.x + middle.width - 1, middle.y, middle.x
+				+ middle.width - 1, middle.y + middle.height);
+		g.drawArc(lowerArc, 180, 180);
     }
         
     /**
@@ -209,5 +216,31 @@ public class GeoShapeCylinderFigure extends GeoShapeFigure implements IPolygonAn
         }
         return anchorBorderPointList.getCopy();
     }
+    
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure#getPath()
+	 * @since 1.2
+	 */
+	protected Path getPath() {
+		Rectangle r = getBounds().getCopy();
+		r.shrink(getLineWidth() / 2, getLineWidth() / 2);
+		int height = getTopHeight(r);
+		Path path = new Path(null);
+		path.addArc(r.x, r.y, r.width, height, 0, -360);
+		path.addRectangle(r.x, r.y + (height / 2), r.width, r.height - height
+				- 1);
+		path.addArc(r.x, r.y + r.height - height - 1, r.width - 1, height, 0,
+				-360);
+		return path;
+	}
+
+	/**
+	 * @param r
+	 * @return
+	 * @since 1.2
+	 */
+	private int getTopHeight(Rectangle r) {
+		return (int) (r.height * 0.25);
+	}
 
 }
