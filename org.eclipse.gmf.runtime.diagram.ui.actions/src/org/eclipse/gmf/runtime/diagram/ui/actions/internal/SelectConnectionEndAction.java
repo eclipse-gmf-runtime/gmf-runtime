@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.SelectConnectionEndRequest;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -108,12 +107,12 @@ public class SelectConnectionEndAction extends DiagramAction{
 			return;
 		ConnectionEditPart connectionEditPart = 
 			(ConnectionEditPart)operationSet.get(0);
-		GraphicalEditPart editPartToSelect = null;
+		EditPart editPartToSelect = null;
 		if (isSource){
-			editPartToSelect = (GraphicalEditPart)connectionEditPart.getSource();
+			editPartToSelect = connectionEditPart.getSource();
 		}
 		else {
-			editPartToSelect = (GraphicalEditPart)connectionEditPart.getTarget();
+			editPartToSelect = connectionEditPart.getTarget();
 		}
 		editPartToSelect.getViewer().reveal(editPartToSelect);
         editPartToSelect.getViewer().select(editPartToSelect);
