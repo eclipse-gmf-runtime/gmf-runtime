@@ -163,6 +163,7 @@ public abstract class GeoShapeEditPart extends ShapeNodeEditPart {
 		super.refreshVisuals();
 		refreshLineWidth();
 		refreshLineType();
+		refreshTransparency();
 	}
 
 	/*

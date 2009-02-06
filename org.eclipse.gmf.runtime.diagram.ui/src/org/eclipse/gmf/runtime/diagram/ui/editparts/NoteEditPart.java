@@ -264,6 +264,7 @@ public class NoteEditPart extends ShapeNodeEditPart {
 		super.refreshVisuals();
 		refreshLineType();
 		refreshLineWidth();
+		refreshTransparency();
 	}
 	
 	/**
