@@ -20,6 +20,9 @@ import org.eclipse.draw2d.Animation;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.MeasurementUnit;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
 
 
 /**
@@ -72,4 +75,28 @@ public class DiagramTests extends AbstractDiagramTests {
 		
 		assertTrue((endTime - startTime) >= 800);
 	}
+
+	public void testSetPixelMeasurementUnit(){
+		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
+		diagram.setMeasurementUnit(MeasurementUnit.PIXEL_LITERAL);
+		assertEquals("get just after set (pixels)", MeasurementUnit.PIXEL_LITERAL, diagram.getMeasurementUnit()); //$NON-NLS-N$
+	}
+
+	public void testSetHiMetricMU(){
+		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
+		diagram.setMeasurementUnit(MeasurementUnit.HIMETRIC_LITERAL);
+		assertEquals("get just after set (hi-metric)", MeasurementUnit.HIMETRIC_LITERAL, diagram.getMeasurementUnit()); //$NON-NLS-N$
+	}
+	
+	public void testMeasuremeantUnitSetOnceOnly() {
+		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
+		diagram.setMeasurementUnit(MeasurementUnit.HIMETRIC_LITERAL);
+		try {
+			diagram.setMeasurementUnit(MeasurementUnit.PIXEL_LITERAL);
+		} catch (UnsupportedOperationException e) {
+			
+		}
+		assertEquals("MeasurementUnit can't change now", MeasurementUnit.HIMETRIC_LITERAL, diagram.getMeasurementUnit());
+	}
+
 }
