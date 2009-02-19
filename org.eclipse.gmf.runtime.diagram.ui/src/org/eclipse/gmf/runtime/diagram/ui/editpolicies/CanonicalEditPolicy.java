@@ -325,7 +325,10 @@ implements NotificationListener {
 	 * Return the host's semantic children. <BR>
 	 * @return a list of semantic children.
 	 */
-	abstract protected List<EObject> getSemanticChildrenList();
+	/*
+	 * Changing the return type to List<EObject> breaks API for clients
+	 */
+	abstract protected List getSemanticChildrenList();
 	
 	/** 
 	 * Returns the default factory hint. 
@@ -529,14 +532,14 @@ implements NotificationListener {
         Command cmd = host().getCommand(request);
 
         if (cmd == null) {
-            for(ViewDescriptor descriptor : ((CreateViewRequest)request).getViewDescriptors()) {
+            for(ViewDescriptor descriptor : (List<ViewDescriptor>)((CreateViewRequest)request).getViewDescriptors()) {
                 ICommand createCommand = getCreateViewCommand(descriptor);
                 cc.compose(createCommand);
             }
         } else {
             cc.compose(new CommandProxy(cmd));
             
-            for(ViewDescriptor descriptor : ((CreateViewRequest)request).getViewDescriptors()) {
+            for(ViewDescriptor descriptor : (List<ViewDescriptor>)((CreateViewRequest)request).getViewDescriptors()) {
             	cc.compose(new CommandProxy(SetViewMutabilityCommand.makeMutable(descriptor)));
             }
         }

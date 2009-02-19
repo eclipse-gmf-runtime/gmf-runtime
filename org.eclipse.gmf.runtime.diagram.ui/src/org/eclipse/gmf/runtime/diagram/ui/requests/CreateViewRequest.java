@@ -310,7 +310,7 @@ public class CreateViewRequest extends CreateRequest {
 	/**
 	 * The view descriptors set by the user
 	 */
-	private List<ViewDescriptor> viewDescriptors;
+	private List viewDescriptors;
 
 	/**
 	 * Convenience constructor for CreateViewRequest using a <code>IElement</code>
@@ -341,7 +341,7 @@ public class CreateViewRequest extends CreateRequest {
 	 * 
 	 * @param viewDescriptors a list of view descriptors
 	 */
-	public CreateViewRequest(List<ViewDescriptor> viewDescriptors) {
+	public CreateViewRequest(List viewDescriptors) {
 		Assert.isNotNull(viewDescriptors);
 		this.viewDescriptors = viewDescriptors;
 		setLocation(new Point(-1,-1));
@@ -364,7 +364,7 @@ public class CreateViewRequest extends CreateRequest {
 	 * @param type the request type
 	 * @param viewDescriptors a list of view descriptors
 	 */
-	public CreateViewRequest(Object type, List<ViewDescriptor> viewDescriptors) {
+	public CreateViewRequest(Object type, List viewDescriptors) {
 		super(type);
 		Assert.isNotNull(viewDescriptors);
 		this.viewDescriptors = viewDescriptors;
@@ -376,7 +376,7 @@ public class CreateViewRequest extends CreateRequest {
 	 * 
 	 * @return List of <code>ViewDescriptor</code> s
 	 */
-	public List<ViewDescriptor> getViewDescriptors() {
+	public List getViewDescriptors() {
 		return viewDescriptors;
 	}
 
