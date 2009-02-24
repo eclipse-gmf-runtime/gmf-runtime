@@ -532,14 +532,14 @@ implements NotificationListener {
         Command cmd = host().getCommand(request);
 
         if (cmd == null) {
-            for(ViewDescriptor descriptor : (List<ViewDescriptor>)((CreateViewRequest)request).getViewDescriptors()) {
+            for(ViewDescriptor descriptor : ((CreateViewRequest)request).getViewDescriptors()) {
                 ICommand createCommand = getCreateViewCommand(descriptor);
                 cc.compose(createCommand);
             }
         } else {
             cc.compose(new CommandProxy(cmd));
             
-            for(ViewDescriptor descriptor : (List<ViewDescriptor>)((CreateViewRequest)request).getViewDescriptors()) {
+            for(ViewDescriptor descriptor : ((CreateViewRequest)request).getViewDescriptors()) {
             	cc.compose(new CommandProxy(SetViewMutabilityCommand.makeMutable(descriptor)));
             }
         }
