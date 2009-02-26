@@ -1993,13 +1993,15 @@ abstract public class ConnectionEditPart
 		
 		RotatableDecoration decoration = null;
 		if (arrowType == ArrowType.OPEN_ARROW) {
+			IMapMode mm = getMapMode();
 			decoration = new PolylineDecoration();
-			((PolylineDecoration)decoration).setScale(11 + getLineWidth(), 6 + getLineWidth());
+			((PolylineDecoration)decoration).setScale(mm.DPtoLP(11) + getLineWidth(), mm.DPtoLP(6) + getLineWidth());
 			((PolylineDecoration)decoration).setTemplate(PolylineDecoration.TRIANGLE_TIP);
 			((PolylineDecoration)decoration).setLineWidth(getLineWidth());
 		} else if (arrowType == ArrowType.SOLID_ARROW) {
+			IMapMode mm = getMapMode();
 			decoration = new PolygonDecoration();
-			((PolygonDecoration)decoration).setScale(11 + getLineWidth(), 6 + getLineWidth());
+			((PolygonDecoration)decoration).setScale(mm.DPtoLP(11) + getLineWidth(), mm.DPtoLP(6) + getLineWidth());
 			((PolygonDecoration)decoration).setTemplate(PolygonDecoration.TRIANGLE_TIP);
 			((PolygonDecoration)decoration).setLineWidth(getLineWidth());
 			((PolygonDecoration)decoration).setFill(true);
