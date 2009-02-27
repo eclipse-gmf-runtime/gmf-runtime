@@ -24,6 +24,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -49,6 +50,8 @@ import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.LineAttributes;
+import org.eclipse.swt.graphics.Path;
+import org.eclipse.swt.graphics.PathData;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -538,7 +541,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * @see org.eclipse.draw2d.Graphics#drawPolygon(org.eclipse.draw2d.geometry.PointList)
 	 */
 	public void drawPolygon(PointList pointList) {
-
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
 		getGraphics2D().draw(createPolygon(pointList));
@@ -1189,6 +1191,63 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
         getGraphics2D().setPaint(oldPaint);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Graphics#drawPath(org.eclipse.swt.graphics.Path)
+	 */
+	public void drawPath(Path path) {
+		checkState();
+		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
+		getGraphics2D().draw(createPathAWT(path));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Graphics#fillPath(org.eclipse.swt.graphics.Path)
+	 */
+	public void fillPath(Path path) {
+		checkState();
+		getGraphics2D().setPaint(getColor(swtGraphics.getBackgroundColor()));
+		getGraphics2D().fill(createPathAWT(path));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Graphics#setClip(org.eclipse.swt.graphics.Path)
+	 */
+	public void setClip(Path path) {
+		getGraphics2D().setClip(createPathAWT(path));
+	}
+	
+	private Path2D.Float createPathAWT(Path path) {
+		Path2D.Float pathAWT = new Path2D.Float();
+		PathData pathData = path.getPathData();
+		int idx = 0;
+		for (int i = 0; i < pathData.types.length; i++) {
+			switch (pathData.types[i]) {
+				case SWT.PATH_MOVE_TO:
+					pathAWT.moveTo(pathData.points[idx++], pathData.points[idx++]);
+					break;
+				case SWT.PATH_LINE_TO:
+					pathAWT.lineTo(pathData.points[idx++], pathData.points[idx++]);
+					break;
+				case SWT.PATH_CUBIC_TO:
+					pathAWT.curveTo(pathData.points[idx++], pathData.points[idx++], pathData.points[idx++], pathData.points[idx++], pathData.points[idx++], pathData.points[idx++]);
+					break;
+				case SWT.PATH_QUAD_TO:
+					pathAWT.quadTo(pathData.points[idx++], pathData.points[idx++], pathData.points[idx++], pathData.points[idx++]);
+					break;
+				case SWT.PATH_CLOSE:
+					pathAWT.closePath();
+					break;
+				default:
+					dispose();
+					SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+			}
+		}			
+		AffineTransform transform = new AffineTransform();
+		transform.translate(transX, transY);
+		pathAWT.transform(transform);
+		return pathAWT;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, org.eclipse.draw2d.geometry.Rectangle, org.eclipse.gmf.runtime.draw2d.ui.render.RenderingListener)
 	 */

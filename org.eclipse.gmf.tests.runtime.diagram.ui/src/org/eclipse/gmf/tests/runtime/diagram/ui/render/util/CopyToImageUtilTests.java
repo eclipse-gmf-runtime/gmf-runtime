@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,14 +22,19 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTestFixture;
 import org.eclipse.swt.widgets.Shell;
@@ -39,7 +44,6 @@ public class CopyToImageUtilTests
 
     public CopyToImageUtilTests(String arg0) {
         super(arg0);
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -51,7 +55,20 @@ public class CopyToImageUtilTests
         testFixture = new LogicTestFixture();
     }
 
-    public static Test suite() {
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		
+		DiagramEditPart dgmEP = getDiagramEditPart();
+
+		CreateViewRequest shapeRequest =
+			new CreateViewRequest(new ViewDescriptor(null, Node.class, ViewType.NOTE, dgmEP.getDiagramPreferencesHint()));
+		
+		shapeRequest.setLocation(new Point(300, 300));
+		getCommandStack().execute(getDiagramEditPart().getCommand(shapeRequest));
+	}
+
+	public static Test suite() {
         return new TestSuite(CopyToImageUtilTests.class);
     }
 
