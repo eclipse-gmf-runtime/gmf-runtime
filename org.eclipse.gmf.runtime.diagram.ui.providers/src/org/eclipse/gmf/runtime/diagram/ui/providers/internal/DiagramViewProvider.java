@@ -63,11 +63,14 @@ public class DiagramViewProvider extends AbstractViewProvider {
 		String semanticHint) {
 		if (semanticHint != null && semanticHint.length() > 0)
 			return (Class)nodeMap.get(semanticHint);
-		EClass semanticEClass = getSemanticEClass(semanticAdapter);
-		if (NotationPackage.eINSTANCE.getDiagram().isSuperTypeOf(semanticEClass)) {
-			return NoteViewFactory.class;
+		if (semanticAdapter != null) {
+			EClass semanticEClass = getSemanticEClass(semanticAdapter);			
+			if (NotationPackage.eINSTANCE.getDiagram().isSuperTypeOf(semanticEClass)) {
+				return NoteViewFactory.class;
+			}
+			return (Class)nodeMap.get(semanticEClass);
 		}
-		return (Class)nodeMap.get(semanticEClass);
+		return null;
 	}
 
 	/**
