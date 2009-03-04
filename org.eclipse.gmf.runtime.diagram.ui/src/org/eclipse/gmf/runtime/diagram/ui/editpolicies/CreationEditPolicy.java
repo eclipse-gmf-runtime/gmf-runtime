@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -342,9 +342,12 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 					(CreateElementRequest)requestAdapter.getAdapter(
 						CreateElementRequest.class), request.getExtendedData()));
 
-		if (createElementCommand == null) 
+		if (createElementCommand == null) { 
 			return UnexecutableCommand.INSTANCE;
-
+		}		
+		if(!createElementCommand.canExecute()){
+			return createElementCommand;
+		}
 		// create the semantic create wrapper command
 		SemanticCreateCommand semanticCommand =
 			new SemanticCreateCommand(requestAdapter, createElementCommand);
