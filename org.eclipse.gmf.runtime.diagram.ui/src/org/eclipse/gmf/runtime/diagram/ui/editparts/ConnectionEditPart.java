@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1968,18 +1968,23 @@ abstract public class ConnectionEditPart
 	 *            the arrow type.
 	 */
 	protected RotatableDecoration getArrowDecoration(int arrowType) {
-		
 		RotatableDecoration decoration = null;
+		int width = getLineWidth();
+		if (width < 0) {
+			width = 1;
+		}
 		if (arrowType == ArrowType.OPEN_ARROW) {
 			decoration = new PolylineDecoration();
-			((PolylineDecoration)decoration).setScale(11 + getLineWidth(), 6 + getLineWidth());
+			((PolylineDecoration)decoration).setScale(
+					getMapMode().DPtoLP(11 + width), getMapMode().DPtoLP(6 + width));
 			((PolylineDecoration)decoration).setTemplate(PolylineDecoration.TRIANGLE_TIP);
-			((PolylineDecoration)decoration).setLineWidth(getLineWidth());
+			((PolylineDecoration)decoration).setLineWidth(getMapMode().DPtoLP(width));
 		} else if (arrowType == ArrowType.SOLID_ARROW) {
 			decoration = new PolygonDecoration();
-			((PolygonDecoration)decoration).setScale(11 + getLineWidth(), 6 + getLineWidth());
+			((PolygonDecoration)decoration).setScale(
+					getMapMode().DPtoLP(11 + width), getMapMode().DPtoLP(6 + width));
 			((PolygonDecoration)decoration).setTemplate(PolygonDecoration.TRIANGLE_TIP);
-			((PolygonDecoration)decoration).setLineWidth(getLineWidth());
+			((PolygonDecoration)decoration).setLineWidth(getMapMode().DPtoLP(width));
 			((PolygonDecoration)decoration).setFill(true);
 		}
 		return decoration;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,6 +55,9 @@ public class RectangleEditPart extends GeoShapeEditPart {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#setLineWidth(int)
 	 */
 	protected void setLineWidth(int width) {
+		if (width < 0) {
+			width = 1;
+		}
 		super.setLineWidth(width);
 		GeoShapeLineStyleBorder lineBorder = (GeoShapeLineStyleBorder)((NodeFigure)getFigure()).getBorder();
 		lineBorder.setWidth(getMapMode().DPtoLP(width));
