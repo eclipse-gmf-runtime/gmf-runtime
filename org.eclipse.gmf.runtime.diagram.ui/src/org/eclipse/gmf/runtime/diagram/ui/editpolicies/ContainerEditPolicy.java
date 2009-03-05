@@ -33,13 +33,13 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.core.commands.GroupCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.BringForwardCommand;
@@ -78,6 +78,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -340,26 +341,29 @@ public class ContainerEditPolicy
         //the snapCommand still invokes proper calculations if snap to grid is turned off, this additional check
         //is intended to make the code more appear more logical     
                 
-        CompoundCommand cmd = new CompoundCommand();        
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+        	.getEditingDomain(); 
+        CompositeTransactionalCommand ctc = new CompositeTransactionalCommand(editingDomain, StringStatics.BLANK);        
         if (layoutRun instanceof IInternalLayoutRunnable) {
-            cmd.add(((IInternalLayoutRunnable) layoutRun).getCommand());        
+            ctc.add(new CommandProxy(((IInternalLayoutRunnable) layoutRun).getCommand()));        
         }
         else {
-            TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
-                .getEditingDomain(); 
-            cmd.add(new ICommandProxy(new AbstractTransactionalCommand(editingDomain, "", null) {//$NON-NLS-1$
+            ctc.add(new AbstractTransactionalCommand(editingDomain, StringStatics.BLANK, null) {//$NON-NLS-1$
                 protected CommandResult doExecuteWithResult(
                             IProgressMonitor progressMonitor, IAdaptable info)
                         throws ExecutionException {
                     layoutRun.run();
                     return CommandResult.newOKCommandResult();
                 }
-            }));     
+            });     
         }       
         if (isSnap) {
-            cmd.add(getSnapCommand(request));
+        	Command snapCmd = getSnapCommand(request);
+        	if (snapCmd != null) {
+        		ctc.add(new CommandProxy(getSnapCommand(request)));
+        	}
         }
-        return cmd;
+        return new ICommandProxy(ctc);
     }
     
     /**

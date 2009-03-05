@@ -12,29 +12,26 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
-import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.PrecisionDimension;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
-
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Bounds;
@@ -51,7 +48,7 @@ import org.eclipse.gmf.runtime.notation.View;
 public class SnapCommand extends AbstractTransactionalCommand {
 
 	/** the edit parts requested to be snapped to grid */
-	protected List editparts;
+	protected List<? extends IGraphicalEditPart> editparts;
 
 	/**
 	 * Constructor for <code>SnapCommand</code>.
@@ -61,7 +58,7 @@ public class SnapCommand extends AbstractTransactionalCommand {
 	 * @param editparts
 	 *            the list containing the edit parts that need to be snapped
 	 */
-	public SnapCommand(TransactionalEditingDomain editingDomain, List editparts) {
+	public SnapCommand(TransactionalEditingDomain editingDomain, List<? extends IGraphicalEditPart> editparts) {
 
 		super(editingDomain, DiagramUIMessages.SnapToGrid_textLabel, null);
 		this.editparts = editparts;
@@ -92,10 +89,7 @@ public class SnapCommand extends AbstractTransactionalCommand {
 
 		CompositeTransactionalCommand snapCommand = new CompositeTransactionalCommand(getEditingDomain(), getLabel());
 
-		for (Iterator iter = editparts.iterator(); iter.hasNext();) {
-			IGraphicalEditPart newEditPart = (IGraphicalEditPart) iter.next();
-			IMapMode mapMode = ((DiagramRootEditPart) newEditPart.getRoot()).getMapMode();
-
+		for (IGraphicalEditPart newEditPart : editparts) {
 			if (newEditPart.getModel() instanceof Node) {
 
 				LayoutConstraint constraint = ((Node) newEditPart.getModel()).getLayoutConstraint();
@@ -108,10 +102,14 @@ public class SnapCommand extends AbstractTransactionalCommand {
 					// translate all coordinates to device units as a standard if necessary
 					// this is done since moveDelta uses device units
 					
-					PrecisionPoint moveDelta = new PrecisionPoint(bounds.getX()
+					PrecisionDimension moveDeltaDim = new PrecisionDimension(bounds.getX()
                         - newEditPart.getFigure().getBounds().x, bounds.getY()
                         - newEditPart.getFigure().getBounds().y);
-					mapMode.LPtoDP(moveDelta);
+					/*
+					 * Distance in pixels needs to be scaled by the scaling factor of the zoom tool, i.e. ScaledRootEditPart
+					 */
+					newEditPart.getFigure().translateToAbsolute(moveDeltaDim);
+					PrecisionPoint moveDelta = new PrecisionPoint(moveDeltaDim.preciseWidth(), moveDeltaDim.preciseHeight());
 
 					// In the case that the figure bounds and model's layout constant are the same,
 					// xDiff and yDiff will evaluate to zero, but snapToHelper will still locate the closest
