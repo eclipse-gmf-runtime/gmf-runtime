@@ -138,6 +138,9 @@ public abstract class GeoShapeEditPart extends ShapeNodeEditPart {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#setLineWidth(int)
 	 */
 	protected void setLineWidth(int width) {
+		if (width < 0) {
+			width = 1;
+		}
 		((NodeFigure) getFigure()).setLineWidth(getMapMode().DPtoLP(width));
 	}
 

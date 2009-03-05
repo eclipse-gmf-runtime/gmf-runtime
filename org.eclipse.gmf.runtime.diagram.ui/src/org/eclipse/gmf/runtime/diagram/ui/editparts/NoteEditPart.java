@@ -246,6 +246,9 @@ public class NoteEditPart extends ShapeNodeEditPart {
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#setLineWidth(int)
      */
 	protected void setLineWidth(int width) {
+		if (width < 0) {
+			width = 1;
+		}
 		((NoteFigure) getFigure()).setLineWidth(getMapMode().DPtoLP(width));
 		getFigure().revalidate();
 	}

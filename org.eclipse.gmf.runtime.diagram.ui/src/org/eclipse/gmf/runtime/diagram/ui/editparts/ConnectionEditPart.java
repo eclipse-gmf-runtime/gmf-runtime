@@ -1990,20 +1990,25 @@ abstract public class ConnectionEditPart
 	 *            the arrow type.
 	 */
 	protected RotatableDecoration getArrowDecoration(int arrowType) {
-		
 		RotatableDecoration decoration = null;
+		int width = getLineWidth();
+		if (width < 0) {
+			width = 1;
+		}
 		if (arrowType == ArrowType.OPEN_ARROW) {
 			IMapMode mm = getMapMode();
 			decoration = new PolylineDecoration();
-			((PolylineDecoration)decoration).setScale(mm.DPtoLP(11) + getLineWidth(), mm.DPtoLP(6) + getLineWidth());
+			((PolylineDecoration)decoration).setScale(
+					mm.DPtoLP(11 + width), mm.DPtoLP(6 + width));
 			((PolylineDecoration)decoration).setTemplate(PolylineDecoration.TRIANGLE_TIP);
-			((PolylineDecoration)decoration).setLineWidth(getLineWidth());
+			((PolylineDecoration)decoration).setLineWidth(mm.DPtoLP(width));
 		} else if (arrowType == ArrowType.SOLID_ARROW) {
 			IMapMode mm = getMapMode();
 			decoration = new PolygonDecoration();
-			((PolygonDecoration)decoration).setScale(mm.DPtoLP(11) + getLineWidth(), mm.DPtoLP(6) + getLineWidth());
+			((PolygonDecoration)decoration).setScale(
+					mm.DPtoLP(11 + width), mm.DPtoLP(6 + width));
 			((PolygonDecoration)decoration).setTemplate(PolygonDecoration.TRIANGLE_TIP);
-			((PolygonDecoration)decoration).setLineWidth(getLineWidth());
+			((PolygonDecoration)decoration).setLineWidth(mm.DPtoLP(width));
 			((PolygonDecoration)decoration).setFill(true);
 		}
 		return decoration;
