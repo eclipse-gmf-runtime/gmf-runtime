@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -100,10 +101,29 @@ public abstract class LineStylesPopup {
 	 *            largest number of items are visible
 	 */
 	public void open(Point location) {
+		open(location, -1);
+		return;
+	}
+	
+	/**
+	 * Opens the popup ensuring that it doesn't run of the screen and doesn't
+	 * hide the launching button
+	 * 
+	 * @param location
+	 *            the initial location of the popup
+	 * @param lowerY
+	 *            if the final y is above location.y, then the popup is moved
+	 *            above lowerY
+	 */
+	public void open(Point location, int lowerY) {
 
 		Point listSize = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
 		shell.setBounds(location.x, location.y, listSize.x, listSize.y);
-
+		// Ensure the popup doesn't run off the screen and doesn't hide the
+		// launching button.
+		Point newLocation = WindowUtil.constrainWindowLocation(shell,
+				location, lowerY);
+		shell.setLocation(newLocation.x, newLocation.y);
 		shell.open();
 		shell.setFocus();
 		Display display = shell.getDisplay();
@@ -112,7 +132,7 @@ public abstract class LineStylesPopup {
 				display.sleep();
 		}
 		return;
-	}
+	}	
 
 	/**
 	 * Gets the item the user selected. Could be null as the user may cancel the
