@@ -22,19 +22,27 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapeConstants;
 import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
+import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.datatype.GradientData;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTestFixture;
 import org.eclipse.swt.widgets.Shell;
@@ -66,6 +74,25 @@ public class CopyToImageUtilTests
 		
 		shapeRequest.setLocation(new Point(300, 300));
 		getCommandStack().execute(getDiagramEditPart().getCommand(shapeRequest));
+		
+		shapeRequest =
+			new CreateViewRequest(new ViewDescriptor(null, Node.class, GeoshapeConstants.TOOL_CYLINDER, dgmEP.getDiagramPreferencesHint()));
+		
+		shapeRequest.setLocation(new Point(400, 400));
+		getCommandStack().execute(getDiagramEditPart().getCommand(shapeRequest));
+		
+		IGraphicalEditPart cylinderEP = getDiagramEditPart().getChildBySemanticHint(GeoshapeConstants.TOOL_CYLINDER);
+		
+		assertNotNull(cylinderEP);
+		
+		String propertyID = PackageUtil.getID(NotationPackage.eINSTANCE.getFillStyle_Gradient());
+		String propertyName = PackageUtil.getDisplayName(NotationPackage.eINSTANCE.getFillStyle_Gradient());
+		GradientData gradientData = new GradientData();
+		gradientData.setGradientColor1(FigureUtilities.colorToInteger(ColorConstants.darkBlue));
+		gradientData.setGradientColor2(FigureUtilities.colorToInteger(ColorConstants.white));
+		ChangePropertyValueRequest request = new ChangePropertyValueRequest(propertyName, propertyID, gradientData);
+		getCommandStack().execute(cylinderEP.getCommand(request));
+		
 	}
 
 	public static Test suite() {

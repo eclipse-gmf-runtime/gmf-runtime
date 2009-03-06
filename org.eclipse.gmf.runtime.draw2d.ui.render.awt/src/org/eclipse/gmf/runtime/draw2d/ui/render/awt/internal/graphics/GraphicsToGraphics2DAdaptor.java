@@ -23,8 +23,8 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -127,6 +127,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
          */
         public int alpha;
 
+    	int graphicHints;
+    	
 		/**
 		 * Copy the values from a given state to this state
 		 * 
@@ -150,9 +152,22 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			bgColor = state.bgColor;
 			XorMode = state.XorMode;
             alpha = state.alpha;
+            graphicHints = state.graphicHints;
 		}
 	}
 
+	static final int FILL_RULE_MASK;
+	static final int FILL_RULE_SHIFT;
+	static final int FILL_RULE_WHOLE_NUMBER = -1;
+
+	/*
+	 * It's consistent with SWTGraphics flags in case some other flags from SWTGraphics need to be here
+	 */
+	static {
+		FILL_RULE_SHIFT = 14;
+		FILL_RULE_MASK = 1 << FILL_RULE_SHIFT; //If changed to more than 1-bit, check references!
+	}
+	
 	private SWTGraphics swtGraphics;
 	private Graphics2D graphics2D;
 	private BasicStroke stroke;
@@ -321,6 +336,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
             
             setAlpha(currentState.alpha);
         }
+        
+        appliedState.graphicHints = currentState.graphicHints;
 	}
 
 	/*
@@ -1213,38 +1230,76 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * @see org.eclipse.draw2d.Graphics#setClip(org.eclipse.swt.graphics.Path)
 	 */
 	public void setClip(Path path) {
+		if (((appliedState.graphicHints ^ currentState.graphicHints) & FILL_RULE_MASK) != 0) {
+			//If there is a pending change to the fill rule, apply it first.
+			//As long as the FILL_RULE is stored in a single bit, just toggling it works.
+			appliedState.graphicHints ^= FILL_RULE_MASK;
+		}
 		getGraphics2D().setClip(createPathAWT(path));
+		appliedState.clipX = currentState.clipX = 0;
+		appliedState.clipY = currentState.clipY = 0;
+		appliedState.clipW = currentState.clipW = 0;
+		appliedState.clipH = currentState.clipH = 0;
 	}
 	
-	private Path2D.Float createPathAWT(Path path) {
-		Path2D.Float pathAWT = new Path2D.Float();
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Graphics#getFillRule()
+	 */
+	public int getFillRule() {
+		return ((currentState.graphicHints & FILL_RULE_MASK) >> FILL_RULE_SHIFT) - FILL_RULE_WHOLE_NUMBER; 
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Graphics#setFillRule(int)
+	 */
+	public void setFillRule(int rule) {
+		currentState.graphicHints &= ~FILL_RULE_MASK;
+		currentState.graphicHints |= (rule + FILL_RULE_WHOLE_NUMBER) << FILL_RULE_SHIFT;
+	}
+
+	private GeneralPath createPathAWT(Path path) {
+		GeneralPath pathAWT = new GeneralPath();
 		PathData pathData = path.getPathData();
 		int idx = 0;
 		for (int i = 0; i < pathData.types.length; i++) {
 			switch (pathData.types[i]) {
-				case SWT.PATH_MOVE_TO:
-					pathAWT.moveTo(pathData.points[idx++], pathData.points[idx++]);
-					break;
-				case SWT.PATH_LINE_TO:
-					pathAWT.lineTo(pathData.points[idx++], pathData.points[idx++]);
-					break;
-				case SWT.PATH_CUBIC_TO:
-					pathAWT.curveTo(pathData.points[idx++], pathData.points[idx++], pathData.points[idx++], pathData.points[idx++], pathData.points[idx++], pathData.points[idx++]);
-					break;
-				case SWT.PATH_QUAD_TO:
-					pathAWT.quadTo(pathData.points[idx++], pathData.points[idx++], pathData.points[idx++], pathData.points[idx++]);
-					break;
-				case SWT.PATH_CLOSE:
-					pathAWT.closePath();
-					break;
-				default:
-					dispose();
-					SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+			case SWT.PATH_MOVE_TO:
+				pathAWT.moveTo(pathData.points[idx++] + transX,
+						pathData.points[idx++] + transY);
+				break;
+			case SWT.PATH_LINE_TO:
+				pathAWT.lineTo(pathData.points[idx++] + transX,
+						pathData.points[idx++] + transY);
+				break;
+			case SWT.PATH_CUBIC_TO:
+				pathAWT.curveTo(pathData.points[idx++] + transX,
+						pathData.points[idx++] + transY, pathData.points[idx++]
+								+ transX, pathData.points[idx++] + transY,
+						pathData.points[idx++] + transX, pathData.points[idx++]
+								+ transY);
+				break;
+			case SWT.PATH_QUAD_TO:
+				pathAWT.quadTo(pathData.points[idx++] + transX,
+						pathData.points[idx++] + transY, pathData.points[idx++]
+								+ transX, pathData.points[idx++] + transY);
+				break;
+			case SWT.PATH_CLOSE:
+				pathAWT.closePath();
+				break;
+			default:
+				dispose();
+				SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 			}
-		}			
-		AffineTransform transform = new AffineTransform();
-		transform.translate(transX, transY);
-		pathAWT.transform(transform);
+		}
+		int swtWindingRule = ((appliedState.graphicHints & FILL_RULE_MASK) >> FILL_RULE_SHIFT)
+				- FILL_RULE_WHOLE_NUMBER;
+		if (swtWindingRule == SWT.FILL_WINDING) {
+			pathAWT.setWindingRule(GeneralPath.WIND_NON_ZERO);
+		} else if (swtWindingRule == SWT.FILL_EVEN_ODD) {
+			pathAWT.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		} else {
+			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+		}
 		return pathAWT;
 	}
 
