@@ -16,6 +16,7 @@ Export-Package: org.eclipse.gmf.runtime.common.ui.services.editor,
  org.eclipse.gmf.runtime.common.ui.services.internal.marker;x-internal:=true,
  org.eclipse.gmf.runtime.common.ui.services.marker,
  org.eclipse.gmf.runtime.common.ui.services.parser,
+ org.eclipse.gmf.runtime.common.ui.services.statusline,
  org.eclipse.gmf.runtime.common.ui.services.util
 Require-Bundle: org.eclipse.core.resources;bundle-version="[3.5.0,4.0.0)";visibility:=reexport,
  org.eclipse.ui;bundle-version="[3.5.0,4.0.0)";visibility:=reexport,

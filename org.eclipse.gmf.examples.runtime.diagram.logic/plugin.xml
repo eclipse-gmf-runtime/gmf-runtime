@@ -526,5 +526,16 @@
             </popupAction>   
          </popupContribution>                                 
       </contributionItemProvider>
+   </extension>
+   <extension
+         id="LogicExampleStatusLineItemProvider"
+         name="LogicExampleStatusLineItemProvider"
+         point="org.eclipse.gmf.runtime.common.ui.services.statusLineContributionItemProviders">
+      <statusLineContributionItemProvider
+            class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicExampleStatusLineContributionItemProvider">
+         <Priority
+               name="Lowest">
+         </Priority>
+      </statusLineContributionItemProvider>
    </extension> 
 </plugin>

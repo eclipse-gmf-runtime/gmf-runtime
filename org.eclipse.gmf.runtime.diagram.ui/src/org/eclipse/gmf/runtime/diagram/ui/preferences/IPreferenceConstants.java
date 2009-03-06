@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,13 +13,9 @@ package org.eclipse.gmf.runtime.diagram.ui.preferences;
 
 /**
  * Defines preference constants for the GMF diagram layer.
- * <p>
- * This interface defines constants only, it is <EM>not</EM> intended to be
- * implemented by clients.
- * </p>
- *  
- * @author schafe
  * 
+ * @noimplement This interface is not intended to be implemented by clients.  
+ * @author schafe
  */
 public interface IPreferenceConstants {
 
@@ -85,6 +81,12 @@ public interface IPreferenceConstants {
      */
 	public static final String PREF_ENABLE_ANTIALIAS = "Global.enableAntiAlias"; //$NON-NLS-1$	
 
+	/**
+     * enable status line content; Global Preference 
+	 * @since 1.2
+     */
+	public static final String PREF_SHOW_STATUS_LINE = "Global.showStatusLine"; //$NON-NLS-1$	
+	
 	/**
      * show grid preference; Grid/Rulers Preference Page 
      */

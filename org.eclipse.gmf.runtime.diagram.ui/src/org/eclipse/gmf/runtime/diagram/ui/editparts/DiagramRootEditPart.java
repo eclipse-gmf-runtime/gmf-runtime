@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,11 +54,18 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatableZoomManager;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
+import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.action.SubStatusLineManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * RootEditPart which manages the Diagram's layers and creates the discrete zoom
@@ -160,7 +167,6 @@ public class DiagramRootEditPart
 	private class PreferenceStoreListener implements IPropertyChangeListener {
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
 			handlePreferenceStorePropertyChanged(event);
-			
 		}
 	}
 	
@@ -459,6 +465,36 @@ public class DiagramRootEditPart
 	}
 	
 	/**
+	 * Refreshes the status line.
+	 * @since 1.2
+	 */
+	protected void refreshShowStatusLine() {
+
+		IPreferenceStore preferenceStore = (IPreferenceStore) getPreferencesHint()
+				.getPreferenceStore();
+		boolean statusLineOn = preferenceStore
+				.getBoolean(IPreferenceConstants.PREF_SHOW_STATUS_LINE);
+
+		IWorkbenchPage page = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPartSite site = page.getActivePart().getSite();
+		IStatusLineManager statusLineManager;
+		if (site instanceof IEditorSite) {
+			IEditorSite editorSite = (IEditorSite) site;
+			statusLineManager = editorSite.getActionBars()
+					.getStatusLineManager();
+		} else if (site instanceof IViewSite) {
+			IViewSite viewSite = (IViewSite) site;
+			statusLineManager = viewSite.getActionBars().getStatusLineManager();
+		} else {
+			return;
+		}
+		if (statusLineManager instanceof SubStatusLineManager) {
+			((SubStatusLineManager) statusLineManager).setVisible(statusLineOn);
+		}
+	}
+	
+	/**
 	 * Adds the pagebreaks figure to the <code>PAGE_BREAKS_LAYER</code>
 	 */
 	private void showPageBreaks() {
@@ -559,7 +595,7 @@ public class DiagramRootEditPart
 			Integer newValue = (Integer) event.getNewValue();
 			// Set the grid line color
 			setGridColor(newValue);
-		}  else if (WorkspaceViewerProperties.GRIDLINESTYLE.equals(event.getProperty())) {
+		} else if (WorkspaceViewerProperties.GRIDLINESTYLE.equals(event.getProperty())) {
 			Integer newValue = (Integer) event.getNewValue();
 			// Set the grid line style
 			setGridStyle(newValue.intValue());
@@ -567,6 +603,8 @@ public class DiagramRootEditPart
 			refreshEnableZoomAnimation(getZoomManager());
 		} else if (event.getProperty().equals(IPreferenceConstants.PREF_ENABLE_ANTIALIAS)){
 			refreshEnableAntiAlias();
+		} else if (event.getProperty().equals(IPreferenceConstants.PREF_SHOW_STATUS_LINE)){
+			refreshShowStatusLine();
 		}	
 	}
 	

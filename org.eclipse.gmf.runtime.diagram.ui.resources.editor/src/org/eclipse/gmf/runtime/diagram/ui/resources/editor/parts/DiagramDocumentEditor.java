@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
@@ -26,11 +27,16 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
+import org.eclipse.gmf.runtime.common.ui.services.statusline.StatusLineService;
 import org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProviderRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
@@ -45,12 +51,18 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette.EditorInputPaletteContent;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -75,7 +87,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.osgi.framework.Bundle;
-
 
 /**
  * A Diagram Editor with optional flyout palette.
@@ -155,6 +166,20 @@ public class DiagramDocumentEditor
 		fActivationListener= new ActivationListener(site.getWorkbenchWindow().getPartService());
 		fActivationListener.activate();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette#initializeGraphicalViewer()
+	 */
+	protected void initializeGraphicalViewer() {
+		super.initializeGraphicalViewer();
+        RootEditPart rootEditPart = getGraphicalViewer().getRootEditPart();
+		if (rootEditPart instanceof DiagramRootEditPart) {
+			DiagramRootEditPart root = (DiagramRootEditPart) rootEditPart;
+			((IPreferenceStore) root
+					.getPreferencesHint().getPreferenceStore()).addPropertyChangeListener(propertyChangeListener);
+		}
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
@@ -170,7 +195,14 @@ public class DiagramDocumentEditor
 			fTitleImage.dispose();
 			fTitleImage= null;
 		}
-
+		
+		RootEditPart rootEditPart = getGraphicalViewer().getRootEditPart();
+		if (rootEditPart instanceof DiagramRootEditPart) {
+			DiagramRootEditPart root = (DiagramRootEditPart) rootEditPart;
+			((IPreferenceStore) root
+					.getPreferencesHint().getPreferenceStore()).removePropertyChangeListener(propertyChangeListener);
+		}
+		
         IDocumentProvider provider = getDocumentProvider();
         IStatus status = provider.getStatus(getEditorInput());
 
@@ -274,7 +306,9 @@ public class DiagramDocumentEditor
 
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		super.selectionChanged(part, selection);
-//		updateStatusLine();
+		if (part == this) {
+			rebuildStatusLine();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -692,6 +726,7 @@ public class DiagramDocumentEditor
 				handleEditorInputChanged();
 		}
 		updateState(getEditorInput());
+		rebuildStatusLine();
 	}
 
 	/**
@@ -1020,6 +1055,14 @@ public class DiagramDocumentEditor
 	private ActivationListener fActivationListener;
 //	private final String fReadOnlyLabel= EditorMessages.Editor_statusline_state_readonly_label;
 //	private final String fWritableLabel= EditorMessages.Editor_statusline_state_writable_label;
+	/** The editor's property change listener. */
+	private IPropertyChangeListener propertyChangeListener= new PropertyChangeListener();
+	/** A label provider for the status line (one of the status line contributions). 
+	 * @since 1.2*/
+	protected ILabelProvider statusLineLabelProvider;
+	/** A list of contribution items for the status line. 
+	 * @since 1.2*/
+    protected List<IContributionItem> statusLineContributions;
 	/** The error message shown in the status line in case of failed information look up. */
 	protected final String fErrorLabel= EditorMessages.Editor_statusline_error_label;
 	/** The editor's element state listener. */
@@ -1113,6 +1156,7 @@ public class DiagramDocumentEditor
 		 */
 		public void partDeactivated(IWorkbenchPart part) {
 			fActivePart= null;
+			handleDeactivation();
 		}
 
 		/*
@@ -1137,6 +1181,13 @@ public class DiagramDocumentEditor
 					fIsHandlingActivation= false;
 				}
 			}
+		}
+		
+		/**
+		 * Handles the deactivation triggering status line contribution items removal.
+		 */
+		private void handleDeactivation(){
+			removeStatusLineContributions();
 		}
 
 		/*
@@ -1163,7 +1214,7 @@ public class DiagramDocumentEditor
 		 * 
 		 */
 		public void windowDeactivated(IWorkbenchWindow window) {
-			// nothing to do
+			handleDeactivation();
 		}
 
 		/*
@@ -1505,4 +1556,134 @@ public class DiagramDocumentEditor
     protected boolean reuseDiagramOnMove() {
         return false;
     }
+
+    /**
+	 * Update the status line message contribution. The default status line
+	 * manager provides the ability to display an icon and message.
+	 * 
+	 * @param message The message. 
+	 * @param image The icon image.
+     * @since 1.2
+     */
+	protected void updateStatusLineMessageContribution(String message, Image image) {
+		getEditorSite().getActionBars().getStatusLineManager().setMessage(
+				image, message);
+	}
+
+	/**
+	 * Add the status line contributions to this editor from the status line
+	 * service.
+	 * 
+	 * @since 1.2
+	 */
+	protected void addStatusLineContributions() {
+		if (statusLineContributions != null && !statusLineContributions.isEmpty()) {
+			return;
+		}
+		statusLineContributions = StatusLineService.getInstance()
+				.getStatusLineContributionItems(getSite().getPage());
+		if(statusLineContributions.isEmpty()){
+			return;
+		}
+		for (IContributionItem contrItem : statusLineContributions) {
+			getEditorSite().getActionBars()
+			.getStatusLineManager().add(contrItem);
+			if (contrItem instanceof ILabelProvider) {
+				statusLineLabelProvider = (ILabelProvider)contrItem;
+				
+			}
+		}
+	}
+
+	/**
+	 * Remove the status line contributions from this editor.
+	 * 
+	 * @since 1.2
+	 */
+	protected void removeStatusLineContributions() {
+		if (statusLineContributions == null || statusLineContributions.isEmpty()) {
+			return;
+		}
+		IStatusLineManager statusLineManager = getEditorSite().getActionBars()
+				.getStatusLineManager();
+		for (IContributionItem contrItem : statusLineContributions) {
+			IContributionItem removedItem = statusLineManager.remove(contrItem);
+			if (removedItem != null) {
+				removedItem.dispose();
+			}
+		}
+		statusLineContributions.removeAll(statusLineContributions);
+		statusLineLabelProvider = null;
+	}
+
+	/**
+	 * Rebuild the status line contributions from this editor.
+	 * 
+	 * @since 1.2
+	 */
+	protected void rebuildStatusLine() {
+		if (isStatusLineOn()) {
+			addStatusLineContributions();
+			handleSelectionChanged();
+			getEditorSite().getActionBars().getStatusLineManager().update(true);
+		}
+	}
+
+	/**
+	 * Determine if the status line should be on based on the global 
+	 * preference.
+	 * 
+	 * @since 1.2
+	 */
+	protected boolean isStatusLineOn() {
+		RootEditPart rep = getGraphicalViewer().getRootEditPart();
+		if (rep instanceof DiagramRootEditPart) {
+			DiagramRootEditPart root = (DiagramRootEditPart) rep;
+			boolean statusLineIsOn = ((IPreferenceStore) root
+					.getPreferencesHint().getPreferenceStore())
+					.getBoolean(IPreferenceConstants.PREF_SHOW_STATUS_LINE);
+			return statusLineIsOn;
+		}
+		return false;
+	}
+
+	/**
+	 * Internal property change listener for handling changes in the editor's
+	 * preferences.
+	 */
+	private class PropertyChangeListener implements IPropertyChangeListener {
+
+		public void propertyChange(PropertyChangeEvent event) {
+			String property = event.getProperty();
+			if (IPreferenceConstants.PREF_SHOW_STATUS_LINE
+					.equals(property)) {
+				if (!isStatusLineOn()) {
+					removeStatusLineContributions();
+					updateStatusLineMessageContribution(null, null);
+					getEditorSite().getActionBars().getStatusLineManager()
+							.update(true);
+				}
+			}
+		}
+	}
+
+	/**
+	 * If the status line is on and the editor has a status line label provider,
+	 * the update.
+	 * 
+	 * @since 1.2
+	 */
+	protected void handleSelectionChanged() {
+		if (isStatusLineOn() && statusLineLabelProvider != null) {
+			IStructuredSelection selection = (IStructuredSelection)getSite().
+				getSelectionProvider().getSelection();
+			if (selection.getFirstElement() instanceof IGraphicalEditPart) {
+				IGraphicalEditPart container = (IGraphicalEditPart) selection
+						.getFirstElement();
+				updateStatusLineMessageContribution(
+						statusLineLabelProvider.getText(container), 
+						statusLineLabelProvider.getImage(container));
+			}
+		}
+	}
 }

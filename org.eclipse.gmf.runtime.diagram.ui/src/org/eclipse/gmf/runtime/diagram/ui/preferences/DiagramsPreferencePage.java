@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,6 +46,8 @@ public class DiagramsPreferencePage
 
 	private String ENABLE_ANTIALIAS = DiagramUIMessages.DiagramsPreferencePage_enableAntiAlias_label;	
 	
+	private String SHOW_STATUS_LINE = DiagramUIMessages.DiagramsPreferencePage_showStatusLine_label;
+	
 	// preference page editor controls
 	private BooleanFieldEditor showConnectionHandles = null;
 
@@ -56,6 +58,8 @@ public class DiagramsPreferencePage
 	private BooleanFieldEditor enableAnimatedZoom = null;
 
 	private BooleanFieldEditor enableAntiAlias = null;
+	
+	private BooleanFieldEditor showStatusLine = null;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage#addFields(org.eclipse.swt.widgets.Composite)
@@ -100,6 +104,11 @@ public class DiagramsPreferencePage
         
 		// enable anti-aliasing only if advanced graphics is supported.
         enableAntiAlias.setEnabled(GCUtilities.supportsAdvancedGraphics(),composite);
+        
+        showStatusLine = new BooleanFieldEditor(
+				IPreferenceConstants.PREF_SHOW_STATUS_LINE, SHOW_STATUS_LINE,
+				composite);
+		addField(showStatusLine);
 		
 	}
 
@@ -121,6 +130,8 @@ public class DiagramsPreferencePage
 		
 		preferenceStore.setDefault(IPreferenceConstants.PREF_ENABLE_ANTIALIAS, true);	
 
+		preferenceStore.setDefault(IPreferenceConstants.PREF_SHOW_STATUS_LINE, true);	
+		
 	}
 
 	/* (non-Javadoc)
