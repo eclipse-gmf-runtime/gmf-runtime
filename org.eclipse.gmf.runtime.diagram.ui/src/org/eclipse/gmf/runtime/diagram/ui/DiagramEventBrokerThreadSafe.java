@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
-package org.eclipse.gmf.runtime.diagram.ui.internal;
+package org.eclipse.gmf.runtime.diagram.ui;
 
 import java.lang.ref.WeakReference;
 
@@ -25,7 +25,7 @@ import org.eclipse.ui.PlatformUI;
  * then there are 2 scenarios that have to be considered.  
  * 
  * The first scenario is for a long operation
- * that has been exeucted with a progress meter, where the progress meter is displaying UI on the main
+ * that has been executed with a progress meter, where the progress meter is displaying UI on the main
  * thread and there is a background thread that is being executed that the progress meter is monitoring.
  * For this scenario, the UI updates on the diagram viewer have been disabled so as to avoid concurrency
  * issues.  When notifications are handled, they are synchronized to the main thread to avoid
@@ -40,8 +40,9 @@ import org.eclipse.ui.PlatformUI;
  * on the main thread.
  * 
  * @author sshaw
+ * @since 1.2
  */
-class DiagramEventBrokerThreadSafe extends DiagramEventBroker {
+public class DiagramEventBrokerThreadSafe extends DiagramEventBroker {
 
 	WeakReference editingDomainRef;
 	
