@@ -80,6 +80,7 @@ public class WindowUtil {
 	 *            if -1, it is ignored; otherwise, if popup is moved up, it has
 	 *            to be completely above lowerY
 	 * @return Constrained location
+	 * @since 1.2
 	 */
 	public static Point constrainWindowLocation(Shell shell,
 			Point initLocation, int lowerY) {
