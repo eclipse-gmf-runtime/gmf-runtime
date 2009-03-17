@@ -35,6 +35,7 @@ import com.ibm.icu.util.StringTokenizer;
  * Internal utilities, for private use of the EMF Core plug-in.
  *
  * @author Christian W. Damus (cdamus)
+ * @since 1.2
  */
 public class Util {
 	private static final String pathDelimiter = String
