@@ -29,8 +29,8 @@ import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 
-/*
- * @canBeSeenBy %level1
+/**
+ * @since 1.2
  */
 public class DescriptionCompartmentEditPart extends TextCompartmentEditPart {
 

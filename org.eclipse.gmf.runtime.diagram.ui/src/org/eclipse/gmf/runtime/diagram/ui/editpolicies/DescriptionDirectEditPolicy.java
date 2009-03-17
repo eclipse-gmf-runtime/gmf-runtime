@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * that do not have a model reference.
  * 
  * @author schafe
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
+ * @since 1.2
  */
 public class DescriptionDirectEditPolicy extends LabelDirectEditPolicy {
 
