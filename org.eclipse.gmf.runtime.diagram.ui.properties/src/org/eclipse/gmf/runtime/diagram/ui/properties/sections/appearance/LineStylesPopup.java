@@ -114,6 +114,7 @@ public abstract class LineStylesPopup {
 	 * @param lowerY
 	 *            if the final y is above location.y, then the popup is moved
 	 *            above lowerY
+	 * @since 1.2
 	 */
 	public void open(Point location, int lowerY) {
 
