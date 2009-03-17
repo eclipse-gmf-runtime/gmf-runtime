@@ -1459,40 +1459,21 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
     		add(dec, new ArrowLocator(this, ConnectionLocator.SOURCE));
     	}
 	}
-    
-	private int[] dashes = null;
-	
+
+
 	/**
-	 * Workaround for bugzilla 105358
-	 * @param dashes <code>int[]</code> array of dash lengths
-	 * @see Graphics#setLineDash(int[])
+	 * Sets the line dash style.
+	 * @see org.eclipse.swt.graphics.LineAttributes#dash
+	 * @param dashes The dashes attribute.
 	 */
 	public void setLineDash(int[] dashes) {
-		if (dashes != null) {
-			this.dashes = new int[dashes.length];
-			for (int i = 0; i < dashes.length; i++) {
-				int dash = dashes[i];
-				if (dash <= 0)
-					SWT.error(SWT.ERROR_INVALID_ARGUMENT);
-				this.dashes[i] = dash;
-			}
+		float [] floatDashes = new float[dashes.length];
+		for (int i = 0; i < dashes.length; i++) {
+			floatDashes[i] = dashes[i];
 		}
-		else {
-			this.dashes = null;
-		}
+		setLineDash(floatDashes);
 	}
 
-	/** 
-	 * Overriden to workaround bugzilla 105358
-	 */
-	public void paintFigure(Graphics graphics) {
-		graphics.pushState();
-		if (dashes != null && getLineStyle() == SWT.LINE_CUSTOM)
-			graphics.setLineDash(dashes);
-		super.paintFigure(graphics);
-		graphics.popState();
-	}
-	
 	/**
 	* Currently we cannot create bendpoints with avoid obstructions 
 	* routing style turned on. Hence we need to define a special cursor
