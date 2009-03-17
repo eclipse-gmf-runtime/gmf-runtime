@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Intalio, Inc. patch for bug 264483 and some javadoc
  ****************************************************************************/
 package org.eclipse.gmf.runtime.diagram.ui.util;
 
@@ -17,6 +18,10 @@ import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
+/**
+ * Helper class to help find a view in an opened editor.
+ *
+ */
 public class DiagramEditorUtil {
 
 	/**
@@ -37,6 +42,9 @@ public class DiagramEditorUtil {
 				Object obj = it.next();
 				if (obj instanceof DiagramEditor) {
 					DiagramEditor diagramEditor = (DiagramEditor) obj;
+					if (diagramEditor.getDiagramEditPart() == null) {
+					    continue;
+					}
 					if (id.equals(ViewUtil.getIdStr(diagramEditor
 							.getDiagramEditPart().getDiagramView()))) {
 						return diagramEditor;
