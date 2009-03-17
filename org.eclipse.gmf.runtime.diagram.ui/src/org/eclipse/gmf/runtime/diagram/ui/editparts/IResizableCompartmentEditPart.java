@@ -17,6 +17,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
  * Interface to let us know that is a Compartment Edit Part that
  * is resizable
  * @author choang@ca.ibm.com
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface IResizableCompartmentEditPart extends IGraphicalEditPart {
 	
