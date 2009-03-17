@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,15 +16,14 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * @author melaasar
- *
  * The interface of all editparts with <code>EObject</code> as a model
- * <B>Not indended to be implemented by clients</B>, Clients should extends GraphicalEditPart
+ * @author melaasar
+ * @noimplement This interface is not intended to be implemented by clients, clients should extend
+ * GraphicalEditPart
  */
 public interface IGraphicalEditPart
 	extends org.eclipse.gef.GraphicalEditPart, IEditableEditPart {
