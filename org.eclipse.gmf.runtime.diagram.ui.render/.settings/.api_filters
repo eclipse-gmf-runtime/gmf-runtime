@@ -1,58 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component id="org.eclipse.gmf.runtime.diagram.ui.render" version="2">
-<resource path="src/org/eclipse/gmf/runtime/diagram/ui/render/editparts/AbstractImageEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.render.editparts.AbstractImageEditPart">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.ui.render.editparts.AbstractImageEditPart"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/ui/render/editparts/URLImageEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.render.editparts.URLImageEditPart">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.ui.render.editparts.URLImageEditPart"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/ui/render/editparts/RenderedDiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.render.editparts.RenderedDiagramRootEditPart$DiagramRenderedScalableFreeformLayeredPane">
-<filter id="643842064">
-<message_arguments>
-<message_argument value="ScaledGraphics"/>
-<message_argument value="DiagramRenderedScalableFreeformLayeredPane"/>
-<message_argument value="createScaledGraphics(MapModeGraphics)"/>
-</message_arguments>
-</filter>
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.ui.render.editparts.RenderedDiagramRootEditPart.DiagramRenderedScalableFreeformLayeredPane"/>
-</message_arguments>
-</filter>
-<filter id="643846161">
-<message_arguments>
-<message_argument value="MapModeGraphics"/>
-<message_argument value="DiagramRenderedScalableFreeformLayeredPane"/>
-<message_argument value="createScaledGraphics(MapModeGraphics)"/>
-</message_arguments>
-</filter>
-<filter id="576725006">
-<message_arguments>
-<message_argument value="AnimatedZoomListener"/>
-<message_argument value="DiagramRenderedScalableFreeformLayeredPane"/>
-</message_arguments>
-</filter>
-<filter id="643842064">
-<message_arguments>
-<message_argument value="MapModeGraphics"/>
-<message_argument value="DiagramRenderedScalableFreeformLayeredPane"/>
-<message_argument value="createMapModeGraphics(Graphics)"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/ui/render/editparts/RenderedDiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.render.editparts.RenderedDiagramRootEditPart">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.ui.render.editparts.RenderedDiagramRootEditPart"/>
-</message_arguments>
-</filter>
-</resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/render/editparts/RenderedDiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.render.editparts.RenderedDiagramRootEditPart$DiagramRenderedScalableFreeformLayeredPane">
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="ScaledGraphics"/>
+                <message_argument value="DiagramRenderedScalableFreeformLayeredPane"/>
+                <message_argument value="createScaledGraphics(MapModeGraphics)"/>
+            </message_arguments>
+        </filter>
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="MapModeGraphics"/>
+                <message_argument value="DiagramRenderedScalableFreeformLayeredPane"/>
+                <message_argument value="createMapModeGraphics(Graphics)"/>
+            </message_arguments>
+        </filter>
+        <filter id="643846161">
+            <message_arguments>
+                <message_argument value="MapModeGraphics"/>
+                <message_argument value="DiagramRenderedScalableFreeformLayeredPane"/>
+                <message_argument value="createScaledGraphics(MapModeGraphics)"/>
+            </message_arguments>
+        </filter>
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="AnimatedZoomListener"/>
+                <message_argument value="DiagramRenderedScalableFreeformLayeredPane"/>
+            </message_arguments>
+        </filter>
+    </resource>
 </component>

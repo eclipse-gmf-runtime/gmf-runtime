@@ -30,10 +30,5 @@
                 <message_argument value="createPrinterGraphics(Graphics)"/>
             </message_arguments>
         </filter>
-        <filter id="338849923">
-            <message_arguments>
-                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.printing.render.util.RenderedDiagramPrinter"/>
-            </message_arguments>
-        </filter>
     </resource>
 </component>
