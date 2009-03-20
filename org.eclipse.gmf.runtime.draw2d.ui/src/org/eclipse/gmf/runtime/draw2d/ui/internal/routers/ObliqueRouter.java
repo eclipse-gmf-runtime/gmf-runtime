@@ -242,13 +242,13 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 	}
 	
 	/**
-	 * Incorporating use of GEF’s ShortestPathConnectionRouter into GMF’s
+	 * Incorporating use of GEF's ShortestPathConnectionRouter into GMF's
 	 * ObliqueRouter in order to enable instant re-routing when an obstacle is
 	 * placed on or removed from a connection which has Avoid Obstacles property
 	 * set. The rules for routing: 
 	 * 
 	 * <li>If the connection is completely within
-	 * one container (doesn’t matter if the container is nested), then GEF’s
+	 * one container (doesn't matter if the container is nested), then GEF's
 	 * router is used, meaning that the connection will be appropriately
 	 * re-routed in case when an obstacle is being placed on the way. 
 	 * 
