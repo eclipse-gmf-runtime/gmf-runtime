@@ -200,7 +200,9 @@ public class ViewRefactorHelper {
 	 * @param newNode The new node to copy features to
 	 */
 	protected void copyNodeFeatures(Node oldNode, Node newNode) {
-		newNode.setLayoutConstraint(oldNode.getLayoutConstraint());
+		if (oldNode.eIsSet(NotationPackage.eINSTANCE.getNode_LayoutConstraint())) {
+			newNode.setLayoutConstraint(oldNode.getLayoutConstraint());
+		}
 		copyViewFeatures(oldNode, newNode);
 	}
 
