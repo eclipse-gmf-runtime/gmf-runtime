@@ -1,7 +1,5 @@
 /**
- * <copyright>
- *
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,10 +7,6 @@
  *
  * Contributors:
  *   IBM - Initial API and implementation
- *
- * </copyright>
- *
- * $Id$
  */
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation;
@@ -32,7 +26,6 @@ import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.presentation.LogicsemanticEditorPlugin;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbench;
@@ -100,8 +93,8 @@ public class ResourceLoadedListener extends DemultiplexingListener {
 			// a resource has been loaded that was not loaded before.  Open an editor
 			final IFile file = getFile((Resource)notification.getNotifier(), domain);
 			
-			if (file != null) {
-				Display.getDefault().asyncExec(new Runnable() {
+			if (file != null && PlatformUI.isWorkbenchRunning()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							IWorkbenchPage page = getActivePage();
@@ -133,8 +126,8 @@ public class ResourceLoadedListener extends DemultiplexingListener {
 			final IFile file = WorkspaceSynchronizer.getFile(
 					(Resource) notification.getNotifier());
 			
-			if (file != null) {
-				Display.getDefault().asyncExec(new Runnable() {
+			if (file != null && PlatformUI.isWorkbenchRunning()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						IWorkbenchPage page = getActivePage();
 						
