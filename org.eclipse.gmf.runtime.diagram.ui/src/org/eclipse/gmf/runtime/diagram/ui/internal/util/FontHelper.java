@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,11 +13,10 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.util;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -63,8 +62,8 @@ public class FontHelper {
 			return FONT_NAMES;
 		
 		//add the names into a set to get a set of unique names
-		Set stringItems = new HashSet();
-		FontData[] fontDatas = Display.getDefault().getFontList(null, true);
+		Set<String> stringItems = new HashSet<String>();
+		FontData[] fontDatas = DisplayUtils.getDisplay().getFontList(null, true);
 		for (int i = 0; i < fontDatas.length; i++) {
 			if (fontDatas[i].getName() != null) {
 				stringItems.add(fontDatas[i].getName());
@@ -74,8 +73,8 @@ public class FontHelper {
 		//add strings into the array
 		String strings[] = new String[stringItems.size()];
 		int i = 0;
-		for (Iterator it = stringItems.iterator(); it.hasNext();) {
-			strings[i++] = (String) it.next();
+		for (String item : stringItems) {
+			strings[i++] = item;
 		}
 		
 		//sort the array

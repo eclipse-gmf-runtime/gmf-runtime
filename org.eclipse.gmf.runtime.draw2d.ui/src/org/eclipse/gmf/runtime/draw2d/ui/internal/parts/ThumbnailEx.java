@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,12 +13,6 @@ package org.eclipse.gmf.runtime.draw2d.ui.internal.parts;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
@@ -26,7 +20,13 @@ import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.UpdateListener;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * A ThumbnailEx is a Figure that displays an image of its source Figure at a 
@@ -255,7 +255,7 @@ class ThumbnailUpdater implements Runnable {
 			thumbnailImage.dispose();
 		
 		if (!targetSize.isEmpty()) {
-			thumbnailImage = new Image(Display.getDefault(), 
+			thumbnailImage = new Image(DisplayUtils.getDisplay(), 
 					targetSize.width, 
 					targetSize.height);
 			thumbnailImageSize = new Dimension(targetSize);

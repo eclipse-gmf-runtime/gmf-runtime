@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.printing.IPrintHelper;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingDebugOptions;
@@ -79,7 +80,9 @@ public class JPSDiagramPrinterHelper extends DiagramPrinterHelper {
 	 */
 	public void printWithSettings(IEditorPart editorPart,
 			Map<String, Diagram> diagramMap, JPSDiagramPrinter jpsDiagramPrinter) {
-
+		
+		Display display = DisplayUtils.getDisplay(); 
+			
 		try {
 			IPrintHelper helper = new PrintHelper();
 			List<String> diagramNames = new ArrayList<String>(diagramMap
@@ -92,7 +95,7 @@ public class JPSDiagramPrinterHelper extends DiagramPrinterHelper {
 			if (printerData != null) {
 		
 				jpsDiagramPrinter.setPrinter(printerData.name);
-				jpsDiagramPrinter.setDisplayDPI(Display.getDefault().getDPI());
+				jpsDiagramPrinter.setDisplayDPI(display.getDPI());
 				jpsDiagramPrinter.setPrintHelper(helper);
 
 				if (helper.getDlgDiagramPrintRangeCurrent()) {
@@ -130,7 +133,7 @@ public class JPSDiagramPrinterHelper extends DiagramPrinterHelper {
 
 			MessageDialog
 					.openError(
-							Display.getDefault().getActiveShell(),
+							display.getActiveShell(),
 							DiagramUIPrintingMessages.JPSDiagramPrinterUtil_ErrorTitle,
 							DiagramUIPrintingMessages.JPSDiagramPrinterUtil_ErrorMessage);
 		}

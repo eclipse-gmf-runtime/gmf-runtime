@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.RootEditPart;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -112,7 +113,7 @@ public class SWTDiagramPrinter extends DiagramPrinter
         }
         
         assert diagrams != null;
-        Iterator it = diagrams.iterator();
+        Iterator<Diagram> it = diagrams.iterator();
 
         Shell shell = new Shell();
         try {
@@ -251,8 +252,8 @@ public class SWTDiagramPrinter extends DiagramPrinter
         
         PageMargins margins = PageInfoHelper.getPageMargins(fPreferences, getMapMode());
         adjustMargins(margins, userScale, getPrinterOffset());
-
-        GC gc_ = new GC(Display.getDefault(),this.gc.getStyle());
+        
+        GC gc_ = new GC(DisplayUtils.getDisplay(), this.gc.getStyle());
         gc_.setAntialias(this.gc.getAntialias());
 
         FontData fontData = JFaceResources.getDefaultFont().getFontData()[0];
@@ -376,7 +377,7 @@ public class SWTDiagramPrinter extends DiagramPrinter
             // which is typically 72dpi
             // This code should be removed when a resolution to Bugzilla 162459 is found
 
-            Image image = new Image(Display.getDefault(), getMapMode().LPtoDP(pageSize.x), getMapMode().LPtoDP(pageSize.y));
+            Image image = new Image(DisplayUtils.getDisplay(), getMapMode().LPtoDP(pageSize.x), getMapMode().LPtoDP(pageSize.y));
 
             GC imgGC = new GC(image, (rtlEnabled) ? SWT.RIGHT_TO_LEFT : SWT.LEFT_TO_RIGHT);
             imgGC.setXORMode(false);
@@ -507,7 +508,7 @@ public class SWTDiagramPrinter extends DiagramPrinter
 
         adjustMargins(margins, userScale, getPrinterOffset());
 
-        GC gc_ = new GC(Display.getDefault());
+        GC gc_ = new GC(DisplayUtils.getDisplay());
 
         FontData fontData = JFaceResources.getDefaultFont().getFontData()[0];
         Font font = new Font(printer, fontData);

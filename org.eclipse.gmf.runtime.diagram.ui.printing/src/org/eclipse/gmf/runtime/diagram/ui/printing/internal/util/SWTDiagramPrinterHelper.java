@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.printing.IPrintHelper;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.printing.actions.DefaultPrintActionHelper;
@@ -84,6 +85,8 @@ public class SWTDiagramPrinterHelper extends DiagramPrinterHelper {
 		PrinterData printerData;
 		IPrintHelper helper;
 
+		Display display = DisplayUtils.getDisplay();
+		
 		try {
 			Class printhelperClass = Class
 					.forName(IPrintHelper.PRINT_HELPER_CLASS_NAME);
@@ -98,7 +101,7 @@ public class SWTDiagramPrinterHelper extends DiagramPrinterHelper {
 				final Printer printer = new Printer(printerData);
 
 				diagramPrinter.setPrinter(printer);
-				diagramPrinter.setDisplayDPI(Display.getDefault().getDPI());
+				diagramPrinter.setDisplayDPI(display.getDPI());
 
 				if (helper.getDlgDiagramPrintRangeCurrent()) {
 					DiagramEditPart dgrmEP = ((IDiagramWorkbenchPart) editorPart)
@@ -142,7 +145,7 @@ public class SWTDiagramPrinterHelper extends DiagramPrinterHelper {
 
 			if (MessageDialog
 					.openQuestion(
-							Display.getDefault().getActiveShell(),
+							display.getActiveShell(),
 							DiagramUIPrintingMessages.DiagramPrinterUtil_DLLErrorTitle,
 							DiagramUIPrintingMessages.DiagramPrinterUtil_DLLErrorMessage_part1
 									+ "\n" //$NON-NLS-1$
@@ -189,7 +192,7 @@ public class SWTDiagramPrinterHelper extends DiagramPrinterHelper {
 
 			if (MessageDialog
 					.openQuestion(
-							Display.getDefault().getActiveShell(),
+							DisplayUtils.getDisplay().getActiveShell(),
 							DiagramUIPrintingMessages.DiagramPrinterUtil_DLLErrorTitle,
 							DiagramUIPrintingMessages.DiagramPrinterUtil_DLLErrorMessage_part1
 									+ "\n" //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg;
 import java.awt.Graphics2D;
 
 import org.apache.batik.ext.awt.RenderingHintsKeyExt;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.Graphics2DToGraphicsAdaptor;
 import org.eclipse.swt.graphics.Color;
@@ -60,7 +61,7 @@ public class SWTImageTranscoder
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.ImageTranscoderEx#createGraphics(int, int)
 	 */
 	protected Graphics2D createGraphics(int w, int h) {
-		Display display = Display.getDefault();
+		Display display = DisplayUtils.getDisplay();
 
 		ImageData imgData = new ImageData(w, h, 24, new PaletteData(0xFF0000, 0xFF00, 0xFF));
 		imgData.transparentPixel = FigureUtilities.RGBToInteger(TRANSPARENT_COLOR).intValue();

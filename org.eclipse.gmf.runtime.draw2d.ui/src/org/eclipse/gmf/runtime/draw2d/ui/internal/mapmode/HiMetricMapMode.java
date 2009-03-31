@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,18 +32,22 @@ public class HiMetricMapMode
 	private static final double UNITS_PER_INCH = 2540.0;
 
 	public HiMetricMapMode() {
-		Display.getDefault().syncExec(new Runnable() {
+		Display display = Display.getCurrent();
+		if (display == null) {
+			Display.getDefault().syncExec(new Runnable() {
 
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.lang.Runnable#run()
-			 */
-			public void run() {
-				dpi = Display.getDefault().getDPI().x;
-			}
-		});
-		
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see java.lang.Runnable#run()
+				 */
+				public void run() {
+					dpi = Display.getCurrent().getDPI().x;
+				}
+			});
+		} else {
+			dpi = display.getDPI().x;
+		}
 		scale = dpi / UNITS_PER_INCH;
 	}
 	

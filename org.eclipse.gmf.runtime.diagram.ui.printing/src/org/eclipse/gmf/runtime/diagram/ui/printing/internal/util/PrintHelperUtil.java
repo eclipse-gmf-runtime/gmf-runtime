@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,6 @@ import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -90,17 +89,8 @@ public class PrintHelperUtil {
      *             creates.
      */
 	public static DiagramEditPart createDiagramEditPart(Diagram diagram,
-            PreferencesHint preferencesHint) {
-			
-            DiagramEditPart diagramEditPart =  OffscreenEditPartFactory.getInstance().createDiagramEditPart(
-            diagram, new Shell(), preferencesHint);
-            // since some of the diagram updates are ASync we need to give the 
-            // inter-thread messages a chance to get processed processed before we
-            // continue; check bugzilla 170332
-            while (Display.getDefault().readAndDispatch ()){
-                // nothing special to do 
-            }
-             return diagramEditPart;
+            PreferencesHint preferencesHint) {			
+            return createDiagramEditPart(diagram, preferencesHint, new Shell());
         }
     
     /**
@@ -119,7 +109,7 @@ public class PrintHelperUtil {
         // since some of the diagram updates are ASync we need to give the 
         // inter-thread messages a chance to get processed before we
         // continue; check bugzilla 170332
-        while (Display.getDefault().readAndDispatch ()){
+        while (shell.getDisplay().readAndDispatch ()){
             // nothing special to do 
         }
          return diagramEditPart;

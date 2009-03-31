@@ -31,6 +31,7 @@ import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsAwareFreeFormLayer;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
@@ -60,7 +61,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
@@ -419,7 +419,7 @@ public class DiagramRootEditPart
 			rulerUnits = getWorkspaceViewerPreferences().getInt(WorkspaceViewerProperties.RULERUNIT);
 		
 		// Get the Displays DPIs
-		double dotsPerInch = Display.getDefault().getDPI().x;
+		double dotsPerInch = DisplayUtils.getDisplay().getDPI().x;
 		int spacingInPixels = 0;
 
 		// Evaluate the Grid Spacing based on the ruler units

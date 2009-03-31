@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,6 +52,7 @@ import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.printing.IPrintHelper;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -533,9 +534,14 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 					DiagramPrintingStatusCodes.RESOURCE_FAILURE,
 					e.getMessage(), e);
 
+			Display display = diagramEditPart.getViewer().getControl().getDisplay();
+			if (display == null) {
+				display = DisplayUtils.getDisplay();
+			}
+			
 			MessageDialog
 					.openError(
-							Display.getDefault().getActiveShell(),
+							display.getActiveShell(),
 							DiagramUIPrintingMessages.JPSDiagramPrinterUtil_ErrorTitle,
 							DiagramUIPrintingMessages.JPSDiagramPrinterUtil_ErrorMessage);
 		}
@@ -553,8 +559,9 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 		
 		this.graphics.pushState();
 
-		int shellStyle = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell().getStyle();
+		Display display = DisplayUtils.getDisplay();
+		
+		int shellStyle = display.getActiveShell().getStyle();
 		boolean rtlEnabled = (shellStyle & SWT.MIRRORED) != 0;
 				
 		if (rtlEnabled) {
@@ -562,7 +569,7 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
 					.getPageSize(page.preferences, false, getMapMode());
 
-			Image image = new Image(Display.getDefault(), getMapMode().LPtoDP(
+			Image image = new Image(display, getMapMode().LPtoDP(
 					pageSize.x), getMapMode().LPtoDP(pageSize.y));
 
 			GC imgGC = new GC(image,  SWT.RIGHT_TO_LEFT);
@@ -712,7 +719,7 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			// offset if we use gradient fill. We will use an image
 			// instead.
 			//
-			Image tempImage = new Image(Display.getDefault(),
+			Image tempImage = new Image(DisplayUtils.getDisplay(),
 					new org.eclipse.swt.graphics.Rectangle(x, y, w, h));
 			GC gc = new GC(tempImage);
 			SWTGraphics tempGraphics = new SWTGraphics(gc);

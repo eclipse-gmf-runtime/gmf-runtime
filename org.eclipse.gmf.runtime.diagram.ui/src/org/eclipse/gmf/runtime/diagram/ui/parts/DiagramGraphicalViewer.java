@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.draw2d.DeferredUpdateManager;
 import org.eclipse.draw2d.LightweightSystem;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ElementToEditPartsMap;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
@@ -89,7 +90,7 @@ public class DiagramGraphicalViewer
          * @see org.eclipse.draw2d.DeferredUpdateManager#sendUpdateRequest()
          */
         protected void sendUpdateRequest() {
-            PlatformUI.getWorkbench().getDisplay().asyncExec(new UpdateRequest());
+            DisplayUtils.getDisplay().asyncExec(new UpdateRequest());
         }
 
         /**
@@ -274,7 +275,7 @@ public class DiagramGraphicalViewer
         if (selectionEventPending)
             return;
         selectionEventPending = true;
-        Display display = PlatformUI.getWorkbench().getDisplay();
+        Display display = getControl().getDisplay();
         if (display != null) {
             display.asyncExec(new Runnable() {
 

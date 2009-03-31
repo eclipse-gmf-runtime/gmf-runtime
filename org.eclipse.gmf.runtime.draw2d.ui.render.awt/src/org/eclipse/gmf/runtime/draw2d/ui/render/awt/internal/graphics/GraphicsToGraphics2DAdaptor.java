@@ -36,6 +36,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageConverter;
@@ -52,7 +53,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.PathData;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * Objects of this class can be used with draw2d to render to a Graphics2D object.
@@ -240,7 +240,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			0,
 			10,
 			10);
-		image = new Image(Display.getDefault(), tempRect);		
+		image = new Image(DisplayUtils.getDisplay(), tempRect);		
 		GC gc = new GC(image);
 		swtGraphics = new SWTGraphics(gc);
 	}
@@ -964,7 +964,9 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 			int height = fontInfo[0].getHeight();
 			
-			float fsize = (float)height * (float)Display.getDefault().getDPI().x / 72.0f;
+			float fsize = (float) height
+					* (float) DisplayUtils.getDisplay().getDPI().x
+					/ 72.0f;
 			height = Math.round(fsize);
 			
 			int style = fontInfo[0].getStyle();

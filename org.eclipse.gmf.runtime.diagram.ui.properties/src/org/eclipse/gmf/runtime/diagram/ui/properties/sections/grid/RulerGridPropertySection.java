@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.sections.grid;
 import java.text.ParseException;
 
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
@@ -505,12 +506,13 @@ public class RulerGridPropertySection
 		}
 		Double value = convertStringToDouble(valueStr);
 		double pixelValue = 0;
+		Display display = DisplayUtils.getDisplay();
 		switch (fromUnits) {
 		case INCHES:
-			pixelValue = value.doubleValue() * Display.getDefault().getDPI().x;
+			pixelValue = value.doubleValue() * display.getDPI().x;
 			break;
 		case CENTIMETERS:
-                pixelValue = value.doubleValue() * Display.getDefault().getDPI().x / INCH2CM;
+                pixelValue = value.doubleValue() * display.getDPI().x / INCH2CM;
 			break;
 		case PIXELS:
 			pixelValue = value.intValue();
@@ -520,10 +522,10 @@ public class RulerGridPropertySection
 
 		switch (toUnits) {
 		case INCHES:
-			returnValue = pixelValue / Display.getDefault().getDPI().x;
+			returnValue = pixelValue / display.getDPI().x;
 			break;
 		case CENTIMETERS:
-                returnValue = pixelValue * INCH2CM / Display.getDefault().getDPI().x;
+                returnValue = pixelValue * INCH2CM / display.getDPI().x;
 			break;
 		case PIXELS:
 			returnValue = Math.round(pixelValue);
@@ -603,7 +605,7 @@ public class RulerGridPropertySection
 			returnValue = number / INCH2CM;
 			break;
 		case PIXELS:
-			returnValue = number / Display.getDefault().getDPI().x;
+			returnValue = number / DisplayUtils.getDisplay().getDPI().x;
 		}
 		return returnValue;
 	}

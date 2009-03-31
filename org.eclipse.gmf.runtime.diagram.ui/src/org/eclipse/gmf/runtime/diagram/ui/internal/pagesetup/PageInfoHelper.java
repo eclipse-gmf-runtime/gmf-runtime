@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
@@ -162,7 +163,7 @@ public class PageInfoHelper {
 		}
 
 		int[] paperSize = { 0, 0 };
-		org.eclipse.swt.widgets.Display display = Display.getDefault();
+		org.eclipse.swt.widgets.Display display = DisplayUtils.getDisplay();
 		org.eclipse.swt.graphics.Point displayDPI = display.getDPI();
 		paperSize[0] = mm.DPtoLP((int)(width * displayDPI.x));
 		paperSize[1] = mm.DPtoLP((int)(height * displayDPI.y));
@@ -277,10 +278,8 @@ public class PageInfoHelper {
 	}	
 	
 	
-	public static PageMargins getPageMargins(IPreferenceStore preferenceStore, IMapMode mm) {
-		assert Display.getDefault() != null;
-		
-		org.eclipse.swt.graphics.Point displayDPI = Display.getDefault().getDPI();
+	public static PageMargins getPageMargins(IPreferenceStore preferenceStore, IMapMode mm) {		
+		org.eclipse.swt.graphics.Point displayDPI = DisplayUtils.getDisplay().getDPI();
 		PageMargins margins = new PageMargins();
 		margins.left = mm.DPtoLP((int) ( displayDPI.x * preferenceStore
 			.getDouble(WorkspaceViewerProperties.PREF_MARGIN_LEFT)));
@@ -292,6 +291,5 @@ public class PageInfoHelper {
 			.getDouble(WorkspaceViewerProperties.PREF_MARGIN_BOTTOM)));
 		
 		return margins;
-		
 	}
 }

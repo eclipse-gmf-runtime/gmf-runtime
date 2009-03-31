@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,16 +109,22 @@ public class UIModificationValidator
     /**
      * Constructs a UI modification validator and initializes the UI context
      */
-    public UIModificationValidator() {
-        Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-                Shell shell = window == null ? null : window.getShell();
-                listener = new WindowListener(shell);
-                PlatformUI.getWorkbench().addWindowListener(listener);
-            }
-        });
-    }
+	public UIModificationValidator() {
+		if (PlatformUI.isWorkbenchRunning()) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+
+					if (PlatformUI.isWorkbenchRunning()) {
+						IWorkbenchWindow window = PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow();
+						Shell shell = window == null ? null : window.getShell();
+						listener = new WindowListener(shell);
+						PlatformUI.getWorkbench().addWindowListener(listener);
+					}
+				}
+			});
+		}
+	}
             
    /**
     *  Helper class that allows us to return status information 
@@ -173,6 +179,7 @@ public class UIModificationValidator
 
 		Shell shell = listener == null ? null : listener.getShell();
 		RunnableWithStatus r = new RunnableWithStatus(files, shell);
+		Display display = PlatformUI.getWorkbench().getDisplay();
 
 		ISyncExecHelper syncExecHelper = org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.SyncExecHelper
 				.getInstance();
@@ -180,12 +187,12 @@ public class UIModificationValidator
 		if (ModalContext.isModalContextThread(Thread.currentThread())) {
 			Runnable safeRunnable = syncExecHelper.safeRunnable(r);
 			if( safeRunnable != null){
-				Display.getDefault().syncExec(safeRunnable);
+				display.syncExec(safeRunnable);
 			} else {
 				r.run();
 			}
 		} else {
-			if (Display.getCurrent() == null) {
+			if (display == null) {
 				r.setShell(null);
 			}
 			r.run();
@@ -198,7 +205,7 @@ public class UIModificationValidator
 	 */
     public void dispose() {
         if (listener != null) {
-            Display.getDefault().asyncExec(new Runnable() {
+            PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
                 public void run() {
                     PlatformUI.getWorkbench().removeWindowListener(listener);
                 }

@@ -181,13 +181,15 @@ public class RulerGridPreferencePage
 			// Use the default
 		}
 		double pixelValue = 0;
+		
+		Display display = getControl().getDisplay();
 
 		switch( fromUnits ) {
 			case INCHES:
-				pixelValue = value.doubleValue() * Display.getDefault().getDPI().x;
+				pixelValue = value.doubleValue() * display.getDPI().x;
 				break;
 			case CENTIMETERS:
-				pixelValue = value.doubleValue() * Display.getDefault().getDPI().x / INCH2CM;
+				pixelValue = value.doubleValue() * display.getDPI().x / INCH2CM;
 				break;
 			case PIXELS:
 				pixelValue = value.intValue();
@@ -197,10 +199,10 @@ public class RulerGridPreferencePage
 		
 		switch( toUnits ) {
 			case INCHES:
-				returnValue = pixelValue / Display.getDefault().getDPI().x;
+				returnValue = pixelValue / display.getDPI().x;
 				break;
 			case CENTIMETERS:
-				returnValue = pixelValue * INCH2CM / Display.getDefault().getDPI().x;
+				returnValue = pixelValue * INCH2CM / display.getDPI().x;
 				break;
 			case PIXELS:
 				returnValue = pixelValue;
@@ -228,7 +230,7 @@ public class RulerGridPreferencePage
 				returnValue = number / INCH2CM;
 				break;
 			case PIXELS:
-				returnValue = number / Display.getDefault().getDPI().x;
+				returnValue = number / getControl().getDisplay().getDPI().x;
 		}
 		return returnValue;
 	}

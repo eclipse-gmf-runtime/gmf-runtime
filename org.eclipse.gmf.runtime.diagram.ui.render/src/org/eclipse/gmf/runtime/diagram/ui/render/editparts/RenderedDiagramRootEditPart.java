@@ -19,6 +19,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
@@ -28,7 +29,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapMod
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatedZoomListener;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * A specialized <code>DiagramRootEditPart</code> that supports rendering of
@@ -58,8 +59,12 @@ public class RenderedDiagramRootEditPart
 		extends DiagramScalableFreeformLayeredPane implements AnimatedZoomListener {
 
 		private boolean animatedZoomOn;
-		static final private Dimension MAX_RENDER_SIZE = new Dimension(PlatformUI.getWorkbench().getDisplay().getBounds().width, 
-			PlatformUI.getWorkbench().getDisplay().getBounds().height);
+		static final private Dimension MAX_RENDER_SIZE;
+		static {
+			Display display = DisplayUtils.getDisplay();
+			MAX_RENDER_SIZE = new Dimension(display.getBounds().width, display
+					.getBounds().height);
+		}
 		
 		/*
 		 * (non-Javadoc)
