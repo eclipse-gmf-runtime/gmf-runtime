@@ -42,7 +42,7 @@ import org.eclipse.ui.part.FileEditorInput;
 public class ResourceLoadedListener extends DemultiplexingListener {
 	private static ResourceLoadedListener instance;
 	
-	private final Set ignoredResources = new java.util.HashSet();
+	private final Set<Resource> ignoredResources = new java.util.HashSet<Resource>();
 	
 	/**
 	 * Initializes me with my filter.
