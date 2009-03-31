@@ -129,11 +129,6 @@ public abstract class GraphicalEditPart
     protected String elementGuid;
 
     /**
-     * Flag to indicate if the edit part is in edit mode
-     */
-    private boolean isEditable = true;
-    
-    /**
      * Cache the editing domain after it is retrieved.
      */
     private TransactionalEditingDomain editingDomain;
@@ -145,15 +140,37 @@ public abstract class GraphicalEditPart
     private FontData cachedFontData;
     
     /**
+     * Flag to indicate if the edit part is in edit mode
+     * @since 1.2
+     */
+    final protected static int FLAG__IS_EDITABLE = MAX_FLAG << 1;
+    
+    /**
+     * Flag to indicate automatic updates of source/target connections visibility triggered by the change
+     * of this editpart's visibility
+     * @since 1.2
+     */
+    final protected static int FLAG__AUTO_CONNECTIONS_VISIBILITY = MAX_FLAG << 2;
+    
+    /**
+     * The left-most bit that is reserved by this class for setting flags. Subclasses may
+     * define additional flags starting at <code>(GRAPHICAL_EDIT_PART__MAX_FLAG << 1)</code>.
+     * @since 1.2
+     */
+    final protected static int GRAPHICAL_EDIT_PART__MAX_FLAG = FLAG__AUTO_CONNECTIONS_VISIBILITY;
+    
+    /**
      * Create an instance.
      * 
      * @param model
      *            the underlying model.
      */
     public GraphicalEditPart(EObject model) {
-        setModel(model);        
+        setModel(model);
+        setFlag(FLAG__IS_EDITABLE, true);
+        setFlag(FLAG__AUTO_CONNECTIONS_VISIBILITY, true);
     }
-
+    
     /** Registers this editpart to recieve notation and semantic events. */
     public void activate() {
         if (isActive()) {
@@ -301,7 +318,7 @@ public abstract class GraphicalEditPart
     public void removeNotify() {
         
         View view = getNotationView();
-        if (view != null && !view.isVisible()){
+        if (view != null && !view.isVisible() && getFlag(FLAG__AUTO_CONNECTIONS_VISIBILITY)){
             setConnectionsVisibility(false);
         }
         
@@ -1012,9 +1029,11 @@ public abstract class GraphicalEditPart
             return;
         }
         
-        // if we are going to hide the node then connections comming to the
+        // if we are going to hide the node then connections coming to the
         // node or outside it should be hidden as well
-        setConnectionsVisibility(vis);
+        if (getFlag(FLAG__AUTO_CONNECTIONS_VISIBILITY)) {
+        	setConnectionsVisibility(vis);
+        }
         _figure.setVisible(vis);
         _figure.revalidate();
     }
@@ -1285,7 +1304,7 @@ public abstract class GraphicalEditPart
             }
         }
 
-        isEditable = false;
+        setFlag(FLAG__IS_EDITABLE, false);
     }
     
     
@@ -1312,7 +1331,7 @@ public abstract class GraphicalEditPart
             return;
         }
 
-        isEditable = true;
+        setFlag(FLAG__IS_EDITABLE, true);
 
         List c = getChildren();
         int size = c.size();
@@ -1341,7 +1360,7 @@ public abstract class GraphicalEditPart
         // is active on another thread
         if (EditPartUtil.isWriteTransactionInProgress(this, true, true))
             return false;
-        return isEditable;
+        return getFlag(FLAG__IS_EDITABLE);
     }
     
     /* 
@@ -1665,6 +1684,27 @@ public abstract class GraphicalEditPart
 	 */
 	protected void refreshLineType() {
 		setLineType(getLineType());
+	}
+	
+	/**
+	 * Sets the flag for automatically refreshing source/target connections visibility based on the editpart's
+	 * visibility (i.e. {@link #setConnectionsVisibility(boolean) will be called}
+	 * 
+	 * @param autoRefreshConnectionsVisibility <code>true</code> to set automatic refresh to on
+	 * @since 1.2
+	 */
+	public void setAutomaticalRefreshConnectionsVisibility(boolean autoRefreshConnectionsVisibility) {
+		setFlag(FLAG__AUTO_CONNECTIONS_VISIBILITY, autoRefreshConnectionsVisibility);
+	}
+	
+	/**
+	 * Returns <code>true</code if automatic update of source/target connections visibility is triggered by editpart's visibility (i.e. {@link #setConnectionsVisibility(boolean) is being called}
+	 * 
+	 * @return <code>true</code> if automatic visibility refresh for connections is on
+	 * @since 1.2
+	 */
+	public boolean isAutomaticalRefreshConnectionsVisibility() {
+		return getFlag(FLAG__AUTO_CONNECTIONS_VISIBILITY);
 	}
 
 }
