@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
  * Utility methods to work with Display object
  * 
  * @author aboyko
- * 
+ * @since 1.2
  */
 public class DisplayUtils {
 	
