@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *     Mariot Chauvin <mariot.chauvin@obeo.fr> - bug 245238
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.draw2d.ui.figures;
@@ -1110,7 +1111,7 @@ public class WrappingLabel
             g.setBackgroundColor(ColorConstants.menuBackgroundSelected);
             g.fillRectangle(getVisibleTextBounds());
             g.popState();
-            g.setForegroundColor(ColorConstants.white);
+            g.setForegroundColor(ColorConstants.menuForegroundSelected);
         }
     }
 
@@ -1119,7 +1120,7 @@ public class WrappingLabel
             g.pushState();
             g.setXORMode(true);
             g.setForegroundColor(ColorConstants.menuBackgroundSelected);
-            g.setBackgroundColor(ColorConstants.white);
+            g.setBackgroundColor(ColorConstants.menuForegroundSelected);
             g.drawFocus(getVisibleTextBounds());
             g.popState();
         }
