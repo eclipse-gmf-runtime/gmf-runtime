@@ -9,8 +9,6 @@
  *    IBM Corporation - initial API and implementation
  *    Mariot Chauvin <mariot.chauvin@obeo.fr> - patch 244297
  ****************************************************************************/
-
-
 package org.eclipse.gmf.runtime.draw2d.ui.internal.graphics;
 
 import java.util.ArrayList;
@@ -70,7 +68,7 @@ public class ScaledGraphics
 	static class FontKey {
 		Font font;
 		int height;
-		protected FontKey() {/* empty constructor */ }
+		protected FontKey() { }
 		protected FontKey(Font font, int height) {
 			this.font = font;
 			this.height = height;
@@ -104,9 +102,7 @@ public class ScaledGraphics
 		/**
 		 * Constructs a new, uninitialized State object.
 		 */
-		protected State() {
-			/* empty constructor */
-		}
+		protected State() {	}
 		
 		/**
 		 * Constructs a new State object and initializes the properties based on the given 
@@ -122,6 +118,18 @@ public class ScaledGraphics
 			this(zoom, x, y, font, (float)lineWidth);
 		}
 	
+		/**
+		 * Constructs a new State object and initializes the properties based on the given 
+		 * values.
+		 * 
+		 * @param zoom the zoom factor
+		 * @param x the x offset
+		 * @param y the y offset
+		 * @param font the font
+		 * @param lineWidth the line width
+		 * 
+		 * @since 3.5
+		 */
 		protected State(double zoom, double x, double y, Font font, float lineWidth) {
 			this.zoom = zoom;
 			this.appliedX = x;
@@ -143,6 +151,16 @@ public class ScaledGraphics
 			setValues(zoom, x, y, font, (float)lineWidth);
 		}
 	
+		/**
+		 * Sets all the properties of the state object.
+		 * @param zoom the zoom factor
+		 * @param x the x offset
+		 * @param y the y offset
+		 * @param font the font
+		 * @param lineWidth the line width
+		 * 
+		 * @since 3.5
+		 */
 		protected void setValues(double zoom, double x, double y, 
 				Font font, float lineWidth) {
 			this.zoom = zoom;
@@ -180,7 +198,7 @@ public class ScaledGraphics
 	private FontHeightCache targetCache = new FontHeightCache();
 	
 	double zoom = 1.0;
-	
+
 	/**
 	 * Constructs a new ScaledGraphics based on the given Graphics object.
 	 * @param g the base graphics object
@@ -192,7 +210,6 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#clipRect(Rectangle) */
-	@Override
 	public void clipRect(Rectangle r) {
 		graphics.clipRect(zoomClipRect(r));
 	}
@@ -201,8 +218,53 @@ public class ScaledGraphics
 		return new Font(Display.getCurrent(), data);
 	}
 	
+	/**
+	 * Scales given path by zoom factor
+	 * 
+	 * @param path
+	 *            Path to be scaled
+	 * @return Scaled path
+	 * @since 1.2	 
+	 */
+	private Path createScaledPath(Path path) {
+		PathData p = path.getPathData();
+		for (int i = 0; i < p.points.length; i += 2) {
+			p.points[i] = (float) (p.points[i] * zoom + fractionalX);
+			p.points[i + 1] = (float) (p.points[i + 1] * zoom + fractionalY);
+		}
+		Path scaledPath = new Path(path.getDevice());
+		int index = 0;
+		for (int i = 0; i < p.types.length; i++) {
+			byte type = p.types[i];
+			switch (type) {
+				case SWT.PATH_MOVE_TO:
+					scaledPath.moveTo(p.points[index], p.points[index + 1]);
+					index += 2;
+					break;
+				case SWT.PATH_LINE_TO:
+					scaledPath.lineTo(p.points[index], p.points[index + 1]);
+					index += 2;
+					break;
+				case SWT.PATH_CUBIC_TO:
+					scaledPath.cubicTo(p.points[index], p.points[index + 1],
+							p.points[index + 2], p.points[index + 3],
+							p.points[index + 4], p.points[index + 5]);
+					index += 6;
+					break;
+				case SWT.PATH_QUAD_TO:
+					scaledPath.quadTo(p.points[index], p.points[index + 1],
+							p.points[index + 2], p.points[index + 3]);
+					index += 4;
+					break;
+				case SWT.PATH_CLOSE:
+					scaledPath.close();
+					break;
+			}
+		}
+		return scaledPath;
+	}
+	
 	/** @see Graphics#dispose() */
-	@Override
 	public void dispose() {
 		//Remove all states from the stack
 		while (stackPointer > 0) {
@@ -213,7 +275,6 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#drawArc(int, int, int, int, int, int) */
-	@Override
 	public void drawArc(int x, int y, int w, int h, int offset, int sweep) {
 		Rectangle z = zoomRect(x, y, w, h);
 		if (z.isEmpty() || sweep == 0)
@@ -222,13 +283,11 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#drawFocus(int, int, int, int) */
-	@Override
 	public void drawFocus(int x, int y, int w, int h) {
 		graphics.drawFocus(zoomRect(x, y, w, h));
 	}
 	
 	/** @see Graphics#drawImage(Image, int, int) */
-	@Override
 	public void drawImage(Image srcImage, int x, int y) {
 		org.eclipse.swt.graphics.Rectangle size = srcImage.getBounds();
 	    Dimension sizeLPDim = new Dimension(size.width, size.height);
@@ -246,7 +305,6 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#drawImage(Image, int, int, int, int, int, int, int, int) */
-	@Override
 	public void drawImage(Image srcImage, int sx, int sy, int sw, int sh,
 											int tx, int ty, int tw, int th) {
 		//"t" == target rectangle, "s" = source
@@ -257,7 +315,6 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#drawLine(int, int, int, int) */
-	@Override
 	public void drawLine(int x1, int y1, int x2, int y2) {
 		graphics.drawLine(
 			(int)(Math.floor((x1 * zoom + fractionalX))),
@@ -267,13 +324,21 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#drawOval(int, int, int, int) */
-	@Override
 	public void drawOval(int x, int y, int w, int h) {
 		graphics.drawOval(zoomRect(x, y, w, h));
 	}
 	
+	/** @see Graphics#drawPath(Path) */
+	public void drawPath(Path path) {
+		Path scaledPath = createScaledPath(path);
+		try {
+			graphics.drawPath(scaledPath);
+		} finally {
+			scaledPath.dispose();
+		}
+	}
+	
 	/** @see Graphics#drawPoint(int, int) */
-	@Override
 	public void drawPoint(int x, int y) {
 		graphics.drawPoint((int)Math.floor(x * zoom + fractionalX),
 				(int)Math.floor(y * zoom + fractionalY));
@@ -282,13 +347,11 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#drawPolygon(int[])
 	 */
-	@Override
 	public void drawPolygon(int[] points) {
 		graphics.drawPolygon(zoomPointList(points));
 	}
 	
 	/** @see Graphics#drawPolygon(PointList) */
-	@Override
 	public void drawPolygon(PointList points) {
 		graphics.drawPolygon(zoomPointList(points.toIntArray()));
 	}
@@ -296,25 +359,21 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#drawPolyline(int[])
 	 */
-	@Override
 	public void drawPolyline(int[] points) {
 		graphics.drawPolyline(zoomPointList(points));
 	}
 	
 	/** @see Graphics#drawPolyline(PointList) */
-	@Override
 	public void drawPolyline(PointList points) {
 		graphics.drawPolyline(zoomPointList(points.toIntArray()));
 	}
 	
 	/** @see Graphics#drawRectangle(int, int, int, int) */
-	@Override
 	public void drawRectangle(int x, int y, int w, int h) {
 		graphics.drawRectangle(zoomRect(x, y, w, h));
 	}
 	
 	/** @see Graphics#drawRoundRectangle(Rectangle, int, int) */
-	@Override
 	public void drawRoundRectangle(Rectangle r, int arcWidth, int arcHeight) {
 		graphics.drawRoundRectangle(zoomRect(r.x, r.y, r.width, r.height),
 			(int)(arcWidth * zoom),
@@ -322,14 +381,12 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#drawString(String, int, int) */
-	@Override
 	public void drawString(String s, int x, int y) {
 		if (allowText)
 			graphics.drawString(s, zoomTextPoint(x, y));
 	}
 	
 	/** @see Graphics#drawText(String, int, int) */
-	@Override
 	public void drawText(String s, int x, int y) {
 		if (allowText)
 			graphics.drawText(s, zoomTextPoint(x, y));
@@ -338,7 +395,6 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#drawText(String, int, int, int)
 	 */
-	@Override
 	public void drawText(String s, int x, int y, int style) {
 		if (allowText)
 			graphics.drawText(s, zoomTextPoint(x, y), style);
@@ -347,7 +403,6 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#drawTextLayout(TextLayout, int, int, int, int, Color, Color)
 	 */
-	@Override
 	public void drawTextLayout(TextLayout layout, int x, int y, int selectionStart,
 			int selectionEnd, Color selectionForeground, Color selectionBackground) {
 		TextLayout scaled = zoomTextLayout(layout);
@@ -359,7 +414,6 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#fillArc(int, int, int, int, int, int) */
-	@Override
 	public void fillArc(int x, int y, int w, int h, int offset, int sweep) {
 		Rectangle z = zoomFillRect(x, y, w, h);
 		if (z.isEmpty() || sweep == 0)
@@ -368,39 +422,43 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#fillGradient(int, int, int, int, boolean) */
-	@Override
 	public void fillGradient(int x, int y, int w, int h, boolean vertical) {
 		graphics.fillGradient(zoomFillRect(x, y, w, h), vertical);
 	}
 	
 	/** @see Graphics#fillOval(int, int, int, int) */
-	@Override
 	public void fillOval(int x, int y, int w, int h) {
 		graphics.fillOval(zoomFillRect(x, y, w, h));
 	}
 	
+	/** @see Graphics#fillPath(Path) */
+	public void fillPath(Path path) {
+		Path scaledPath = createScaledPath(path);
+		try {
+			graphics.fillPath(scaledPath);
+		} finally {
+			scaledPath.dispose();
+		}
+	}	
+		
 	/**
 	 * @see Graphics#fillPolygon(int[])
 	 */
-	@Override
 	public void fillPolygon(int[] points) {
 		graphics.fillPolygon(zoomPointList(points));
 	}
 	
 	/** @see Graphics#fillPolygon(PointList) */
-	@Override
 	public void fillPolygon(PointList points) {
 		graphics.fillPolygon(zoomPointList(points.toIntArray()));
 	}
 	
 	/** @see Graphics#fillRectangle(int, int, int, int) */
-	@Override
 	public void fillRectangle(int x, int y, int w, int h) {
 		graphics.fillRectangle(zoomFillRect(x, y, w, h));
 	}
 	
 	/** @see Graphics#fillRoundRectangle(Rectangle, int, int) */
-	@Override
 	public void fillRoundRectangle(Rectangle r, int arcWidth, int arcHeight) {
 		graphics.fillRoundRectangle(zoomFillRect(r.x, r.y, r.width, r.height),
 			(int)(arcWidth * zoom),
@@ -408,14 +466,12 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#fillString(String, int, int) */
-	@Override
 	public void fillString(String s, int x, int y) {
 		if (allowText)
 			graphics.fillString(s, zoomTextPoint(x, y));
 	}
 	
 	/** @see Graphics#fillText(String, int, int) */
-	@Override
 	public void fillText(String s, int x, int y) {
 		if (allowText)
 			graphics.fillText(s, zoomTextPoint(x, y));
@@ -424,7 +480,6 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#getAbsoluteScale()
 	 */
-	@Override
 	public double getAbsoluteScale() {
 		return zoom * graphics.getAbsoluteScale();
 	}
@@ -432,7 +487,6 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#getAlpha()
 	 */
-	@Override
 	public int getAlpha() {
 		return graphics.getAlpha();
 	}
@@ -440,13 +494,11 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#getAntialias()
 	 */
-	@Override
 	public int getAntialias() {
 		return graphics.getAntialias();
 	}
 	
 	/** @see Graphics#getBackgroundColor() */
-	@Override
 	public Color getBackgroundColor() {
 		return graphics.getBackgroundColor();
 	}
@@ -475,7 +527,6 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#getClip(Rectangle) */
-	@Override
 	public Rectangle getClip(Rectangle rect) {
 		graphics.getClip(rect);
 		int x = (int)(rect.x / zoom);
@@ -496,7 +547,6 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#getAdvanced()
 	 */
-	@Override
 	public boolean getAdvanced() {
 		return graphics.getAdvanced();
 	}
@@ -504,25 +554,21 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#getFillRule()
 	 */
-	@Override
 	public int getFillRule() {
 		return graphics.getFillRule();
 	}
 	
 	/** @see Graphics#getFont() */
-	@Override
 	public Font getFont() {
 		return getLocalFont();
 	}
 	
 	/** @see Graphics#getFontMetrics() */
-	@Override
 	public FontMetrics getFontMetrics() {
 		return FigureUtilities.getFontMetrics(localFont);
 	}
 	
 	/** @see Graphics#getForegroundColor() */
-	@Override
 	public Color getForegroundColor() {
 		return graphics.getForegroundColor();
 	}
@@ -530,23 +576,13 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#getInterpolation()
 	 */
-	@Override
 	public int getInterpolation() {
 		return graphics.getInterpolation();
 	}
 
 	/**
-	 * @see Graphics#getLineMiterLimit()
-	 */
-	@Override
-	public float getLineMiterLimit() {
-		return graphics.getLineMiterLimit();
-	}
-	
-	/**
 	 * @see Graphics#getLineCap()
 	 */
-	@Override
 	public int getLineCap() {
 		return graphics.getLineCap();
 	}
@@ -554,35 +590,31 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#getLineJoin()
 	 */
-	@Override
 	public int getLineJoin() {
 		return graphics.getLineJoin();
 	}
 	
 	/** @see Graphics#getLineStyle() */
-	@Override
 	public int getLineStyle() {
 		return graphics.getLineStyle();
 	}
 	
+	/** @see Graphics#getLineMiterLimit() */
+	public float getLineMiterLimit() {
+		return graphics.getLineMiterLimit();
+	}
+	
 	/** @see Graphics#getLineWidth() */
-	@Override
 	public int getLineWidth() {
 		return (int)getLineWidthFloat();
 	}
 	
-	/**
-	 * @see Graphics#getLineWidthFloat()
-	 */
-	@Override
+	/** @see Graphics#getLineWidthFloat() */
 	public float getLineWidthFloat() {
 		return getLocalLineWidth();
 	}
 	
-	/**
-	 * @see Graphics#getLineAttributes()
-	 */
-	@Override
+	/** @see Graphics#getLineAttributes() */
 	public LineAttributes getLineAttributes() {
 		LineAttributes a = graphics.getLineAttributes();
 		a.width = getLocalLineWidth();
@@ -650,7 +682,7 @@ public class ScaledGraphics
 		setScale(zoom * amount);
 	}
 	
-	@Override
+	/** @see Graphics#setAdvanced(boolean) */
 	public void setAdvanced(boolean advanced) {
 		graphics.setAdvanced(advanced);
 	}
@@ -662,7 +694,6 @@ public class ScaledGraphics
 	 * 
 	 * @see Graphics#setAlpha(int)
 	 */
-	@Override
 	public void setAlpha(int alpha) {
 	    if (!GCUtilities.supportsAdvancedGraphics()) { 
 	        logAdvancedGraphicsWarning();
@@ -678,7 +709,6 @@ public class ScaledGraphics
 	 * 
 	 * @see Graphics#setAntialias(int)
 	 */
-	@Override
 	public void setAntialias(int value) {
 	    if (!GCUtilities.supportsAdvancedGraphics()) { 
 	        logAdvancedGraphicsWarning();
@@ -688,23 +718,26 @@ public class ScaledGraphics
 	}
 	
 	/** @see Graphics#setBackgroundColor(Color) */
-	@Override
 	public void setBackgroundColor(Color rgb) {
 		graphics.setBackgroundColor(rgb);
 	}
-	
-	/**
-	 * @see Graphics#setBackgroundPattern(Pattern)
-	 */
-	@Override
+
+	/** @see Graphics#setClip(Path) */
+	public void setClip(Path path) {
+		Path scaledPath = createScaledPath(path);
+		try {
+			graphics.setClip(scaledPath);
+		} finally {
+			scaledPath.dispose();
+		}
+	}
+		
+	/** @see Graphics#setBackgroundPattern(Pattern) */
 	public void setBackgroundPattern(Pattern pattern) {
 		graphics.setBackgroundPattern(pattern);  
 	}
 	
-	/** 
-	 * @see Graphics#setClip(Rectangle)
-	 */
-	@Override
+	/** @see Graphics#setClip(Rectangle) */
 	public void setClip(Rectangle r) {
 		graphics.setClip(zoomClipRect(r));
 	}
@@ -712,27 +745,21 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#setFillRule(int)
 	 */
-	@Override
 	public void setFillRule(int rule) {
 		graphics.setFillRule(rule);
 	}
 	
 	/** @see Graphics#setFont(Font) */
-	@Override
 	public void setFont(Font f) {
 		setLocalFont(f);
 	}
 	
 	/** @see Graphics#setForegroundColor(Color) */
-	@Override
 	public void setForegroundColor(Color rgb) {
 		graphics.setForegroundColor(rgb);
 	}
 	
-	/**
-	 * @see Graphics#setForegroundPattern(Pattern)
-	 */
-	@Override
+	/** @see Graphics#setForegroundPattern(Pattern) */
 	public void setForegroundPattern(Pattern pattern) {
 		graphics.setForegroundPattern(pattern);
 	}
@@ -744,7 +771,6 @@ public class ScaledGraphics
 	 * 
 	 * @see org.eclipse.draw2d.Graphics#setInterpolation(int)
 	 */
-	@Override
 	public void setInterpolation(int interpolation) {
 	    if (!GCUtilities.supportsAdvancedGraphics()) { 
 	        logAdvancedGraphicsWarning();
@@ -753,15 +779,9 @@ public class ScaledGraphics
 		graphics.setInterpolation(interpolation);
 	}
 	
-	@Override
-	public void setLineMiterLimit(float miterLimit) {
-		graphics.setLineMiterLimit(miterLimit);
-	}
-	
 	/**
 	 * @see Graphics#setLineCap(int)
 	 */
-	@Override
 	public void setLineCap(int cap) {
 		graphics.setLineCap(cap);
 	}
@@ -769,7 +789,6 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#setLineDash(int[])
 	 */
-	@Override
 	public void setLineDash(int[] dash) {
 		graphics.setLineDash(dash);
 	}
@@ -777,39 +796,31 @@ public class ScaledGraphics
 	/**
 	 * @see Graphics#setLineJoin(int)
 	 */
-	@Override
 	public void setLineJoin(int join) {
 		graphics.setLineJoin(join);
 	}
 	
-	/**
-	 *  @see Graphics#setLineStyle(int)
-	 */
-	@Override
+	/** @see Graphics#setLineStyle(int) */
 	public void setLineStyle(int style) {
 		graphics.setLineStyle(style);
 	}
 	
-	/** 
-	 * @see Graphics#setLineWidth(int)
-	 */
-	@Override
+	/** @see Graphics#setLineMiterLimit(float) */
+	public void setLineMiterLimit(float value) {
+		graphics.setLineMiterLimit(value);
+	}
+
+	/** @see Graphics#setLineWidth(int) */
 	public void setLineWidth(int width) {
 		setLineWidthFloat(width);
 	}
 	
-	/**
-	 * @see Graphics#setLineWidthFloat(float)
-	 */
-	@Override
+	/** @see Graphics#setLineWidthFloat(float) */
 	public void setLineWidthFloat(float width) {
 		setLocalLineWidth(width);
 	}
 	
-	/**
-	 * @see Graphics#setLineAttributes(LineAttributes)
-	 */
-	@Override
+	/** @see Graphics#setLineAttributes(LineAttributes) */
 	public void setLineAttributes(LineAttributes attributes) {
 		graphics.setLineAttributes(attributes);
 		setLocalLineWidth(attributes.width);
@@ -857,6 +868,15 @@ public class ScaledGraphics
 	public void translate(int dx, int dy) {
 		// fractionalX/Y is the fractional part left over from previous 
 		// translates that gets lost in the integer approximation.
+		double dxFloat = dx * zoom + fractionalX;
+		double dyFloat = dy * zoom + fractionalY;
+		fractionalX = dxFloat - Math.floor(dxFloat);
+		fractionalY = dyFloat - Math.floor(dyFloat);
+		graphics.translate((int)Math.floor(dxFloat), (int)Math.floor(dyFloat));
+	}
+	
+	/** @see Graphics#translate(float, float) */
+	public void translate(float dx, float dy) {
 		double dxFloat = dx * zoom + fractionalX;
 		double dyFloat = dy * zoom + fractionalY;
 		fractionalX = dxFloat - Math.floor(dxFloat);
@@ -1017,7 +1037,6 @@ public class ScaledGraphics
 												- targetCache.height + 1 + fractionalY)));
 	}
 	
-	
 	protected Graphics getGraphics() {
 		return graphics;
 	}
@@ -1032,7 +1051,7 @@ public class ScaledGraphics
 	                .warning(
 	                    Draw2dPlugin.getInstance(),
 	                    IStatus.WARNING,
-	                    "Advanced graphics support is not available in right-to-left mode.  Diagrams might not look as nice as they could in left-to-right mode."); //$NON-NLS-1$
+	                    "Advanced graphics support is not available in right-to-left mode.  Diagrams might not look as nice as they could in right-to-left mode."); //$NON-NLS-1$
 	        } else {
 	            Log
 	                .warning(
@@ -1043,90 +1062,4 @@ public class ScaledGraphics
 	        advancedGraphicsWarningLogged = true;
 	    }
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.draw2d.Graphics#setClip(org.eclipse.swt.graphics.Path)
-	 * @since 1.2
-	 */
-	public void setClip(Path path) {
-		Path scaledPath = createScaledPath(path);
-		try {
-			graphics.setClip(scaledPath);
-		} finally {
-			scaledPath.dispose();
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.draw2d.Graphics#fillPath(org.eclipse.swt.graphics.Path)
-	 * @since 1.2
-	 */
-	public void fillPath(Path path) {
-		Path scaledPath = createScaledPath(path);
-		try {
-			graphics.fillPath(scaledPath);
-		} finally {
-			scaledPath.dispose();
-		}
-	}	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.draw2d.Graphics#drawPath(org.eclipse.swt.graphics.Path)
-	 * @since 1.2
-	 */
-	public void drawPath(Path path) {
-		Path scaledPath = createScaledPath(path);
-		try {
-			graphics.drawPath(scaledPath);
-		} finally {
-			scaledPath.dispose();
-		}
-	}	
-
-	/**
-	 * Scales given path by zoom facotr
-	 * 
-	 * @param path
-	 *            Path to be scaled
-	 * @return Scaled path
-	 * @since 1.2	 
-	 */
-	private Path createScaledPath(Path path) {
-		PathData p = path.getPathData();
-		for (int i = 0; i < p.points.length; i += 2) {
-			p.points[i] = (float) (p.points[i] * zoom + fractionalX);
-			p.points[i + 1] = (float) (p.points[i + 1] * zoom + fractionalY);
-		}
-		Path scaledPath = new Path(path.getDevice());
-		int index = 0;
-		for (int i = 0; i < p.types.length; i++) {
-			byte type = p.types[i];
-			switch (type) {
-			case SWT.PATH_MOVE_TO:
-				scaledPath.moveTo(p.points[index], p.points[index + 1]);
-				index += 2;
-				break;
-			case SWT.PATH_LINE_TO:
-				scaledPath.lineTo(p.points[index], p.points[index + 1]);
-				index += 2;
-				break;
-			case SWT.PATH_CUBIC_TO:
-				scaledPath.cubicTo(p.points[index], p.points[index + 1],
-						p.points[index + 2], p.points[index + 3],
-						p.points[index + 4], p.points[index + 5]);
-				index += 6;
-				break;
-			case SWT.PATH_QUAD_TO:
-				scaledPath.quadTo(p.points[index], p.points[index + 1],
-						p.points[index + 2], p.points[index + 3]);
-				index += 4;
-				break;
-			case SWT.PATH_CLOSE:
-				scaledPath.close();
-				break;
-			}
-		}
-		return scaledPath;
-	}
-			
 }
