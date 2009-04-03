@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Mariot Chauvin <mariot.chauvin@obeo.fr> - bug 215179 
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.render.clipboard;
@@ -27,6 +28,7 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
@@ -510,17 +512,17 @@ abstract public class DiagramGenerator {
 		for (Iterator iter = editParts.iterator(); iter.hasNext();) {
 			IGraphicalEditPart element = (IGraphicalEditPart) iter.next();
 
-			// Get its view
-			View view = (View) element.getModel();
 
 			// If the view is a shape view...
 			if (element instanceof ShapeEditPart) {
 				// Get its connections source
-				List sourceConnections = view.getSourceEdges();
+				List sourceConnections = element.getSourceConnections();
 
 				// For each source connection...
 				for (int i = 0; i < sourceConnections.size(); i++) {
-					Edge edge = (Edge) sourceConnections.get(i);
+					EditPart part = (EditPart) sourceConnections.get(i);
+					Edge edge = (Edge) part.getModel();
+
 
 					// Get the connections target
 					View toView = (edge).getTarget();
