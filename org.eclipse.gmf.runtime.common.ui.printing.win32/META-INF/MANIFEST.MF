@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.printing.win32
+Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.printing.win32;singleton=true
 Bundle-Name: %Fragment.name
 Bundle-Vendor: %Fragment.providerName
 Bundle-Version: 1.2.0.qualifier
