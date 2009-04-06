@@ -16,12 +16,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramEventBrokerThreadSafe;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.AppearancePreferencePage;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectionsPreferencePage;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramsPreferencePage;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.RulerGridPreferencePage;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -74,7 +68,8 @@ public class DiagramUIPlugin
 	throws Exception {
 		super.start(context);
 		
-		initializeDefaultDiagramPreferenceStore();
+		PreferencesHint.registerPreferenceStore(PreferencesHint.USE_DEFAULTS,
+				new PreferenceStore());
 		
 		DiagramEventBroker.registerDiagramEventBrokerFactory(new DiagramEventBroker.DiagramEventBrokerFactory() {
         	public DiagramEventBroker createDiagramEventBroker(TransactionalEditingDomain editingDomain) {
@@ -83,21 +78,4 @@ public class DiagramUIPlugin
         });
 	}
 
-	/**
-	 * Initializes the preference store to be used as default values when a
-	 * diagram editor does not have any preferences hooked up. This is the
-	 * preference store registered with {@link PreferencesHint#USE_DEFAULTS}.
-	 */
-	private void initializeDefaultDiagramPreferenceStore() {
-		IPreferenceStore defaultStore = new PreferenceStore();
-
-		DiagramsPreferencePage.initDefaults(defaultStore);
-		RulerGridPreferencePage.initDefaults(defaultStore);
-		AppearancePreferencePage.initDefaults(defaultStore);
-		ConnectionsPreferencePage.initDefaults(defaultStore);
-		PrintingPreferencePage.initDefaults(defaultStore);
-
-		PreferencesHint.registerPreferenceStore(
-			PreferencesHint.USE_DEFAULTS, defaultStore);
-	}
 }

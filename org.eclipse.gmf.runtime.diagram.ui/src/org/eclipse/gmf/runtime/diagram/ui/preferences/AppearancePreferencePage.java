@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,9 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Appearance General preference page.
@@ -276,6 +278,28 @@ protected void addFontAndColorFields(Composite composite) {
 	 * @param store IPreferenceStore
 	 */
 	static protected void setDefaultFontPreference(IPreferenceStore store){
+		final IPreferenceStore theStore = store;
+		if (Display.getCurrent() != null) {
+			initDefaultFontProc(theStore);
+		} else {
+			Display display = PlatformUI.isWorkbenchRunning() ? PlatformUI
+					.getWorkbench().getDisplay() : Display.getDefault();
+			display.syncExec(new Runnable(){
+				public void run() {
+					initDefaultFontProc(theStore);
+				}
+			});
+		}
+	}
+	
+	/**
+	 * Set the default font for this preference store. Assumes that the method
+	 * executed on the UI thread
+	 * 
+	 * @param store
+	 *            IPreferenceStore
+	 */
+	private static void initDefaultFontProc(IPreferenceStore store) {
 		FontData fontDataArray[] =
             JFaceResources.getDefaultFont().getFontData();
         FontData fontData = fontDataArray[0];

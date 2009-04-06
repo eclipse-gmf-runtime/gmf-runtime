@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2003, 2004  IBM Corporation and others.          -->
+<!-- Copyright (c) 2003, 2009  IBM Corporation and others.          -->
 <!-- All rights reserved. This program and the accompanying materials      -->
 <!-- are made available under the terms of the Eclipse Public License v1.0 -->
 <!-- which accompanies this distribution, and is available at              -->
@@ -57,5 +57,11 @@
             name="%GMFDiagramContext.name"
             parentId="org.eclipse.ui.contexts.window">
       </context>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.gmf.runtime.diagram.ui.preferences.DefaultDiagramPreferencesInitializer">
+      </initializer>
    </extension>
 </plugin>
