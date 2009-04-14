@@ -38,7 +38,7 @@ public class DisplayUtils {
 		if (display == null && PlatformUI.isWorkbenchRunning()) {
 			display = PlatformUI.getWorkbench().getDisplay();
 		}
-		return display != null ? display : Display.getCurrent();
+		return display != null ? display : Display.getDefault();
 	}
 	
 	/**
