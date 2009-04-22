@@ -179,7 +179,7 @@ public class UIModificationValidator
 
 		Shell shell = listener == null ? null : listener.getShell();
 		RunnableWithStatus r = new RunnableWithStatus(files, shell);
-		Display display = PlatformUI.getWorkbench().getDisplay();
+		Display display = DisplayUtils.getDisplay();
 
 		ISyncExecHelper syncExecHelper = org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.SyncExecHelper
 				.getInstance();
