@@ -18,7 +18,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * Populates default diagram preferences
  * 
  * @author aboyko
- *
+ * @since 1.2
  */
 public class DefaultDiagramPreferencesInitializer extends
 		DiagramPreferenceInitializer {
