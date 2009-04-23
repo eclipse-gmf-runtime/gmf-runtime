@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Mariot Chauvin <mariot.chauvin@obeo.fr> - bug 233344 
  ****************************************************************************/
 
 
@@ -30,12 +31,11 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
-
 /**
- * @author sshaw
- *
  * This class is a top level router for managing the individual branches in a set of
  * tree routed connections.
+ *
+ * @author sshaw
  */
 public class TreeRouter extends BendpointConnectionRouter implements OrthogonalRouter {
 
@@ -125,7 +125,14 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 		
 		return false;
 	}
-	
+    
+	private Rectangle getTargetAnchorRelativeBounds(final Connection conn) {
+		final Rectangle bounds = conn.getTargetAnchor().getOwner().getBounds().getCopy();
+		conn.getTargetAnchor().getOwner().translateToAbsolute(bounds);
+		conn.translateToRelative(bounds);
+		return bounds;
+	}
+
 	/**
 	 * getTrunkLocation
 	 * Method to retrieve the trunk location in relative coordinates based on 
@@ -136,7 +143,7 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 	 */
 	public Point getTrunkLocation(Connection conn) {
 		Dimension vertex = getTrunkVertex();
-		Point target = getTrunkOrientation().getEdge(conn.getTargetAnchor().getOwner().getBounds());
+		Point target = getTrunkOrientation().getEdge(getTargetAnchorRelativeBounds(conn));
 
 		Point ptTrunkLoc = new Point(vertex.width, vertex.height);
 		ptTrunkLoc = ptTrunkLoc.getTranslated(target);
@@ -155,21 +162,23 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 	public void setTrunkLocation(Connection conn, Point ptTrunkLoc) {
 		Point ptRelTrunkLoc = new Point(ptTrunkLoc);
 		
+		final Rectangle targetAnchorBounds = getTargetAnchorRelativeBounds(conn); 
+		
 		// update orientation
 		if (isTopDown(conn)) {
-			if (ptTrunkLoc.y < conn.getTargetAnchor().getOwner().getBounds().getCenter().y)
+			if (ptTrunkLoc.y < targetAnchorBounds.getCenter().y)
 				setTrunkOrientation(Orientation.TOP);
 			else
 				setTrunkOrientation(Orientation.BOTTOM);
 		}
 		else {
-			if (ptTrunkLoc.x < conn.getTargetAnchor().getOwner().getBounds().getCenter().x)
+			if (ptTrunkLoc.x < targetAnchorBounds.getCenter().x)
 				setTrunkOrientation(Orientation.LEFT);
 			else
 				setTrunkOrientation(Orientation.RIGHT);
 		}
 
-		Point target = getTrunkOrientation().getEdge(conn.getTargetAnchor().getOwner().getBounds());
+		Point target = getTrunkOrientation().getEdge(targetAnchorBounds);
 		
 		Dimension currentVertex = ptRelTrunkLoc.getDifference(target);
 		setTrunkVertex(currentVertex);
