@@ -42,7 +42,7 @@ final class FontRegistry {
 		return singletonInstance;
 	}
 
-	private Map fonts = null;
+	private Map<String, Font> fonts = null;
 
 	/**
 	 * Private constructor.
@@ -66,16 +66,21 @@ final class FontRegistry {
 	 * @return the Font
 	 */
 	public Font getFont(Device device, FontData fd) {
-		if (fonts == null)
-			fonts = new HashMap();
+		Font font = null;
+		String fontSignature = fd.toString();
 
-		Object value = fonts.get(fd.toString());
-		if (value != null) {
-			return (Font) value;
+		if(fonts == null) {
+			fonts = new HashMap<String, Font>();
+		} else {
+			font = fonts.get(fontSignature);
 		}
-		Font newFont = new Font(device, fd);
-		fonts.put(fd.toString(), newFont);
-		return newFont;
+		
+		if (font == null) {
+			font = new Font(device, fd);
+			fonts.put(fontSignature, font);
+		}
+		
+		return font;
 	}
 
 	/**
@@ -83,10 +88,10 @@ final class FontRegistry {
 	 */
 	public void clearFontCache() {
 		if (fonts != null) {
-			List keys = new ArrayList(fonts.keySet());
-			Iterator keyiter = keys.iterator();
+			List<String> keys = new ArrayList<String>(fonts.keySet());
+			Iterator<String> keyiter = keys.iterator();
 			while (keyiter.hasNext()) {
-				Font font = (Font) fonts.remove(keyiter.next());
+				Font font = fonts.remove(keyiter.next());
 				font.dispose();
 			}
 		}
