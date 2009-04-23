@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Mariot Chauvin <mariot.chauvin@obeo.fr> - bug 164513
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
@@ -121,7 +122,7 @@ public class DeferredCreateConnectionViewAndElementCommand
 	 * Constructor for DeferredCreateConnectionViewAndElementCommand.
 	 * 
 	 * @param request
-	 *            the ceate connection request
+	 *            the create connection request
 	 * @param typeInfoAdapter
 	 *            extracts the type to be used in a new
 	 *            <code>CreateConnectionViewAndElementRequest</code> at
@@ -186,9 +187,28 @@ public class DeferredCreateConnectionViewAndElementCommand
 			targetViewAdapter.getAdapter(View.class));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.commands.operations.AbstractOperation#canExecute()
+	 */
+	public boolean canExecute() {
+		if (!(request instanceof CreateConnectionViewRequest) && !(request instanceof CreateUnspecifiedTypeConnectionRequest))
+			return false;
+		if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
+			if (typeInfoAdapter == null)
+				return false;
+			final IElementType typeInfo = (IElementType) typeInfoAdapter.getAdapter(IElementType.class);
+			if (typeInfo != null) {
+				 if (((CreateUnspecifiedTypeConnectionRequest) request).getRequestForType(typeInfo) == null)
+					 return false;
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * Finds the source and target editparts by extracting the views from the
-	 * view adapaters and searching in the editpart viewer. Creates a connection
+	 * view adapters and searching in the editpart viewer. Creates a connection
 	 * view and element using the request.
 	 * 
 	 */
@@ -208,7 +228,7 @@ public class DeferredCreateConnectionViewAndElementCommand
 			IElementType typeInfo = (IElementType) typeInfoAdapter
 				.getAdapter(IElementType.class);
 			if (typeInfo == null) {
-				CommandResult.newErrorCommandResult(getLabel());
+				return CommandResult.newErrorCommandResult(getLabel());
 			}
 
 			if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
