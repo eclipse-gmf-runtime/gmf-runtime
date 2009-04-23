@@ -205,7 +205,7 @@ public class UIModificationValidator
 	 */
     public void dispose() {
         if (listener != null) {
-            PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+        	DisplayUtils.getDisplay().asyncExec(new Runnable() {
                 public void run() {
                     PlatformUI.getWorkbench().removeWindowListener(listener);
                 }
