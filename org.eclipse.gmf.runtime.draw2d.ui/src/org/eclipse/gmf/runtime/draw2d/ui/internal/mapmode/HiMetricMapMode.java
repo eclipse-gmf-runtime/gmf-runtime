@@ -16,7 +16,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.swt.widgets.Display;
-
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 
 /**
  * This class implements the MapMode interface to provide support for
@@ -32,22 +32,9 @@ public class HiMetricMapMode
 	private static final double UNITS_PER_INCH = 2540.0;
 
 	public HiMetricMapMode() {
-		Display display = Display.getCurrent();
-		if (display == null) {
-			Display.getDefault().syncExec(new Runnable() {
-
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see java.lang.Runnable#run()
-				 */
-				public void run() {
-					dpi = Display.getCurrent().getDPI().x;
-				}
-			});
-		} else {
-			dpi = display.getDPI().x;
-		}
+		Display display = DisplayUtils.getDisplay();
+		assert (display != null);
+		dpi = display.getDPI().x;
 		scale = dpi / UNITS_PER_INCH;
 	}
 	
