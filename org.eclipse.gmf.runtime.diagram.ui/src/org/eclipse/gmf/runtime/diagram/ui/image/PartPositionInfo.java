@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A data structure that stores the positional information of a
@@ -31,6 +32,7 @@ public class PartPositionInfo {
 	private int m_iPartX;
 	private int m_iPartY;
 	private EObject m_semanticElement;
+	private View m_view;
 	private List<Point> m_polyline = null; // List contains objects of type Point (x,y coordinate pairs)
 
 	/**
@@ -127,6 +129,24 @@ public class PartPositionInfo {
 	 */
 	public void setPolyline(List<Point> m_polyline) {
 		this.m_polyline = m_polyline;
+	}
+
+	/**
+	 * Returns the View
+	 * @return view
+	 * @since 1.2
+	 */
+	public View getView() {
+		return m_view;
+	}
+
+	/**
+	 * Sets the View
+	 * @param View
+	 * @since 1.2
+	 */
+	public void setView(View view) {
+		m_view = view;
 	}
 	
 }
