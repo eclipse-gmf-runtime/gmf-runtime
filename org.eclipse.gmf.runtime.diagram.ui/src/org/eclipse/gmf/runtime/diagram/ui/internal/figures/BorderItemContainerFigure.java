@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,16 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.figures;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.GraphicsSource;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.TreeSearch;
+import org.eclipse.draw2d.UpdateManager;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -49,6 +50,8 @@ public class BorderItemContainerFigure
     private Rectangle extendedBounds = new Rectangle();
     
     private BorderItemContainerHelper helper = new BorderItemContainerHelper();
+    
+	private BorderedItemContainerUpdateManagerWrapper updateManagerWrapper = new BorderedItemContainerUpdateManagerWrapper();
     
 	/**
 	 * Constructor
@@ -313,11 +316,7 @@ public class BorderItemContainerFigure
 	}
 
 	public void erase() {
-		if (getChildren().isEmpty()) {
-			super.erase();
-		} else {
-			if (getParent() == null || !isVisible())
-				return;
+		if (getParent() != null && isVisible()) {
 			repaint();
 		}
 	}
@@ -326,17 +325,7 @@ public class BorderItemContainerFigure
 	 * Refresh adornments
 	 */
 	public void repaint() {
-		if (getChildren().isEmpty()) {
-			super.repaint();
-		} else {
-			if (getParent() == null || !isVisible())
-				return;
-			Rectangle rectBounds = getExtendedBounds();
-			getParent().getParent().repaint(rectBounds);
-			if (getViewport() != null) {
-				getViewport().repaint(rectBounds);
-			}
-		}
+		repaint(getExtendedBounds());
 	}
     
     public void invalidate() {
@@ -350,6 +339,14 @@ public class BorderItemContainerFigure
         super.validate();
     }
     
+	@Override
+	public UpdateManager getUpdateManager() {
+		if (getParent() != null) {
+			return updateManagerWrapper;
+		}
+		return super.getUpdateManager();
+	}
+
     /**
      * Gets the extended bounds of the figure which includes the bounds of all
      * the border item figures.
@@ -359,9 +356,7 @@ public class BorderItemContainerFigure
     public Rectangle getExtendedBounds() {
         if (extendedBounds == null) {
             extendedBounds = getParent().getBounds().getCopy();
-            Iterator iterator = getChildren().iterator();
-            while (iterator.hasNext()) {
-                Figure childFigure = (Figure) iterator.next();
+            for (IFigure childFigure : (List<IFigure>) getChildren()) {
                 Rectangle childBounds = (childFigure instanceof IExpandableFigure) ? ((IExpandableFigure) childFigure)
                     .getExtendedBounds()
                     : childFigure.getBounds(); 
@@ -430,4 +425,59 @@ public class BorderItemContainerFigure
     	
     }
     
+    private class BorderedItemContainerUpdateManagerWrapper extends UpdateManager {
+    	
+    	public BorderedItemContainerUpdateManagerWrapper() {
+    	}
+
+		@Override
+		public void setGraphicsSource(GraphicsSource gs) {
+			BorderItemContainerFigure.this.getParent().getUpdateManager().setGraphicsSource(gs);
+		}
+
+		@Override
+		public synchronized void addDirtyRegion(IFigure figure, int x, int y,
+				int w, int h) {
+			Rectangle r = new Rectangle(x, y, w, h);
+			IFigure borderedNodeParent = BorderItemContainerFigure.this.getParent().getParent();
+			IFigure walker = figure;
+			do {
+				walker = walker.getParent();
+				walker.translateToParent(r);
+			} while (walker != borderedNodeParent && walker.getParent() != null);
+			walker.getUpdateManager().addDirtyRegion(walker, r.x, r.y, r.width, r.height);
+		}
+
+		@Override
+		public synchronized void addInvalidFigure(IFigure f) {
+			BorderItemContainerFigure.this.getParent().getUpdateManager().addInvalidFigure(f);
+		}
+
+		@Override
+		public synchronized void performUpdate() {
+			BorderItemContainerFigure.this.getParent().getUpdateManager().performUpdate();
+		}
+
+		@Override
+		public synchronized void performUpdate(Rectangle exposed) {
+			BorderItemContainerFigure.this.getParent().getUpdateManager().performUpdate(exposed);
+		}
+
+		@Override
+		public void performValidation() {
+			BorderItemContainerFigure.this.getParent().getUpdateManager().performValidation();
+		}
+
+		@Override
+		public synchronized void runWithUpdate(Runnable runnable) {
+			BorderItemContainerFigure.this.getParent().getUpdateManager().runWithUpdate(runnable);
+		}
+
+		@Override
+		public void setRoot(IFigure figure) {
+			BorderItemContainerFigure.this.getParent().getUpdateManager().setRoot(figure);
+		}
+
+    }
+
 }
