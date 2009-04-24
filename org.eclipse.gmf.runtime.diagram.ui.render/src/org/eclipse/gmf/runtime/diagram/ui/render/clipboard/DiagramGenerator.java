@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -927,10 +927,17 @@ abstract public class DiagramGenerator {
 		Graphics graphics = null;
 		try {
 			IMapMode mm = getMapMode();
+			
+			PrecisionRectangle rect = new PrecisionRectangle();
+			rect.setX(sourceRect.x);
+			rect.setY(sourceRect.y);
+			rect.setWidth(sourceRect.width);
+			rect.setHeight(sourceRect.height);
+			
+			mm.LPtoDP(rect);
 
 			// Create the graphics and wrap it with the HiMetric graphics object
-			graphics = setUpGraphics(mm.LPtoDP(sourceRect.width), mm
-					.LPtoDP(sourceRect.height));
+			graphics = setUpGraphics((int) Math.round(rect.preciseWidth), (int) Math.round(rect.preciseHeight));
 
 			RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
 					graphics, getMapMode());

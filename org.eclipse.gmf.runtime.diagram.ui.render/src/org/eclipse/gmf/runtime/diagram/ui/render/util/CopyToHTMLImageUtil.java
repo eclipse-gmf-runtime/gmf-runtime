@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PrecisionDimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -102,6 +103,11 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		imageFormatToTileSizeMap.put(ImageFileFormat.SVG, new Dimension(0, 0));
 		imageFormatToTileSizeMap.put(ImageFileFormat.PDF, new Dimension(0, 0));
 	}
+	
+	/**
+	 * Minimal size of the tile in pixels
+	 */
+	private static Dimension minimalTileSize = new Dimension(2, 2);
 
 	/*
 	 * (non-Javadoc)
@@ -206,6 +212,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 *            tile height in logical units (not device units)
 	 * @param monitor
 	 *            progress monitor
+	 * @param mm map-mode used by the diagram
 	 * @return <code>Point</code>, where x represents number of columns and y
 	 *         represents number of rows
 	 * @throws Error
@@ -214,10 +221,13 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	private ExportInfo exportImage(DiagramGenerator gen, List editParts,
 			IPath destinationFolder, String fileName,
 			ImageFileFormat imageFormat, Dimension logTileSize,
-			IProgressMonitor monitor) throws Error, CoreException {
+			IProgressMonitor monitor, IMapMode mm) throws Error, CoreException {
 		org.eclipse.swt.graphics.Rectangle diagramArea = gen
 				.calculateImageRectangle(editParts);
+		org.eclipse.swt.graphics.Rectangle sourceRect = null; 
 		int rows = 1, columns = 1;
+		PrecisionDimension minimalLogicalTileSize = new PrecisionDimension(minimalTileSize);
+		mm.DPtoLP(minimalLogicalTileSize);
 		int logTileWidth = logTileSize.width;
 		int logTileHeight = logTileSize.height;
 		if (logTileWidth <= 0) {
@@ -226,21 +236,23 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		if (logTileHeight <= 0) {
 			logTileHeight = diagramArea.height;
 		}
-		columns = (int) Math.ceil(diagramArea.width / ((double) logTileWidth));
-		rows = (int) Math.ceil(diagramArea.height / ((double) logTileHeight));
+		logTileWidth = Math.max(logTileWidth, minimalLogicalTileSize.width);
+		logTileHeight = Math.max(logTileHeight, minimalLogicalTileSize.height);
+		columns = (int) Math.ceil(diagramArea.width / (float)logTileWidth);
+		rows = (int) Math.ceil(diagramArea.height / (float)logTileHeight);
 		int jobsToDo = 6 * columns * rows + 1;
 		monitor
 				.beginTask(
 						DiagramUIMessages.CopyToHTMLImageTask_exportingToHTML,
 						jobsToDo);
 		for (int i = 0; i < rows; i++) {
-			int sourceY = i * logTileHeight + diagramArea.y;
-			int sourceHeight = Math.min(logTileHeight, diagramArea.height
-					- logTileHeight * i);
+			int sourceY =  i * logTileHeight + diagramArea.y;
+			int sourceHeight = i != rows - 1 ? logTileHeight : Math.max(diagramArea.height
+					- logTileHeight * i, minimalLogicalTileSize.height);
 			for (int j = 0; j < columns; j++) {
 				int sourceX = diagramArea.x + j * logTileWidth;
-				int sourceWidth = Math.min(logTileWidth, diagramArea.width
-						- logTileWidth * j);
+				int sourceWidth = j != columns - 1 ? logTileWidth : Math.max(diagramArea.width
+						- logTileWidth * j, minimalLogicalTileSize.width);
 				String tileFileName = fileName
 						+ getTileImageFileNameIndexDelimiter() + i
 						+ getTileImageFileNameIndexDelimiter() + j
@@ -251,13 +263,12 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 				monitor
 						.subTask(DiagramUIMessages.CopyToHTMLImageTask_generateImageFile
 								+ tilePath);
-				copyToImage(gen, editParts,
-						new org.eclipse.swt.graphics.Rectangle(sourceX,
-								sourceY, sourceWidth, sourceHeight), tilePath,
-						imageFormat, monitor);
+				sourceRect = new org.eclipse.swt.graphics.Rectangle(sourceX,
+						sourceY, sourceWidth, sourceHeight);
+				copyToImage(gen, editParts, sourceRect, tilePath, imageFormat, monitor);
 			}
 		}
-		return new ExportInfo(gen, new Point(columns, rows), fileName, destinationFolder, imageFormat, new Dimension(logTileWidth, logTileHeight));
+		return new ExportInfo(gen, new Point(columns, rows), fileName, destinationFolder, imageFormat, new PrecisionDimension(logTileWidth, logTileHeight));
 	}
 
 	/**
@@ -423,8 +434,8 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 				diagramEP.getFigure()); 
 
 		Dimension dimension = (Dimension) mm.DPtoLP(
-				imageFormatToTileSizeMap.get(format).getCopy());
-
+				new PrecisionDimension(imageFormatToTileSizeMap.get(format)));
+		
 		/*
 		 * Destination is the destination for HTML file. Hence we need to come
 		 * up with the names for image file(s)
@@ -437,7 +448,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		 * rows and columns
 		 */
 		ExportInfo info  = exportImage(gen, selection, destinationFolder, fileName,
-				format, dimension, monitor);
+				format, dimension, monitor, mm);
 		
 		/*
 		 * The tile dimension returned with the ExportInfo object is in logical units. We need to translate it

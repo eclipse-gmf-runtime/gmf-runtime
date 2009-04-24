@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -580,7 +580,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	public void drawRectangle(int x, int y, int w, int h) {
 
 		Rectangle2D rect =
-			new Rectangle2D.Float(x + transX, y + transY, w + 1, h + 1);
+			new Rectangle2D.Float(x + transX, y + transY, w, h);
 
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
@@ -987,6 +987,17 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		for (int i=0; i<dash.length; i++)
 			dashFlt[i] = dash[i];
 		currentState.lineDash = dashFlt;
+		
+		stroke =
+			new BasicStroke(
+				stroke.getLineWidth(),
+				stroke.getEndCap(),
+				stroke.getLineJoin(),
+				stroke.getMiterLimit(),
+				dashFlt,
+				0);
+
+		getGraphics2D().setStroke(stroke);
 	}
 	
 	/*
