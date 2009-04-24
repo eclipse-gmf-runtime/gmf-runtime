@@ -600,7 +600,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	public void drawRectangle(int x, int y, int w, int h) {
 
 		Rectangle2D rect =
-			new Rectangle2D.Float(x + transX, y + transY, w + 1, h + 1);
+			new Rectangle2D.Float(x + transX, y + transY, w, h);
 
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
@@ -1016,12 +1016,21 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		for (int i=0; i<dash.length; i++) {
 			dashFlt[i] = dash[i];
 		}
-		currentState.lineDash = dashFlt;
+		setLineDash(dashFlt);
 	}
 	
 	@Override
 	public void setLineDash(float[] dash) {
 		currentState.lineDash = dash;
+		stroke =
+			new BasicStroke(
+				stroke.getLineWidth(),
+				stroke.getEndCap(),
+				stroke.getLineJoin(),
+				stroke.getMiterLimit(),
+				dash,
+				0);
+		getGraphics2D().setStroke(stroke);
 	}
 	
 	/*

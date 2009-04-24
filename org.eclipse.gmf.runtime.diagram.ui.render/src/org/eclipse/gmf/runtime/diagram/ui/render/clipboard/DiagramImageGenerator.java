@@ -21,6 +21,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -128,9 +129,18 @@ public class DiagramImageGenerator
 	public java.awt.Image createAWTImageForParts(List selectedObjects, org.eclipse.swt.graphics.Rectangle sourceRect) {
 
 		BufferedImage awtImage = null;
-			IMapMode mm = getMapMode();
-		awtImage = new BufferedImage(mm.LPtoDP(sourceRect.width), mm
-				.LPtoDP(sourceRect.height), BufferedImage.TYPE_4BYTE_ABGR_PRE);
+		IMapMode mm = getMapMode();
+		PrecisionRectangle rect = new PrecisionRectangle();
+		rect.setX(sourceRect.x);
+		rect.setY(sourceRect.y);
+		rect.setWidth(sourceRect.width);
+		rect.setHeight(sourceRect.height);
+
+		mm.LPtoDP(rect);
+
+		awtImage = new BufferedImage((int) Math.round(rect.preciseWidth),
+				(int) Math.rint(rect.preciseHeight),
+				BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
 		Graphics2D g2d = awtImage.createGraphics();
 		g2d.setColor(Color.white);
@@ -153,8 +163,7 @@ public class DiagramImageGenerator
 				.getHeight()));
 
 		Graphics graphics = new GraphicsToGraphics2DAdaptor(g2d,
-				new Rectangle(0, 0, mm.LPtoDP(sourceRect.width), mm
-						.LPtoDP(sourceRect.height)));
+				new Rectangle(0, 0, awtImage.getWidth(), awtImage.getHeight()));
 
 		RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
 				graphics, mm);
