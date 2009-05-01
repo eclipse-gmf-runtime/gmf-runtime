@@ -430,6 +430,8 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 	protected void performDirectEdit(Point eventLocation) {
 		if (getManager().getClass() == TextDirectEditManager.class) {
 			((TextDirectEditManager) getManager()).show(eventLocation.getSWTPoint());
+		} else {
+            performDirectEdit();
 		}
 	}
 	
