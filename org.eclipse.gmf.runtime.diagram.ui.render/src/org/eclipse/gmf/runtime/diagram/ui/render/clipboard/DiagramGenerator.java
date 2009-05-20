@@ -12,8 +12,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.render.clipboard;
 
 import java.awt.Image;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -25,36 +25,29 @@ import java.util.Stack;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.LayerManager;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.IExpandableFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
-import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
-import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg.Sign;
+import org.eclipse.gmf.runtime.diagram.ui.render.util.DiagramImageUtils;
+import org.eclipse.gmf.runtime.diagram.ui.render.util.PartPositionInfoGenerator;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
-import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 
@@ -70,6 +63,14 @@ abstract public class DiagramGenerator {
 	private int image_margin = 0;
 
 	private DiagramEditPart _dgrmEP;
+	
+	private IFigure printableLayer;
+	
+	private Dimension emptyImageSize;
+	
+	private static final int DEFAULT_IMAGE_MARGIN_PIXELS = 10;
+	
+	private static final int DEFAULT_EMPTY_IMAGE_SIZE_PIXELS = 100;
 
 	/**
 	 * Creates a new instance.
@@ -79,7 +80,12 @@ abstract public class DiagramGenerator {
 	 */
 	public DiagramGenerator(DiagramEditPart dgrmEP) {
 		this._dgrmEP = dgrmEP;
-		image_margin = getMapMode().DPtoLP(10);
+		this.printableLayer = LayerManager.Helper.find(_dgrmEP).getLayer(LayerConstants.PRINTABLE_LAYERS);
+		IMapMode mm = getMapMode();
+		image_margin = mm.DPtoLP(DEFAULT_IMAGE_MARGIN_PIXELS);
+		emptyImageSize = (Dimension) mm.DPtoLP(new Dimension(
+				DEFAULT_EMPTY_IMAGE_SIZE_PIXELS,
+				DEFAULT_EMPTY_IMAGE_SIZE_PIXELS));
 	}
 
 	/**
@@ -177,8 +183,7 @@ abstract public class DiagramGenerator {
 	 * @return
 	 */
 	protected IMapMode getMapMode() {
-		IMapMode mm = MapModeUtil.getMapMode(getDiagramEditPart().getFigure());
-		return mm;
+		return MapModeUtil.getMapMode(getDiagramEditPart().getFigure());
 	}
 
 	/**
@@ -198,7 +203,7 @@ abstract public class DiagramGenerator {
 	final protected void renderToGraphics(Graphics graphics,
 			Point translateOffset, List editparts) {
 
-		List sortedEditparts = sortSelection(editparts);
+//		List sortedEditparts = sortSelection(editparts);
 
 		graphics.translate((-translateOffset.x), (-translateOffset.y));
 		graphics.pushState();
@@ -355,7 +360,7 @@ abstract public class DiagramGenerator {
 			relBounds = figure.getBounds().getCopy();
 
 		Rectangle abBounds = relBounds.getCopy();
-		translateToPrintableLayer(figure, abBounds);
+		DiagramImageUtils.translateTo(abBounds, figure, printableLayer);
 
 		// Calculate the difference
 		int transX = abBounds.x - relBounds.x;
@@ -368,7 +373,7 @@ abstract public class DiagramGenerator {
 		graphics.popState();
 		graphics.restoreState();
 	}
-
+	
 	/**
 	 * Find the decorations that adorn the specified <code>editParts</code>.
 	 * 
@@ -490,41 +495,44 @@ abstract public class DiagramGenerator {
 	 * @param open
 	 * @param closed
 	 */
-	private void sortSelection(GraphicalEditPart editPart, List open,
-			List closed) {
-
-		// Do nothing if the open list is empty
-		if (open.isEmpty()) {
-			return;
-		}
-
-		// IF the edit part is contained in the open list (we are searching for
-		// it)
-		if (open.contains(editPart)) {
-			// Add the Edit Part to the closed list and remove it from
-			// the open list
-			closed.add(editPart);
-			open.remove(editPart);
-		}
-
-		for (Iterator iter = editPart.getChildren().iterator(); iter.hasNext();) {
-			GraphicalEditPart child = (GraphicalEditPart) iter.next();
-			sortSelection(child, open, closed);
-		}
-	}
-
-	private List sortSelection(List toSort) {
-		List closed = new ArrayList(toSort.size());
-		List open = new ArrayList(toSort.size());
-		open.addAll(toSort);
-
-		sortSelection(getDiagramEditPart(), open, closed);
-		if (!open.isEmpty()) {
-			closed.addAll(open);
-		}
-
-		return closed;
-	}
+	/*
+	 * The 2 commented out methods are not being used currently
+	 */
+//	private void sortSelection(GraphicalEditPart editPart, List open,
+//			List closed) {
+//
+//		// Do nothing if the open list is empty
+//		if (open.isEmpty()) {
+//			return;
+//		}
+//
+//		// IF the edit part is contained in the open list (we are searching for
+//		// it)
+//		if (open.contains(editPart)) {
+//			// Add the Edit Part to the closed list and remove it from
+//			// the open list
+//			closed.add(editPart);
+//			open.remove(editPart);
+//		}
+//
+//		for (Iterator iter = editPart.getChildren().iterator(); iter.hasNext();) {
+//			GraphicalEditPart child = (GraphicalEditPart) iter.next();
+//			sortSelection(child, open, closed);
+//		}
+//	}
+//
+//	private List sortSelection(List toSort) {
+//		List closed = new ArrayList(toSort.size());
+//		List open = new ArrayList(toSort.size());
+//		open.addAll(toSort);
+//
+//		sortSelection(getDiagramEditPart(), open, closed);
+//		if (!open.isEmpty()) {
+//			closed.addAll(open);
+//		}
+//
+//		return closed;
+//	}
 
 	/**
 	 * This method is used to obtain the list of child edit parts for shape
@@ -560,51 +568,10 @@ abstract public class DiagramGenerator {
 	 */
 	public org.eclipse.swt.graphics.Rectangle calculateImageRectangle(
 			List editparts) {
-		int minX = 0;
-		int maxX = 0;
-		int minY = 0;
-		int maxY = 0;
-
-		IMapMode mm = getMapMode();
-
-		for (int i = 0; i < (editparts.size()); i++) {
-			IGraphicalEditPart editPart = (IGraphicalEditPart) editparts.get(i);
-
-			IFigure figure = editPart.getFigure();
-			Rectangle bounds = null;
-			if (figure instanceof IExpandableFigure)
-				bounds = ((IExpandableFigure) figure).getExtendedBounds();
-			else
-				bounds = figure.getBounds().getCopy();
-			translateToPrintableLayer(figure, bounds);
-			bounds = bounds.getExpanded(getImageMargin(), getImageMargin());
-
-			if (i == 0) {
-				minX = bounds.x;
-				maxX = bounds.x + bounds.width;
-				minY = bounds.y;
-				maxY = bounds.y + bounds.height;
-			} else {
-				minX = Math.min(minX, bounds.x);
-				maxX = Math.max(maxX, (bounds.x + bounds.width));
-				minY = Math.min(minY, bounds.y);
-				maxY = Math.max(maxY, (bounds.y + bounds.height));
-			}
-		}
-
-		int width = (maxX - minX);
-		int height = (maxY - minY);
-		if (width <= 0) {
-			width = mm.DPtoLP(100);
-		}
-
-		if (height <= 0) {
-			height = mm.DPtoLP(100); // create an empty image if the
-			// diagram does not contain child
-		}
-		org.eclipse.swt.graphics.Rectangle imageRect = new org.eclipse.swt.graphics.Rectangle(
-				minX, minY, width, height);
-		return imageRect;
+		Rectangle rect = DiagramImageUtils.calculateImageRectangle(editparts,
+				getImageMargin(), emptyImageSize);
+		return new org.eclipse.swt.graphics.Rectangle(rect.x, rect.y,
+				rect.width, rect.height);
 	}
 	
 	/**
@@ -633,89 +600,36 @@ abstract public class DiagramGenerator {
 	 *         diagram.
 	 */
 	public List getDiagramPartInfo(DiagramEditPart diagramEditPart) {
-		List<PartPositionInfo> result = new ArrayList<PartPositionInfo>();
-		List<IGraphicalEditPart> editParts = new ArrayList<IGraphicalEditPart>();
-
-		List<IGraphicalEditPart> children = (List<IGraphicalEditPart>) diagramEditPart.getPrimaryEditParts();
+		Map<String, Object> options = new HashMap<String, Object>();
+		Point origin = DiagramImageUtils.calculateImageRectangle(
+				diagramEditPart.getPrimaryEditParts(), getImageMargin(),
+				emptyImageSize).getLocation();
+		options.put(PartPositionInfoGenerator.CONNECTION_MARGIN,
+				new Double(getImageMargin() >> 1));
+		options.put(PartPositionInfoGenerator.DIAGRAM_ORIGIN, origin);
+		return PartPositionInfoGenerator.getDiagramPartInfo(diagramEditPart,
+				options);
+	}
+	
+	public List<PartPositionInfo> getConstrainedDiagramPartInfo(int maxWidth,
+			int maxHeight, boolean useMargins) {
+		return getConstrainedDiagramPartInfo(_dgrmEP, maxWidth, maxHeight,
+				useMargins);
+	}
+	
+	public List<PartPositionInfo> getConstrainedDiagramPartInfo(
+			DiagramEditPart diagramEditPart, int maxWidth, int maxHeight,
+			boolean useMargins) {
+		List<IGraphicalEditPart> children = (List<IGraphicalEditPart>) diagramEditPart
+				.getPrimaryEditParts();
 		IMapMode mm = getMapMode();
 
 		// We will use the diagram generate that was used to generate the image
 		// to figure out the outer-bound rectangle so that we are calculating
 		// the
 		// image positions using the same box as was used to create the image.
-		org.eclipse.swt.graphics.Rectangle imageRect = calculateImageRectangle(children);
-
-		for (IGraphicalEditPart part : children) {
-			editParts.add(part);
-			getNestedEditParts(part, editParts);
-		}
-
-		for (IGraphicalEditPart part : editParts) {
-			IFigure figure = part.getFigure();
-
-			// RATLC00139941: Need to support any kind of shape edit part
-			// and shape compartments, too, because these sometimes
-			// correspond to distinct semantic elements
-			if (part instanceof ShapeEditPart
-					|| part instanceof ShapeCompartmentEditPart) {
-
-				PartPositionInfo position = new PartPositionInfo();
-
-				position.setView(part.getNotationView());
-				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement(position.getView()));
-
-				Rectangle bounds = figure.getBounds().getCopy();
-				translateToPrintableLayer(figure, bounds);
-				bounds.translate(-imageRect.x, -imageRect.y);
-
-				position.setPartHeight(mm.LPtoDP(bounds.height));
-				position.setPartWidth(mm.LPtoDP(bounds.width));
-				position.setPartX(mm.LPtoDP(bounds.x));
-				position.setPartY(mm.LPtoDP(bounds.y));
-				result.add(0, position);
-			} else if (part instanceof ConnectionEditPart) {
-				// find a way to get (P1, P2, ... PN) for connection edit part
-				// add MARGIN and calculate "stripe" for the polyline instead of
-				// bounding box.
-				PartPositionInfo position = new PartPositionInfo();
-
-				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement((View) part.getModel()));
-
-				if (figure instanceof PolylineConnection) {
-					PolylineConnection mainPoly = (PolylineConnection) figure;
-					PointList mainPts = mainPoly.getPoints();
-
-					translateToPrintableLayer(figure, mainPts);
-					List<Point> envelopingPts = calculateEnvelopingPolyline(mainPts,
-							new Point(imageRect.x, imageRect.y));
-					List<Point> transformedPts = convertPolylineUnits(envelopingPts);
-
-					position.setPolyline(transformedPts);
-					result.add(0, position);
-				}
-			}
-		}
-		return result;
-	}
-	
-	public List<PartPositionInfo> getConstrainedDiagramPartInfo(int maxWidth, int maxHeight, boolean useMargins) {
-		return getConstrainedDiagramPartInfo(_dgrmEP, maxWidth, maxHeight, useMargins);
-	}
-	
-	public List<PartPositionInfo> getConstrainedDiagramPartInfo(DiagramEditPart diagramEditPart, int maxWidth, int maxHeight, boolean useMargins) {
-		List<PartPositionInfo> result = new ArrayList<PartPositionInfo>();
-		List<IGraphicalEditPart> editParts = new ArrayList<IGraphicalEditPart>();
-
-		List<IGraphicalEditPart> children = (List<IGraphicalEditPart>) diagramEditPart.getPrimaryEditParts();
-		IMapMode mm = getMapMode();
-
-		// We will use the diagram generate that was used to generate the image
-		// to figure out the outer-bound rectangle so that we are calculating
-		// the
-		// image positions using the same box as was used to create the image.
-		ConstrainedImageRenderingData data = getConstrainedImageRenderingData(children, maxWidth, maxHeight, useMargins);
+		ConstrainedImageRenderingData data = getConstrainedImageRenderingData(
+				children, maxWidth, maxHeight, useMargins);
 		Rectangle imageRect = data.imageOriginalBounds.getCopy();
 		mm.DPtoLP(imageRect);
 		if (useMargins) {
@@ -726,176 +640,32 @@ abstract public class DiagramGenerator {
 			imageRect.expand(getImageMargin(), getImageMargin());
 		}
 
-		for (IGraphicalEditPart part : children) {
-			editParts.add(part);
-			getNestedEditParts(part, editParts);
-		}
-
-		for (IGraphicalEditPart part : editParts) {
-			IFigure figure = part.getFigure();
-
-			// RATLC00139941: Need to support any kind of shape edit part
-			// and shape compartments, too, because these sometimes
-			// correspond to distinct semantic elements
-			if (part instanceof ShapeEditPart
-					|| part instanceof ShapeCompartmentEditPart) {
-
-				PartPositionInfo position = new PartPositionInfo();
-
-				position.setView(part.getNotationView());
-				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement(position.getView()));
-
-				Rectangle bounds = figure.getBounds().getCopy();
-				translateToPrintableLayer(figure, bounds);
-				bounds.performScale(data.scalingFactor);
-				bounds.translate(-imageRect.x, -imageRect.y);
-
-				position.setPartHeight(mm.LPtoDP(bounds.height));
-				position.setPartWidth(mm.LPtoDP(bounds.width));
-				position.setPartX(mm.LPtoDP(bounds.x));
-				position.setPartY(mm.LPtoDP(bounds.y));
-				result.add(0, position);
-			} else if (part instanceof ConnectionEditPart) {
-				// find a way to get (P1, P2, ... PN) for connection edit part
-				// add MARGIN and calculate "stripe" for the polyline instead of
-				// bounding box.
-				PartPositionInfo position = new PartPositionInfo();
-
-				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement((View) part.getModel()));
-
-				if (figure instanceof PolylineConnection) {
-					PolylineConnection mainPoly = (PolylineConnection) figure;
-					PointList mainPts = mainPoly.getPoints();
-					mainPts.performScale(data.scalingFactor);
-
-					translateToPrintableLayer(figure, mainPts);
-					List<Point> envelopingPts = calculateEnvelopingPolyline(mainPts,
-							new Point(imageRect.x, imageRect.y));
-					List<Point> transformedPts = convertPolylineUnits(envelopingPts);
-
-					position.setPolyline(transformedPts);
-					result.add(0, position);
-				}
-			}
-		}
-
-		return result;
-	}
-
-	/**
-	 * Recursively moves up the figure containment tree until it reaches the
-	 * printable layer or the root.
-	 * 
-	 * @param figure
-	 *            the figure that the translatable is relative to
-	 * @param translatable
-	 *            the object that needs to be translated
-	 */
-	private void translateToPrintableLayer(IFigure figure,
-			Translatable translatable) {
-
-		IFigure printableLayer = getDiagramEditPart().getLayer(
-				LayerConstants.PRINTABLE_LAYERS);
-		if (figure == null || figure.equals(printableLayer)) {
-			return;
-		}
-
-		figure.translateToParent(translatable);
-		translateToPrintableLayer(figure.getParent(), translatable);
-	}
-
-	/**
-	 * Calculates enveloping polyline for a given polyline with margin MARGIN
-	 * 
-	 *   E1                  E2
-	 *     +----------------+
-	 *     |                |<------- MARGIN
-	 *   A *----------------* B
-	 *     |                |
-	 *     +----------------+
-	 *   E4                  E3
-	 * 
-	 * On the figure above: AB is a given polyline. E1E2E3E4 is enveloping
-	 * polyline built around AB perimeter using margin MARGIN.
-	 * 
-	 * 
-	 * @param polyPts
-	 * @param origin
-	 *            location of the main diagram bounding box used to shift
-	 *            coordinates to be relative against diagram
-	 * 
-	 * @return List of Point type objects (that carry X and Y coordinate pair)
-	 *         representing the polyline
-	 * @author Barys Dubauski
-	 */
-	private List<Point> calculateEnvelopingPolyline(PointList polyPts, Point origin) {
-		List<Point> result = new ArrayList<Point>();
-		List<LineSeg> mainSegs = (List<LineSeg>) PointListUtilities.getLineSegments(polyPts);
-
-		int mainSegsLength = mainSegs.size();
-
-		LineSeg segment = null;
-		Point orthoPoint1 = null;
-		Point orthoPoint2 = null;
-
-		// collect points clockwise
-		for (int i = 0; i < mainSegsLength; i++) {
-			segment = (LineSeg) mainSegs.get(i);
-			orthoPoint1 = segment.locatePoint(0.0, getImageMargin(),
-					Sign.POSITIVE);
-			orthoPoint1.translate(-origin.x, -origin.y);
-			orthoPoint2 = segment.locatePoint(1.0, getImageMargin(),
-					Sign.POSITIVE);
-			orthoPoint2.translate(-origin.x, -origin.y);
-
-			result.add(orthoPoint1);
-			result.add(orthoPoint2);
-		}
-
-		// now add the original poly
-		for (int i = mainSegsLength - 1; i >= 0; i--) {
-			segment = (LineSeg) mainSegs.get(i);
-			orthoPoint1 = segment.getTerminus();
-			orthoPoint1.translate(-origin.x, -origin.y);
-			result.add(orthoPoint1);
-			orthoPoint2 = segment.getOrigin();
-			orthoPoint2.translate(-origin.x, -origin.y);
-			result.add(orthoPoint2);
-		}
-
-		// add first point to close the polyline per "poly" area type HTML
-		// requirements
-		result.add(result.get(0));
-
-		return result;
-	}
-
-	/**
-	 * transforms coordinates of the polyline from logical units to device units
-	 * 
-	 * @param polyPts
-	 * @return List of Point type objects (that carry X and Y coordinate pair)
-	 *         representing the polyline
-	 * @author Barys Dubauski
-	 */
-	private List<Point> convertPolylineUnits(List<Point> polyPts) {
-		List<Point> result = new ArrayList<Point>();
-		IMapMode mm = getMapMode();
-		for (Point point : polyPts) {
-			Point newPoint = new Point(mm.LPtoDP(point.x), mm.LPtoDP(point.y));
-			result.add(newPoint);
-		}
-		return result;
+		Map<String, Object> options = new HashMap<String, Object>();
+		options.put(PartPositionInfoGenerator.CONNECTION_MARGIN,
+				new Double(mm.DPtoLP(5)));
+		options.put(PartPositionInfoGenerator.DIAGRAM_ORIGIN, imageRect.getLocation());
+		options.put(PartPositionInfoGenerator.SCALE_FACTOR, new Double(data.scalingFactor));
+		
+		return PartPositionInfoGenerator.getDiagramPartInfo(diagramEditPart, options);
 	}
 
 	/**
 	 * @return <code>int</code> value that is the margin around the generated
 	 *         image in logical coordinates.
 	 */
-	protected int getImageMargin() {
+	public int getImageMargin() {
 		return image_margin;
+	}
+
+	/**
+	 * Sets the image margin value (width of the white frame around the image).
+	 * The value must be in logical units.
+	 * 
+	 * @param imageMargin
+	 */
+	public void setImageMargin(int imageMargin) {
+		Assert.isTrue(imageMargin >= 0);
+		image_margin = imageMargin;
 	}
 
 	/**
@@ -939,7 +709,8 @@ abstract public class DiagramGenerator {
 			mm.LPtoDP(rect);
 
 			// Create the graphics and wrap it with the HiMetric graphics object
-			graphics = setUpGraphics((int) Math.round(rect.preciseWidth), (int) Math.round(rect.preciseHeight));
+			graphics = setUpGraphics((int) Math.round(rect.preciseWidth),
+					(int) Math.round(rect.preciseHeight));
 
 			RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
 					graphics, getMapMode());
@@ -965,7 +736,9 @@ abstract public class DiagramGenerator {
 	 * @param useMargins true if 10 pisels margins are required to bound the editparts image
 	 * @return the image descriptor
 	 */
-	final public ImageDescriptor createConstrainedSWTImageDecriptorForParts(List editParts, int maxDeviceWidth, int maxDeviceHeight, boolean useMargins) {
+	final public ImageDescriptor createConstrainedSWTImageDecriptorForParts(
+			List editParts, int maxDeviceWidth, int maxDeviceHeight,
+			boolean useMargins) {
 		ImageDescriptor imageDesc = new ImageDescriptor() {
 
 			/*
@@ -982,7 +755,8 @@ abstract public class DiagramGenerator {
 		try {
 			IMapMode mm = getMapMode();
 
-			ConstrainedImageRenderingData data = getConstrainedImageRenderingData(editParts, maxDeviceWidth, maxDeviceHeight, useMargins);
+			ConstrainedImageRenderingData data = getConstrainedImageRenderingData(
+					editParts, maxDeviceWidth, maxDeviceHeight, useMargins);
 
 			// Create the graphics and wrap it with the HiMetric graphics object
 			graphics = setUpGraphics(data.imageWidth, data.imageHeight);
@@ -995,7 +769,8 @@ abstract public class DiagramGenerator {
 			graphics.translate(data.margin, data.margin);
 			mapModeGraphics.scale(data.scalingFactor);
 
-			Point location = new PrecisionPoint(data.imageOriginalBounds.preciseX(), data.imageOriginalBounds.preciseY());
+			Point location = new PrecisionPoint(data.imageOriginalBounds
+					.preciseX(), data.imageOriginalBounds.preciseY());
 			mm.DPtoLP(location);
 			renderToGraphics(mapModeGraphics, location, editParts);
 			imageDesc = getImageDescriptor(graphics);
@@ -1015,34 +790,48 @@ abstract public class DiagramGenerator {
 		int margin; // margins size in pixels
 	}
 	
-	ConstrainedImageRenderingData getConstrainedImageRenderingData(List editParts, int maxDeviceWidth, int maxDeviceHeight, boolean useMargins) {
+	ConstrainedImageRenderingData getConstrainedImageRenderingData(
+			List editParts, int maxDeviceWidth, int maxDeviceHeight,
+			boolean useMargins) {
 		ConstrainedImageRenderingData data = new ConstrainedImageRenderingData();
 		IMapMode mm = getMapMode();
-		
-		data.imageOriginalBounds = new PrecisionRectangle(new Rectangle(calculateImageRectangle(editParts)));
+
+		data.imageOriginalBounds = new PrecisionRectangle(new Rectangle(
+				calculateImageRectangle(editParts)));
 		mm.LPtoDP(data.imageOriginalBounds);
-		
+
 		int deviceMargins = mm.LPtoDP(getImageMargin());
-		data.margin = useMargins ? deviceMargins : 0; 
+		data.margin = useMargins ? deviceMargins : 0;
 		double xScalingFactor = 1.0, yScalingFactor = xScalingFactor;
-		
+
 		data.imageOriginalBounds.shrink(deviceMargins, deviceMargins);
-		
+
 		if (maxDeviceWidth > data.margin) {
-			xScalingFactor = (maxDeviceWidth  - data.margin - data.margin)/ (data.imageOriginalBounds.preciseWidth());
+			xScalingFactor = (maxDeviceWidth - data.margin - data.margin)
+					/ (data.imageOriginalBounds.preciseWidth());
 		}
 		if (maxDeviceHeight > data.margin) {
-			yScalingFactor = (maxDeviceHeight - data.margin - data.margin) / (data.imageOriginalBounds.preciseHeight());
+			yScalingFactor = (maxDeviceHeight - data.margin - data.margin)
+					/ (data.imageOriginalBounds.preciseHeight());
 		}
-		
-		data.scalingFactor = Math.min(Math.min(xScalingFactor, yScalingFactor), 1);
-		
-		data.imageWidth = data.imageOriginalBounds.width + data.margin + data.margin;
-		data.imageHeight = data.imageOriginalBounds.height + data.margin + data.margin;
-				
+
+		data.scalingFactor = Math.min(Math.min(xScalingFactor, yScalingFactor),
+				1);
+
+		data.imageWidth = data.imageOriginalBounds.width + data.margin
+				+ data.margin;
+		data.imageHeight = data.imageOriginalBounds.height + data.margin
+				+ data.margin;
+
 		if (data.scalingFactor < 1) {
-			data.imageWidth = (int) Math.round(data.imageOriginalBounds.preciseWidth() * data.scalingFactor) + data.margin + data.margin;
-			data.imageHeight = (int) Math.round(data.imageOriginalBounds.preciseHeight() * data.scalingFactor) + data.margin + data.margin;
+			data.imageWidth = (int) Math.round(data.imageOriginalBounds
+					.preciseWidth()
+					* data.scalingFactor)
+					+ data.margin + data.margin;
+			data.imageHeight = (int) Math.round(data.imageOriginalBounds
+					.preciseHeight()
+					* data.scalingFactor)
+					+ data.margin + data.margin;
 		} else {
 			data.scalingFactor = 1;
 		}
@@ -1059,7 +848,8 @@ abstract public class DiagramGenerator {
 	 * @param useMargins true if 10 pisels margins are required to bound the editparts image
 	 * @return the image
 	 */
-	public Image createConstrainedAWTImageForParts(List editParts, int maxDeviceWidth, int maxDeviceHeight, boolean useMargins) {
+	public Image createConstrainedAWTImageForParts(List editParts,
+			int maxDeviceWidth, int maxDeviceHeight, boolean useMargins) {
 		return null;
 	}
 
