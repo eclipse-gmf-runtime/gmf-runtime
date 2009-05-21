@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,8 @@ import org.eclipse.gmf.runtime.diagram.ui.type.DiagramNotationType;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;
 
@@ -461,6 +463,73 @@ public class ConnectorTests
         }
     }
 
+    public void testConnectionBendpoints()
+    	throws Exception {
+    try {
+        getFixture().openDiagram();
+
+        // Add three notes.
+        final ShapeEditPart note1EP = getFixture().createShapeUsingTool(
+            DiagramNotationType.NOTE, new Point(100, 100));
+        final ShapeEditPart note2EP = getFixture().createShapeUsingTool(
+            DiagramNotationType.NOTE, new Point(200, 300));
+        flushEventQueue();
+
+        ConnectionNodeEditPart lineEP = (ConnectionNodeEditPart) getFixture()
+            .createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
+        flushEventQueue();
+        
+		PointList pointList = lineEP.getConnectionFigure().getPoints().getCopy();
+		Point pt1 = pointList.getFirstPoint();
+		Point pt2 = pointList.getLastPoint();
+		Point bend = new Point((pt1.x + pt2.x) / 2, pt1.y);
+		pointList.insertPoint(bend, 1);
+		SetConnectionBendpointsCommand bendpointsChanged =
+			new SetConnectionBendpointsCommand(getTestFixture().getEditingDomain());
+		bendpointsChanged.setEdgeAdapter(new EObjectAdapter(lineEP.getNotationView()));
+			bendpointsChanged.setNewPointList(pointList, lineEP
+					.getConnectionFigure().getSourceAnchor()
+					.getReferencePoint(), lineEP.getConnectionFigure()
+					.getTargetAnchor().getReferencePoint());
+		
+		getCommandStack().execute(new ICommandProxy(bendpointsChanged));
+		flushEventQueue();
+		assertEquals("Wrong number of bendpoints for the model", 3, ((RelativeBendpoints)((Edge)lineEP.getNotationView()).getBendpoints()).getPoints().size());
+		assertEquals("Wrong number of bendpoints for the figure", 3, lineEP.getConnectionFigure().getPoints().size());
+		
+		pointList = lineEP.getConnectionFigure().getPoints().getCopy();
+		pt1 = pointList.getFirstPoint();
+		pt2 = pointList.getLastPoint();
+		bend = new Point((pt1.x + pt2.x) / 4, (pt1.y + pt2.y) / 2);
+		pointList.insertPoint(bend, 2);
+		bendpointsChanged =
+			new SetConnectionBendpointsCommand(getTestFixture().getEditingDomain());
+		bendpointsChanged.setEdgeAdapter(new EObjectAdapter(lineEP.getNotationView()));
+			bendpointsChanged.setNewPointList(pointList, lineEP
+					.getConnectionFigure().getSourceAnchor()
+					.getReferencePoint(), lineEP.getConnectionFigure()
+					.getTargetAnchor().getReferencePoint());
+		getCommandStack().execute(new ICommandProxy(bendpointsChanged));
+		flushEventQueue();
+		assertEquals("Wrong number of bendpoints for the model", 4, ((RelativeBendpoints)((Edge)lineEP.getNotationView()).getBendpoints()).getPoints().size());
+		assertEquals("Wrong number of bendpoints for the figure", 4, lineEP.getConnectionFigure().getPoints().size());
+
+		getCommandStack().undo();
+		flushEventQueue();		
+		assertEquals("Wrong number of bendpoints for the model", 3, ((RelativeBendpoints)((Edge)lineEP.getNotationView()).getBendpoints()).getPoints().size());
+		assertEquals("Wrong number of bendpoints for the figure", 3, lineEP.getConnectionFigure().getPoints().size());
+		
+		getCommandStack().redo();
+		flushEventQueue();
+		assertEquals("Wrong number of bendpoints for the model", 4, ((RelativeBendpoints)((Edge)lineEP.getNotationView()).getBendpoints()).getPoints().size());
+		assertEquals("Wrong number of bendpoints for the figure", 4, lineEP.getConnectionFigure().getPoints().size());
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally {
+        getFixture().closeDiagram();
+    }
+}
     /**
      * Verifies conditions on the line as note3 is moved around.
      * @param note1EP
