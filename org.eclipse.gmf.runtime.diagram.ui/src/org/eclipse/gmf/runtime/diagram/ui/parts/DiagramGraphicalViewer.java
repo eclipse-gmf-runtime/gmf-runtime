@@ -30,7 +30,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author melaasar
@@ -240,7 +239,7 @@ public class DiagramGraphicalViewer
         if (selectionEventPending)
             return;
         selectionEventPending = true;
-        Display display = PlatformUI.getWorkbench().getDisplay();
+        Display display = DisplayUtils.getDisplay();
         if (display != null) {
             display.asyncExec(new Runnable() {
 

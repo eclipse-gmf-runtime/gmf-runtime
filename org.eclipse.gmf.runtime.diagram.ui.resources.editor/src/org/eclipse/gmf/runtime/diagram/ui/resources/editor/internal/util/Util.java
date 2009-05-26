@@ -21,15 +21,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
-
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 
 /**
  * @author qili
@@ -92,11 +91,7 @@ public class Util {
 	 * display is returned. Otherwise the method returns the default display.
 	 */
 	public static Display getStandardDisplay() {
-		Display display;
-		display= Display.getCurrent();
-		if (display == null)
-			display= PlatformUI.getWorkbench().getDisplay();
-		return display;
+		return DisplayUtils.getDisplay();
 	}
 
 

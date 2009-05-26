@@ -14,9 +14,9 @@ import java.lang.ref.WeakReference;
 
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * This is an extension of the DiagramEventBroker that has special handling for notifications that
@@ -60,7 +60,7 @@ public class DiagramEventBrokerThreadSafe extends DiagramEventBroker {
             final ResourceSetChangeEvent eventToHandle = event;
             TransactionalEditingDomain editingDomain = (TransactionalEditingDomain)editingDomainRef.get();
             if (editingDomain != null) {
-	            PlatformUI.getWorkbench().getDisplay().syncExec(editingDomain.createPrivilegedRunnable(new Runnable() { 
+	            DisplayUtils.getDisplay().syncExec(editingDomain.createPrivilegedRunnable(new Runnable() { 
 	                public void run() {
 	                    internal_resourceSetChanged(eventToHandle);
 	                }

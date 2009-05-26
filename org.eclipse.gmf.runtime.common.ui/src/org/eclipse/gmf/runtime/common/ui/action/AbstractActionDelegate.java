@@ -20,6 +20,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -35,7 +36,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * The abstract parent of all concrete action delegates that execute commands.
@@ -435,19 +435,19 @@ public abstract class AbstractActionDelegate implements IPartListener, IActionWi
 	 * 
 	 */
 	protected void openErrorDialog(final IStatus status) {
+		
+        final Display display = DisplayUtils.getDisplay();
 
-        final Display workbenchDisplay = PlatformUI.getWorkbench().getDisplay();
-
-        if (workbenchDisplay.getThread() == Thread.currentThread()) {
+        if (display.getThread() == Thread.currentThread()) {
             // we're already on the UI thread
-            ErrorDialog.openError(workbenchDisplay.getActiveShell(), Action
+            ErrorDialog.openError(display.getActiveShell(), Action
                 .removeMnemonics(getLabel()), null, status);
 
         } else {
             // we're not on the UI thread
-            workbenchDisplay.asyncExec(new Runnable() {
+        	display.asyncExec(new Runnable() {
                 public void run() {
-                    ErrorDialog.openError(workbenchDisplay.getActiveShell(),
+                    ErrorDialog.openError(display.getActiveShell(),
                         Action.removeMnemonics(getLabel()), null, status);
                 }
             });

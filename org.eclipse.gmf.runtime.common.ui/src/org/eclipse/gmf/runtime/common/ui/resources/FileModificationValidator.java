@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,7 +106,7 @@ public class FileModificationValidator {
 			// Similar to the DefaultUIFileModificationValidator we check if the shell is not null before 
 			// displaying messages.
 			if(shell != null){
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						MessageDialog
 								.openError(

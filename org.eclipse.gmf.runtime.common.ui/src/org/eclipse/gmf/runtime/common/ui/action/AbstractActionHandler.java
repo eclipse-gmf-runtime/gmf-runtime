@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
 import org.eclipse.gmf.runtime.common.ui.util.PartListenerAdapter;
 import org.eclipse.gmf.runtime.common.ui.util.StatusLineUtil;
@@ -43,7 +44,6 @@ import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * The abstract parent of all concrete action handlers that execute commands.
@@ -511,19 +511,19 @@ public abstract class AbstractActionHandler
 	 */
 	protected void openErrorDialog(final IStatus status) {
         
-        final Display workbenchDisplay = PlatformUI.getWorkbench().getDisplay();
+        final Display display = DisplayUtils.getDisplay();
 
-        if (workbenchDisplay.getThread() == Thread.currentThread()) {
+        if (display.getThread() == Thread.currentThread()) {
             // we're already on the UI thread
-            ErrorDialog.openError(workbenchDisplay.getActiveShell(),
+            ErrorDialog.openError(display.getActiveShell(),
                 removeMnemonics(getLabel()), null, status);
 
         } else {
             // we're not on the UI thread
-            workbenchDisplay.asyncExec(new Runnable() {
+        	display.asyncExec(new Runnable() {
 
                 public void run() {
-                    ErrorDialog.openError(workbenchDisplay.getActiveShell(),
+                    ErrorDialog.openError(display.getActiveShell(),
                         removeMnemonics(getLabel()), null, status);
                 }
             });

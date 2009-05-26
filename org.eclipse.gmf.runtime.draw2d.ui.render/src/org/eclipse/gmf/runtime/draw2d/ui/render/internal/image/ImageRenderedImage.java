@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.security.InvalidParameterException;
 
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
@@ -26,7 +27,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Display;
 
 /**
 * Class that represents a Image image. This is a useful abstraction so that it
@@ -75,7 +76,9 @@ public final class ImageRenderedImage extends AbstractRenderedImage {
 			int newWidth = bufferWidth;
             int newHeight = bufferHeight;
             
-            if (getKey().shouldMaintainAspectRatio()) {
+			Display display = DisplayUtils.getDisplay(); 
+
+			if (getKey().shouldMaintainAspectRatio()) {
                 double origAspectRatio = origHeight / (double)origWidth;
                 if (origAspectRatio > newHeight / (double)newWidth) {
                     newWidth = (int)Math.round(newHeight / origAspectRatio);
@@ -92,8 +95,8 @@ public final class ImageRenderedImage extends AbstractRenderedImage {
 				newWidth *= scale;
 				newHeight *= scale;
 				
-				Image origImage = new Image(PlatformUI.getWorkbench().getDisplay(), imgData[0]);
-				Image image = new Image(PlatformUI.getWorkbench().getDisplay(), new Rectangle(0, 0, bufferWidth, bufferHeight));
+				Image origImage = new Image(display, imgData[0]);
+				Image image = new Image(display, new Rectangle(0, 0, bufferWidth, bufferHeight));
 				GC gc = new GC(image);
 				SWTGraphics swtG = new SWTGraphics(gc);
 				swtG.drawImage(origImage, 0, 0, origWidth, origHeight, (bufferWidth - newWidth) / 2, (bufferHeight - newHeight) / 2, newWidth, newHeight);
@@ -105,7 +108,7 @@ public final class ImageRenderedImage extends AbstractRenderedImage {
 			}
 			else {
 				ImageData scaledImgData = imgData[0].scaledTo(newWidth, newHeight);
-				return new Image(PlatformUI.getWorkbench().getDisplay(), scaledImgData);
+				return new Image(display, scaledImgData);
 			}
 		} catch (Exception e) {
 			Trace.throwing(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, ImageRenderedImage.class, 

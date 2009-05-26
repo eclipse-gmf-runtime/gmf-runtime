@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,11 +15,11 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * This is a helper class used to convert an SWT Image into an AWT
@@ -66,7 +66,7 @@ public class ImageConverter {
 			}
 		}
 	
-		return new Image(PlatformUI.getWorkbench().getDisplay(), swtImageData);
+		return new Image(DisplayUtils.getDisplay(), swtImageData);
 	}
 	
 	/**

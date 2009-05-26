@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.resources.FileChangeManager;
 import org.eclipse.gmf.runtime.common.ui.resources.IFileObserver;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
@@ -47,7 +48,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -240,7 +240,7 @@ public class BookmarkDecorator
          *            the decorators to be refreshed
          */
         private void refreshDecorators(final List decorators) {
-            PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+            DisplayUtils.getDisplay().asyncExec(new Runnable() {
                 public void run() {
                     try {
                         TransactionUtil.getEditingDomain(
