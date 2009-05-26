@@ -1,0 +1,22 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: DiagramPrint_ja - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x411 /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\jamesPrint\DiagramPrint\DiagramPrint_ja\DiagramPrint.rc"" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint.pdb" /machine:I386 /out:"..\I10n\os\win32\x86\ja\DiagramPrint.dll" /implib:"Release/DiagramPrint.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Linking...
+   Creating library Release/DiagramPrint.lib and object Release/DiagramPrint.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

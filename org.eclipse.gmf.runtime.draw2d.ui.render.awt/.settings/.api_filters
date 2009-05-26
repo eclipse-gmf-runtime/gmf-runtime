@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><component id="org.eclipse.gmf.runtime.draw2d.ui.render.awt" version="2">
+    <resource path="src/org/eclipse/gmf/runtime/draw2d/ui/render/awt/internal/graphics/GraphicsToGraphics2DAdaptor.java" type="org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.GraphicsToGraphics2DAdaptor">
+        <filter id="571473929">
+            <message_arguments>
+                <message_argument value="Graphics"/>
+                <message_argument value="GraphicsToGraphics2DAdaptor"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

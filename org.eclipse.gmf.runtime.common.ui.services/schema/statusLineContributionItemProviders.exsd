@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.gmf.runtime.common.ui.services" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.gmf.runtime.common.ui.services" id="statusLineContributionItemProviders" name="statusLineContributionItemProviders"/>
+      </appInfo>
+      <documentation>
+         This extension point is used to define status line contribution item providers for the status line service.
+      (&lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.statusline.StatusLineService&lt;/tt&gt;).
+      &lt;p&gt;
+      The status line service supplies contribution items to the status line.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="statusLineContributionItemProvider"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="statusLineContributionItemProvider">
+      <complexType>
+         <sequence>
+            <element ref="Priority"/>
+            <element ref="Policy" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The provider class. Providers implement service functionality (operations).
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.statusline.AbstractStatusLineContributionItemProvider:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Priority">
+      <complexType>
+         <attribute name="name" use="required">
+            <annotation>
+               <documentation>
+                  The name of the provider priority, i.e. Lowest, Low, Medium, High, or Highest.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Lowest">
+                  </enumeration>
+                  <enumeration value="Low">
+                  </enumeration>
+                  <enumeration value="Medium">
+                  </enumeration>
+                  <enumeration value="High">
+                  </enumeration>
+                  <enumeration value="Highest">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Policy">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The provider policy class. Provider policies can optionally be associated with providers to determine whether the providers provide a given operation.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         1.2
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         Following is an example of a status line item provider extension:
+&lt;p&gt;
+&lt;pre&gt;
+   &lt;extension 
+      id=&quot;statusLineContributionItemProviders&quot; 
+      name=&quot;%ext.statusLineContributionItemProviders&quot; 
+      point=&quot;org.eclipse.gmf.runtime.common.ui.services.statusLineContributionItemProviders&quot;&gt; 
+      &lt;statusLineContributionItemProvider 
+         class=&quot;org.eclipse.gmf.examples.diagram.providers.StatusLineItemProvider&quot;&gt; 
+         &lt;Priority 
+            name=&quot;Lowest&quot;&gt; 
+         &lt;/Priority&gt; 
+      &lt;/statusLineContributionItemProvider&gt; 
+   &lt;/extension&gt; 
+&lt;/pre&gt;
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         The value of the &lt;tt&gt;class&lt;/tt&gt; attribute must represent a subclass of
+         &lt;tt&gt;org.eclipse.gmf.runtime.common.core.service.AbstractProvider&lt;/tt&gt; that implements
+         &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.statusline.AbstractStatusLineContributionItemProvider&lt;/tt&gt;.
+      </documentation>
+   </annotation>
+
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2009 IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
+</schema>

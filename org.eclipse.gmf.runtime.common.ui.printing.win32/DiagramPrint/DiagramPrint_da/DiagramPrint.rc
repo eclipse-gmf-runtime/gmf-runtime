@@ -1,0 +1,425 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Danish resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DAN)
+#ifdef _WIN32
+LANGUAGE LANG_DANISH, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "IBM Corporation\0"
+            VALUE "FileDescription", "DiagramPrint DLL\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "DiagramPrint\0"
+            VALUE "LegalCopyright", "Licensed Materials -- Property of IBM - (C) Copyright IBM Corporation, 2003,2008 - US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.\0"
+            VALUE "LegalTrademarks", "(R) IBM is a registered trademark of International Business Machines Corporation.  Windows(TM) is a trademark of Microsoft Corporation.\0"
+            VALUE "OriginalFilename", "DiagramPrint.DLL\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "DiagramPrint Dynamic Link Library\0"
+            VALUE "ProductVersion", "2, 1, 0, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+1538 DIALOG DISCARDABLE  32, 32, 312, 361
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Udskriv"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Printer",1075,9,6,295,84,WS_GROUP
+    LTEXT           "&Navn:",1093,16,21,19,8
+    COMBOBOX        1139,59,17,150,152,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON      "&Egenskaber...",1025,216,17,60,14,WS_GROUP
+    LTEXT           "Status:",1095,16,36,26,8,SS_NOPREFIX
+    CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,36,217,10
+    LTEXT           "Type:",1094,16,48,22,8,SS_NOPREFIX
+    CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,48,218,10
+    LTEXT           "Hvor:",1097,16,61,24,8,SS_NOPREFIX
+    CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,60,218,10
+    LTEXT           "Kommentar:",1096,16,73,42,8,SS_NOPREFIX
+    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,71,71,148,10
+    CONTROL         "Udskriv til fi&l",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,212,70,51,12
+    GROUPBOX        "Diagramudskrivningsomfang",1072,9,95,294,106,WS_GROUP
+    CONTROL         "A&ktuelt diagram",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,211,12
+    CONTROL         "Alle &diagrammer i åbne modeller",IDC_ALL_DIAGRAMS,
+                    "Button",BS_AUTORADIOBUTTON,17,121,226,12
+    CONTROL         "&Valgte diagrammer:",IDC_SELECTED_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,135,129,12
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP
+    GROUPBOX        "Skalering",IDC_STATIC,8,202,295,51
+    CONTROL         "&Juster til % af normal størrelse:",IDC_SCALE_PERCENT,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,
+                    217,115,12
+    CONTROL         "&Tilpas til:",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,16,233,53,12
+    EDITTEXT        IDC_PERCENT,138,217,32,12,ES_NUMBER
+    RTEXT           "sider i &bredden:",1105,84,235,52,8
+    EDITTEXT        IDC_PAGESM,145,233,32,12,ES_NUMBER
+    RTEXT           "sider i &højden:",IDC_STATIC,189,235,54,8
+    EDITTEXT        IDC_PAGESN,247,233,32,12,ES_NUMBER
+    LTEXT           "",IDC_STATIC,260,235,8,8,NOT WS_VISIBLE
+    GROUPBOX        "Udskriftsområde",1074,8,257,132,73,WS_GROUP
+    CONTROL         "&Alle",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,272,75,12
+    CONTROL         "&Sider",1058,"Button",BS_AUTORADIOBUTTON,16,286,83,12
+    RTEXT           "&fra:",1089,24,308,10,8
+    EDITTEXT        1152,48,306,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "t&il:",1090,82,308,7,8
+    EDITTEXT        1153,100,306,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "Kopier",1073,148,257,155,72,WS_GROUP
+    LTEXT           "Antal ko&pier:",1092,163,273,51,8
+    EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
+    CONTROL         "S&ortér",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,235,295,53,12
+    DEFPUSHBUTTON   "OK",IDOK,205,339,48,14,WS_GROUP
+    PUSHBUTTON      "Annullér",IDCANCEL,257,339,48,14
+    ICON            "",1086,156,290,70,25,WS_GROUP
+END
+
+1539 DIALOG DISCARDABLE  32, 32, 288, 178
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Indstil printer"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Printer",1075,8,4,272,84,WS_GROUP
+    LTEXT           "&Navn:",1093,16,20,19,8
+    COMBOBOX        1136,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON      "&Egenskaber",1025,212,17,60,14,WS_GROUP
+    LTEXT           "Status:",1095,16,36,36,8,SS_NOPREFIX
+    CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,36,216,10
+    LTEXT           "Type:",1094,16,48,36,8,SS_NOPREFIX
+    CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,47,217,10
+    LTEXT           "Hvor:",1097,16,60,36,8,SS_NOPREFIX
+    CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,60,217,10
+    LTEXT           "Kommentar:",1096,16,72,39,8,SS_NOPREFIX
+    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,72,217,10
+    GROUPBOX        "Papir",1073,8,92,164,56,WS_GROUP
+    LTEXT           "St&ørrelse:",1089,16,108,29,8
+    COMBOBOX        1137,52,106,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    LTEXT           "&Kilde:",1090,16,128,17,8
+    COMBOBOX        1138,52,126,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    GROUPBOX        "Retning",1072,180,92,100,56,WS_GROUP
+    ICON            "",1084,195,112,18,20,WS_GROUP
+    CONTROL         "&Stående",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,224,106,40,12
+    CONTROL         "&Liggende",1057,"Button",BS_AUTORADIOBUTTON,224,126,43,
+                    12
+    DEFPUSHBUTTON   "OK",IDOK,180,156,48,14,WS_GROUP
+    PUSHBUTTON      "Annullér",IDCANCEL,232,156,48,14
+END
+
+1546 DIALOG DISCARDABLE  32, 32, 240, 240
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Sideopsætning"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "",1080,"Static",SS_WHITERECT | WS_GROUP,80,8,80,80
+    CONTROL         "",1081,"Static",SS_GRAYRECT | WS_GROUP,160,12,4,80
+    CONTROL         "",1082,"Static",SS_GRAYRECT | WS_GROUP,84,88,80,4
+    GROUPBOX        "Papir",1073,8,97,224,56,WS_GROUP
+    LTEXT           "St&ørrelse:",1089,16,112,29,8
+    COMBOBOX        1137,64,110,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    LTEXT           "&Kilde:",1090,17,133,17,8
+    COMBOBOX        1138,64,130,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    GROUPBOX        "Retning",1072,8,156,64,56,WS_GROUP
+    CONTROL         "&Stående",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,170,40,12
+    CONTROL         "&Liggende",1057,"Button",BS_AUTORADIOBUTTON,16,190,43,
+                    12
+    GROUPBOX        "Margener",1075,81,156,152,56,WS_GROUP
+    LTEXT           "&Venstre:",1102,88,172,26,8
+    EDITTEXT        1155,120,170,28,12,WS_GROUP
+    LTEXT           "&Højre:",1103,164,172,19,8
+    EDITTEXT        1157,196,170,28,12,WS_GROUP
+    LTEXT           "&Top:",1104,88,192,32,8
+    EDITTEXT        1156,120,190,28,12,WS_GROUP
+    LTEXT           "&Bund:",1105,164,192,19,8
+    EDITTEXT        1158,196,190,28,12,WS_GROUP
+    DEFPUSHBUTTON   "OK",IDOK,80,220,48,14,WS_GROUP
+    PUSHBUTTON      "Annullér",IDCANCEL,132,220,48,14
+    PUSHBUTTON      "&Printer...",1026,184,220,48,14
+END
+
+1234 DIALOG DISCARDABLE  32, 32, 288, 186
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Udskriv"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Printer",1075,8,4,272,84,WS_GROUP
+    LTEXT           "&Navn:",1093,16,20,19,8
+    COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON      "&Egenskaber",1025,212,17,60,14,WS_GROUP
+    LTEXT           "Status:",1095,16,36,36,8,SS_NOPREFIX
+    CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,36,217,10
+    LTEXT           "Type:",1094,16,48,36,10,SS_NOPREFIX
+    CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,48,217,10
+    LTEXT           "Hvor:",1097,16,61,36,8,SS_NOPREFIX
+    CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,60,217,10
+    LTEXT           "Kommentar:",1096,16,73,39,8,SS_NOPREFIX
+    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,72,146,10
+    CONTROL         "Udskriv til fi&l",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,213,70,51,12
+    GROUPBOX        "Udskriftsområde",1072,8,93,144,64,WS_GROUP
+    CONTROL         "&Alle",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,106,25,12
+    CONTROL         "&Sider",1058,"Button",BS_AUTORADIOBUTTON,16,122,29,12
+    CONTROL         "&Valg",1057,"Button",BS_AUTORADIOBUTTON,15,138,27,12
+    RTEXT           "&fra:",1089,52,124,10,8
+    EDITTEXT        1152,74,122,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "t&il:",1090,105,124,7,8
+    EDITTEXT        1153,118,122,26,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "Kopier",1073,160,92,120,64,WS_GROUP
+    LTEXT           "Antal ko&pier:",1092,168,108,39,8
+    EDITTEXT        1154,240,106,32,12,ES_NUMBER | WS_GROUP
+    ICON            "",1086,162,124,76,24,SS_CENTERIMAGE | WS_GROUP
+    CONTROL         "S&ortér",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,240,130,32,12
+    DEFPUSHBUTTON   "OK",IDOK,180,164,48,14,WS_GROUP
+    PUSHBUTTON      "Annullér",IDCANCEL,233,164,48,14
+END
+
+1547 DIALOGEX 32, 32, 289, 354
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Udskriv"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Printer",1075,9,4,272,84,WS_GROUP
+    LTEXT           "&Navn:",1093,16,22,19,8
+    COMBOBOX        1139,59,18,146,152,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON      "&Egenskaber...",1025,212,17,60,14,WS_GROUP
+    LTEXT           "Status:",1095,16,36,36,8,SS_NOPREFIX
+    CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,36,217,10
+    LTEXT           "Type:",1094,16,48,36,10,SS_NOPREFIX
+    CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,48,217,10
+    LTEXT           "Hvor:",1097,16,60,36,8,SS_NOPREFIX
+    CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,60,217,10
+    LTEXT           "Kommentar:",1096,16,72,39,8,SS_NOPREFIX
+    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,59,72,146,10
+    CONTROL         "Udskriv til fi&l",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,212,70,53,12
+    GROUPBOX        "Diagramudskrivningsomfang",1072,8,94,272,106,WS_GROUP
+    CONTROL         "A&ktuelt diagram",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,62,12
+    CONTROL         "Alle &diagrammer i åbne modeller",IDC_ALL_DIAGRAMS,
+                    "Button",BS_AUTORADIOBUTTON,16,121,112,12
+    CONTROL         "&Valgte diagrammer:",IDC_SELECTED_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,17,135,73,12
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP
+    GROUPBOX        "Skalering",IDC_STATIC,8,202,272,51
+    CONTROL         "&Juster til % af normal størrelse:",IDC_SCALE_PERCENT,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,
+                    218,107,12
+    CONTROL         "&Tilpas til:",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,16,233,41,12
+    LTEXT           "&Juster til % af normal størrelse:",1102,30,219,93,8,
+                    NOT WS_VISIBLE
+    EDITTEXT        IDC_PERCENT,128,217,32,12,ES_NUMBER
+    LTEXT           "sider i &bredden:",1105,71,235,48,8
+    EDITTEXT        IDC_PAGESM,128,233,32,12,ES_NUMBER
+    RTEXT           "sider i &højden:",IDC_STATIC,177,236,54,8
+    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
+    LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
+    GROUPBOX        "Udskriftsområde",1074,8,258,132,64,WS_GROUP
+    CONTROL         "&Alle",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,272,25,12
+    CONTROL         "&Sider",1058,"Button",BS_AUTORADIOBUTTON,16,286,29,12
+    RTEXT           "&fra:",1089,24,302,10,8
+    EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "t&il:",1090,85,302,7,8
+    EDITTEXT        1153,100,300,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "Kopier",1073,147,257,132,64,WS_GROUP
+    LTEXT           "Antal ko&pier:",1092,163,273,39,8
+    EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
+    CONTROL         "S&ortér",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,235,295,32,12
+    DEFPUSHBUTTON   "OK",IDOK,180,328,48,14,WS_GROUP
+    PUSHBUTTON      "Annullér",IDCANCEL,233,328,48,14
+    ICON            "",1086,156,290,70,25,WS_GROUP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    1538, DIALOG
+    BEGIN
+        RIGHTMARGIN, 289
+        BOTTOMMARGIN, 349
+    END
+
+    1547, DIALOG
+    BEGIN
+        RIGHTMARGIN, 286
+        BOTTOMMARGIN, 342
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Danish resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\DiagramPrint.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\DiagramPrint.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

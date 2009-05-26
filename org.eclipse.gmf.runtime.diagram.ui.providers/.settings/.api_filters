@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component id="org.eclipse.gmf.runtime.diagram.ui.providers" version="2">
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/providers/LeftRightProvider.java" type="org.eclipse.gmf.runtime.diagram.ui.providers.LeftRightProvider">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="DefaultProvider"/>
+                <message_argument value="LeftRightProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/providers/TopDownProvider.java" type="org.eclipse.gmf.runtime.diagram.ui.providers.TopDownProvider">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="DefaultProvider"/>
+                <message_argument value="TopDownProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/providers/CompositeLeftRightProvider.java" type="org.eclipse.gmf.runtime.diagram.ui.providers.CompositeLeftRightProvider">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="CompositeLayoutProvider"/>
+                <message_argument value="CompositeLeftRightProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/providers/CompositeTopDownProvider.java" type="org.eclipse.gmf.runtime.diagram.ui.providers.CompositeTopDownProvider">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="CompositeLayoutProvider"/>
+                <message_argument value="CompositeTopDownProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>
