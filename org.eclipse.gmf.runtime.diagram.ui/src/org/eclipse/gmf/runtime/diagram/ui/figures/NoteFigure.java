@@ -11,8 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.figures;
 
+import org.eclipse.draw2d.AbstractBorder;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -35,7 +37,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
  */
 public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchorableFigure {
 
-	private boolean diagrsamLinkMode = false;
+	private boolean diagramLinkMode = false;
 
 
 	private boolean withDanglingCorner = true;
@@ -54,6 +56,69 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	 * the clip margin constant in device coordinates
 	 */
 	static public final int CLIP_MARGIN_DP = 14;
+	
+	/**
+	 * Border for notes. Defines paint method and insets that depend on line width and
+	 * given margin.
+	 * @since 1.2
+	 */
+	public class NoteFigureBorder extends AbstractBorder {
+		private Insets margin;
+		NoteFigureBorder(Insets insets) {
+			margin = insets;
+		}	
+		
+		/**
+		 * Returns margin for this border
+		 * @return margin as Insets
+		 */
+		public Insets getMargin() {
+			return margin;
+		}
+
+		/**
+		 * Sets the margin for this border 
+		 * @param margin as Insets
+		 */
+		public void setMargin(Insets margin) {
+			this.margin = margin;
+		}
+
+
+		/*
+		 * @see org.eclipse.draw2d.Border#getInsets(org.eclipse.draw2d.IFigure)
+		 */
+		public Insets getInsets(IFigure figure) {
+			NoteFigure noteFigure = (NoteFigure)figure;
+			int width = noteFigure.getLineWidth();
+			return new Insets(width + margin.top, width + margin.left, 
+					width + margin.bottom, width + margin.right);
+		}
+
+
+		/* 
+		 * @see org.eclipse.draw2d.Border#paint(org.eclipse.draw2d.IFigure, org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
+		 */
+		public void paint(IFigure figure, Graphics g, Insets insets) {
+			NoteFigure noteFigure = (NoteFigure)figure;
+			Rectangle r = noteFigure.getBounds().getCopy();
+			r.shrink(noteFigure.getLineWidth() / 2, noteFigure.getLineWidth() / 2);
+			
+			PointList p = noteFigure.getPointList(r);
+			p.addPoint(r.x, r.y - noteFigure.getLineWidth() / 2);
+			g.setLineWidth(noteFigure.getLineWidth());  
+			g.setLineStyle(noteFigure.getLineStyle());  
+			g.drawPolyline(p);
+	
+			if (withDanglingCorner) {
+				PointList corner = new PointList();
+				corner.addPoint(r.x + r.width - getClipWidth(), r.y);
+				corner.addPoint(r.x + r.width - getClipWidth(), r.y + getClipHeight());
+				corner.addPoint(r.x + r.width, r.y + getClipHeight());
+				g.drawPolyline(corner);			
+			}			
+		}
+	}
 		
 	/**
 	 * Constructor
@@ -64,10 +129,26 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	 */
 	public NoteFigure(int width, int height, Insets insets) {
 		super(width, height);
-		setBorder(
-			new MarginBorder(insets.top, insets.left, insets.bottom, insets.right));
+		// NoteFigureBorder defines insets which ensure that content within the note will be indented 
+		// appropriately as the line width changes
+		setBorder(new NoteFigureBorder(insets)); 
 
-		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
+		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout() {
+			// Override to ensure that children's size is not taken into account
+			// when calculating minimum size (otherwise, if WrappingLabel is a
+			// child, the smallest rectangle we could get would be big enough to
+			// fit the label of minimum size = three dots and icon if there is
+			// one). 
+			public Dimension calculateMinimumSize(IFigure container, int wHint,
+					int hHint) {
+				Insets insets = container.getInsets();
+				Dimension minSize = new Dimension(0, 0);
+				return transposer
+					.t(minSize)
+					.expand(insets.getWidth(), insets.getHeight())
+					.union(getBorderPreferredSize(container));
+			}			
+		};
 		layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
 		layout.setSpacing(insets.top);
 		setLayoutManager(layout);
@@ -104,23 +185,14 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 		return p;
 	}
 
+	/**
+	 * Paints border unless this Note is in DiagramLinkMode  
+	 * 
+	 * @see org.eclipse.draw2d.Figure#paintBorder(org.eclipse.draw2d.Graphics)
+	 */
 	protected void paintBorder(Graphics g) {
 		if (!isDiagramLinkMode()) {
-			Rectangle r = getBounds().getCopy();
-			r.shrink(getLineWidth() / 2, getLineWidth() / 2);
-			
-			PointList p = getPointList(r);
-			g.setLineWidth(getLineWidth());  
-			g.setLineStyle(getLineStyle());  
-			g.drawPolyline(p);
-	
-			if (withDanglingCorner) {
-				PointList corner = new PointList();
-				corner.addPoint(r.x + r.width - getClipWidth(), r.y);
-				corner.addPoint(r.x + r.width - getClipWidth(), r.y + getClipHeight());
-				corner.addPoint(r.x + r.width, r.y + getClipHeight());
-				g.drawPolyline(corner);			
-			}
+			getBorder().paint(this, g, NO_INSETS);
 		}		 
 	}
 
@@ -140,14 +212,14 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	 * @return the old diagram Link mode state
 	 */
 	public boolean setDiagramLinkMode(boolean diagramLinkMode) {
-		boolean bOldDiagramLinkMode = this.diagrsamLinkMode;
+		boolean bOldDiagramLinkMode = this.diagramLinkMode;
 		ConstrainedToolbarLayout layout = (ConstrainedToolbarLayout)getLayoutManager();
 		if (diagramLinkMode){
 			layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_CENTER);
 		}else {
 			layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
 		}
-		this.diagrsamLinkMode = diagramLinkMode;
+		this.diagramLinkMode = diagramLinkMode;
 		return bOldDiagramLinkMode;
 	}
 	
@@ -155,7 +227,7 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	 * @return true is in diagram Link mode, otherwise false
 	 */
 	public boolean isDiagramLinkMode() {
-		return diagrsamLinkMode;
+		return diagramLinkMode;
 	}
 
    /*
