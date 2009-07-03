@@ -327,7 +327,17 @@ public class ViewRefactorHelper {
 				eClassMap.put(feature.getEContainingClass(), newStyle = newView.getStyle(feature.getEContainingClass()));
 			}
 			if (newStyle != null) {
-				newStyle.eSet(feature, oldStyle.eGet(feature));
+				if (!oldStyle.eIsSet(feature)) {
+					if (!newStyle.eIsSet(feature)) {
+						// both features are null; nothing to do
+						continue;
+					} else {
+						// new style's feature is set and must be cleared
+						newStyle.eUnset(feature);
+					}
+				} else {
+					newStyle.eSet(feature, oldStyle.eGet(feature));
+				}
 			}
 		}
 	}
