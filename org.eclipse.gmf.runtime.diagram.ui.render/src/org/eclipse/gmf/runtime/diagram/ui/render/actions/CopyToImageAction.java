@@ -22,7 +22,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
@@ -36,6 +38,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.internal.dialogs.CopyToImageDia
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.l10n.DiagramUIRenderMessages;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToHTMLImageUtil;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
+import org.eclipse.gmf.runtime.diagram.ui.render.util.DiagramImageUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -259,6 +262,13 @@ public class CopyToImageAction
 								.getDestination(), dialog.getImageFormat(),
 							monitor);
 					} else {
+						DiagramImageUtils
+								.zOrderSort(
+										editparts,
+										LayerManager.Helper
+												.find(getDiagramEditPart())
+												.getLayer(
+														LayerConstants.PRINTABLE_LAYERS));
 						monitor.beginTask("", 6); //$NON-NLS-1$
 						monitor.worked(1);
 						monitor
