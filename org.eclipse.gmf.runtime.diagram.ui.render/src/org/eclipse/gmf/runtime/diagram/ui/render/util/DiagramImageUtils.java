@@ -11,13 +11,19 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.render.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -103,6 +109,58 @@ public final class DiagramImageUtils {
 			walker.translateToParent(t);
 		}
 		return t;
+	}
+	
+	/**
+	 * Sorts editparts using editparts figures z-order. All figures must be
+	 * ancestors of <code>zOrderRoot</code> figure
+	 * 
+	 * @param editparts
+	 *            list of editparts to sort
+	 * @param zOrderRoot
+	 *            the common parent
+	 */
+	public static void zOrderSort(List<GraphicalEditPart> editparts, IFigure zOrderRoot) {
+		if (editparts == null || editparts.size() < 2) {
+			return;
+		}
+		final Map<GraphicalEditPart, List<Integer>> indexMap = new IdentityHashMap<GraphicalEditPart, List<Integer>>(editparts.size());
+		for (GraphicalEditPart ep : editparts) {
+			List<Integer> index = new ArrayList<Integer>();
+			for (IFigure fig = ep.getFigure(); fig != zOrderRoot && fig.getParent() != null; fig = fig.getParent()) {
+				index.add(fig.getParent().getChildren().indexOf(fig));
+			}
+			indexMap.put(ep, index);
+		}
+		Collections.sort(editparts, new Comparator<GraphicalEditPart>() {
+			@Override
+			public int compare(GraphicalEditPart ep1, GraphicalEditPart ep2) {
+				List<Integer> index1 = indexMap.get(ep1);
+				List<Integer> index2 = indexMap.get(ep2);
+				int num1, num2;
+				for (int i = 0; i < index1.size() && i < index2.size(); i++) {
+					num1 = index1.get(index1.size() - 1 - i).intValue();
+					num2 = index2.get(index2.size() - 1 - i).intValue();
+					if (num1 < num2) {
+						return -1;
+					} else if (num1 > num2) {
+						return 1;
+					}
+				}
+				/*
+				 * If we get here then either one editparts figure is the child of another one.
+				 * Child figure will be on top of its parent. 
+				 * Parent figure will have smaller size of the index
+				 */
+				if (index1.size() < index2.size()) {
+					return 1;
+				} else if (index1.size() > index2.size()) {
+					return -1;
+				} else {
+					return 0;
+				}
+			}
+		});
 	}
 	
 }

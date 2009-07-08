@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -35,6 +37,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.l10n.DiagramUIRenderMessages;
+import org.eclipse.gmf.runtime.diagram.ui.render.util.DiagramImageUtils;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.dialogs.MessageDialog;
 
@@ -121,10 +124,14 @@ public class CopyImageCommand
 
 		Image image = null;
 		try {
-			if (imageCopyDiagram)
+			if (imageCopyDiagram) {
 				image = imageGenerator.createAWTImageForDiagram();
-			else
+			} else {
+				DiagramImageUtils.zOrderSort(editParts, LayerManager.Helper
+						.find(diagramEP).getLayer(
+								LayerConstants.PRINTABLE_LAYERS));
 				image = imageGenerator.createAWTImageForParts(editParts);
+			}
 		} catch (OutOfMemoryError error) {
 			String eMsg = DiagramUIRenderMessages.CopyAction_UnableToCopyImageMessage;
 			Log.error(DiagramUIRenderPlugin.getInstance(), IStatus.ERROR, eMsg,
