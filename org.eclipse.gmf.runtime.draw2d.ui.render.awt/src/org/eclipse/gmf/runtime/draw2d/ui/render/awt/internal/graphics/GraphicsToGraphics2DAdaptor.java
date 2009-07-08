@@ -20,7 +20,6 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
@@ -98,6 +97,19 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		public Font font;
 		
 		/**
+		 * cache line dash array
+		 */
+		public float[] lineDash = { 3, 3 };
+		
+		/**
+		 * cached line style
+		 */
+		public int lineStyle = LINE_SOLID;
+		/**
+		 * cached line width
+		 */
+		public float lineWidth = 1;
+		/**
 		 * cached xor mode value
 		 */
 		public boolean XorMode = false;
@@ -114,12 +126,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
          * cached alpha value
          */
         public int alpha;
-        
-        /**
-         * Line attributes value
-         */
-        public LineAttributes lineAttributes = new LineAttributes(1);
-        
+
     	int graphicHints;
     	
 		/**
@@ -139,13 +146,13 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			clipH = state.clipH;
 			
 			font = state.font;
+			lineStyle = state.lineStyle;
+			lineWidth = state.lineWidth;
 			fgColor = state.fgColor;
 			bgColor = state.bgColor;
 			XorMode = state.XorMode;
             alpha = state.alpha;
             graphicHints = state.graphicHints;
-            
-            lineAttributes = SWTGraphics.clone(state.lineAttributes);
 		}
 	}
 
@@ -257,9 +264,9 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 				0,
 				null,
 				0);
-		LineAttributes lineAttributes = new LineAttributes(1);
-		swtGraphics.getLineAttributes(lineAttributes);
-		setLineAttributes(lineAttributes);
+
+		setLineStyle(swtGraphics.getLineStyle());
+		setLineWidth(swtGraphics.getLineWidth());
 		getGraphics2D().setStroke(stroke);
 	}
 
@@ -270,6 +277,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	private void init() {
 
 		// Initialize drawing styles
+		setLineStyle(getLineStyle());
+		setLineWidth(1);
 		setForegroundColor(getForegroundColor());
 		setBackgroundColor(getBackgroundColor());
 		setXORMode(getXORMode());
@@ -400,7 +409,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
-		getGraphics2D().setStroke(createStroke());
 		getGraphics2D().draw(arc);
 	}
 
@@ -498,7 +506,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
-		getGraphics2D().setStroke(createStroke());
 		getGraphics2D().draw(line);
 	}
 
@@ -514,7 +521,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
-		getGraphics2D().setStroke(createStroke());
 		getGraphics2D().draw(ellipse);
 	}
 
@@ -554,7 +560,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	public void drawPolygon(PointList pointList) {
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
-		getGraphics2D().setStroke(createStroke());
 		getGraphics2D().draw(createPolygon(pointList));
 	}
 
@@ -577,7 +582,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 */
 	public void drawPolyline(PointList pointList) {
 
-		getGraphics2D().setStroke(createStroke());
 		// Draw polylines as a series of lines
 		for (int x = 1; x < pointList.size(); x++) {
 
@@ -600,7 +604,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
-		getGraphics2D().setStroke(createStroke());
 		getGraphics2D().draw(rect);
 	}
 
@@ -711,8 +714,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			lineWidth = getLineWidth();
 			
 			setLineWidth( 1 );
-			setLineWidth( lineWidth );
 			drawLine( x, baseline,	x + stringLength, baseline );
+			setLineWidth( lineWidth );
 		}
 		
 		if( isFontStrikeout(getFont()) ) {
@@ -720,8 +723,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			lineWidth = getLineWidth();
 			
 			setLineWidth( 1 );
-			setLineWidth( lineWidth );
 			drawLine( x, strikeline, x + stringLength, strikeline );
+			setLineWidth( lineWidth );
 		}
 	}
 
@@ -860,7 +863,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		
 		setBackgroundColor(state.bgColor);
 		setForegroundColor(state.fgColor);
-		setLineAttributes(state.lineAttributes);
+		setLineStyle(state.lineStyle);
+		setLineWidthFloat(state.lineWidth);
 		setXORMode(state.XorMode);
 		
 		setClipAbsolute(state.clipX, state.clipY, state.clipW, state.clipH);
@@ -1017,9 +1021,16 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	
 	@Override
 	public void setLineDash(float[] dash) {
-		currentState.lineAttributes.dash = dash;
-		setLineStyle(SWTGraphics.LINE_CUSTOM);
-		swtGraphics.setLineDash(dash);
+		currentState.lineDash = dash;
+		stroke =
+			new BasicStroke(
+				stroke.getLineWidth(),
+				stroke.getEndCap(),
+				stroke.getLineJoin(),
+				stroke.getMiterLimit(),
+				dash,
+				0);
+		getGraphics2D().setStroke(stroke);
 	}
 	
 	/*
@@ -1029,8 +1040,46 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 */
 	@Override
 	public void setLineStyle(int style) {
-		currentState.lineAttributes.style = style;		
+		currentState.lineStyle = style;
+		
 		swtGraphics.setLineStyle(style);
+		
+		float dash[] = { 18, 9 };
+		float dash_dot[] = { 9, 3, 3, 3 };
+		float dash_dot_dot[] = { 9, 3, 3, 3, 3, 3 };
+		float dot[] = { 3, 3 };
+
+		float dashPattern[];
+		switch (style) {
+			case SWTGraphics.LINE_DASH :
+				dashPattern = dash;
+				break;
+			case SWTGraphics.LINE_DASHDOT :
+				dashPattern = dash_dot;
+				break;
+			case SWTGraphics.LINE_DASHDOTDOT :
+				dashPattern = dash_dot_dot;
+				break;
+			case SWTGraphics.LINE_DOT :
+				dashPattern = dot;
+				break;
+			case SWTGraphics.LINE_CUSTOM :
+				dashPattern = currentState.lineDash;
+				break;
+			default :
+				dashPattern = null;
+		}
+
+		stroke =
+			new BasicStroke(
+				stroke.getLineWidth(),
+				stroke.getEndCap(),
+				stroke.getLineJoin(),
+				stroke.getMiterLimit(),
+				dashPattern,
+				0);
+
+		getGraphics2D().setStroke(stroke);
 	}
 	
 	/**
@@ -1069,14 +1118,27 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	
 	@Override
 	public void setLineWidthFloat(float width) {
-		currentState.lineAttributes.width = width;
+		currentState.lineWidth = width;
 		swtGraphics.setLineWidthFloat(width);
+
+		stroke =
+			new BasicStroke(
+				width,
+				stroke.getEndCap(),
+				stroke.getLineJoin(),
+				stroke.getMiterLimit(),
+				stroke.getDashArray(),
+				0);
+
+		getGraphics2D().setStroke(stroke);
 	}
 	
 	@Override
 	public void setLineAttributes(LineAttributes lineAttributes) {
-		SWTGraphics.copyLineAttributes(currentState.lineAttributes, lineAttributes);
 		swtGraphics.setLineAttributes(lineAttributes);
+		setLineWidthFloat(lineAttributes.width);
+		setLineStyle(lineAttributes.style);
+		setLineDash(lineAttributes.dash);
 	}
 	
 	/*
@@ -1163,7 +1225,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	public void drawPath(Path path) {
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
-		getGraphics2D().setStroke(createStroke());
 		getGraphics2D().draw(createPathAWT(path));
 	}
 
@@ -1365,75 +1426,4 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
     	this.stroke = stroke;
     	getGraphics2D().setStroke(stroke);
     }
-    
-    /**
-	 * Sets and retirns AWT Stroke based on the value of
-	 * <code>LineAttributes</code> within the current state object
-	 * 
-	 * @return the new AWT stroke
-	 */
-    private Stroke createStroke() {    	
-    	float factor = currentState.lineAttributes.width > 0 ? currentState.lineAttributes.width : 3;
-    	float awt_dash[];
-    	int awt_cap;
-    	int awt_join;
-    	
-		switch (currentState.lineAttributes.style) {
-			case SWTGraphics.LINE_DASH :
-				awt_dash = new float[]{ factor * 6, factor * 3 };
-				break;
-			case SWTGraphics.LINE_DASHDOT :
-				awt_dash = new float[] { factor * 3, factor, factor, factor };
-				break;
-			case SWTGraphics.LINE_DASHDOTDOT :
-				awt_dash = new float[] { factor * 3, factor, factor, factor, factor, factor };
-				break;
-			case SWTGraphics.LINE_DOT :
-				awt_dash = new float[] { factor, factor };
-				break;
-			case SWTGraphics.LINE_CUSTOM :
-				awt_dash = currentState.lineAttributes.dash;
-				break;
-			default :
-				awt_dash = null;
-		}
-		
-		switch (currentState.lineAttributes.cap) {
-			case SWT.CAP_FLAT:
-				awt_cap = BasicStroke.CAP_BUTT;
-				break;
-			case SWT.CAP_ROUND:
-				awt_cap = BasicStroke.CAP_ROUND;
-				break;
-			case SWT.CAP_SQUARE:
-				awt_cap = BasicStroke.CAP_SQUARE;
-				break;
-			default:
-				awt_cap = BasicStroke.CAP_BUTT;				
-		}
-		
-		switch (currentState.lineAttributes.join) {
-			case SWT.JOIN_BEVEL:
-				awt_join = BasicStroke.JOIN_BEVEL;
-				break;
-			case SWT.JOIN_MITER:
-				awt_join = BasicStroke.JOIN_MITER;
-				break;
-			case SWT.JOIN_ROUND:
-				awt_join = BasicStroke.JOIN_ROUND;
-			default:
-				awt_join = BasicStroke.JOIN_MITER;
-		}
-		
-		stroke =
-			new BasicStroke(
-				currentState.lineAttributes.width,
-				awt_cap,
-				awt_join,
-				currentState.lineAttributes.miterLimit,
-				awt_dash,
-				currentState.lineAttributes.dashOffset);
-		return stroke;
-    }
-
 }
