@@ -30,8 +30,10 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.GraphicsToGraphics2DAdaptor;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -71,6 +73,8 @@ public class DiagramImageGenerator
 		image = new Image(display, new org.eclipse.swt.graphics.Rectangle(0, 0, width, height));
 		gc = new GC(image);
 		SWTGraphics swtG = new SWTGraphics(gc);
+		swtG.setAdvanced(true);
+		swtG.setAntialias(SWT.ON);
 		
 		/*
 		IPreferenceStore preferenceStore =
@@ -212,7 +216,7 @@ public class DiagramImageGenerator
 		Graphics graphics = new GraphicsToGraphics2DAdaptor(g2d,
 				new org.eclipse.swt.graphics.Rectangle(0, 0, data.imageWidth, data.imageHeight));
 		
-		ScaledGraphics scaledGraphics = new ScaledGraphics(graphics);
+		ScaledGraphics scaledGraphics = new RenderedScaledGraphics(graphics);
 
 		RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
 				scaledGraphics, mm);
