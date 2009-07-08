@@ -1,43 +1,99 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component id="org.eclipse.gmf.runtime.diagram.ui" version="2">
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/figures/ResizableCompartmentFigure.java" type="org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure">
-        <filter id="643842064">
-            <message_arguments>
-                <message_argument value="AnimatableScrollPane"/>
-                <message_argument value="ResizableCompartmentFigure"/>
-                <message_argument value="createScrollpane(IMapMode)"/>
-            </message_arguments>
-        </filter>
-        <filter id="643842064">
-            <message_arguments>
-                <message_argument value="AnimatableScrollPane"/>
-                <message_argument value="ResizableCompartmentFigure"/>
-                <message_argument value="createScrollpane()"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/editpart/EditPartService.java" type="org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService">
-        <filter id="576725006">
-            <message_arguments>
-                <message_argument value="IEditPartProvider"/>
-                <message_argument value="EditPartService"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/editpart/CreateGraphicEditPartOperation.java" type="org.eclipse.gmf.runtime.diagram.ui.services.editpart.CreateGraphicEditPartOperation">
+<?xml version="1.0" encoding="UTF-8"?><component id="org.eclipse.gmf.runtime.diagram.ui" version="2">
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/actions/CheckedPropertyAction.java" type="org.eclipse.gmf.runtime.diagram.ui.actions.CheckedPropertyAction">
         <filter id="576720909">
             <message_arguments>
-                <message_argument value="EditPartOperation"/>
-                <message_argument value="CreateGraphicEditPartOperation"/>
+                <message_argument value="PropertyChangeAction"/>
+                <message_argument value="CheckedPropertyAction"/>
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/decorator/AbstractDecorator.java" type="org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator">
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/PasteCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.PasteCommand">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="ClipboardCommand"/>
+                <message_argument value="PasteCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/CompartmentEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart">
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="IContainedEditPart"/>
+                <message_argument value="CompartmentEditPart"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/ConnectionEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart">
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="IContainedEditPart"/>
+                <message_argument value="ConnectionEditPart"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/DiagramEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="ISurfaceEditPart"/>
+                <message_argument value="DiagramEditPart"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/DiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart">
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="ZoomableEditPart"/>
+                <message_argument value="DiagramRootEditPart"/>
+            </message_arguments>
+        </filter>
         <filter id="643842064">
             <message_arguments>
-                <message_argument value="Decoration"/>
-                <message_argument value="AbstractDecorator"/>
-                <message_argument value="getDecoration()"/>
+                <message_argument value="DiagramRuler"/>
+                <message_argument value="DiagramRootEditPart"/>
+                <message_argument value="getVerticalRuler()"/>
+            </message_arguments>
+        </filter>
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="DiagramRuler"/>
+                <message_argument value="DiagramRootEditPart"/>
+                <message_argument value="getHorizontalRuler()"/>
+            </message_arguments>
+        </filter>
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="PageBreakEditPart"/>
+                <message_argument value="DiagramRootEditPart"/>
+                <message_argument value="getPageBreakEditPart()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/DiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart$DiagramScalableFreeformLayeredPane">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="ScalableFreeformLayeredPane"/>
+                <message_argument value="DiagramScalableFreeformLayeredPane"/>
+            </message_arguments>
+        </filter>
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="ScaledGraphics"/>
+                <message_argument value="DiagramScalableFreeformLayeredPane"/>
+                <message_argument value="createScaledGraphics(MapModeGraphics)"/>
+            </message_arguments>
+        </filter>
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="MapModeGraphics"/>
+                <message_argument value="DiagramScalableFreeformLayeredPane"/>
+                <message_argument value="createMapModeGraphics(Graphics)"/>
+            </message_arguments>
+        </filter>
+        <filter id="643846161">
+            <message_arguments>
+                <message_argument value="MapModeGraphics"/>
+                <message_argument value="DiagramScalableFreeformLayeredPane"/>
+                <message_argument value="createScaledGraphics(MapModeGraphics)"/>
             </message_arguments>
         </filter>
     </resource>
@@ -57,60 +113,18 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/actions/CheckedPropertyAction.java" type="org.eclipse.gmf.runtime.diagram.ui.actions.CheckedPropertyAction">
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editpolicies/ConnectionBendpointEditPolicy.java" type="org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionBendpointEditPolicy">
         <filter id="576720909">
             <message_arguments>
-                <message_argument value="PropertyChangeAction"/>
-                <message_argument value="CheckedPropertyAction"/>
+                <message_argument value="ConnectionBendpointEditPolicy"/>
+                <message_argument value="ConnectionBendpointEditPolicy"/>
             </message_arguments>
         </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/DiagramEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
-        <filter id="576725006">
+        <filter id="643850349">
             <message_arguments>
-                <message_argument value="ISurfaceEditPart"/>
-                <message_argument value="DiagramEditPart"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/figures/BorderedNodeFigure.java" type="org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure">
-        <filter id="576725006">
-            <message_arguments>
-                <message_argument value="IExpandableFigure"/>
-                <message_argument value="BorderedNodeFigure"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/requests/CreateConnectionViewAndElementRequest.java" type="org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest">
-        <filter id="576725006">
-            <message_arguments>
-                <message_argument value="SuppressibleUIRequest"/>
-                <message_argument value="CreateConnectionViewAndElementRequest"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/PasteCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.PasteCommand">
-        <filter id="576720909">
-            <message_arguments>
-                <message_argument value="ClipboardCommand"/>
-                <message_argument value="PasteCommand"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/figures/ShapeCompartmentFigure.java" type="org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure">
-        <filter id="643842064">
-            <message_arguments>
-                <message_argument value="AnimatableScrollPane"/>
-                <message_argument value="ShapeCompartmentFigure"/>
-                <message_argument value="createScrollpane(IMapMode)"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/CompartmentEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart">
-        <filter id="576725006">
-            <message_arguments>
-                <message_argument value="IContainedEditPart"/>
-                <message_argument value="CompartmentEditPart"/>
+                <message_argument value="LineMode"/>
+                <message_argument value="ConnectionBendpointEditPolicy"/>
+                <message_argument value="ConnectionBendpointEditPolicy(LineMode)"/>
             </message_arguments>
         </filter>
     </resource>
@@ -123,11 +137,36 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/ConnectionEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart">
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/figures/BorderedNodeFigure.java" type="org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure">
         <filter id="576725006">
             <message_arguments>
-                <message_argument value="IContainedEditPart"/>
-                <message_argument value="ConnectionEditPart"/>
+                <message_argument value="IExpandableFigure"/>
+                <message_argument value="BorderedNodeFigure"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/figures/ResizableCompartmentFigure.java" type="org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure">
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="AnimatableScrollPane"/>
+                <message_argument value="ResizableCompartmentFigure"/>
+                <message_argument value="createScrollpane()"/>
+            </message_arguments>
+        </filter>
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="AnimatableScrollPane"/>
+                <message_argument value="ResizableCompartmentFigure"/>
+                <message_argument value="createScrollpane(IMapMode)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/figures/ShapeCompartmentFigure.java" type="org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure">
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="AnimatableScrollPane"/>
+                <message_argument value="ShapeCompartmentFigure"/>
+                <message_argument value="createScrollpane(IMapMode)"/>
             </message_arguments>
         </filter>
     </resource>
@@ -140,6 +179,45 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/requests/CreateConnectionViewAndElementRequest.java" type="org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest">
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="SuppressibleUIRequest"/>
+                <message_argument value="CreateConnectionViewAndElementRequest"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/decorator/AbstractDecorator.java" type="org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator">
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="Decoration"/>
+                <message_argument value="AbstractDecorator"/>
+                <message_argument value="getDecoration()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/editpart/AbstractEditPartProvider.java" type="org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider">
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="Properties"/>
+                <message_argument value="AbstractEditPartProvider"/>
+            </message_arguments>
+        </filter>
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="IEditPartProvider"/>
+                <message_argument value="AbstractEditPartProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/editpart/CreateGraphicEditPartOperation.java" type="org.eclipse.gmf.runtime.diagram.ui.services.editpart.CreateGraphicEditPartOperation">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="EditPartOperation"/>
+                <message_argument value="CreateGraphicEditPartOperation"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/editpart/CreateRootEditPartOperation.java" type="org.eclipse.gmf.runtime.diagram.ui.services.editpart.CreateRootEditPartOperation">
         <filter id="576720909">
             <message_arguments>
@@ -148,69 +226,11 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/DiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart$DiagramScalableFreeformLayeredPane">
-        <filter id="576720909">
-            <message_arguments>
-                <message_argument value="ScalableFreeformLayeredPane"/>
-                <message_argument value="DiagramScalableFreeformLayeredPane"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/DiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart">
-        <filter id="643842064">
-            <message_arguments>
-                <message_argument value="DiagramRuler"/>
-                <message_argument value="DiagramRootEditPart"/>
-                <message_argument value="getVerticalRuler()"/>
-            </message_arguments>
-        </filter>
-        <filter id="643842064">
-            <message_arguments>
-                <message_argument value="DiagramRuler"/>
-                <message_argument value="DiagramRootEditPart"/>
-                <message_argument value="getHorizontalRuler()"/>
-            </message_arguments>
-        </filter>
-        <filter id="576725006">
-            <message_arguments>
-                <message_argument value="ZoomableEditPart"/>
-                <message_argument value="DiagramRootEditPart"/>
-            </message_arguments>
-        </filter>
-        <filter id="643842064">
-            <message_arguments>
-                <message_argument value="PageBreakEditPart"/>
-                <message_argument value="DiagramRootEditPart"/>
-                <message_argument value="getPageBreakEditPart()"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/editpart/AbstractEditPartProvider.java" type="org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider">
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/editpart/EditPartService.java" type="org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService">
         <filter id="576725006">
             <message_arguments>
                 <message_argument value="IEditPartProvider"/>
-                <message_argument value="AbstractEditPartProvider"/>
-            </message_arguments>
-        </filter>
-        <filter id="576725006">
-            <message_arguments>
-                <message_argument value="Properties"/>
-                <message_argument value="AbstractEditPartProvider"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editpolicies/ConnectionBendpointEditPolicy.java" type="org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionBendpointEditPolicy">
-        <filter id="643850349">
-            <message_arguments>
-                <message_argument value="LineMode"/>
-                <message_argument value="ConnectionBendpointEditPolicy"/>
-                <message_argument value="ConnectionBendpointEditPolicy(LineMode)"/>
-            </message_arguments>
-        </filter>
-        <filter id="576720909">
-            <message_arguments>
-                <message_argument value="ConnectionBendpointEditPolicy"/>
-                <message_argument value="ConnectionBendpointEditPolicy"/>
+                <message_argument value="EditPartService"/>
             </message_arguments>
         </filter>
     </resource>

@@ -35,6 +35,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.PrinterGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
@@ -45,7 +46,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.printing.Printer;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -385,7 +385,7 @@ public class SWTDiagramPrinter extends DiagramPrinter
             SWTGraphics sg = new SWTGraphics(imgGC);
               
             //for scaling
-            ScaledGraphics g1 = new ScaledGraphics(sg);
+            ScaledGraphics g1 = new RenderedScaledGraphics(sg);
           
             //for himetrics and svg
             MapModeGraphics mmg = createMapModeGraphics(g1);

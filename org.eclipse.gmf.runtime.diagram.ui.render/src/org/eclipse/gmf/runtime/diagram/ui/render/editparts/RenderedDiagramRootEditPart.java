@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,9 +72,9 @@ public class RenderedDiagramRootEditPart
 		 * @see org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane#createScaledGraphics(org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics)
 		 */
 		protected ScaledGraphics createScaledGraphics(MapModeGraphics gMM) {
-			if (animatedZoomOn) {
-				return new ScaledGraphics(gMM);
-			}
+//			if (animatedZoomOn) {
+//				return new RenderedScaledGraphics(gMM);
+//			}
 
 			return new RenderedScaledGraphics(gMM, true, MAX_RENDER_SIZE);
 		}
