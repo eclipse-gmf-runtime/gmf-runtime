@@ -54,6 +54,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -1204,7 +1206,7 @@ public class PrintPreviewHelper{
 
 		SWTGraphics sg = new SWTGraphics(gc);
 		//for scaling
-		ScaledGraphics g1 = new ScaledGraphics(sg);
+		ScaledGraphics g1 = new RenderedScaledGraphics(sg);
 	
 		//for himetrics and svg
 		MapModeGraphics mmg = createMapModeGraphics(g1);
@@ -1396,7 +1398,7 @@ public class PrintPreviewHelper{
 	 */
 	protected MapModeGraphics createMapModeGraphics(
 			ScaledGraphics scaledGraphics) {
-		return new MapModeGraphics(scaledGraphics, getMapMode());
+		return new RenderedMapModeGraphics(scaledGraphics, getMapMode());
 	}
 				
 	/**

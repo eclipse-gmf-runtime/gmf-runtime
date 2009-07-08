@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
@@ -81,8 +80,8 @@ public class RenderedMapModeGraphics
 	public RenderedImage drawRenderedImage(RenderedImage srcImage,
 			Rectangle rect, RenderingListener listener) {
 		return RenderHelper.getInstance(
-			DiagramMapModeUtil.getScale(getMapMode()), true, shouldAllowDelayRender(), getMaximumRenderSize()).drawRenderedImage(getGraphics(),
-			srcImage, rect, listener);
+			1, false, shouldAllowDelayRender(), getMaximumRenderSize()).drawRenderedImage(getGraphics(),
+			srcImage, zoomRect(rect.x, rect.y, rect.width, rect.height), listener);
 	}
 	
 	/* (non-Javadoc)

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,18 +64,6 @@ public class RenderedScaledGraphics
 		this.maximumRenderSize = maximumRenderSize;
 	}
 
-	private double scale = 1.0;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.draw2d.Graphics#scale(double)
-	 */
-	public void scale(double amount) {
-		scale = amount;
-		super.scale(amount);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -85,8 +73,8 @@ public class RenderedScaledGraphics
 	 */
 	public RenderedImage drawRenderedImage(RenderedImage srcImage,
 			Rectangle rect, RenderingListener listener) {
-		return RenderHelper.getInstance(scale, true, shouldAllowDelayRender(), getMaximumRenderSize())
-			.drawRenderedImage(getGraphics(), srcImage, rect, listener);
+		return RenderHelper.getInstance(1, false, shouldAllowDelayRender(), getMaximumRenderSize())
+			.drawRenderedImage(getGraphics(), srcImage, zoomRect(rect.x, rect.y, rect.width, rect.height), listener);
 	}
 
 	/* (non-Javadoc)

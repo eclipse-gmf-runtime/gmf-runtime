@@ -79,6 +79,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.GraphicsToGraphics2DAdaptor;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -90,7 +91,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * This class supports printing using the Java Print Service API. The logic of
@@ -404,7 +404,7 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	}
 
 	protected ScaledGraphics createPrinterGraphics(Graphics theGraphics) {
-		return new ScaledGraphics(theGraphics);
+		return new RenderedScaledGraphics(theGraphics);
 	}
 
 	/**
@@ -574,7 +574,7 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 
 			GC imgGC = new GC(image,  SWT.RIGHT_TO_LEFT);
 			SWTGraphics tempSWTGraphic = new SWTGraphics(imgGC);
-			ScaledGraphics tempScaledGraphic = new ScaledGraphics(tempSWTGraphic);
+			ScaledGraphics tempScaledGraphic = new RenderedScaledGraphics(tempSWTGraphic);
 			MapModeGraphics tempMapModeGraphic = createMapModeGraphics(tempScaledGraphic);
 			
 			imgGC.setFont(tempMapModeGraphic.getFont());

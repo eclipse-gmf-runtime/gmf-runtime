@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayeredPane;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
@@ -49,10 +50,13 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.util.MeasurementUnitHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.IMapModeHolder;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatableZoomManager;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -172,9 +176,27 @@ public class DiagramRootEditPart
 	
 	static protected class DiagramScalableFreeformLayeredPane extends
 		org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane implements ZoomListener {
+		
+		private static final Dimension MAX_RENDERED_IMAGE_SIZE = new Dimension(1000, 1000);
 	
         public DiagramScalableFreeformLayeredPane(IMapMode mm) {
 			super(mm);
+		}
+
+        /**
+         * @since 1.2
+         */
+		@Override
+		protected MapModeGraphics createMapModeGraphics(Graphics graphics) {
+			return new RenderedMapModeGraphics(graphics, getMapMode(), true, MAX_RENDERED_IMAGE_SIZE);
+		}
+
+        /**
+         * @since 1.2
+         */
+		@Override
+		protected ScaledGraphics createScaledGraphics(MapModeGraphics gmm) {
+			return new RenderedScaledGraphics(gmm, true, MAX_RENDERED_IMAGE_SIZE);
 		}
 
 		/* 

@@ -48,6 +48,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 
@@ -761,7 +762,7 @@ abstract public class DiagramGenerator {
 			// Create the graphics and wrap it with the HiMetric graphics object
 			graphics = setUpGraphics(data.imageWidth, data.imageHeight);
 
-			ScaledGraphics scaledGraphics = new ScaledGraphics(graphics);
+			ScaledGraphics scaledGraphics = new RenderedScaledGraphics(graphics);
 			
 			RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
 					scaledGraphics, getMapMode());
