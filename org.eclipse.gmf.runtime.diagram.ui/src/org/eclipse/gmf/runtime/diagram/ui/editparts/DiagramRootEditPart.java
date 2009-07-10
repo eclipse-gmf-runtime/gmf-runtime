@@ -186,7 +186,6 @@ public class DiagramRootEditPart
 		/**
 		 * @since 1.2
 		 */
-		@Override
 		protected MapModeGraphics createMapModeGraphics(Graphics graphics) {
 			return new RenderedMapModeGraphics(graphics, getMapMode(), true, MAX_RENDERED_IMAGE_SIZE);
 		}
@@ -194,7 +193,6 @@ public class DiagramRootEditPart
 		/**
 		 * @since 1.2
 		 */
-		@Override
 		protected ScaledGraphics createScaledGraphics(MapModeGraphics gmm) {
 			return new RenderedScaledGraphics(gmm, true, MAX_RENDERED_IMAGE_SIZE);
 		}
