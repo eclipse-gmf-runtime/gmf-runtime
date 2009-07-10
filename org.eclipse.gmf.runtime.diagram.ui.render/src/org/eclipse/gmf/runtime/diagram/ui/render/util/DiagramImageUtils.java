@@ -133,7 +133,6 @@ public final class DiagramImageUtils {
 			indexMap.put(ep, index);
 		}
 		Collections.sort(editparts, new Comparator<GraphicalEditPart>() {
-			@Override
 			public int compare(GraphicalEditPart ep1, GraphicalEditPart ep2) {
 				List<Integer> index1 = indexMap.get(ep1);
 				List<Integer> index2 = indexMap.get(ep2);
