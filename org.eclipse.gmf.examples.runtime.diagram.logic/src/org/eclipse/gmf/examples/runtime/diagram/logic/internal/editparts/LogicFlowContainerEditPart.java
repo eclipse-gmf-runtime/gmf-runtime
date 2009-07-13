@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicFlowBorder;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicFlowFigure;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
@@ -48,11 +49,14 @@ public class LogicFlowContainerEditPart
 	 * Overwrite createNodeFigure() in super class
 	 */
 	protected NodeFigure createNodeFigure() {
-		NodeFigure newFigure = new LogicFlowFigure(new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100)));
+		LogicFlowFigure logicFlowFigure = new LogicFlowFigure(new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100)));
+        Dimension borderSize = new Dimension(getMapMode()
+                .DPtoLP(20), getMapMode().DPtoLP(18));
+        logicFlowFigure.setBorder(new LogicFlowBorder(borderSize));
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 		layout.setStretchMinorAxis(true);
-		newFigure.setLayoutManager(layout);
-		return newFigure;
+		logicFlowFigure.setLayoutManager(layout);
+		return logicFlowFigure;
 	} 
     
     public Object getPreferredValue(EStructuralFeature feature) {
