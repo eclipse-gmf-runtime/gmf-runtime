@@ -68,18 +68,28 @@ public class DiagramGeneralSection
 	private static final String NAME_PROPERTY_CHANGE_COMMAND_NAME = NAME
 		+ VALUE_CHANGED_STRING;
 
-	private static final String DESCRIPTION_PROPERTY_CHANGE_COMMAND_NAME = DESCRIPTION
+	protected static final String DESCRIPTION_PROPERTY_CHANGE_COMMAND_NAME = DESCRIPTION
 		+ VALUE_CHANGED_STRING;
 
 	/**
-	 * The Type label field.
+	 * The Type label field
 	 */
-	private CLabel typeText;
+	protected CLabel typeLabel;
+	
+	/**
+	 * The description label field
+	 */
+	protected CLabel descriptionLabel;
+	
+	/**
+	 * The Type label text field.
+	 */
+	protected CLabel typeText;
 
 	/**
-	 * The description label field.
+	 * The description label text field
 	 */
-	private Text descriptionText;
+	protected Text descriptionText;
 
 	/**
 	 * The Name text cached from the model.
@@ -90,31 +100,32 @@ public class DiagramGeneralSection
 	 * User pressed Enter key after editing name field - update the model
 	 */
 	protected synchronized void setDescription() {
-
-		final String newDescription = descriptionText.getText();
-		if (!newDescription.equals(descriptionCache)) {
-			ArrayList commands = new ArrayList();
-
-			for (Iterator i = getEObjectList().iterator(); i.hasNext();) {
-				final EObject next = (EObject) i.next();
-				commands.add(createCommand(
-					DESCRIPTION_PROPERTY_CHANGE_COMMAND_NAME, next,
-					new Runnable() {
-
-						public void run() {
-							DescriptionStyle description = (DescriptionStyle) ((Diagram) next)
-								.getStyle(NotationPackage.eINSTANCE
-									.getDescriptionStyle());
-							if (description != null)
-								description.setDescription(newDescription);
-						}
-					}));
+		if ( descriptionText != null ) {
+			final String newDescription = descriptionText.getText();
+			if (!newDescription.equals(descriptionCache)) {
+				ArrayList commands = new ArrayList();
+	
+				for (Iterator i = getEObjectList().iterator(); i.hasNext();) {
+					final EObject next = (EObject) i.next();
+					commands.add(createCommand(
+						DESCRIPTION_PROPERTY_CHANGE_COMMAND_NAME, next,
+						new Runnable() {
+	
+							public void run() {
+								DescriptionStyle description = (DescriptionStyle) ((Diagram) next)
+									.getStyle(NotationPackage.eINSTANCE
+										.getDescriptionStyle());
+								if (description != null)
+									description.setDescription(newDescription);
+							}
+						}));
+				}
+	
+				executeAsCompositeCommand(DESCRIPTION_PROPERTY_CHANGE_COMMAND_NAME,
+					commands);
+	
+				descriptionCache = newDescription;
 			}
-
-			executeAsCompositeCommand(DESCRIPTION_PROPERTY_CHANGE_COMMAND_NAME,
-				commands);
-
-			descriptionCache = newDescription;
 		}
 	}
 
@@ -124,7 +135,9 @@ public class DiagramGeneralSection
 	 * @see org.eclipse.ui.views.properties.tabbed.ISection#dispose()
 	 */
 	public void dispose() {
-		getListener().stopListeningTo(descriptionText);
+		if ( descriptionText != null ) {
+			getListener().stopListeningTo(descriptionText);
+		}
 		super.dispose();
 	}
 
@@ -137,13 +150,13 @@ public class DiagramGeneralSection
 		super.refreshUI();
 
 		Diagram diagram = (Diagram) getEObject();
-
-		typeText.setText(getDiagramType(diagram));
-
+		if ( typeText != null ) {
+			typeText.setText(getDiagramType(diagram));
+		}
 		DescriptionStyle description = (DescriptionStyle) diagram
 			.getStyle(NotationPackage.eINSTANCE.getDescriptionStyle());
 
-		if (description != null)
+		if (description != null && descriptionText != null)
 			descriptionText.setText(description.getDescription());
 
 	}
@@ -291,8 +304,14 @@ public class DiagramGeneralSection
 			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.doCreateControls(parent, aTabbedPropertySheetPage);
 
-		FormData data;
+		doCreateType(getSectionComposite(), aTabbedPropertySheetPage);
+		doCreateDescription(getSectionComposite(), aTabbedPropertySheetPage);
 
+	}
+
+	protected void doCreateType(Composite parent, 
+			TabbedPropertySheetPage aTabbedPropertySheetPage) {
+		FormData data;
 		typeText = getWidgetFactory().createCLabel(getSectionComposite(),
 			StringStatics.BLANK);
 		data = new FormData();
@@ -302,7 +321,7 @@ public class DiagramGeneralSection
 			ITabbedPropertyConstants.VSPACE, SWT.BOTTOM);
 		typeText.setLayoutData(data);
 
-		CLabel typeLabel = getWidgetFactory().createCLabel(
+		typeLabel = getWidgetFactory().createCLabel(
 			getSectionComposite(), DIAGRAM_TYPE_LABEL);
 		data = new FormData();
 		data.left = new FormAttachment(0, 0);
@@ -310,11 +329,14 @@ public class DiagramGeneralSection
 			-ITabbedPropertyConstants.HSPACE);
 		data.top = new FormAttachment(typeText, 0, SWT.CENTER);
 		typeLabel.setLayoutData(data);
+	}
 
+	protected void doCreateDescription(Composite parent, 
+			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		descriptionText = getWidgetFactory().createText(getSectionComposite(),
 			StringStatics.BLANK,
 			SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
-		data = new FormData();
+		FormData data = new FormData();
 		data.left = new FormAttachment(typeText, 0, SWT.LEFT);
 		data.right = new FormAttachment(typeText, 0, SWT.RIGHT);
 		data.top = new FormAttachment(typeText,
@@ -324,7 +346,7 @@ public class DiagramGeneralSection
 		data.width = 100;
 		descriptionText.setLayoutData(data);
 
-		CLabel descriptionLabel = getWidgetFactory().createCLabel(
+		descriptionLabel = getWidgetFactory().createCLabel(
 			getSectionComposite(), DESCRIPTION_LABEL);
 		data = new FormData();
 		data.left = new FormAttachment(0, 0);
