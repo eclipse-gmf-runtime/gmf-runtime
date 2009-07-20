@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,9 +20,9 @@ import org.eclipse.gmf.runtime.common.ui.services.properties.IPropertiesModifier
 import org.eclipse.gmf.runtime.common.ui.services.properties.descriptors.ICompositeSourcePropertyDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.IReadOnlyDiagramPropertySheetPageContributor;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -60,7 +60,7 @@ public class ReadOnlyDiagramPropertiesModifier
 					IWorkbenchPage page = window.getActivePage();
                     
                     if (page != null) {
-                        IEditorPart part = page.getActiveEditor();
+                        IWorkbenchPart part = page.getActivePart();
 
                         return part instanceof IReadOnlyDiagramPropertySheetPageContributor
                             || (part instanceof DiagramEditor && !((DiagramEditor) part)
