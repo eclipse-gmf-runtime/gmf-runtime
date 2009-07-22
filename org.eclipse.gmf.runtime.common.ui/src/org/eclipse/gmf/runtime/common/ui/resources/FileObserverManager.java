@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.resources;
 
+import java.net.URI;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
@@ -66,9 +68,10 @@ public class FileObserverManager {
 	 *            the file filter.
 	 */
 	protected void add(IFileObserver fileObserver, IFile fileFilter) {
+		URI uri = fileFilter.getLocationURI();
 		trace("...FileObserverManager: addFileObserver " //$NON-NLS-1$
 			+ fileObserver.toString()
-			+ " filter " + fileFilter.getLocationURI().toString()); //$NON-NLS-1$
+			+ " filter " + (uri != null ? uri.toString() : StringStatics.BLANK)); //$NON-NLS-1$
 		FileObserverFilter filter = new FileObserverFilter(
 			FileObserverFilterType.FILE, fileFilter);
 		fileObserverList.put(fileObserver, filter);
