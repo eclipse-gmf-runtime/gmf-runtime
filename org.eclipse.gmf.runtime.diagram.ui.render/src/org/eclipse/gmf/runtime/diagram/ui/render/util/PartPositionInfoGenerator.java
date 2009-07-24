@@ -28,6 +28,7 @@ import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
@@ -37,6 +38,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.geometry.PrecisionPointList;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg.Sign;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A Utility class to generate the info for images of diagrams
@@ -107,20 +109,53 @@ public final class PartPositionInfoGenerator {
 			// Need to support any kind of shape edit part
 			// and shape compartments, too, because these sometimes
 			// correspond to distinct semantic elements
-			if (part instanceof ShapeEditPart
-					|| part instanceof ShapeCompartmentEditPart) {
-
+			View view = part.getNotationView();
+			if (part instanceof ConnectionEditPart
+					&& figure instanceof PolylineConnection) {
+				// find a way to get (P1, P2, ... PN) for connection edit part
+				// add MARGIN and calculate "stripe" for the polyline instead of
+				// bounding box.
 				PartPositionInfo position = new PartPositionInfo();
 
-				position.setView(part.getNotationView());
+				position.setView(view);
 				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement(position.getView()));
+						.resolveSemanticElement(view));
 
-				PrecisionRectangle bounds = new PrecisionRectangle(figure.getBounds());
+				PolylineConnection mainPoly = (PolylineConnection) figure;
+				PointList mainPts = mainPoly.getPoints();
+
+				DiagramImageUtils.translateTo(mainPts, figure, printableLayer);
+				PointList envelopingPts = calculateEnvelopingPolyline(mainPts,
+						(int) Math.max(connectionMargin, mainPoly
+								.getLineWidth() >> 1));
+				envelopingPts.translate(new PrecisionPoint(-origin.preciseX(),
+						-origin.preciseY()));
+				mm.LPtoDP(envelopingPts);
+				envelopingPts.performScale(scale);
+
+				List<Point> pts = new ArrayList(envelopingPts.size());
+				for (int i = 0; i < envelopingPts.size(); i++) {
+					pts.add(envelopingPts.getPoint(i));
+				}
+
+				position.setPolyline(pts);
+				result.add(0, position);
+			} else if ((view != null && view.isSetElement())
+					|| (part instanceof ShapeEditPart
+							|| part instanceof ShapeCompartmentEditPart || part instanceof LabelEditPart)) {
+				PartPositionInfo position = new PartPositionInfo();
+
+				position.setView(view);
+				position.setSemanticElement(ViewUtil
+						.resolveSemanticElement(view));
+
+				PrecisionRectangle bounds = new PrecisionRectangle(figure
+						.getBounds());
 				DiagramImageUtils.translateTo(bounds, figure, printableLayer);
-				bounds.translate(new PrecisionPoint(-origin.preciseX(), -origin.preciseY()));
+				bounds.translate(new PrecisionPoint(-origin.preciseX(), -origin
+						.preciseY()));
 				mm.LPtoDP(bounds);
-				
+
 				bounds.performScale(scale);
 
 				position.setPartHeight(bounds.height);
@@ -128,36 +163,6 @@ public final class PartPositionInfoGenerator {
 				position.setPartX(bounds.x);
 				position.setPartY(bounds.y);
 				result.add(0, position);
-			} else if (part instanceof ConnectionEditPart) {
-				// find a way to get (P1, P2, ... PN) for connection edit part
-				// add MARGIN and calculate "stripe" for the polyline instead of
-				// bounding box.
-				PartPositionInfo position = new PartPositionInfo();
-
-				position.setView(part.getNotationView());
-				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement(position.getView()));
-
-				if (figure instanceof PolylineConnection) {
-					PolylineConnection mainPoly = (PolylineConnection) figure;
-					PointList mainPts = mainPoly.getPoints();
-
-					DiagramImageUtils.translateTo(mainPts, figure, printableLayer);
-					PointList envelopingPts = calculateEnvelopingPolyline(
-							mainPts, (int) Math.max(connectionMargin, mainPoly
-									.getLineWidth() >> 1));
-					envelopingPts.translate(new PrecisionPoint(-origin.preciseX(), -origin.preciseY()));
-					mm.LPtoDP(envelopingPts);
-					envelopingPts.performScale(scale);
-					
-					List<Point> pts = new ArrayList(envelopingPts.size());
-					for (int i = 0; i < envelopingPts.size(); i++) {
-						pts.add(envelopingPts.getPoint(i));
-					}
-
-					position.setPolyline(pts);
-					result.add(0, position);
-				}
 			}
 		}
 		return result;
