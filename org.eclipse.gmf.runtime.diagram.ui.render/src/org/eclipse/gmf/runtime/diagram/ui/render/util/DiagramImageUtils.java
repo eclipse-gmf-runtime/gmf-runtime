@@ -120,7 +120,7 @@ public final class DiagramImageUtils {
 	 * @param zOrderRoot
 	 *            the common parent
 	 */
-	public static void zOrderSort(List<GraphicalEditPart> editparts, IFigure zOrderRoot) {
+	public static void zOrderSort(List<? extends GraphicalEditPart> editparts, IFigure zOrderRoot) {
 		if (editparts == null || editparts.size() < 2) {
 			return;
 		}
