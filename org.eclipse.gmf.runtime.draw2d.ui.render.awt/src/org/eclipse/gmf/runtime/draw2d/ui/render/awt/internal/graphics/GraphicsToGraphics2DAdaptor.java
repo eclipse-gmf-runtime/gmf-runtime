@@ -578,7 +578,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 */
 	public void drawPolyline(PointList pointList) {
 
-		getGraphics2D().setStroke(createStroke());
 		// Draw polylines as a series of lines
 		for (int x = 1; x < pointList.size(); x++) {
 
@@ -646,6 +645,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 		checkState();
 		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
+		getGraphics2D().setStroke(createStroke());
 		getGraphics2D().draw(roundRect);
 	}
 
@@ -1453,9 +1453,12 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 				awt_join = BasicStroke.JOIN_MITER;
 		}
 		
+		/*
+		 * SWT paints line width == 0 as if it is == 1, so AWT is synced up with that below.
+		 */
 		stroke =
 			new BasicStroke(
-				currentState.lineAttributes.width,
+				currentState.lineAttributes.width != 0 ? currentState.lineAttributes.width : 1,
 				awt_cap,
 				awt_join,
 				currentState.lineAttributes.miterLimit,
