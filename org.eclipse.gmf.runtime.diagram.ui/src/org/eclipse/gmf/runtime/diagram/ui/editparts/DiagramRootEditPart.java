@@ -183,16 +183,16 @@ public class DiagramRootEditPart
 			super(mm);
 		}
 
-		/**
-		 * @since 1.2
-		 */
+        /**
+         * @since 1.3
+         */
 		protected MapModeGraphics createMapModeGraphics(Graphics graphics) {
 			return new RenderedMapModeGraphics(graphics, getMapMode(), true, MAX_RENDERED_IMAGE_SIZE);
 		}
 
-		/**
-		 * @since 1.2
-		 */
+        /**
+         * @since 1.3
+         */
 		protected ScaledGraphics createScaledGraphics(MapModeGraphics gmm) {
 			return new RenderedScaledGraphics(gmm, true, MAX_RENDERED_IMAGE_SIZE);
 		}
