@@ -1,4 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?><component id="org.eclipse.gmf.runtime.diagram.ui" version="2">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.gmf.runtime.diagram.ui" version="2">
+    <resource path="META-INF/MANIFEST.MF">
+        <filter id="924844039">
+            <message_arguments>
+                <message_argument value="1.2.1.qualifier"/>
+                <message_argument value="1.2.0.v20090526-1925"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/actions/CheckedPropertyAction.java" type="org.eclipse.gmf.runtime.diagram.ui.actions.CheckedPropertyAction">
         <filter id="576720909">
             <message_arguments>
@@ -48,9 +57,9 @@
         </filter>
         <filter id="643842064">
             <message_arguments>
-                <message_argument value="DiagramRuler"/>
+                <message_argument value="PageBreakEditPart"/>
                 <message_argument value="DiagramRootEditPart"/>
-                <message_argument value="getVerticalRuler()"/>
+                <message_argument value="getPageBreakEditPart()"/>
             </message_arguments>
         </filter>
         <filter id="643842064">
@@ -62,9 +71,9 @@
         </filter>
         <filter id="643842064">
             <message_arguments>
-                <message_argument value="PageBreakEditPart"/>
+                <message_argument value="DiagramRuler"/>
                 <message_argument value="DiagramRootEditPart"/>
-                <message_argument value="getPageBreakEditPart()"/>
+                <message_argument value="getVerticalRuler()"/>
             </message_arguments>
         </filter>
     </resource>
