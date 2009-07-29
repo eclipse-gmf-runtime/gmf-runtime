@@ -68,26 +68,33 @@ public class DiagramGeneralSection
 	private static final String NAME_PROPERTY_CHANGE_COMMAND_NAME = NAME
 		+ VALUE_CHANGED_STRING;
 
+	/**
+	 * @since 1.2
+	 */
 	protected static final String DESCRIPTION_PROPERTY_CHANGE_COMMAND_NAME = DESCRIPTION
 		+ VALUE_CHANGED_STRING;
 
 	/**
 	 * The Type label field
+	 * @since 1.2
 	 */
 	protected CLabel typeLabel;
 	
 	/**
 	 * The description label field
+	 * @since 1.2
 	 */
 	protected CLabel descriptionLabel;
 	
 	/**
 	 * The Type label text field.
+	 * @since 1.2
 	 */
 	protected CLabel typeText;
 
 	/**
 	 * The description label text field
+	 * @since 1.2
 	 */
 	protected Text descriptionText;
 
@@ -309,6 +316,11 @@ public class DiagramGeneralSection
 
 	}
 
+	/**
+	 * @param parent
+	 * @param aTabbedPropertySheetPage
+	 * @since 1.2
+	 */
 	protected void doCreateType(Composite parent, 
 			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		FormData data;
@@ -331,6 +343,11 @@ public class DiagramGeneralSection
 		typeLabel.setLayoutData(data);
 	}
 
+	/**
+	 * @param parent
+	 * @param aTabbedPropertySheetPage
+	 * @since 1.2
+	 */
 	protected void doCreateDescription(Composite parent, 
 			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		descriptionText = getWidgetFactory().createText(getSectionComposite(),
