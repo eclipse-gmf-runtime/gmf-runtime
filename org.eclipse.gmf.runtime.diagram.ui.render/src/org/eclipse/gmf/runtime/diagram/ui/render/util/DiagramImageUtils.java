@@ -119,6 +119,7 @@ public final class DiagramImageUtils {
 	 *            list of editparts to sort
 	 * @param zOrderRoot
 	 *            the common parent
+	 * @since 1.3
 	 */
 	public static void zOrderSort(List<? extends GraphicalEditPart> editparts, IFigure zOrderRoot) {
 		if (editparts == null || editparts.size() < 2) {
