@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,26 +68,33 @@ public class DiagramGeneralSection
 	private static final String NAME_PROPERTY_CHANGE_COMMAND_NAME = NAME
 		+ VALUE_CHANGED_STRING;
 
+	/**
+	 * @since 1.3
+	 */
 	protected static final String DESCRIPTION_PROPERTY_CHANGE_COMMAND_NAME = DESCRIPTION
 		+ VALUE_CHANGED_STRING;
 
 	/**
 	 * The Type label field
+	 * @since 1.3
 	 */
 	protected CLabel typeLabel;
 	
 	/**
 	 * The description label field
+	 * @since 1.3
 	 */
 	protected CLabel descriptionLabel;
 	
 	/**
 	 * The Type label text field.
+	 * @since 1.3
 	 */
 	protected CLabel typeText;
 
 	/**
 	 * The description label text field
+	 * @since 1.3
 	 */
 	protected Text descriptionText;
 
@@ -309,6 +316,11 @@ public class DiagramGeneralSection
 
 	}
 
+	/**
+	 * @param parent
+	 * @param aTabbedPropertySheetPage
+	 * @since 1.3
+	 */
 	protected void doCreateType(Composite parent, 
 			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		FormData data;
@@ -331,6 +343,11 @@ public class DiagramGeneralSection
 		typeLabel.setLayoutData(data);
 	}
 
+	/**
+	 * @param parent
+	 * @param aTabbedPropertySheetPage
+	 * @since 1.3
+	 */
 	protected void doCreateDescription(Composite parent, 
 			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		descriptionText = getWidgetFactory().createText(getSectionComposite(),
