@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,14 +61,14 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 			return null;
 		}
 
-		if (request.getType().equals(RequestConstants.REQ_PROPERTY_CHANGE) || 
-			request.getType().equals(RequestConstants.REQ_CHILD_PROPERTY_CHANGE)) {
+		if (RequestConstants.REQ_PROPERTY_CHANGE.equals(request.getType()) || 
+			RequestConstants.REQ_CHILD_PROPERTY_CHANGE.equals(request.getType())) {
 			EditPart ep = getHost();
 			if (ep instanceof IGraphicalEditPart) {
 				View view = ((IGraphicalEditPart) ep).getNotationView();
 				ChangePropertyValueRequest cpvr =
 					(ChangePropertyValueRequest) request;
-				if (request.getType().equals(RequestConstants.REQ_CHILD_PROPERTY_CHANGE)){
+				if (RequestConstants.REQ_CHILD_PROPERTY_CHANGE.equals(request.getType())){
 					view = ViewUtil.getChildBySemanticHint(view,((ChangeChildPropertyValueRequest)cpvr).getNotationViewType());
 				}
 				if (view !=null){
@@ -82,7 +82,7 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 					}
 				}
 			}
-		} else if (request.getType().equals(RequestConstants.REQ_SHOW_ALL_COMPARTMENTS)){
+		} else if (RequestConstants.REQ_SHOW_ALL_COMPARTMENTS.equals(request.getType())){
 			EditPart ep = getHost();
 			if (ep instanceof TopGraphicEditPart) {
 				TopGraphicEditPart topEP = (TopGraphicEditPart) ep;
@@ -148,9 +148,9 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 	 * @see org.eclipse.gef.EditPolicy#understandsRequest(Request)
 	 */
 	public boolean understandsRequest(Request request) {
-		if (request.getType().equals(RequestConstants.REQ_PROPERTY_CHANGE)||
-			request.getType().equals(RequestConstants.REQ_CHILD_PROPERTY_CHANGE)||
-			request.getType().equals(RequestConstants.REQ_SHOW_ALL_COMPARTMENTS))
+		if (RequestConstants.REQ_PROPERTY_CHANGE.equals(request.getType()) ||
+			RequestConstants.REQ_CHILD_PROPERTY_CHANGE.equals(request.getType()) ||
+			RequestConstants.REQ_SHOW_ALL_COMPARTMENTS.equals(request.getType()))
 			return true;
 		if (request instanceof ApplyAppearancePropertiesRequest
 			&& getHost() instanceof IGraphicalEditPart)
@@ -165,9 +165,9 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 		if (!understandsRequest(request))
 			return null;
 
-		if (request.getType().equals(RequestConstants.REQ_PROPERTY_CHANGE) ||
-			request.getType().equals(RequestConstants.REQ_CHILD_PROPERTY_CHANGE)||
-			request.getType().equals(RequestConstants.REQ_SHOW_ALL_COMPARTMENTS)) {
+		if (RequestConstants.REQ_PROPERTY_CHANGE.equals(request.getType()) ||
+			RequestConstants.REQ_CHILD_PROPERTY_CHANGE.equals(request.getType()) ||
+			RequestConstants.REQ_SHOW_ALL_COMPARTMENTS.equals(request.getType())) {
 			
 			return getHost();
 		} else if (request instanceof ApplyAppearancePropertiesRequest) {
