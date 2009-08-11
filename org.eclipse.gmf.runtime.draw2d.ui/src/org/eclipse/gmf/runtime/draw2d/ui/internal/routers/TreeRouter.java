@@ -133,6 +133,13 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 		return bounds;
 	}
 
+	private Rectangle getSourceAnchorRelativeBounds(final Connection conn) {
+		final Rectangle bounds = conn.getSourceAnchor().getOwner().getBounds().getCopy();
+		conn.getSourceAnchor().getOwner().translateToAbsolute(bounds);
+		conn.translateToRelative(bounds);
+		return bounds;
+	}
+	
 	/**
 	 * getTrunkLocation
 	 * Method to retrieve the trunk location in relative coordinates based on 
@@ -459,8 +466,8 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 	public boolean isTreeBranch(Connection conn, PointList points) {
 		if (points.size() == 4) {
 			// just check if ends are with-in the owner bounding box
-			Rectangle targetBounds = conn.getTargetAnchor().getOwner().getBounds();
-			Rectangle sourceBounds = conn.getSourceAnchor().getOwner().getBounds();
+			Rectangle targetBounds = getTargetAnchorRelativeBounds(conn);
+			Rectangle sourceBounds = getSourceAnchorRelativeBounds(conn);
 			
 			if (isTopDown(conn)) {
 				return (points.getPoint(0).x > sourceBounds.x && 
