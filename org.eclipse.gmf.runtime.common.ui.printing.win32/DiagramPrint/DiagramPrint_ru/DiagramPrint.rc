@@ -72,32 +72,32 @@ END
 // Dialog
 //
 
-1538 DIALOG DISCARDABLE  32, 32, 297, 354
+1538 DIALOG DISCARDABLE  32, 32, 313, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "Печать"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Принтер",1075,8,4,278,84,WS_GROUP
+    GROUPBOX        "Принтер",1075,8,4,295,84,WS_GROUP
     LTEXT           "&Имя:",1093,16,21,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     PUSHBUTTON      "&Свойства...",1025,212,17,60,14,WS_GROUP
-    LTEXT           "Состояние:",1095,16,36,36,10,SS_NOPREFIX
+    LTEXT           "Состояние:",1095,16,36,49,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,60,36,216,10
-    LTEXT           "Тип:",1094,16,48,22,10,SS_NOPREFIX
+                    WS_GROUP,74,36,216,10
+    LTEXT           "Тип:",1094,16,48,49,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,60,48,216,10
-    LTEXT           "Где:",1097,16,60,19,10,SS_NOPREFIX
+                    WS_GROUP,74,48,216,10
+    LTEXT           "Где:",1097,16,60,49,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,61,60,215,10
-    LTEXT           "Комментарий:",1096,16,75,42,10,SS_NOPREFIX
+                    WS_GROUP,74,60,215,10
+    LTEXT           "Комментарий:",1096,16,75,49,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,65,72,157,10
+                    WS_GROUP,74,74,146,10
     CONTROL         "Печать в &файл",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,234,70,42,12
-    GROUPBOX        "Диапазон печати диаграмм",1072,8,93,280,106,WS_GROUP
+                    WS_GROUP | WS_TABSTOP,230,73,69,12
+    GROUPBOX        "Диапазон печати диаграмм",1072,8,93,296,106,WS_GROUP
     CONTROL         "Т&екущая диаграмма",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,17,104,253,12
     CONTROL         "Все &диаграммы открытых моделей",IDC_ALL_DIAGRAMS,
@@ -107,37 +107,35 @@ BEGIN
     LISTBOX         IDC_DIAGRAMS,28,153,243,39,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Масштаб",IDC_STATIC,8,202,279,51
+    GROUPBOX        "Масштаб",IDC_STATIC,8,202,296,51
     CONTROL         "За&дать в % от обычного размера:",IDC_SCALE_PERCENT,
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,
-                    218,123,12
+                    217,130,12
     CONTROL         "П&одогнать к:",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,55,12
-    LTEXT           "За&дать в % от обычного размера:",1102,30,219,88,8,NOT 
-                    WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,155,218,32,12,ES_NUMBER
-    LTEXT           "стр. в &ширину:",1105,93,237,25,8
-    EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
-    RTEXT           "стр. в высо&ту:",IDC_STATIC,171,236,54,10
-    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,62,12
+    EDITTEXT        IDC_PERCENT,156,218,32,12,ES_NUMBER
+    LTEXT           "стр. в &ширину:",1105,93,235,58,8
+    EDITTEXT        IDC_PAGESM,156,233,32,12,ES_NUMBER
+    RTEXT           "стр. в высо&ту:",IDC_STATIC,194,235,58,10
+    EDITTEXT        IDC_PAGESN,258,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,8,8,NOT WS_VISIBLE
     GROUPBOX        "Диапазон печати",1074,8,257,132,64,WS_GROUP
     CONTROL         "&Все",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,272,47,12
-    CONTROL         "Стра&ницы",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,
+                    WS_TABSTOP,16,272,73,12
+    CONTROL         "Стра&ницы",1058,"Button",BS_AUTORADIOBUTTON,16,286,81,
                     12
     RTEXT           "&от:",1089,24,302,20,8
     EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
     RTEXT           "&до:",1090,80,302,16,8
     EDITTEXT        1153,100,300,27,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "Копии",1073,147,257,141,64,WS_GROUP
-    LTEXT           "Число &копий:",1092,159,271,51,12
-    EDITTEXT        1154,219,271,32,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "Копии",1073,147,257,157,64,WS_GROUP
+    LTEXT           "Число &копий:",1092,159,271,54,12
+    EDITTEXT        1154,225,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "С&ортировать",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,226,298,58,12
-    DEFPUSHBUTTON   "OK",IDOK,180,328,48,14,WS_GROUP
-    PUSHBUTTON      "Отмена",IDCANCEL,232,328,48,14
-    ICON            "",1086,159,291,70,25,WS_GROUP
+                    WS_TABSTOP,230,298,70,12
+    DEFPUSHBUTTON   "OK",IDOK,205,329,48,14,WS_GROUP
+    PUSHBUTTON      "Отмена",IDCANCEL,257,329,48,14
+    ICON            "",1086,156,290,70,25,WS_GROUP
 END
 
 1539 DIALOG DISCARDABLE  32, 32, 288, 178
@@ -260,11 +258,11 @@ BEGIN
     PUSHBUTTON      "Отмена",IDCANCEL,232,164,48,14
 END
 
-1547 DIALOGEX 32, 32, 289, 354
+1547 DIALOG DISCARDABLE  32, 32, 289, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "Печать"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "Принтер",1075,8,4,272,84,WS_GROUP
     LTEXT           "&Имя:",1093,16,21,36,8
@@ -325,7 +323,7 @@ BEGIN
                     WS_TABSTOP,235,295,36,12
     DEFPUSHBUTTON   "OK",IDOK,180,328,48,14,WS_GROUP
     PUSHBUTTON      "Отмена",IDCANCEL,232,328,48,14
-    ICON            "",1086,156,290,70,25,WS_GROUP
+    ICON            "",1086,156,290,20,20,WS_GROUP
 END
 
 
@@ -339,7 +337,7 @@ GUIDELINES DESIGNINFO DISCARDABLE
 BEGIN
     1538, DIALOG
     BEGIN
-        RIGHTMARGIN, 294
+        RIGHTMARGIN, 310
         BOTTOMMARGIN, 349
     END
 
