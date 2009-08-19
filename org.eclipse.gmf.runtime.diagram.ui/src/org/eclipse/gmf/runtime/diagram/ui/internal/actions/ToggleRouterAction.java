@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,13 +79,15 @@ public class ToggleRouterAction extends CheckedPropertyAction {
 				RoutingStyle style = (RoutingStyle) (primaryConnection.getNotationView())
 				.getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
 
-				Routing currentRouting = style.getRouting();
-				if (currentRouting != null) {
-					for (Iterator iter = Routing.VALUES.iterator(); iter.hasNext();) {
-						if (iter.next().equals(currentRouting) && iter.hasNext()) {						
-							Object currentRoutingType = iter.next();
-							if (testTree(currentRoutingType)) {
-								return currentRoutingType;
+				if (style != null) {
+					Routing currentRouting = style.getRouting();
+					if (currentRouting != null) {
+						for (Iterator iter = Routing.VALUES.iterator(); iter.hasNext();) {
+							if (iter.next().equals(currentRouting) && iter.hasNext()) {						
+								Object currentRoutingType = iter.next();
+								if (testTree(currentRoutingType)) {
+									return currentRoutingType;
+								}
 							}
 						}
 					}
