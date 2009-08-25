@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,6 +50,10 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	private static final String PART_ACTION_CONTRIBUTION = "partAction"; //$NON-NLS-1$
 	private static final String PART_ACTIONGROUP_CONTRIBUTION = "partActionGroup"; //$NON-NLS-1$
 	private static final String PART_CUSTOM_CONTRIBUTION = "partCustom"; //$NON-NLS-1$
+	/**
+	 * @since 1.3
+	 */
+	private static final String PART_PREDEFINED_ITEM = "partPredefinedItem"; //$NON-NLS-1$
 	private static final String POPUP_CONTRIBUTION = "popupContribution"; //$NON-NLS-1$
 	private static final String POPUP_MENU_CONTRIBUTION = "popupMenu"; //$NON-NLS-1$
 	private static final String POPUP_MENUGROUP_CONTRIBUTION = "popupMenuGroup"; //$NON-NLS-1$
@@ -72,6 +76,14 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	private static final String TEXT = "text"; //$NON-NLS-1$
 	private static final String DOCUMENT_CLASS = "documentClass"; //$NON-NLS-1$
     private static final String REMOVE = "remove"; //$NON-NLS-1$
+    /**
+	 * @since 1.3
+	 */
+    private static final String REMOVE_FROM_TOOLBAR = "removeFromToolbar"; //$NON-NLS-1$
+    /**
+	 * @since 1.3
+	 */
+    private static final String REMOVE_FROM_MENUBAR = "removeFromMenubar"; //$NON-NLS-1$
 
 	/** the list of all part contributions made by a provider */
 	private List partContributions = new ArrayList();
@@ -316,7 +328,9 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 				else if (contributionType.equals(PART_ACTIONGROUP_CONTRIBUTION))
 					getContributionItems().add(
 						new PartActionGroupDescriptor(configChildren[i]));
-                  
+	            else if (contributionType.equals(PART_PREDEFINED_ITEM))
+	                getContributionItems().add(
+	                    new PartPredefinedItemDescriptor(configChildren[i]));                 
 			}
 		}
 
@@ -795,6 +809,82 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 			super(configElement);
 		}
 	}
+	
+	/**
+     * A descriptor for a contribution item previously defined as an addition to toolbar or menubar.
+     *
+	 * @since 1.3
+	 */
+	public static class PartPredefinedItemDescriptor
+    	extends AbstractContributionItemDescriptor {
+    
+		/** the contribution item's path in the menubar*/
+	    private String menubarPath;
+	    /** the contribution item's path in the toolbar*/
+	    private String toolbarPath;
+	    
+	    /** flag to remove the predefined contribution item from the toolbar*/
+	    private boolean removeFromToolbar;
+	    /** flag to remove the predefined contribution item from the menu*/
+	    private boolean removeFromMenubar;
+	
+	    /**
+	     * Constructs a new popup custom descriptor from its configuration element.
+	     * 
+	     * @param configElement The contribution's configuration element
+	     */
+	    public PartPredefinedItemDescriptor(IConfigurationElement configElement) {
+	        super(configElement);
+	        
+	        String location = configElement.getAttribute(CONTRIBUTION_MENUBAR_PATH);
+	        menubarPath = (location == null) ? "/" //$NON-NLS-1$
+	            : extractMenuPath(location);
+	        
+	        location = configElement.getAttribute(CONTRIBUTION_TOOLBAR_PATH);	
+	        toolbarPath = (location == null) ? "/" //$NON-NLS-1$
+		            : extractMenuPath(location);	        
+	        
+	        removeFromToolbar = Boolean.valueOf(configElement.getAttribute(REMOVE_FROM_TOOLBAR)).booleanValue();
+	        
+	        removeFromMenubar = Boolean.valueOf(configElement.getAttribute(REMOVE_FROM_MENUBAR)).booleanValue();           
+	    }
+	    
+	    /**
+	     * Returns the contribution item's path in the toolbar if any, or "/" if not.
+	     * 
+	     * @return The contribution item's path in the toolbar if any, or "/" if not
+	     */
+	    public String getToolbarPath() {
+	        return toolbarPath;
+	    }  	    
+	    
+	    /**
+	     * Returns the contribution item's path in the menu if any, or "/" if not.
+	     * 
+	     * @return The contribution item's path in the menu if any, or "/" if not
+	     */
+	    public String getMenubarPath() {
+	        return menubarPath;
+	    }       
+	    
+	    /**
+	     * Returns true if predefined item needs to be removed from the toolbar.
+	     * 
+	     * @return true if predefined item needs to be removed from the toolbar
+	     */
+	    public boolean isToBeRemovedFromToolbar() {
+	        return removeFromToolbar;
+	    }
+
+	    /**
+	     * Returns true if predefined item needs to be removed from the menubar.
+	     * 
+	     * @return true if predefined item needs to be removed from the menubar
+	     */	    
+	    public boolean isToBeRemovedFromMenubar() {
+	        return removeFromMenubar;
+	    }       
+	}		
 
 	/**
 	 * A descriptor for a popup menu contribution item.

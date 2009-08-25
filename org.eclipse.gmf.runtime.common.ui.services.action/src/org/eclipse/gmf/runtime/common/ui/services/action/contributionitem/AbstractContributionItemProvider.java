@@ -297,6 +297,15 @@ public abstract class AbstractContributionItemProvider
 							item.getId(),
 							partDescriptor),
 							actionBars);
+			} else if (c instanceof ProviderContributionDescriptor.PartPredefinedItemDescriptor) {
+                ProviderContributionDescriptor.PartPredefinedItemDescriptor item = (ProviderContributionDescriptor.PartPredefinedItemDescriptor) c;
+
+                if (item.isToBeRemovedFromToolbar()) {
+                	removeExistingItem(item.getId(), item.getToolbarPath(), actionBars.getToolBarManager(), false);
+                }
+                if (item.isToBeRemovedFromMenubar()) {
+                    removeExistingItem(item.getId(), item.getMenubarPath(), actionBars.getMenuManager(), true);
+                }
 			}
 		}
 	}
@@ -409,7 +418,7 @@ public abstract class AbstractContributionItemProvider
                 ProviderContributionDescriptor.PopupPredefinedItemDescriptor item = (ProviderContributionDescriptor.PopupPredefinedItemDescriptor) c;
 
                 if (item.isToBeRemoved()) {
-                    removeExistingItem(item.getId(), item.getPath(), popupMenu);
+                    removeExistingItem(item.getId(), item.getPath(), popupMenu, false);
                 }
 			}
 		}
@@ -798,7 +807,7 @@ public abstract class AbstractContributionItemProvider
      * @param contributionManager
      */
     private void removeExistingItem(String id, String path,
-            IContributionManager contributionManager) {
+            IContributionManager contributionManager, boolean useIdForRemoval) {
 
         // Find the menu or action or group.
         if (id == null)
@@ -839,8 +848,13 @@ public abstract class AbstractContributionItemProvider
             }
 
         }
-        parent.remove(predefinedItem);
-
+        // parent.remove(item) and parent.remove(item.getId()) yield different results in some cases 
+        // parent.remove(item) seems to be working for all cases except for removing a menu from menu bar (item defined as partMenu)
+        if (useIdForRemoval) {
+        	parent.remove(predefinedItem.getId());
+        } else {
+        	parent.remove(predefinedItem);
+        }
     }
     
 	/**
