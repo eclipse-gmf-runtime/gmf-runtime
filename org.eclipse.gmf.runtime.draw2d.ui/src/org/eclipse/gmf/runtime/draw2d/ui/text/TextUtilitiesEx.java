@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,7 +63,7 @@ public class TextUtilitiesEx
      *  Gets a string's extents, converted by the mapmode
      */
     public Dimension getStringExtents(String s, Font f) {
-    	Dimension extents = new Dimension(getStringDimension(s, f, true));
+    	Dimension extents = new Dimension(getStringDimension(s, f, false));
         applyItalicBugHack(s, f, extents);
         applyMapModeConversion(extents);
         return extents;
@@ -73,7 +73,7 @@ public class TextUtilitiesEx
      *  Gets text's extents, converted by the mapmode
      */
     public Dimension getTextExtents(String s, Font f) {
-        Dimension extents = new Dimension(getTextDimension(s, f, true));
+        Dimension extents = new Dimension(getTextDimension(s, f, false));
         applyItalicBugHack(s, f, extents);
         applyMapModeConversion(extents);
         return extents;
