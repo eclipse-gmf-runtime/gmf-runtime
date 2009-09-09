@@ -138,7 +138,7 @@ BEGIN
     GROUPBOX        "ダイアグラム印刷範囲",1072,8,93,272,106,WS_GROUP
     CONTROL         "現在のダイアグラム(&U)",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "開いているモデルからのダイアグラムすべて(&D)",
+    CONTROL         "開いているモデル内のすべてのダイアグラム(&D)",
                     IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,253,
                     12
     CONTROL         "選択されたダイアグラム(&E):",IDC_SELECTED_DIAGRAMS,
@@ -324,7 +324,7 @@ BEGIN
     GROUPBOX        "ダイアグラム印刷範囲",1072,8,93,272,106,WS_GROUP
     CONTROL         "現在のダイアグラム(&U)",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "開いているモデルからのダイアグラムすべて(&D)",
+    CONTROL          "開いているモデル内のすべてのダイアグラム(&D)",
                     IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,253,
                     12
     CONTROL         "選択されたダイアグラム(&E):",IDC_SELECTED_DIAGRAMS,
