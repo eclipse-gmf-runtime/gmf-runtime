@@ -139,7 +139,7 @@ BEGIN
                     WS_GROUP
     CONTROL         "Diagramme act&uel",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "Tous les &diagrammes des modèles ouverts",
+    CONTROL        "Tous les d&iagrammes des modèles ouverts",
                     IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,253,
                     12
     CONTROL         "Diagrammes sél&ectionnés :",IDC_SELECTED_DIAGRAMS,
@@ -148,9 +148,9 @@ BEGIN
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "Mise à l'échelle",IDC_STATIC,8,202,295,51
-    CONTROL         "Pourcenta&ge :",IDC_SCALE_PERCENT,"Button",
+    CONTROL        "P&ourcentage :",IDC_SCALE_PERCENT,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,217,68,12
-    CONTROL         "Aédapter à :",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
+    CONTROL         "Adapter &à :",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
                     WS_TABSTOP,16,233,63,12
     EDITTEXT        IDC_PERCENT,93,217,32,12,ES_NUMBER
     RTEXT           "&Largeur :",1105,84,235,39,8
@@ -169,7 +169,7 @@ BEGIN
     GROUPBOX        "Copies",1073,147,257,156,70,WS_GROUP
     RTEXT           "Nombre de &copies :",1092,160,273,68,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
-    CONTROL         "Ra&ssembler",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+    CONTROL        "A&ssembler",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,235,295,60,12
     DEFPUSHBUTTON   "OK",IDOK,203,332,48,14,WS_GROUP
     PUSHBUTTON      "Annuler",IDCANCEL,255,332,48,14
@@ -289,7 +289,7 @@ BEGIN
     LTEXT           "Nombre de &copies :",1092,168,108,68,8
     EDITTEXT        1154,240,106,32,12,ES_NUMBER | WS_GROUP
     ICON            "",1086,162,124,76,24,SS_CENTERIMAGE | WS_GROUP
-    CONTROL         "Ra&ssembler",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+    CONTROL         "A&ssembler",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,240,130,36,12
     DEFPUSHBUTTON   "OK",IDOK,180,164,48,14,WS_GROUP
     PUSHBUTTON      "Annuler",IDCANCEL,232,164,48,14
@@ -324,7 +324,7 @@ BEGIN
                     WS_GROUP
     CONTROL         "Diagramme act&uel",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "Tous les &diagrammes des modèles ouverts",
+    CONTROL         "Tous les d&iagrammes des modèles ouverts",
                     IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,253,
                     12
     CONTROL         "Diagrammes sél&ectionnés :",IDC_SELECTED_DIAGRAMS,
@@ -333,11 +333,11 @@ BEGIN
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "Mise à l'échelle",IDC_STATIC,8,202,272,51
-    CONTROL         "Pourcenta&ge :",IDC_SCALE_PERCENT,"Button",
+    CONTROL        "P&ourcentage :",IDC_SCALE_PERCENT,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,218,104,12
-    CONTROL         "Aédapter à :",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
+    CONTROL         "Adapter &à :",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
                     WS_TABSTOP,16,233,34,12
-    LTEXT           "Pourcenta&ge :",1102,30,219,88,8,NOT WS_VISIBLE
+    LTEXT          "P&ourcentage :",1102,30,219,88,8,NOT WS_VISIBLE
     EDITTEXT        IDC_PERCENT,122,217,32,12,ES_NUMBER
     LTEXT           "&Largeur :",1105,71,235,43,8
     EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
@@ -355,7 +355,7 @@ BEGIN
     GROUPBOX        "Copies",1073,147,257,132,64,WS_GROUP
     LTEXT           "Nombre de &copies :",1092,163,273,68,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
-    CONTROL         "Ra&ssembler",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+    CONTROL          "A&ssembler",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,235,295,36,12
     DEFPUSHBUTTON   "OK",IDOK,180,328,48,14,WS_GROUP
     PUSHBUTTON      "Annuler",IDCANCEL,232,328,48,14
