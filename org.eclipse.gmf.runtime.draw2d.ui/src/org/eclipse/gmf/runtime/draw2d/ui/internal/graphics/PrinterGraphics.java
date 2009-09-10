@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,9 +66,9 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
 	 */
 	public void dispose() {
 		
-		for (Iterator it = collapseImageCache.values().iterator(); it.hasNext();)
+		for (Iterator<Image> it = collapseImageCache.values().iterator(); it.hasNext();)
 		{
-	        Image img = (Image) it.next();
+	        Image img = it.next();
 	        img.dispose();
 		}
 
@@ -77,7 +77,7 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
 		super.dispose();
 	}
 	
-	Map collapseImageCache = new HashMap();
+	Map<Image, Image> collapseImageCache = new HashMap<Image, Image>();
 
     /**
      * collapseImage
@@ -111,20 +111,20 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
 	 * @see org.eclipse.draw2d.Graphics#drawImage(org.eclipse.swt.graphics.Image, int, int)
 	 */
 	public void drawImage(Image srcImage, int x, int y) {
-		Image collapseImage = collapseImage(srcImage);
+		Image collapseImage = srcImage.getImageData().transparentPixel == -1 ? collapseImage(srcImage)
+				: srcImage;
 		super.drawImage(collapseImage, x, y);
-    }
+	}
     
     /**
 	 * @see org.eclipse.draw2d.Graphics#drawImage(org.eclipse.swt.graphics.Image, int, int, int, int, int, int, int, int)
 	 */
-	public void drawImage(Image srcImage,
-        int sx, int sy, int sw, int sh,
-        int tx, int ty, int tw, int th)
-    {
-		Image collapseImage = collapseImage(srcImage);
-        super.drawImage(collapseImage, sx, sy, sw, sh, tx, ty, tw, th);
-    }
+	public void drawImage(Image srcImage, int sx, int sy, int sw, int sh,
+			int tx, int ty, int tw, int th) {
+		Image collapseImage = srcImage.getImageData().transparentPixel == -1 ? collapseImage(srcImage)
+				: srcImage;
+		super.drawImage(collapseImage, sx, sy, sw, sh, tx, ty, tw, th);
+	}
     
     /**
      * shouldRoundFonts
