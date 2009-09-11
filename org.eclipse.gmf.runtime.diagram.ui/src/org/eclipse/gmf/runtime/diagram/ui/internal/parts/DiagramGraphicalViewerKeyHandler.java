@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2008  IBM Corporation and others.
+ * Copyright (c) 2000, 2009  IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -447,36 +447,43 @@ public class DiagramGraphicalViewerKeyHandler
         return true;
     }
 
-    /**
-     * Given an absolute point (pStart) and a list of EditParts, this method
-     * finds the closest EditPart (except for the one to be excluded) in the
-     * given direction (EAST or WEST). The x-location alone is used to determine
-     * the closest sibling. If the direction is EAST and there are no EditParts
-     * to the EAST then the farthest WEST EditPart is returned (and vice versa).
-     * This allows the user to cycle through all the EditParts using the TAB
-     * key.
-     * 
-     * @param siblings
-     *            List of sibling EditParts
-     * @param pStart
-     *            The starting point (must be in absolute coordinates) from
-     *            which the next sibling is to be found.
-     * @param direction
-     *            PositionConstants.EAST or PositionConstants.WEST
-     * @param exclude
-     *            The EditPart to be excluded from the search
-     */
+	/**
+	 * Given an absolute point (pStart) and a list of EditParts, this method
+	 * finds the closest EditPart (except for the one to be excluded) in the
+	 * given direction (EAST or WEST). The x-location is used to determine the
+	 * closest sibling. Also, if going EAST and there is vertically aligned
+	 * figure underneath pStart, then that figure is the result. If going WEST
+	 * and there is a figure above pStartm then that figure is the result.If the
+	 * direction is EAST and there are no EditParts to the EAST and SOUTH then
+	 * the farthest WEST EditPart is returned (and vice versa). This allows the
+	 * user to cycle through all the EditParts using the TAB key.
+	 * 
+	 * @param siblings
+	 *            List of sibling EditParts
+	 * @param pStart
+	 *            The starting point (must be in absolute coordinates) from
+	 *            which the next sibling is to be found.
+	 * @param direction
+	 *            PositionConstants.EAST or PositionConstants.WEST
+	 * @param exclude
+	 *            The EditPart to be excluded from the search
+	 */
     private GraphicalEditPart findClosestHorizontalSibling(List siblings,
             Point pStart, int direction, EditPart exclude) {
         GraphicalEditPart epCurrent;
         GraphicalEditPart epFinal = null;
-        GraphicalEditPart epCycle = null; // in case there are no more shapes
-                                            // in this direction
+        GraphicalEditPart epCycle = null; // in case there are no more shapes in this direction
+        GraphicalEditPart epCycleVertical = null; // in case there are no more shapes in EAST or WEST direction
+        
         IFigure figure;
         Point pCurrent;
-        int distance = Integer.MAX_VALUE;
-        int xCycle = direction == PositionConstants.EAST ? Integer.MAX_VALUE
-            : 0;
+        int distanceX = Integer.MAX_VALUE;
+        int distanceY = Integer.MAX_VALUE;
+        int finalY = 0;
+        boolean goVertical = false;
+        int xCycle = direction == PositionConstants.EAST ? Integer.MAX_VALUE : 0;
+        int yCycle = xCycle;
+        int yCycleVertical = xCycle;
 
         Iterator iter = siblings.iterator();
         while (iter.hasNext()) {
@@ -489,28 +496,90 @@ public class DiagramGraphicalViewerKeyHandler
 
             int dx = pCurrent.x - pStart.x;
 
-            if ((direction == PositionConstants.EAST && dx > 0)
-                || (direction == PositionConstants.WEST && dx < 0)) {
+            if (!goVertical && 
+            		((direction == PositionConstants.EAST && dx > 0)
+            				|| (direction == PositionConstants.WEST && dx < 0))) {
                 int abs_dx = Math.abs(dx);
-                if (abs_dx < distance) {
-                    distance = abs_dx;
+                if (abs_dx < distanceX) {
+                    distanceX = abs_dx;
+                    finalY = pCurrent.y;
                     epFinal = epCurrent;
+                } else if (abs_dx == distanceX) {
+                	// There are vertically aligned figures that could be horizontally closest to the current figure.
+                	// If we go east, choose the top one, if we go west, choose the bottom one.
+                	// finalY is always assigned in this case
+                	if ((direction == PositionConstants.EAST && pCurrent.y < finalY) || 
+                			(direction == PositionConstants.WEST && pCurrent.y > finalY))	{
+                        finalY = pCurrent.y;
+                        epFinal = epCurrent;
+                	}
                 }
             }
-
+            if (dx == 0) {
+            	// Once we find a figure that is vertically aligned with the current, we have to go vertically
+            	// (to this or closest figure vertically aligned) since there will be no other chance to traverse it.
+            	// The exception: we reached the far east end while going east, or far west end while going west.            	
+            	int dy = pCurrent.y - pStart.y;
+                if ((direction == PositionConstants.EAST && dy > 0)
+                        || (direction == PositionConstants.WEST && dy < 0)) {
+                	goVertical = true;
+                	int abs_dy = Math.abs(dy);                	
+                    if (abs_dy < distanceY) {
+                    	distanceY = abs_dy;
+                    	epFinal = epCurrent;
+                    }                    
+            	}
+            }
+        	// Consider the case when we need to go east (south) or west (north) and the current figure is on the 
+        	// far east (south) or west (north) end, respectively.
             if (epFinal == null) {
-                if (direction == PositionConstants.EAST && pCurrent.x < xCycle) {
-                    xCycle = pCurrent.x;
-                    epCycle = epCurrent;
-                } else if (direction == PositionConstants.WEST
-                    && pCurrent.x > xCycle) {
-                    xCycle = pCurrent.x;
-                    epCycle = epCurrent;
-                }
+            	if (dx == 0) {
+            		// Case when the figure is at the end and there is one or more vertically aligned figure.
+            		// This will be the result only if there are no figures to the left or right.
+                    if (direction == PositionConstants.EAST && pCurrent.y < yCycleVertical) {
+                    	yCycleVertical = pCurrent.y;
+                        epCycleVertical = epCurrent;
+                    } else if (direction == PositionConstants.WEST && pCurrent.y > yCycleVertical) {
+                    	yCycleVertical = pCurrent.y;
+                        epCycleVertical = epCurrent;
+                    }            		
+            	} else {
+            		boolean assign = false;
+	                if (direction == PositionConstants.EAST) {
+	                	if (pCurrent.x < xCycle) {
+	                		assign = true;
+	                	} else if (pCurrent.x == xCycle) {
+	                		// Current figure is vertically aligned with the possible result figure.
+	                		// Choose the top figure.
+	                		if (pCurrent.y < yCycle) {
+	                			assign = true;
+	                		}
+	                	}
+	                } else if (direction == PositionConstants.WEST) {
+	                	if (pCurrent.x > xCycle) {	                
+	                		assign = true;
+	                	} else if (pCurrent.x == xCycle) {
+	                		// Current figure is vertically aligned with the possible result figure.
+	                		// Choose the top figure.
+	                		if (pCurrent.y > yCycle) {
+	                			assign = true;
+	                		}
+	                	}
+	                }
+	                if (assign) {
+                		xCycle = pCurrent.x;
+                		yCycle = pCurrent.y;
+                		epCycle = epCurrent;
+	                }
+            	}
             }
         }
         if (epFinal == null) {
-            return epCycle;
+        	if (epCycle == null) {
+        		return epCycleVertical;
+        	} else {
+        		return epCycle;
+        	}
         }
         return epFinal;
     }
