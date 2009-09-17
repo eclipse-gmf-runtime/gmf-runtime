@@ -15,18 +15,19 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.internal.image;
 import java.io.ByteArrayInputStream;
 import java.security.InvalidParameterException;
 
-import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKey;
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -37,7 +38,61 @@ import org.eclipse.swt.widgets.Display;
 * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
 */
 public final class ImageRenderedImage extends AbstractRenderedImage {
+	
+	private final RGB TRANSPARENT_COLOR = new RGB(0,0,0);
+	
+	/**
+	 * Draws two images, one that represents the background, and another one
+	 * centered within the bounds of the first one.
+	 * 
+	 * @author lgrahek
+	 * 
+	 */
+	private static class TwoImageDescriptor extends CompositeImageDescriptor {
 
+		/** size of the combined image */
+		private Point size;		
+		/** background image (transparent) */
+		private ImageData bgImgData;
+		/** image to be drawn on top of it */
+		private ImageData actualImgData;
+		
+
+		/**
+		 * @param bgImgData
+		 *            Image to drawn first
+		 * @param actualImgData
+		 *            Image to be drawn second
+		 * @param bufferWidth
+		 *            Width of the final image
+		 * @param bufferHeight
+		 *            Height of the final image
+		 */
+		public TwoImageDescriptor(ImageData bgImgData, ImageData actualImgData,
+				int bufferWidth, int bufferHeight) {
+			this.bgImgData = bgImgData;
+			this.actualImgData = actualImgData;
+			this.size = new Point(bufferWidth, bufferHeight);
+		}	
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.resource.CompositeImageDescriptor#drawCompositeImage(int, int)
+		 */
+		protected void drawCompositeImage(int width, int height) {
+			// draw the base image
+			drawImage(bgImgData, 0, 0);
+			drawImage(actualImgData, 
+					(size.x - actualImgData.width) / 2, (size.y - actualImgData.height) / 2);
+		}
+		
+		/**
+		 * @see org.eclipse.jface.resource.CompositeImageDescriptor#getSize()
+		 */
+		protected Point getSize() {
+			return size;
+		}
+	}			
+	
 	/**
 	 * Constructor for SVGImage
 	 * 
@@ -63,12 +118,12 @@ public final class ImageRenderedImage extends AbstractRenderedImage {
 			ImageLoader loader = new ImageLoader();
 			ByteArrayInputStream byteIS = new ByteArrayInputStream(getBuffer());
 			// otherwise render the image.
-			ImageData[] imgData = loader.load(byteIS);
-			if (imgData == null)
+			ImageData[] origImgData = loader.load(byteIS);
+			if (origImgData == null)
 				throw new InvalidParameterException();
 				
-			int origWidth = imgData[0].width;
-			int origHeight = imgData[0].height;
+			int origWidth = origImgData[0].width;
+			int origHeight = origImgData[0].height;
 			
 			int bufferWidth = getKey().getWidth() == 0 ? origWidth : getKey().getWidth();
 			int bufferHeight = getKey().getHeight() == 0 ? origHeight : getKey().getHeight();
@@ -95,19 +150,18 @@ public final class ImageRenderedImage extends AbstractRenderedImage {
 				newWidth *= scale;
 				newHeight *= scale;
 				
-				Image origImage = new Image(display, imgData[0]);
-				Image image = new Image(display, new Rectangle(0, 0, bufferWidth, bufferHeight));
-				GC gc = new GC(image);
-				SWTGraphics swtG = new SWTGraphics(gc);
-				swtG.drawImage(origImage, 0, 0, origWidth, origHeight, (bufferWidth - newWidth) / 2, (bufferHeight - newHeight) / 2, newWidth, newHeight);
-				swtG.dispose();
-				gc.dispose();
-				origImage.dispose();
-				
-				return image;
+				// Ensure that pixels outside of the actual image are
+				// transparent by creating a background image which is transparent.
+				// TransparentBgImageDescriptor does the job.
+				PaletteData paletteData = new PaletteData(0xFF, 0xFF00, 0xFF0000);
+				ImageData imgData = new ImageData(bufferWidth, bufferHeight, 24, paletteData);		
+				imgData.transparentPixel = paletteData.getPixel(TRANSPARENT_COLOR);				
+				TwoImageDescriptor desc = new TwoImageDescriptor(
+						imgData, origImgData[0].scaledTo(newWidth, newHeight), bufferWidth, bufferHeight);
+				return desc.createImage();
 			}
 			else {
-				ImageData scaledImgData = imgData[0].scaledTo(newWidth, newHeight);
+				ImageData scaledImgData = origImgData[0].scaledTo(newWidth, newHeight);
 				return new Image(display, scaledImgData);
 			}
 		} catch (Exception e) {
