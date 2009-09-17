@@ -41,6 +41,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
@@ -652,35 +653,19 @@ abstract public class DiagramGenerator {
 
 		for (IGraphicalEditPart part : editParts) {
 			IFigure figure = part.getFigure();
+			View view = part.getNotationView();
 
 			// RATLC00139941: Need to support any kind of shape edit part
 			// and shape compartments, too, because these sometimes
 			// correspond to distinct semantic elements
-			if (part instanceof ShapeEditPart
-					|| part instanceof ShapeCompartmentEditPart) {
-
-				PartPositionInfo position = new PartPositionInfo();
-
-				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement((View) part.getModel()));
-
-				Rectangle bounds = figure.getBounds().getCopy();
-				translateToPrintableLayer(figure, bounds);
-				bounds.translate(-imageRect.x, -imageRect.y);
-
-				position.setPartHeight(mm.LPtoDP(bounds.height));
-				position.setPartWidth(mm.LPtoDP(bounds.width));
-				position.setPartX(mm.LPtoDP(bounds.x));
-				position.setPartY(mm.LPtoDP(bounds.y));
-				result.add(0, position);
-			} else if (part instanceof ConnectionEditPart) {
+			if (part instanceof ConnectionEditPart) {
 				// find a way to get (P1, P2, ... PN) for connection edit part
 				// add MARGIN and calculate "stripe" for the polyline instead of
 				// bounding box.
 				PartPositionInfo position = new PartPositionInfo();
 
 				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement((View) part.getModel()));
+						.resolveSemanticElement(view));
 
 				if (figure instanceof PolylineConnection) {
 					PolylineConnection mainPoly = (PolylineConnection) figure;
@@ -694,6 +679,23 @@ abstract public class DiagramGenerator {
 					position.setPolyline(transformedPts);
 					result.add(0, position);
 				}
+			} else if ((view != null && view.isSetElement())
+					|| (part instanceof ShapeEditPart
+							|| part instanceof ShapeCompartmentEditPart || part instanceof LabelEditPart)) {
+				PartPositionInfo position = new PartPositionInfo();
+
+				position.setSemanticElement(ViewUtil
+						.resolveSemanticElement(view));
+
+				Rectangle bounds = figure.getBounds().getCopy();
+				translateToPrintableLayer(figure, bounds);
+				bounds.translate(-imageRect.x, -imageRect.y);
+
+				position.setPartHeight(mm.LPtoDP(bounds.height));
+				position.setPartWidth(mm.LPtoDP(bounds.width));
+				position.setPartX(mm.LPtoDP(bounds.x));
+				position.setPartY(mm.LPtoDP(bounds.y));
+				result.add(0, position);
 			}
 		}
 		return result;
@@ -732,36 +734,19 @@ abstract public class DiagramGenerator {
 
 		for (IGraphicalEditPart part : editParts) {
 			IFigure figure = part.getFigure();
+			View view = part.getNotationView();
 
 			// RATLC00139941: Need to support any kind of shape edit part
 			// and shape compartments, too, because these sometimes
 			// correspond to distinct semantic elements
-			if (part instanceof ShapeEditPart
-					|| part instanceof ShapeCompartmentEditPart) {
-
-				PartPositionInfo position = new PartPositionInfo();
-
-				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement((View) part.getModel()));
-
-				Rectangle bounds = figure.getBounds().getCopy();
-				translateToPrintableLayer(figure, bounds);
-				bounds.performScale(data.scalingFactor);
-				bounds.translate(-imageRect.x, -imageRect.y);
-
-				position.setPartHeight(mm.LPtoDP(bounds.height));
-				position.setPartWidth(mm.LPtoDP(bounds.width));
-				position.setPartX(mm.LPtoDP(bounds.x));
-				position.setPartY(mm.LPtoDP(bounds.y));
-				result.add(0, position);
-			} else if (part instanceof ConnectionEditPart) {
+			if (part instanceof ConnectionEditPart) {
 				// find a way to get (P1, P2, ... PN) for connection edit part
 				// add MARGIN and calculate "stripe" for the polyline instead of
 				// bounding box.
 				PartPositionInfo position = new PartPositionInfo();
 
 				position.setSemanticElement(ViewUtil
-						.resolveSemanticElement((View) part.getModel()));
+						.resolveSemanticElement(view));
 
 				if (figure instanceof PolylineConnection) {
 					PolylineConnection mainPoly = (PolylineConnection) figure;
@@ -776,6 +761,24 @@ abstract public class DiagramGenerator {
 					position.setPolyline(transformedPts);
 					result.add(0, position);
 				}
+			} else if ((view != null && view.isSetElement())
+					|| (part instanceof ShapeEditPart
+							|| part instanceof ShapeCompartmentEditPart || part instanceof LabelEditPart)) {
+				PartPositionInfo position = new PartPositionInfo();
+
+				position.setSemanticElement(ViewUtil
+						.resolveSemanticElement(view));
+
+				Rectangle bounds = figure.getBounds().getCopy();
+				translateToPrintableLayer(figure, bounds);
+				bounds.performScale(data.scalingFactor);
+				bounds.translate(-imageRect.x, -imageRect.y);
+
+				position.setPartHeight(mm.LPtoDP(bounds.height));
+				position.setPartWidth(mm.LPtoDP(bounds.width));
+				position.setPartX(mm.LPtoDP(bounds.x));
+				position.setPartY(mm.LPtoDP(bounds.y));
+				result.add(0, position);
 			}
 		}
 
