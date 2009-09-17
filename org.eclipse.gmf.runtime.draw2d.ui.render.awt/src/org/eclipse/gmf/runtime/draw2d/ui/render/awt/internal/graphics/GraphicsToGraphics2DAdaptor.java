@@ -29,6 +29,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Stack;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -674,10 +675,30 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 		if( s == null )
 			return;
+		
+		java.awt.Font swappedFont = null;
 
 		java.awt.FontMetrics metrics = getGraphics2D().getFontMetrics();
 		int stringLength = metrics.stringWidth(s);
 
+		/**
+		 * Workaround non-latin strings for AWT
+		 */
+		if (getGraphics2D().getFont().canDisplayUpTo(s) != -1) {
+			swappedFont = getGraphics2D().getFont();
+			java.awt.Font font = null; 
+			if ("ja".equals(Platform.getNL()) && Platform.getOS().startsWith(Platform.OS_WIN32)) { //$NON-NLS-1$
+				font = new java.awt.Font("MS UI Gothic", swappedFont.getStyle(), swappedFont.getSize()); //$NON-NLS-1$
+				if (font.canDisplayUpTo(s) != -1) {
+					font = null;
+				}
+			}
+			if (font == null) {
+				font = new java.awt.Font(null, swappedFont.getStyle(), swappedFont.getSize());
+			}
+			getGraphics2D().setFont(font);
+		}
+		
 		float xpos = x + transX;
 		float ypos = y + transY;
 
@@ -705,6 +726,13 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			setLineWidth( 1 );
 			drawLine( x, strikeline, x + stringLength, strikeline );
 			setLineWidth( lineWidth );
+		}
+		
+		/**
+		 * Workaround non-latin strings for AWT (cont.)
+		 */
+		if (swappedFont != null) {
+			getGraphics2D().setFont(swappedFont);
 		}
 	}
 
