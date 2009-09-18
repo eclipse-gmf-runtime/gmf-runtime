@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -262,6 +263,7 @@ public class ViewRefactorHelper {
 	public void copyViewAppearance(View oldView, View newView, final List excludeStyles) {
 		newView.setVisible(oldView.isVisible());
 		copyViewStyles(oldView, newView, excludeStyles);
+		copyViewAppearanceProperties(oldView, newView, excludeStyles);
 		
 		for (Iterator j = new ArrayList(oldView.getPersistedChildren()).iterator(); j.hasNext();) {
 			Node oldChildNode = (Node) j.next();
@@ -269,6 +271,24 @@ public class ViewRefactorHelper {
 				Node newChildNode = (Node) ViewUtil.getChildBySemanticHint(newView, oldChildNode.getType());
 				if (newChildNode != null) {
 					copyViewAppearance(oldChildNode, newChildNode, excludeStyles);
+				}
+			}
+		}
+	}
+	
+	private void copyViewAppearanceProperties(View oldView, View newView, final List excludeStyles) {
+		for (EAttribute attribute : oldView.eClass().getEAllAttributes()) {
+			EClass containingEClass = attribute.getEContainingClass();
+			if (NotationPackage.Literals.STYLE.isSuperTypeOf(containingEClass) && !excludeStyles.contains(containingEClass)) {
+				EObject newViewStyle = newView.getStyle(containingEClass);
+				if (newViewStyle != null) {
+					if (!oldView.eIsSet(attribute)) {
+						if (newViewStyle.eIsSet(attribute)) {
+							newViewStyle.eUnset(attribute);
+						}
+					} else {
+						newViewStyle.eSet(attribute, oldView.eGet(attribute));
+					}
 				}
 			}
 		}
