@@ -205,15 +205,15 @@ public final class PartPositionInfoGenerator {
 	 */
 	private static PointList calculateEnvelopingPolyline(PointList polyPts, int margin) {
 		PointList result = new PrecisionPointList(polyPts.size() << 1);
-		List<LineSeg> mainSegs = (List<LineSeg>) PointListUtilities.getLineSegments(polyPts);
-		
-		result = calculateParallelPolyline(mainSegs, margin);
-		PointList pts = calculateParallelPolyline(mainSegs, -margin);
-		for (int i = pts.size() - 1; i >= 0; i--) {
-			result.addPoint(pts.getPoint(i));
+		List<LineSeg> mainSegs = (List<LineSeg>) PointListUtilities.getLineSegments(polyPts);		
+		if (mainSegs.size() > 0) {		
+			result = calculateParallelPolyline(mainSegs, margin);
+			PointList pts = calculateParallelPolyline(mainSegs, -margin);
+			for (int i = pts.size() - 1; i >= 0; i--) {
+				result.addPoint(pts.getPoint(i));
+			}
+			result.addPoint(result.getFirstPoint());
 		}
-		result.addPoint(result.getFirstPoint());
-
 		return result;
 	}
 	

@@ -150,6 +150,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		}
 	}
 
+	static final int ADVANCED_GRAPHICS_MASK;
+	static final int ADVANCED_SHIFT;
 	static final int FILL_RULE_MASK;
 	static final int FILL_RULE_SHIFT;
 	static final int FILL_RULE_WHOLE_NUMBER = -1;
@@ -159,7 +161,9 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 */
 	static {
 		FILL_RULE_SHIFT = 14;
+		ADVANCED_SHIFT = 15;
 		FILL_RULE_MASK = 1 << FILL_RULE_SHIFT; //If changed to more than 1-bit, check references!
+		ADVANCED_GRAPHICS_MASK = 1 << ADVANCED_SHIFT;
 	}
 	
 	private SWTGraphics swtGraphics;
@@ -261,6 +265,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		LineAttributes lineAttributes = new LineAttributes(1);
 		swtGraphics.getLineAttributes(lineAttributes);
 		setLineAttributes(lineAttributes);
+		setFillRule(swtGraphics.getFillRule());
+		setAdvanced(swtGraphics.getAdvanced());
 		getGraphics2D().setStroke(stroke);
 	}
 
@@ -1365,6 +1371,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
         else if (value == SWT.OFF) {
             getGraphics2D().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         }
+        setAdvanced(true);
     }
 
 	@Override
@@ -1465,6 +1472,18 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 				awt_dash,
 				currentState.lineAttributes.dashOffset);
 		return stroke;
+    }
+
+    public boolean getAdvanced() {
+    	return (currentState.graphicHints & ADVANCED_GRAPHICS_MASK) != 0;
+    }
+
+    public void setAdvanced(boolean value) {
+    	if(value) {
+    		currentState.graphicHints |= ADVANCED_GRAPHICS_MASK;
+    	} else {
+    		currentState.graphicHints &= ~ADVANCED_GRAPHICS_MASK;
+    	}
     }
 
 }
