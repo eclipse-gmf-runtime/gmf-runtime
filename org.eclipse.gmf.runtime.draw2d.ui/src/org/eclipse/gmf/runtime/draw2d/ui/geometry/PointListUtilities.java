@@ -342,12 +342,16 @@ public class PointListUtilities {
 	 */
 	public static List getLineSegments(PointList points) {
 		if (points.size() <= 1)
-			return new ArrayList(0);
+			return new ArrayList<LineSeg>(0);
 
-		ArrayList lines = new ArrayList(points.size() - 1);
+		ArrayList<LineSeg> lines = new ArrayList<LineSeg>(points.size() - 1);
 
 		for (int i = 0; i < points.size() - 1; i++) {
-			lines.add(new LineSeg(points.getPoint(i), points.getPoint(i + 1)));
+			Point pt1 = points.getPoint(i);
+			Point pt2 = points.getPoint(i + 1);
+			if (!pt1.equals(pt2)) {
+				lines.add(new LineSeg(pt1, pt2));
+			}
 		}
 
 		return lines;
