@@ -1,12 +1,12 @@
 /******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.figures;
@@ -17,6 +17,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -110,7 +111,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
         setLayoutManager(new ConstrainedToolbarLayout());
         setTitle(compartmentTitle);
         setToolTip(compartmentTitle);
-        setBorder(new OneLineBorder());
+        setBorder(new OneLineBorder(mm.DPtoLP(1), PositionConstants.TOP));
     }
     
 	/**

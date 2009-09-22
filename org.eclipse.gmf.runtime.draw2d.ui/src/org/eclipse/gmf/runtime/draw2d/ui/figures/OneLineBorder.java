@@ -1,12 +1,12 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.draw2d.ui.figures;
@@ -16,6 +16,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -111,37 +112,33 @@ public class OneLineBorder extends LineBorder {
 	 * @param graphics  <code>Graphics</code> handle for drawing the border.
 	 * @param insets  Space to be taken up by this border.
 	 */
+	@Override
 	public void paint(IFigure figure, Graphics graphics, Insets insets) {
 		tempRect.setBounds(getPaintRectangle(figure, insets));
-		if (getWidth() % 2 == 1) {
-			tempRect.width--;
-			tempRect.height--;
-		}
+
+		int one = MapModeUtil.getMapMode(figure).DPtoLP(1);
+		int widthInDP = getWidth() / one;
+		
+		int halfWidthInDP = MapModeUtil.getMapMode(figure).DPtoLP(widthInDP / 2);
+		tempRect.x += halfWidthInDP;
+		tempRect.y += halfWidthInDP;
+		tempRect.width -= getWidth();
+		tempRect.height -= getWidth();
+		
 		graphics.setLineWidth(getWidth());
 		graphics.setLineStyle(getStyle());
+
 		switch (position) {
 			case PositionConstants.TOP :
-				// move down by width/2 to ensure the border will fit;
-				// no need to change x
-				tempRect.y += getWidth() / 2;				
 				graphics.drawLine(tempRect.getTopLeft(), tempRect.getTopRight());				
 				break;
 			case PositionConstants.BOTTOM :	
-				// move up by width/2 to ensure the border will fit;
-				// no need to change x			
-				tempRect.y -= getWidth() / 2;
 				graphics.drawLine(tempRect.getBottomLeft(), tempRect.getBottomRight());
 				break;
 			case PositionConstants.LEFT :
-				// move right by width/2 to ensure the border will fit;
-				// no need to change y			
-				tempRect.x += getWidth() / 2;
 				graphics.drawLine(tempRect.getTopLeft(), tempRect.getBottomLeft());
 				break;
 			case PositionConstants.RIGHT :
-				// move left by width/2 to ensure the border will fit;
-				// no need to change y						
-				tempRect.x -= getWidth() / 2;
 				graphics.drawLine(tempRect.getTopRight(), tempRect.getBottomRight());
 				break;
 		}
