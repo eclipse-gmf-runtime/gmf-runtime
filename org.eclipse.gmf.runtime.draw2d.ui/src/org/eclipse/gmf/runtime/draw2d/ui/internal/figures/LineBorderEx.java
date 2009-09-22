@@ -1,14 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.runtime.draw2d.ui.internal.figures;
 
@@ -16,11 +15,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Color;
-
-
 
 /**
  * This subclass of the LineBorder is required to provide MapMode support.
@@ -64,19 +60,26 @@ public class LineBorderEx
 	public LineBorderEx(Color color, int width) {
 		super(color, width);
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.draw2d.LineBorder#paint(org.eclipse.draw2d.IFigure, org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
-	 */
+
+	@Override
+	public Insets getInsets(IFigure figure) {
+		int widthInLP = MapModeUtil.getMapMode(figure).DPtoLP(getWidth());
+		return new Insets(widthInLP);
+	}
+
+	@Override
 	public void paint(IFigure figure, Graphics graphics, Insets insets) {
 		tempRect.setBounds(getPaintRectangle(figure, insets));
-		IMapMode mm = MapModeUtil.getMapMode(figure);
-		// width is in pixels (as stated in constructors), convert it
-		int lpWidth = mm.DPtoLP(getWidth());
-		tempRect.shrink(lpWidth / 2, lpWidth / 2);
 
-		graphics.setLineWidth(lpWidth);
+		int widthInLP = MapModeUtil.getMapMode(figure).DPtoLP(getWidth());
+		int halfWidthInLP = MapModeUtil.getMapMode(figure).DPtoLP(
+				getWidth() / 2);
+		tempRect.x += halfWidthInLP;
+		tempRect.y += halfWidthInLP;
+		tempRect.width -= widthInLP;
+		tempRect.height -= widthInLP;
+
+		graphics.setLineWidth(getWidth());
 		graphics.setLineStyle(getStyle());
 		if (getColor() != null)
 			graphics.setForegroundColor(getColor());
