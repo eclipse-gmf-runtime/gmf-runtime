@@ -318,6 +318,11 @@ public class PasteIntoParentOperation
 								getLoadedResource().getIDToEObjectMapCopy());
 							if (resolved.eIsProxy() == false) {
 								EcoreUtil.replace(eObject, ref, eObj, resolved);
+							} else if ( ref.getEOpposite() != null){
+								//if it can not resolve to loaded paste resource, then
+								//it is an external reference. If it is also a bidirectional
+								//reference, clear its value. 
+								eObject.eUnset(ref);
 							}
 						}
 					}
