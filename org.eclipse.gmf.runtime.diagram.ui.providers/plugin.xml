@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<!-- Copyright (c) 2005, 2008  IBM Corporation and others.                       -->
+<!-- Copyright (c) 2005, 2009  IBM Corporation and others.                       -->
 <!-- All rights reserved. This program and the accompanying materials      -->
 <!-- are made available under the terms of the Eclipse Public License v1.0 -->
 <!-- which accompanies this distribution, and is available at              -->
@@ -603,13 +603,22 @@
             <popupMenuGroup path="/filtersMenu/compartmentMenu/" id="individualCompartmentsGroup">
             </popupMenuGroup>
             <popupMenuGroup path="/filtersMenu/compartmentMenu/" id="allCompartmentsGroup">
-            </popupMenuGroup>
+            </popupMenuGroup>  
+         </popupContribution>       
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart">
+               <method
+                     name="getResizableNotationViews().isEmpty()"
+                     value="false">
+               </method>
+            </popupStructuredContributionCriteria>                    
             <popupAction path="/filtersMenu/compartmentMenu/allCompartmentsGroup" id="allCompartmentsAction">
             </popupAction>
             <popupAction path="/filtersMenu/compartmentMenu/allCompartmentsGroup" id="noCompartmentsAction">
             </popupAction>     
-         </popupContribution>       
-         
+            <popupAction path="/filtersMenu/expandFilterGroup" id="sortfilterAction">
+            </popupAction>
+         </popupContribution>          
          <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
             </popupStructuredContributionCriteria>
@@ -632,13 +641,6 @@
             <popupAction path="/diagramAddmenu/addDiagramGeneralGroup" id="addNoteAction">
             </popupAction>
             <popupAction path="/diagramAddmenu/addDiagramGeneralGroup" id="addTextAction">
-            </popupAction>
-         </popupContribution>
-         
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
-            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart">
-            </popupStructuredContributionCriteria>
-            <popupAction path="/filtersMenu/expandFilterGroup" id="sortfilterAction">
             </popupAction>
          </popupContribution>
         
