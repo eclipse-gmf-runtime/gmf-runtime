@@ -603,13 +603,22 @@
             <popupMenuGroup path="/filtersMenu/compartmentMenu/" id="individualCompartmentsGroup">
             </popupMenuGroup>
             <popupMenuGroup path="/filtersMenu/compartmentMenu/" id="allCompartmentsGroup">
-            </popupMenuGroup>
+            </popupMenuGroup>  
+         </popupContribution>       
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart">
+               <method
+                     name="getResizableNotationViews().isEmpty()"
+                     value="false">
+               </method>
+            </popupStructuredContributionCriteria>                    
             <popupAction path="/filtersMenu/compartmentMenu/allCompartmentsGroup" id="allCompartmentsAction">
             </popupAction>
             <popupAction path="/filtersMenu/compartmentMenu/allCompartmentsGroup" id="noCompartmentsAction">
             </popupAction>     
-         </popupContribution>       
-         
+            <popupAction path="/filtersMenu/expandFilterGroup" id="sortfilterAction">
+            </popupAction>
+         </popupContribution>          
          <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
             </popupStructuredContributionCriteria>
@@ -632,13 +641,6 @@
             <popupAction path="/diagramAddmenu/addDiagramGeneralGroup" id="addNoteAction">
             </popupAction>
             <popupAction path="/diagramAddmenu/addDiagramGeneralGroup" id="addTextAction">
-            </popupAction>
-         </popupContribution>
-         
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
-            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart">
-            </popupStructuredContributionCriteria>
-            <popupAction path="/filtersMenu/expandFilterGroup" id="sortfilterAction">
             </popupAction>
          </popupContribution>
         
