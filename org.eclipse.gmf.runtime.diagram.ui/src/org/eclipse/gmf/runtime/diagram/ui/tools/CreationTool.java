@@ -193,14 +193,7 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	 * @param point to create shape at
 	 */
 	protected void createShapeAt(Point point) {
-		
-		List selectedEditParts = getCurrentViewer().getSelectedEditParts();
-		if (selectedEditParts.size() == 1) {
-			setTargetEditPart((EditPart) selectedEditParts.get(0));
-		} else {
-			setTargetEditPart(getCurrentViewer().getRootEditPart()
-					.getContents());
-		}
+		setTargetEditPart(getCurrentViewer().getRootEditPart().getContents());
 		getCreateRequest().setLocation(point);
 		setCurrentCommand(getCommand());
 		performCreation(0);
