@@ -208,6 +208,8 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 		if (e.keyCode==SWT.Selection){
 			setEditDomain(getCurrentViewer().getEditDomain());
 			createShapeAt(UNDEFINED_POINT);
+			setState(STATE_TERMINAL);
+			handleFinished();
 			return true;
 		}
 		return false;
