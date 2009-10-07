@@ -133,7 +133,9 @@ public class OffscreenEditPartFactory {
     	/*
     	 * We need to flush all the deferred updates. 
     	 */
-   		while (shell.getDisplay().readAndDispatch());
+   		while (shell.getDisplay().readAndDispatch()) {
+   			// nothing
+   		}
         
         return (DiagramEditPart) customViewer.getContents();
 
