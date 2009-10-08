@@ -245,6 +245,7 @@ public final class PartPositionInfoGenerator {
 			if (intersections.size() > 0) {
 				result.addPoint(intersections.getFirstPoint());
 			} else {
+				result.addPoint(parallel_1.getTerminus());
 				result.addPoint(parallel_2.getOrigin());
 			}
 			parallel_1 = parallel_2;
