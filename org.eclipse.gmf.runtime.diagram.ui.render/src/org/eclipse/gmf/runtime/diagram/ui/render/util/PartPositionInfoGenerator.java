@@ -122,7 +122,7 @@ public final class PartPositionInfoGenerator {
 						.resolveSemanticElement(view));
 
 				PolylineConnection mainPoly = (PolylineConnection) figure;
-				PointList mainPts = mainPoly.getPoints();
+				PointList mainPts = mainPoly.getPoints().getCopy();
 
 				DiagramImageUtils.translateTo(mainPts, figure, printableLayer);
 				PointList envelopingPts = calculateEnvelopingPolyline(mainPts,
@@ -241,11 +241,17 @@ public final class PartPositionInfoGenerator {
 		for (; index < polySegs.size(); index++) {
 			parallel_2 = polySegs.get(index).getParallelLineSegThroughPoint(
 					polySegs.get(index).locatePoint(0, absMargin, sign));
-			result.addPoint(parallel_1.getLinesIntersections(parallel_2).getFirstPoint());
+			PointList intersections = parallel_1.getLinesIntersections(parallel_2);
+			if (intersections.size() > 0) {
+				result.addPoint(intersections.getFirstPoint());
+			} else {
+				result.addPoint(parallel_2.getOrigin());
+			}
 			parallel_1 = parallel_2;
 		}
 		result.addPoint(polySegs.get(index - 1).locatePoint(1.0, absMargin, sign));
 		return result;
 	}
-
+	
 }
+
