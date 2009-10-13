@@ -59,17 +59,10 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapMod
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatableZoomManager;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
-import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.SubStatusLineManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * RootEditPart which manages the Diagram's layers and creates the discrete zoom
@@ -485,36 +478,6 @@ public class DiagramRootEditPart
 	}
 	
 	/**
-	 * Refreshes the status line.
-	 * @since 1.2
-	 */
-	protected void refreshShowStatusLine() {
-
-		IPreferenceStore preferenceStore = (IPreferenceStore) getPreferencesHint()
-				.getPreferenceStore();
-		boolean statusLineOn = preferenceStore
-				.getBoolean(IPreferenceConstants.PREF_SHOW_STATUS_LINE);
-
-		IWorkbenchPage page = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage();
-		IWorkbenchPartSite site = page.getActivePart().getSite();
-		IStatusLineManager statusLineManager;
-		if (site instanceof IEditorSite) {
-			IEditorSite editorSite = (IEditorSite) site;
-			statusLineManager = editorSite.getActionBars()
-					.getStatusLineManager();
-		} else if (site instanceof IViewSite) {
-			IViewSite viewSite = (IViewSite) site;
-			statusLineManager = viewSite.getActionBars().getStatusLineManager();
-		} else {
-			return;
-		}
-		if (statusLineManager instanceof SubStatusLineManager) {
-			((SubStatusLineManager) statusLineManager).setVisible(statusLineOn);
-		}
-	}
-	
-	/**
 	 * Adds the pagebreaks figure to the <code>PAGE_BREAKS_LAYER</code>
 	 */
 	private void showPageBreaks() {
@@ -623,9 +586,7 @@ public class DiagramRootEditPart
 			refreshEnableZoomAnimation(getZoomManager());
 		} else if (event.getProperty().equals(IPreferenceConstants.PREF_ENABLE_ANTIALIAS)){
 			refreshEnableAntiAlias();
-		} else if (event.getProperty().equals(IPreferenceConstants.PREF_SHOW_STATUS_LINE)){
-			refreshShowStatusLine();
-		}	
+		} 
 	}
 	
 	/**
