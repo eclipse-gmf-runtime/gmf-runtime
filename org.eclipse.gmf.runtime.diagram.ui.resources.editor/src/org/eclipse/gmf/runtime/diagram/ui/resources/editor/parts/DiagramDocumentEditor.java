@@ -1614,6 +1614,10 @@ public class DiagramDocumentEditor
 		}
 		statusLineContributions.removeAll(statusLineContributions);
 		statusLineLabelProvider = null;
+		
+		updateStatusLineMessageContribution(null, null);
+		getEditorSite().getActionBars().getStatusLineManager()
+				.update(true);		
 	}
 
 	/**
@@ -1654,14 +1658,13 @@ public class DiagramDocumentEditor
 	private class PropertyChangeListener implements IPropertyChangeListener {
 
 		public void propertyChange(PropertyChangeEvent event) {
-			String property = event.getProperty();
-			if (IPreferenceConstants.PREF_SHOW_STATUS_LINE
-					.equals(property)) {
-				if (!isStatusLineOn()) {
-					removeStatusLineContributions();
-					updateStatusLineMessageContribution(null, null);
-					getEditorSite().getActionBars().getStatusLineManager()
-							.update(true);
+			if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart() == DiagramDocumentEditor.this) {
+				String property = event.getProperty();
+				if (IPreferenceConstants.PREF_SHOW_STATUS_LINE
+						.equals(property)) {
+					if (!isStatusLineOn()) {
+						removeStatusLineContributions();
+					}
 				}
 			}
 		}
