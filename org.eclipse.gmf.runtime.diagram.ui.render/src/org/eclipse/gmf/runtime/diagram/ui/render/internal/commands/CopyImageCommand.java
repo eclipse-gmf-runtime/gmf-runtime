@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,9 @@ package org.eclipse.gmf.runtime.diagram.ui.render.internal.commands;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -22,6 +25,10 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -121,10 +128,13 @@ public class CopyImageCommand
 
 		Image image = null;
 		try {
-			if (imageCopyDiagram)
+			if (imageCopyDiagram) {
 				image = imageGenerator.createAWTImageForDiagram();
-			else
+			} else {
+				zOrderSort(editParts, LayerManager.Helper.find(diagramEP)
+						.getLayer(LayerConstants.PRINTABLE_LAYERS));
 				image = imageGenerator.createAWTImageForParts(editParts);
+			}
 		} catch (OutOfMemoryError error) {
 			String eMsg = DiagramUIRenderMessages.CopyAction_UnableToCopyImageMessage;
 			Log.error(DiagramUIRenderPlugin.getInstance(), IStatus.ERROR, eMsg,
@@ -206,4 +216,46 @@ public class CopyImageCommand
     public boolean canUndo() {
         return false;
     }
+
+	private static void zOrderSort(List<? extends GraphicalEditPart> editparts, IFigure zOrderRoot) {
+		if (editparts == null || editparts.size() < 2) {
+			return;
+		}
+		final Map<GraphicalEditPart, List<Integer>> indexMap = new IdentityHashMap<GraphicalEditPart, List<Integer>>(editparts.size());
+		for (GraphicalEditPart ep : editparts) {
+			List<Integer> index = new ArrayList<Integer>();
+			for (IFigure fig = ep.getFigure(); fig != zOrderRoot && fig.getParent() != null; fig = fig.getParent()) {
+				index.add(fig.getParent().getChildren().indexOf(fig));
+			}
+			indexMap.put(ep, index);
+		}
+		Collections.sort(editparts, new Comparator<GraphicalEditPart>() {
+			public int compare(GraphicalEditPart ep1, GraphicalEditPart ep2) {
+				List<Integer> index1 = indexMap.get(ep1);
+				List<Integer> index2 = indexMap.get(ep2);
+				int num1, num2;
+				for (int i = 0; i < index1.size() && i < index2.size(); i++) {
+					num1 = index1.get(index1.size() - 1 - i).intValue();
+					num2 = index2.get(index2.size() - 1 - i).intValue();
+					if (num1 < num2) {
+						return -1;
+					} else if (num1 > num2) {
+						return 1;
+					}
+				}
+				/*
+				 * If we get here then either one editparts figure is the child of another one.
+				 * Child figure will be on top of its parent. 
+				 * Parent figure will have smaller size of the index
+				 */
+				if (index1.size() < index2.size()) {
+					return 1;
+				} else if (index1.size() > index2.size()) {
+					return -1;
+				} else {
+					return 0;
+				}
+			}
+		});
+	}
 }
