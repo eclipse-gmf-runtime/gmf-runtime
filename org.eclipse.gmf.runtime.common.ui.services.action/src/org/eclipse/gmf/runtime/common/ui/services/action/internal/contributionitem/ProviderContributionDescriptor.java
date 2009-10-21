@@ -51,7 +51,7 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	private static final String PART_ACTIONGROUP_CONTRIBUTION = "partActionGroup"; //$NON-NLS-1$
 	private static final String PART_CUSTOM_CONTRIBUTION = "partCustom"; //$NON-NLS-1$
 	/**
-	 * @since 1.2.1
+	 * @since 1.3
 	 */
 	private static final String PART_PREDEFINED_ITEM = "partPredefinedItem"; //$NON-NLS-1$
 	private static final String POPUP_CONTRIBUTION = "popupContribution"; //$NON-NLS-1$
@@ -77,11 +77,11 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	private static final String DOCUMENT_CLASS = "documentClass"; //$NON-NLS-1$
     private static final String REMOVE = "remove"; //$NON-NLS-1$
     /**
-	 * @since 1.2.1
+	 * @since 1.3
 	 */
     private static final String REMOVE_FROM_TOOLBAR = "removeFromToolbar"; //$NON-NLS-1$
     /**
-	 * @since 1.2.1
+	 * @since 1.3
 	 */
     private static final String REMOVE_FROM_MENUBAR = "removeFromMenubar"; //$NON-NLS-1$
 
@@ -813,7 +813,7 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	/**
      * A descriptor for a contribution item previously defined as an addition to toolbar or menubar.
      *
-	 * @since 1.2.1
+	 * @since 1.3
 	 */
 	public static class PartPredefinedItemDescriptor
     	extends AbstractContributionItemDescriptor {
