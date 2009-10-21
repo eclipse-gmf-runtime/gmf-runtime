@@ -139,6 +139,7 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 		conn.translateToRelative(bounds);
 		return bounds;
 	}
+
 	
 	/**
 	 * getTrunkLocation

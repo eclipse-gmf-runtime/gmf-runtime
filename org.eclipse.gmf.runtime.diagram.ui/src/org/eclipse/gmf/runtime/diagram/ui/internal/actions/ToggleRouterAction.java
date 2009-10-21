@@ -78,7 +78,7 @@ public class ToggleRouterAction extends CheckedPropertyAction {
 				
 				RoutingStyle style = (RoutingStyle) (primaryConnection.getNotationView())
 				.getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
-				
+
 				if (style != null) {
 					Routing currentRouting = style.getRouting();
 					if (currentRouting != null) {
