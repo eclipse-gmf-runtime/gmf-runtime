@@ -122,23 +122,25 @@ public final class PartPositionInfoGenerator {
 						.resolveSemanticElement(view));
 
 				PolylineConnection mainPoly = (PolylineConnection) figure;
-				PointList mainPts = mainPoly.getPoints().getCopy();
-
-				DiagramImageUtils.translateTo(mainPts, figure, printableLayer);
-				PointList envelopingPts = calculateEnvelopingPolyline(mainPts,
-						(int) Math.max(connectionMargin, mainPoly
-								.getLineWidth() >> 1));
-				envelopingPts.translate(new PrecisionPoint(-origin.preciseX(),
-						-origin.preciseY()));
-				mm.LPtoDP(envelopingPts);
-				envelopingPts.performScale(scale);
-
-				List<Point> pts = new ArrayList(envelopingPts.size());
-				for (int i = 0; i < envelopingPts.size(); i++) {
-					pts.add(envelopingPts.getPoint(i));
+				if (mainPoly.isVisible() && !mainPoly.getBounds().isEmpty()) {
+					PointList mainPts = mainPoly.getPoints().getCopy();
+	
+					DiagramImageUtils.translateTo(mainPts, figure, printableLayer);
+					PointList envelopingPts = calculateEnvelopingPolyline(mainPts,
+							(int) Math.max(connectionMargin, mainPoly
+									.getLineWidth() >> 1));
+					envelopingPts.translate(new PrecisionPoint(-origin.preciseX(),
+							-origin.preciseY()));
+					mm.LPtoDP(envelopingPts);
+					envelopingPts.performScale(scale);
+	
+					List<Point> pts = new ArrayList(envelopingPts.size());
+					for (int i = 0; i < envelopingPts.size(); i++) {
+						pts.add(envelopingPts.getPoint(i));
+					}
+	
+					position.setPolyline(pts);
 				}
-
-				position.setPolyline(pts);
 				result.add(0, position);
 			} else if ((view != null && view.isSetElement())
 					|| (part instanceof ShapeEditPart
@@ -149,19 +151,21 @@ public final class PartPositionInfoGenerator {
 				position.setSemanticElement(ViewUtil
 						.resolveSemanticElement(view));
 
-				PrecisionRectangle bounds = new PrecisionRectangle(figure
-						.getBounds());
-				DiagramImageUtils.translateTo(bounds, figure, printableLayer);
-				bounds.translate(new PrecisionPoint(-origin.preciseX(), -origin
-						.preciseY()));
-				mm.LPtoDP(bounds);
-
-				bounds.performScale(scale);
-
-				position.setPartHeight(bounds.height);
-				position.setPartWidth(bounds.width);
-				position.setPartX(bounds.x);
-				position.setPartY(bounds.y);
+				if (figure.isShowing() && !figure.getBounds().isEmpty()) {
+					PrecisionRectangle bounds = new PrecisionRectangle(figure
+							.getBounds());
+					DiagramImageUtils.translateTo(bounds, figure, printableLayer);
+					bounds.translate(new PrecisionPoint(-origin.preciseX(), -origin
+							.preciseY()));
+					mm.LPtoDP(bounds);
+	
+					bounds.performScale(scale);
+	
+					position.setPartHeight(bounds.height);
+					position.setPartWidth(bounds.width);
+					position.setPartX(bounds.x);
+					position.setPartY(bounds.y);
+				}
 				result.add(0, position);
 			}
 		}
