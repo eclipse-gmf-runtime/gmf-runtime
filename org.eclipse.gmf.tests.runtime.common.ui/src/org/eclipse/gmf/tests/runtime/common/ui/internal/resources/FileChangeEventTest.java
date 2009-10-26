@@ -414,7 +414,6 @@ public class FileChangeEventTest extends TestCase {
 		public void touch(IProgressMonitor monitor) throws CoreException {/*Empty block*/
 		}
 
-		@SuppressWarnings("unchecked")
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
@@ -567,6 +566,44 @@ public class FileChangeEventTest extends TestCase {
 		 */
 		public boolean isTeamPrivateMember(int arg0) {
 			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#hasFilters()
+		 */
+		public boolean hasFilters() {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isGroup()
+		 */
+		public boolean isGroup() {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#setDerived(boolean, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void setDerived(boolean isDerived, IProgressMonitor monitor)
+				throws CoreException {
+			//
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#setLinkLocation(java.net.URI, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void setLinkLocation(URI location, int updateFlags,
+				IProgressMonitor monitor) throws CoreException {
+			// 
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#setLinkLocation(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void setLinkLocation(IPath location, int updateFlags,
+				IProgressMonitor monitor) throws CoreException {
+			//
 		}
 	}
 	

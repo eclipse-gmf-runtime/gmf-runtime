@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceFilter;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
@@ -367,7 +368,6 @@ public class FileObserverFilterTest
 			/* Empty block */
 		}
 
-		@SuppressWarnings("unchecked")
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
@@ -532,6 +532,44 @@ public class FileObserverFilterTest
 		 */
 		public boolean isTeamPrivateMember(int arg0) {
 			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#hasFilters()
+		 */
+		public boolean hasFilters() {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isGroup()
+		 */
+		public boolean isGroup() {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#setDerived(boolean, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void setDerived(boolean isDerived, IProgressMonitor monitor)
+				throws CoreException {
+			//
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#setLinkLocation(java.net.URI, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void setLinkLocation(URI location, int updateFlags,
+				IProgressMonitor monitor) throws CoreException {
+			// 
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#setLinkLocation(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void setLinkLocation(IPath location, int updateFlags,
+				IProgressMonitor monitor) throws CoreException {
+			//
 		}
 	}
 
@@ -1276,6 +1314,75 @@ public class FileObserverFilterTest
 		 */
 		public boolean isTeamPrivateMember(int arg0) {
 			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IFolder#createGroup(int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void createGroup(int updateFlags, IProgressMonitor monitor)
+				throws CoreException {
+			// 
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IContainer#addFilter(java.lang.String, int, java.lang.String, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void addFilter(String filterID, int type, String arguments,
+				int updateFlags, IProgressMonitor monitor) throws CoreException {
+			// 
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IContainer#getFilters()
+		 */
+		public IResourceFilter[] getFilters() throws CoreException {
+			return null;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IContainer#removeFilter(java.lang.String, int, java.lang.String, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void removeFilter(String filterID, int type, String arguments,
+				int updateFlags, IProgressMonitor monitor) throws CoreException {
+			// 
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#hasFilters()
+		 */
+		public boolean hasFilters() {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isGroup()
+		 */
+		public boolean isGroup() {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#setDerived(boolean, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void setDerived(boolean isDerived, IProgressMonitor monitor)
+				throws CoreException {
+			//
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#setLinkLocation(java.net.URI, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void setLinkLocation(URI location, int updateFlags,
+				IProgressMonitor monitor) throws CoreException {
+			// 
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#setLinkLocation(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void setLinkLocation(IPath location, int updateFlags,
+				IProgressMonitor monitor) throws CoreException {
+			//
 		}
 	}
 
