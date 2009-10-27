@@ -1384,6 +1384,22 @@ public class FileObserverFilterTest
 				IProgressMonitor monitor) throws CoreException {
 			//
 		}
+
+		/*
+		 * @see org.eclipse.core.resources.IContainer#addFilter(java.lang.String, int, java.lang.Object, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void addFilter(String filterID, int type, Object arguments,
+				int updateFlags, IProgressMonitor monitor) throws CoreException {
+			// 
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IContainer#removeFilter(java.lang.String, int, java.lang.Object, int, org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public void removeFilter(String filterID, int type, Object arguments,
+				int updateFlags, IProgressMonitor monitor) throws CoreException {
+			// 
+		}
 	}
 
 	public static void main(String[] args) {
