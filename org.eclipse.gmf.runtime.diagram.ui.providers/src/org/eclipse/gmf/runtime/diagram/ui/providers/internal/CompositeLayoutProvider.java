@@ -1,12 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Mariot Chauvin <mariot.chauvin@obeo.fr> - bug 243888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.providers.internal;
@@ -60,11 +61,20 @@ import org.eclipse.gmf.runtime.notation.View;
 
 public abstract class CompositeLayoutProvider
     extends DefaultProvider {
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#build_nodes(java.util.List, java.util.Map, org.eclipse.draw2d.graph.Subgraph)
+     * @deprecated
      */
     protected NodeList build_nodes(List selectedObjects,
+            Map editPartToNodeDict, Subgraph rootGraph) {
+    	return buildNodes(selectedObjects, editPartToNodeDict, rootGraph);
+    }
+	
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#buildNodes(java.util.List, java.util.Map, org.eclipse.draw2d.graph.Subgraph)
+     */
+    protected NodeList buildNodes(List selectedObjects,
             Map editPartToNodeDict, Subgraph rootGraph) {
         ListIterator li = selectedObjects.listIterator();
         NodeList nodes = new NodeList();
@@ -108,11 +118,11 @@ public abstract class CompositeLayoutProvider
                 editPartToNodeDict.put(ep, n);
                 nodes.add(n);
                 if (hasChildren && !(gep instanceof GroupEditPart)) {
-                    build_nodes(gep.getChildren(), editPartToNodeDict,
+                    buildNodes(gep.getChildren(), editPartToNodeDict,
                         (Subgraph) n);
                 }
                 if (n instanceof ConstantSizeNode) {
-                    build_borderNodes(gep, (ConstantSizeNode)n, editPartToNodeDict);                	
+                    buildBorderNodes(gep, (ConstantSizeNode)n, editPartToNodeDict);                	
                 }
             }
         }
