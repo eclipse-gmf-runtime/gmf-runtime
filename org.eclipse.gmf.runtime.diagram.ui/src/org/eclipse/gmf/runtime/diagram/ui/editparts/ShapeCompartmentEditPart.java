@@ -140,6 +140,10 @@ public abstract class ShapeCompartmentEditPart
 				
 				IGraphicalEditPart source = (IGraphicalEditPart) getSourceEditPart(cep);
 				IGraphicalEditPart target = (IGraphicalEditPart) getTargetEditPart(cep);
+				if (source == null || target == null) {
+					connection.setVisible(false);
+					continue;
+				}
 				
 				if (!source.getFigure().isShowing() || !target.getFigure().isShowing()) {
 					connection.setVisible(false);
@@ -161,7 +165,7 @@ public abstract class ShapeCompartmentEditPart
                 Point tRefPoint;
                 List bendpoints = (List) connection.getConnectionRouter()
                     .getConstraint(connection);
-                if (bendpoints.size() >= 2) {
+                if (bendpoints != null && bendpoints.size() >= 2) {
                     sRefPoint = ((Bendpoint) bendpoints.get(0)).getLocation()
                         .getCopy();
                     connection.translateToAbsolute(sRefPoint);

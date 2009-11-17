@@ -748,7 +748,7 @@ abstract public class ConnectionEditPart
      * @return the diagram
      */
     protected Diagram getDiagramView() {
-        return (Diagram) getRoot().getContents().getModel();
+        return ((View) getRoot().getContents().getModel()).getDiagram();
     }
 
     /*
@@ -757,11 +757,16 @@ abstract public class ConnectionEditPart
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#getPrimaryView()
      */
     public View getPrimaryView() {
-        for (EditPart parent = this; parent != null; parent = parent
-            .getParent())
-            if (parent instanceof IPrimaryEditPart)
-                return (View) parent.getModel();
-        return null;
+    	if (this instanceof IPrimaryEditPart && getModel() instanceof View) {
+    		return (View) getModel();
+    	} else {
+    		for (EditPart ep = getParent(); ep != null; ep = ep.getParent()) {
+    			if (ep instanceof IGraphicalEditPart && ep.getModel() instanceof View) {
+    				return ((IGraphicalEditPart) ep).getPrimaryView();
+    			}
+    		}
+    	}
+    	return null;
     }
 
     /**

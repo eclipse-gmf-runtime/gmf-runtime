@@ -1788,6 +1788,7 @@ public class PointListUtilities {
 				locateInfo)) {
 			double inSegPercDist = 0;
 			LineSeg seg = locateInfo.theSegment;
+			if (seg != null) {
 			if (seg.length() > 0)
 				inSegPercDist =
 					locateInfo.remainingDist
@@ -1801,6 +1802,7 @@ public class PointListUtilities {
 						? LineSeg.Sign.POSITIVE
 						: LineSeg.Sign.NEGATIVE));
 			return location;
+			}
 		}
 		return null;
 	}
