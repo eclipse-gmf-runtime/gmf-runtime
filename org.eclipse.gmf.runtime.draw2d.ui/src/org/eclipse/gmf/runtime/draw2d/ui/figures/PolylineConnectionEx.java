@@ -59,6 +59,8 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
     private static Rectangle LINEBOUNDS = Rectangle.SINGLETON;
     private static int TOLERANCE = 3;
     
+    private static Rectangle EMPTY_BOUNDS = new Rectangle(0,0,0,0);
+    
     /**
      * No smoothness
      */
@@ -226,7 +228,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
             // extend the boundary slightly by the jumplinks height value
             bounds.expand(jumpLinkSize.height + calculatedTolerance, jumpLinkSize.height + calculatedTolerance);
         }
-        return bounds;
+        return getSourceAnchor() != null && getTargetAnchor() != null ? bounds : EMPTY_BOUNDS;
     }
 
     /**

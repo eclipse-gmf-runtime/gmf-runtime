@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -133,7 +133,10 @@ public class LabelHelper {
 			return ptLst.getFirstPoint().getTranslated(offset);
 		} else if (ptLst.size() >= 2){
 			// This is a edge...
-			int index = PointListUtilities.findNearestLineSegIndexOfPoint(ptLst, ptOnLine);		
+			int index = PointListUtilities.findNearestLineSegIndexOfPoint(ptLst, ptOnLine);	
+			if (index < 1) {
+				return ptLst.getFirstPoint().getTranslated(offset);
+			}
 			LineSeg segment = (LineSeg) PointListUtilities.getLineSegments(ptLst).get(index - 1);
 			Point relativeOffset = null;
 			if (segment != null) {

@@ -637,18 +637,24 @@ public abstract class GraphicalEditPart
      * @return the diagram
      */
     protected Diagram getDiagramView() {
-        return (Diagram) getRoot().getContents().getModel();
+        return ((View) getRoot().getContents().getModel()).getDiagram();
     }
 
     /**
      * Convenience method returning the editpart's parimary view. Same as
      * calling <code>getView().getPrimaryView()</code>
      */
-    public final View getPrimaryView() {
-        for (EditPart parent = this; parent != null; parent = parent.getParent())
-            if (parent instanceof IPrimaryEditPart && parent.getModel() instanceof View)
-                return (View)parent.getModel();
-        return null;
+    public View getPrimaryView() {
+    	if (this instanceof IPrimaryEditPart && getModel() instanceof View) {
+    		return (View) getModel();
+    	} else {
+    		for (EditPart ep = getParent(); ep != null; ep = ep.getParent()) {
+    			if (ep instanceof IGraphicalEditPart && ep.getModel() instanceof View) {
+    				return ((IGraphicalEditPart) ep).getPrimaryView();
+    			}
+    		}
+    	}
+    	return null;
     }
 
     /**
