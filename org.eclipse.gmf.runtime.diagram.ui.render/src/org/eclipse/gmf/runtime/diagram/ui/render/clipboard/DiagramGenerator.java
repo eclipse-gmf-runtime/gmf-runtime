@@ -349,7 +349,7 @@ abstract public class DiagramGenerator {
 	 */
 	private void paintFigure(Graphics graphics, IFigure figure) {
 
-		if (!figure.isVisible())
+		if (!figure.isVisible() || figure.getBounds().isEmpty())
 			return;
 
 		// Calculate the Relative bounds and absolute bounds
