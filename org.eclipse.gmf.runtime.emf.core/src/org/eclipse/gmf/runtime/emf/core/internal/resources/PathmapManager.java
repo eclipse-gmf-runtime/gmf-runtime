@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -874,10 +874,12 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager, IPat
 				if (valueString.endsWith("/")) { //$NON-NLS-1$
 					valueString = valueString.substring(0,valueString.length()-1);
 				}
-				
-				if (uriAsString.startsWith(valueString)
-					&& (maxValueString == null || 
-							maxValueString.length() < valueString.length())) {
+
+				if ((uriAsString.startsWith(valueString) &&
+					(valueString.length() == uriAsString.length() || 
+				     uriAsString.charAt(valueString.length()) == EMFCoreConstants.PATH_SEPARATOR))
+				    && (maxValueString == null || maxValueString.length() < valueString.length())) {
+					
 					maxValueString = valueString;
 					maxKey = (String)entry.getKey();
 				}
