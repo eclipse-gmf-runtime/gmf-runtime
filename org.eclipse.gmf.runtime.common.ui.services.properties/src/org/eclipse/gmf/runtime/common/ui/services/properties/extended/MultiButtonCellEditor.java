@@ -20,8 +20,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
@@ -269,21 +267,6 @@ public abstract class MultiButtonCellEditor
 				}
 			}
 		});
-		
-        button.addTraverseListener(new TraverseListener() {
-
-            public void keyTraversed(TraverseEvent e) {
-                if (e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-                    e.doit = false;
-                    getControl().traverse(SWT.TRAVERSE_TAB_PREVIOUS);
-                }
-
-                if (e.detail == SWT.TRAVERSE_TAB_NEXT) {
-                    e.doit = false;
-                    getControl().traverse(SWT.TRAVERSE_TAB_NEXT);
-                }
-            }
-        });		
 
 		buttonList.add(button);
 	}
