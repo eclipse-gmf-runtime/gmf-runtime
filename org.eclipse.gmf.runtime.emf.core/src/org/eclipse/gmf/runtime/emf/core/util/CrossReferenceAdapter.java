@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 	private boolean resolve = true;
 	
-    private static Map eClassToChangeableFeatures = new HashMap();
+    private Map eClassToChangeableFeatures = new HashMap();
 
     private static List nullList = new ArrayList(1);
 
@@ -937,7 +937,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	 * @param eCls an EClass
 	 * @return a list of its {@link EReference}s that are changeable
 	 */
-    private static List getCrossReferencesChangeableFeatures(EClass eCls) {
+    private List getCrossReferencesChangeableFeatures(EClass eCls) {
         List features = (List) eClassToChangeableFeatures.get(eCls);
         if (features == null) {
             features = nullList;
