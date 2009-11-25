@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,13 +23,14 @@ import junit.textui.TestRunner;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFileInfoMatcherDescription;
 import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceFilter;
+import org.eclipse.core.resources.IResourceFilterDescription;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
@@ -1324,26 +1325,10 @@ public class FileObserverFilterTest
 		}
 
 		/*
-		 * @see org.eclipse.core.resources.IContainer#addFilter(java.lang.String, int, java.lang.String, int, org.eclipse.core.runtime.IProgressMonitor)
-		 */
-		public void addFilter(String filterID, int type, String arguments,
-				int updateFlags, IProgressMonitor monitor) throws CoreException {
-			// 
-		}
-
-		/*
 		 * @see org.eclipse.core.resources.IContainer#getFilters()
 		 */
-		public IResourceFilter[] getFilters() throws CoreException {
+		public IResourceFilterDescription[] getFilters() throws CoreException {
 			return null;
-		}
-
-		/*
-		 * @see org.eclipse.core.resources.IContainer#removeFilter(java.lang.String, int, java.lang.String, int, org.eclipse.core.runtime.IProgressMonitor)
-		 */
-		public void removeFilter(String filterID, int type, String arguments,
-				int updateFlags, IProgressMonitor monitor) throws CoreException {
-			// 
 		}
 
 		/*
@@ -1369,35 +1354,19 @@ public class FileObserverFilterTest
 		}
 
 		/*
-		 * @see org.eclipse.core.resources.IResource#setLinkLocation(java.net.URI, int, org.eclipse.core.runtime.IProgressMonitor)
+		 * @see org.eclipse.core.resources.IContainer#createFilter(int, org.eclipse.core.resources.IFileInfoMatcherDescription, int, org.eclipse.core.runtime.IProgressMonitor)
 		 */
-		public void setLinkLocation(URI location, int updateFlags,
-				IProgressMonitor monitor) throws CoreException {
-			// 
-		}
-
-		/*
-		 * @see org.eclipse.core.resources.IResource#setLinkLocation(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
-		 */
-		public void setLinkLocation(IPath location, int updateFlags,
-				IProgressMonitor monitor) throws CoreException {
-			//
-		}
-
-		/*
-		 * @see org.eclipse.core.resources.IContainer#addFilter(java.lang.String, int, java.lang.Object, int, org.eclipse.core.runtime.IProgressMonitor)
-		 */
-		public void addFilter(String filterID, int type, Object arguments,
+		public IResourceFilterDescription createFilter(int type,
+				IFileInfoMatcherDescription matcherDescription,
 				int updateFlags, IProgressMonitor monitor) throws CoreException {
-			// 
+			return null;
 		}
 
 		/*
-		 * @see org.eclipse.core.resources.IContainer#removeFilter(java.lang.String, int, java.lang.Object, int, org.eclipse.core.runtime.IProgressMonitor)
+		 * @see org.eclipse.core.resources.IContainer#removeFilter(org.eclipse.core.resources.IResourceFilterDescription, int, org.eclipse.core.runtime.IProgressMonitor)
 		 */
-		public void removeFilter(String filterID, int type, Object arguments,
+		public void removeFilter(IResourceFilterDescription filterDescription,
 				int updateFlags, IProgressMonitor monitor) throws CoreException {
-			// 
 		}
 	}
 
