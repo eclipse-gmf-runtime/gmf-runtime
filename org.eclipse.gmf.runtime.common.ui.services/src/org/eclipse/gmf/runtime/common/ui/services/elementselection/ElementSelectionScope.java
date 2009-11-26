@@ -34,6 +34,7 @@ public class ElementSelectionScope {
      * 
      * @param scope
      *            the scope
+     * @since 1.3
      */
     protected ElementSelectionScope(int scope) {
         this.scope = scope;
