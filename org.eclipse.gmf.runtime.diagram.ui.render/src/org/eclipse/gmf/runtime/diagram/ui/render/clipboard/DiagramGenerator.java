@@ -653,6 +653,7 @@ abstract public class DiagramGenerator {
 	/**
 	 * @return <code>int</code> value that is the margin around the generated
 	 *         image in logical coordinates.
+	 * @since 1.3
 	 */
 	public int getImageMargin() {
 		return image_margin;
@@ -663,6 +664,7 @@ abstract public class DiagramGenerator {
 	 * The value must be in logical units.
 	 * 
 	 * @param imageMargin
+	 * @since 1.3
 	 */
 	public void setImageMargin(int imageMargin) {
 		Assert.isTrue(imageMargin >= 0);
