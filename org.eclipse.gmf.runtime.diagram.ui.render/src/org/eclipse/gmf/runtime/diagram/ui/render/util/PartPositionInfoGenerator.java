@@ -44,6 +44,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * A Utility class to generate the info for images of diagrams
  * 
  * @author aboyko
+ * @since 1.3
  *
  */
 public final class PartPositionInfoGenerator {
