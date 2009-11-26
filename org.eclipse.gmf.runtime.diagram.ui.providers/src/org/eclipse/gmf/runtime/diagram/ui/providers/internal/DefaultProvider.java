@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Mariot Chauvin <mariot.chauvin@obeo.fr> - bug 243888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.providers.internal;
@@ -144,7 +145,7 @@ public abstract class DefaultProvider
         mm = MapModeUtil.getMapMode(containerEditPart.getFigure());
         // setup graph
         DirectedGraph g = createGraph();
-        build_graph(g, containerEditPart.getChildren());
+        buildGraph(g, containerEditPart.getChildren());
         createGraphLayout().visit(g);
         // update the diagram based on the graph
         Command cmd = update_diagram(containerEditPart, g, false);
@@ -171,7 +172,7 @@ public abstract class DefaultProvider
         mm = MapModeUtil.getMapMode(containerEditPart.getFigure());
         
         DirectedGraph g = createGraph();
-        build_graph(g, selectedObjects);
+        buildGraph(g, selectedObjects);
         createGraphLayout().visit(g);
         // update the diagram based on the graph
         Command cmd = update_diagram(containerEditPart, g, true);
@@ -205,8 +206,25 @@ public abstract class DefaultProvider
      *            Map of editparts from the GEF to the temporary Nodes used for
      *            layout.
      * @return NodeList list of Nodes that is passed to the graph structure.
+     * @deprecated
+     * @see DefaultProvider#buildNodes(List, Map, Subgraph)
      */
     protected NodeList build_nodes(List selectedObjects, Map editPartToNodeDict, Subgraph root) {
+        return buildNodes(selectedObjects, editPartToNodeDict, root);
+    }
+ 
+    /**
+     * build_nodes Method to build up the nodes in the temporary Graph structure
+     * which the algorithm is executed on.
+     * 
+     * @param selectedObjects
+     *            List of selected objects to be layed out.
+     * @param editPartToNodeDict
+     *            Map of editparts from the GEF to the temporary Nodes used for
+     *            layout.
+     * @return NodeList list of Nodes that is passed to the graph structure.
+     */
+    protected NodeList buildNodes(List selectedObjects, Map editPartToNodeDict, Subgraph root) {
         ListIterator li = selectedObjects.listIterator();
 
         NodeList nodes = new NodeList();
@@ -243,7 +261,7 @@ public abstract class DefaultProvider
                 editPartToNodeDict.put(shapeEP, n);
                 nodes.add(n);
                 
-                build_borderNodes(shapeEP, n, editPartToNodeDict);
+                buildBorderNodes(shapeEP, n, editPartToNodeDict);
                 
             }
         }
@@ -267,8 +285,31 @@ public abstract class DefaultProvider
 	 * @param editPartToNodeDict
 	 *            the map of editparts to nodes
 	 * @since 2.1
+	 * @deprecated
+	 * @see DefaultProvider#buildBorderNodes(GraphicalEditPart, ConstantSizeNode, Map)
 	 */
     protected void build_borderNodes(GraphicalEditPart parentEP, ConstantSizeNode parentNode, Map editPartToNodeDict) {
+    	buildBorderNodes(parentEP, parentNode, editPartToNodeDict);
+    }
+    
+    /**
+	 * Since an editpart may contain border items that may need be laid out,
+	 * this is the place where border nodes can be created and added to the map
+	 * of editparts to nodes. If border items locations don't have much
+	 * semantical meaning and their locations are valubale notationally it's
+	 * best that border nodes are created here in this method. The
+	 * infrastructure for creating commands to move border items around is all
+	 * in place already. Creates border nodes for an editpart.
+	 * 
+	 * @param parentEP
+	 *            the editopart
+	 * @param parentNode
+	 *            the node for the editpart
+	 * @param editPartToNodeDict
+	 *            the map of editparts to nodes
+	 * @since 2.1
+	 */
+    protected void buildBorderNodes(GraphicalEditPart parentEP, ConstantSizeNode parentNode, Map editPartToNodeDict) {
     	if (!supportsBorderNodes()) {
     		return;
     	}
@@ -394,8 +435,25 @@ public abstract class DefaultProvider
      *            Map of editparts from the GEF to the temporary Nodes used for
      *            layout.
      * @return EdgeList list of Edges that is passed to the graph structure.
+     * @deprecated
+     * @see DefaultProvider#buildEdges(List, Map)
      */
     protected EdgeList build_edges(List selectedObjects, Map editPartToNodeDict) {
+    	return buildEdges(selectedObjects, editPartToNodeDict);
+    }
+    
+    /**
+     * build_edges Method to build up the edges in the temporary Graph structure
+     * which the algorithm is executed on.
+     * 
+     * selectedObjects List of selected objects to be layed out.
+     * 
+     * @param editPartToNodeDict
+     *            Map of editparts from the GEF to the temporary Nodes used for
+     *            layout.
+     * @return EdgeList list of Edges that is passed to the graph structure.
+     */
+    protected EdgeList buildEdges(List selectedObjects, Map editPartToNodeDict) {
 
         EdgeList edges = new EdgeList();
 
@@ -671,18 +729,35 @@ public abstract class DefaultProvider
      * @param selectedObjects
      *            List of editparts that the Nodes and Edges will be calculated
      *            from.
+     * @deprecated
+     * @see DefaultProvider#buildGraph(DirectedGraph, List)
      */
     protected void build_graph(DirectedGraph g, List selectedObjects) {
+    	buildGraph(g, selectedObjects);
+     }
+    
+    /**
+     * Method build_graph. This method will build the proxy graph that the
+     * layout is based on.
+     * 
+     * @param g
+     *            DirectedGraph structure that will be populated with Nodes and
+     *            Edges in this method.
+     * @param selectedObjects
+     *            List of editparts that the Nodes and Edges will be calculated
+     *            from.
+     */
+    protected void buildGraph(DirectedGraph g, List selectedObjects) {
         Hashtable editPartToNodeDict = new Hashtable(500);
         this.minX = -1;
         this.minY = -1;
-        NodeList nodes = build_nodes(selectedObjects, editPartToNodeDict,null);
+        NodeList nodes = buildNodes(selectedObjects, editPartToNodeDict,null);
 
         // append edges that should be added to the graph
         ArrayList objects = new ArrayList();
         objects.addAll(selectedObjects);
         objects.addAll(getRelevantConnections(editPartToNodeDict));
-        EdgeList edges = build_edges(objects, editPartToNodeDict);
+        EdgeList edges = buildEdges(objects, editPartToNodeDict);
         g.nodes = nodes;
         g.edges = edges;
         postProcessGraph(g,editPartToNodeDict);
