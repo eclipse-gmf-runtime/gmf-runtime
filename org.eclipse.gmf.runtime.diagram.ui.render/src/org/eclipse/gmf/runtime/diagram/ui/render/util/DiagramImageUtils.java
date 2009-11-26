@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.figures.IExpandableFigure;
  * Utility methods used by various diagram image generators
  * 
  * @author aboyko
+ * @since 1.3
  *
  */
 public final class DiagramImageUtils {
