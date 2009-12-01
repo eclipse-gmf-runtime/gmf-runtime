@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.printing.Printer;
+import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -147,9 +148,30 @@ public class SWTDiagramPrinter extends DiagramPrinter
                 if (pref.getBoolean(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS)) {
                     
                     //get workspace settings...
-                    if (dgrmEP.getDiagramPreferencesHint().getPreferenceStore() != null)
-                        pref = (IPreferenceStore)dgrmEP.getDiagramPreferencesHint().getPreferenceStore(); 
+                    if (dgrmEP.getDiagramPreferencesHint().getPreferenceStore() != null){
+                        pref = (IPreferenceStore)dgrmEP.getDiagramPreferencesHint().getPreferenceStore();
+                    }
                 }
+                
+            	// Ensure the preference value is properly updated when the
+				// user overrides the preference store with values from the
+				// print settings.
+				// Printing and preview use the preference settings, to
+				// calculate page size.
+				PrinterData printerData = printer.getPrinterData();
+				if (printerData != null) {
+					boolean useLandscape = (printerData.orientation == PrinterData.LANDSCAPE);
+					if (pref.getBoolean(WorkspaceViewerProperties.PREF_USE_LANDSCAPE) != useLandscape) {
+						pref.setValue(
+								WorkspaceViewerProperties.PREF_USE_LANDSCAPE,
+								useLandscape);
+					}
+					if (pref.getBoolean(WorkspaceViewerProperties.PREF_USE_PORTRAIT) == useLandscape) {
+						pref.setValue(
+								WorkspaceViewerProperties.PREF_USE_PORTRAIT,
+								!useLandscape);
+					}
+				}
                 
                 doPrintDiagram(dgrmEP, loadedPreferences, pref);
                 

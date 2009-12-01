@@ -621,6 +621,16 @@ JNIEXPORT jboolean JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_Print
 		env->SetObjectField(printerData, id, byteArray);
 		env->ReleaseByteArrayElements(byteArray, byteArrayElements, 0);
 
+	
+		//Set the orientation 
+		if((pDM->dmFields & DM_ORIENTATION) != 0) {		
+			jfieldID orientationField = env->GetFieldID(objectClass, "orientation", "I");
+			if(orientationField != NULL){
+				//The value of DMORIENT_LANDSCAPE==2 and DMORIENT_PORTRAIT==1 
+				//match up with PrinterData.LANDSCAPE==2 and PrinterData.PORTRAIT==1 on the java side.
+				env->SetIntField(printerData, orientationField, pDM->dmOrientation);
+			}
+		}
 		//set info from devNames
 		DEVNAMES* pDN = (DEVNAMES*) GlobalLock(pd.hDevNames);
 		env->SetObjectField(printerData, env->GetFieldID(objectClass, "driver", "Ljava/lang/String;"), env->NewString((LPWSTR)pDN + pDN->wDriverOffset,wcslen(((LPWSTR)pDN + pDN->wDriverOffset))));
