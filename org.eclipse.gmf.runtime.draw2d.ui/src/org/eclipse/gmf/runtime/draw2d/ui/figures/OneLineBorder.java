@@ -119,26 +119,30 @@ public class OneLineBorder extends LineBorder {
 		int one = MapModeUtil.getMapMode(figure).DPtoLP(1);
 		int widthInDP = getWidth() / one;
 		
-		int halfWidthInDP = MapModeUtil.getMapMode(figure).DPtoLP(widthInDP / 2);
-		tempRect.x += halfWidthInDP;
-		tempRect.y += halfWidthInDP;
-		tempRect.width -= getWidth();
-		tempRect.height -= getWidth();
+		int halfWidthInLP = MapModeUtil.getMapMode(figure).DPtoLP(widthInDP / 2);
 		
 		graphics.setLineWidth(getWidth());
 		graphics.setLineStyle(getStyle());
-
+		
 		switch (position) {
 			case PositionConstants.TOP :
+				tempRect.y += halfWidthInLP;
+				tempRect.height -= getWidth();
 				graphics.drawLine(tempRect.getTopLeft(), tempRect.getTopRight());				
 				break;
 			case PositionConstants.BOTTOM :	
+				tempRect.y += halfWidthInLP;
+				tempRect.height -= getWidth();
 				graphics.drawLine(tempRect.getBottomLeft(), tempRect.getBottomRight());
 				break;
 			case PositionConstants.LEFT :
+				tempRect.x += halfWidthInLP;
+				tempRect.width -= getWidth();
 				graphics.drawLine(tempRect.getTopLeft(), tempRect.getBottomLeft());
 				break;
 			case PositionConstants.RIGHT :
+				tempRect.x += halfWidthInLP;
+				tempRect.width -= getWidth();
 				graphics.drawLine(tempRect.getTopRight(), tempRect.getBottomRight());
 				break;
 		}
