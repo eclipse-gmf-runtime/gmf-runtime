@@ -29,6 +29,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.Resource.Factory.Registry;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -559,10 +561,29 @@ public class EMFCoreUtil {
             }
 		}
 		
+		Resource.Factory factory = null;
+		
 		URI uri = EcoreUtil.getURI(proxy);
 
-		Resource.Factory factory = Resource.Factory.Registry.INSTANCE
-			.getFactory(uri);
+		if (uri != null) {
+			Resource resource = proxy.eResource();
+			
+			if (resource != null) {
+				ResourceSet resourceSet = resource.getResourceSet();
+				
+				if (resourceSet != null) {
+					Registry registry = resourceSet.getResourceFactoryRegistry();
+					
+					if (registry != null) {
+						factory = registry.getFactory(uri);
+					}
+				}
+			}
+			
+			if (factory == null) {
+				factory = Resource.Factory.Registry.INSTANCE.getFactory(uri);
+			}
+		}
 
 		String result = null;
 		

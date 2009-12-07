@@ -21,6 +21,7 @@ import junit.textui.TestRunner;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmf.tests.runtime.emf.core.resources.GMFResourceModificationManagerTests;
+import org.eclipse.gmf.tests.runtime.emf.core.util.EMFCoreUtilTests;
 
 public class AllTests extends TestCase implements IApplication {
 
@@ -32,6 +33,7 @@ public class AllTests extends TestCase implements IApplication {
 		TestSuite suite = new TestSuite();
 		suite.addTest(GMFEditingDomainFactoryTests.suite());
 		suite.addTest(GMFResourceModificationManagerTests.suite());
+		suite.addTest(EMFCoreUtilTests.suite());
 		return suite;
 	}
 
