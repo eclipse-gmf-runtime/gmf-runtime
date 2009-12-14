@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,14 +16,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.examples.extlibrary.EXTLibraryFactory;
 import org.eclipse.emf.examples.extlibrary.Library;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
+import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 
 
 /**
@@ -272,10 +274,10 @@ public class RegressionTest	extends BaseClipboardTest {
 			
 			// get its branches and verify them
 			assertEquals(4, pastedLibrary.getBranches().size());
-			assertSame(pastedLibrary, ((Library) pastedLibrary.getBranches().get(0)).getParentBranch());
-			assertSame(pastedLibrary, ((Library) pastedLibrary.getBranches().get(1)).getParentBranch());
-			assertSame(pastedLibrary, ((Library) pastedLibrary.getBranches().get(2)).getParentBranch());
-			assertSame(pastedLibrary, ((Library) pastedLibrary.getBranches().get(3)).getParentBranch());
+			assertSame(pastedLibrary, (pastedLibrary.getBranches().get(0)).getParentBranch());
+			assertSame(pastedLibrary, (pastedLibrary.getBranches().get(1)).getParentBranch());
+			assertSame(pastedLibrary, (pastedLibrary.getBranches().get(2)).getParentBranch());
+			assertSame(pastedLibrary, (pastedLibrary.getBranches().get(3)).getParentBranch());
 			
 			// make sure that the original level1 branches are unchanged
 			assertSame(level1, level1a.getParentBranch());
@@ -309,6 +311,23 @@ public class RegressionTest	extends BaseClipboardTest {
 	
 			// check that the library was copied into the branches containment list
 			assertTrue(level12.getBranches().size() == 1);
+		}
+	}
+	
+	/**
+	 * Tests that the two <code>createClipboardSupport</code> methods will
+	 * return the same clipboard helper. The correct way is to call the method
+	 * that takes an <code>EObject</code>, but it is possible that clients are
+	 * still calling the method that takes an <code>EClass</code>.
+	 */
+	public void test_createClipboardSupportMethods() {
+		if (writing()) {
+			IClipboardSupport clipboardSupport = ClipboardUtil
+					.createClipboardSupport(level12book.eClass());
+			IClipboardSupport clipboardSupport2 = ClipboardUtil
+					.createClipboardSupport(level12book);
+
+			assertEquals(clipboardSupport, clipboardSupport2);
 		}
 	}
 }

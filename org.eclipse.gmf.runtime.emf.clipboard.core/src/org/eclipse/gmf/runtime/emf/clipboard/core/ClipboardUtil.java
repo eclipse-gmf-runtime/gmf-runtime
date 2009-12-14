@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -154,7 +154,7 @@ public class ClipboardUtil {
 				}
 				CopyOperation copyOperation = new CopyOperation(
 					monitor,
-					createClipboardSupport(first.eClass()),
+					createClipboardSupport(first),
 					eObjects, hints);
 				return copyOperation.copy();
 			}
@@ -231,7 +231,7 @@ public class ClipboardUtil {
 				PasteOperation.TOTAL_WORK);
 			IClipboardSupport helper = targetElement.isResource()
 				? DefaultClipboardSupport.getInstance()
-				: createClipboardSupport(((EObject)targetElement.getObject()).eClass());
+				: createClipboardSupport(((EObject)targetElement.getObject()));
 			if (string.length() == 0) {
 				return Collections.EMPTY_SET;
 			}
@@ -276,6 +276,10 @@ public class ClipboardUtil {
 	 * have a dedicated clipboard support implementation, then a default
 	 * implementation is provided that implements semantics similar to the
 	 * {@link org.eclipse.emf.ecore.util.EcoreUtil.Copier} class.
+	 * <p>
+	 * <b>WARNING: DO NOT USE.</b> Calling this method does not support the full
+	 * extensibility capabilities of the ClipboardSupport extension point. Use
+	 * the method {@link #createClipboardSupport(EObject)} instead.
 	 * 
 	 * @param eClass a metaclass
 	 * @return the <code>eClass</code>'s metamodel's clipboard support
@@ -289,6 +293,30 @@ public class ClipboardUtil {
 		
 		if (factory != null) {
 			result = factory.newClipboardSupport(ePackage);
+		}
+		
+		return result;
+	}
+
+	/**
+	 * Obtains the clipboard copy/paste support utility, if any, for the
+	 * specified <code>eObject</code>. If there is not clipboard support
+	 * implementation provided for this EObject, then a default implementation
+	 * is provided that implements semantics similar to the
+	 * {@link org.eclipse.emf.ecore.util.EcoreUtil.Copier} class.
+	 * 
+	 * @param eObject
+	 *            an EObject
+	 * @return the <code>eObject</code>'s clipboard support utility, or a null
+	 *         implementation if none is registered for it (not actually
+	 *         <code>null</code>)
+	 */
+	public static IClipboardSupport createClipboardSupport(EObject eObject) {
+		IClipboardSupport result = DefaultClipboardSupport.getInstance();
+		IClipboardSupportFactory factory = ClipboardSupportManager.lookup(eObject);
+		
+		if (factory != null) {
+			result = factory.newClipboardSupport(eObject.eClass().getEPackage());
 		}
 		
 		return result;
