@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.gmf.runtime.emf.clipboard.core">
+<schema targetNamespace="org.eclipse.gmf.runtime.emf.clipboard.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.gmf.runtime.emf.clipboard.core" id="clipboardSupport" name="Clipboard Support"/>
@@ -16,6 +16,11 @@ special treatment.
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="factory" minOccurs="1" maxOccurs="unbounded"/>
@@ -57,12 +62,12 @@ EMF objects.
          </documentation>
       </annotation>
       <complexType>
-         <attribute name="nsURI" type="string" use="required">
+         <attribute name="nsURI" type="string">
             <annotation>
                <documentation>
-                  Namespace URI identifying the EPackage for which the extension
-provides an &lt;code&gt;IClipboardSupportFactory&lt;/code&gt; implementation.
+                  Either the nsURI or the policy attribute needs to be used.  Namespace URI identifying the EPackage for which the extension provides an &lt;code&gt;IClipboardSupportFactory&lt;/code&gt; implementation.
 The EPackage represents an EMF metamodel.
+WARNING: DO NOT USE.  Providing an nsURI does not support the full extensibility capabilities of the ClipboardSupport extension point. Providing a policy class is the recommended approach.
                </documentation>
             </annotation>
          </attribute>
@@ -104,6 +109,16 @@ will be devised soon.
                </restriction>
             </simpleType>
          </attribute>
+         <attribute name="policy" type="string">
+            <annotation>
+               <documentation>
+                  Either the nsURI or the policy attribute needs to be used.  Providing a policy class supports the full extensibility capabilities of the ClipboardSupport extension point and is the recommended approach.  The policy class is used to answer whether or not the provider provides for an object, without causing plug-ins to be activated (the policy class needs to be placed in a package that will not cause the plugin to load to support this).
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupportPolicy"/>
+               </appInfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
@@ -135,6 +150,20 @@ model:
       </documentation>
    </annotation>
 
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2005  IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
    <annotation>
       <appInfo>
          <meta.section type="apiInfo"/>
@@ -145,29 +174,6 @@ model:
 interface.  A support factory is responsible for creating
 &lt;code&gt;IClipboardSupport&lt;/code&gt;s for the packages on which it is
 registered on this extension point.
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-        Copyright (c) 2005  IBM Corporation and others.&lt;br&gt;
-	All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the Eclipse Public License v1.0 
-	which accompanies this distribution, and is available at 
-	&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-
       </documentation>
    </annotation>
 
