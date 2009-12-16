@@ -25,6 +25,8 @@ public final class InternalDiagramUIMessages extends NLS {
 	public static String CreateOrSelectElementCommand_PopupMenu_CreateMenuItem_Text;
 	public static String CreateOrSelectElementCommand_PopupMenu_SelectExistingElementMenuItem_Text;
 	public static String CreateOrSelectElementCommand_PopupMenu_CreateWithoutBindingMenuItem_Text;
+	
+	public static String Text_InitialValue;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, InternalDiagramUIMessages.class);

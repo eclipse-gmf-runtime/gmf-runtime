@@ -15,7 +15,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.InternalDiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.optimal.ShapeViewFactory;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -40,5 +43,11 @@ public class TextShapeViewFactory
 
 		getViewService().createNode(semanticAdapter, view,
 			CommonParserHint.DESCRIPTION, ViewUtil.APPEND, persisted, getPreferencesHint());
+		
+		// Set initial description to "Text"
+		ShapeStyle shapeStyle = (ShapeStyle)view.getStyle(NotationPackage.Literals.SHAPE_STYLE);
+		if (shapeStyle != null) {
+			shapeStyle.setDescription(InternalDiagramUIMessages.Text_InitialValue);
+		}		
 	}
 }
