@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.descriptors;
 
 import java.util.StringTokenizer;
 
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.dialogs.GradientSelectionDialog;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.GradientStyle;
@@ -147,13 +148,13 @@ public class GradientCellEditor extends DialogCellEditor {
 					FigureUtilities.RGBToInteger(dialog.getGradientColor1()), 
 					FigureUtilities.RGBToInteger(dialog.getGradientColor2()), 
 					dialog.getGradientStyle());
-		} else {
+		} else if (result == -1){ // user selected Clear button
 			// make the calls here, since parent ignores null, and we need to clear gradient
 			markDirty();
             doSetValue(null);
             fireApplyEditorValue();
-			return null;
 		}
+		return null;
 	}
 	
 
@@ -183,7 +184,7 @@ public class GradientCellEditor extends DialogCellEditor {
 	 */
 	protected void updateContents(Object value) {
 		if (value == null) {
-			gradientLabel.setText("");
+			gradientLabel.setText(StringStatics.BLANK); 
 		} else if (value instanceof String) {
 			gradientLabel.setText((String)value);
 		} else {
