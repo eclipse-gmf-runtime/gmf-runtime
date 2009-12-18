@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ExposeHelper;
@@ -23,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
+import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Ratio;
 import org.eclipse.gmf.runtime.notation.TitleStyle;
@@ -73,7 +75,8 @@ public abstract class ResizableCompartmentEditPart
 		refreshCollapsed();
 		refreshRatio();
 		refreshLineWidth();
-		refreshLineType();		
+		refreshLineType();	
+		refreshBackgroundColor();
 	}
 
 	/**
@@ -146,6 +149,9 @@ public abstract class ResizableCompartmentEditPart
 			refreshLineWidth();
 		} else if (NotationPackage.eINSTANCE.getLineTypeStyle_LineType().equals(feature)) {
 			refreshLineType();
+		} else if (NotationPackage.eINSTANCE.getFillStyle_Gradient().equals(feature) ||
+				NotationPackage.eINSTANCE.getFillStyle_FillColor().equals(feature)) {				
+			refreshBackgroundColor();			
 		} else 
 			super.handleNotificationEvent(event);
 	}
@@ -291,4 +297,31 @@ public abstract class ResizableCompartmentEditPart
 		}
 		return false;
 	}
+	
+    /**
+	 * This method refreshes background color of scroll bars (when they are
+	 * present). Actually, scroll bars inherit background color from their parent shape,
+	 * but in case of gradient we want to set the background to the second color
+	 * of gradient.
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#refreshBackgroundColor()
+	 */
+    protected void refreshBackgroundColor() {
+    	if (getPrimaryView() == null) {
+    		return;
+    	}
+        FillStyle style = (FillStyle)getPrimaryView().getStyle(NotationPackage.Literals.FILL_STYLE);
+        ScrollPane scrollPane = getCompartmentFigure().getScrollPane();
+        if (style != null && scrollPane != null) {
+    		Color color = null;
+    		if (style.getGradient() == null) {
+    			color = DiagramColorRegistry.getInstance().getColor(new Integer(style.getFillColor()));
+    		} else {
+    			color = DiagramColorRegistry.getInstance().getColor(new Integer(style.getGradient().getGradientColor2()));
+    		}
+    		if (color != null) {
+    			scrollPane.setBackgroundColor(color);
+    		}
+    	}
+    }		
 }

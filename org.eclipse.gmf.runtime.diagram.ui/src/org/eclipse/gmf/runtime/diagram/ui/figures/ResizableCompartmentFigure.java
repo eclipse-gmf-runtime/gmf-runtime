@@ -182,16 +182,18 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 */
 	public void expand() {
         scrollPane.getViewport().setVisible(true);
+        scrollPane.setHorizontalScrollBarVisibility(ScrollPane.AUTOMATIC);
+        scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
         if (scrollPane instanceof AnimatableScrollPane) {
             ((AnimatableScrollPane)scrollPane).expand();
         }
-		scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
 	}
 	/**
 	 * Collapses the compartment figure
 	 */
 	public void collapse() {
 		scrollPane.setVerticalScrollBarVisibility(ScrollPane.NEVER);
+		scrollPane.setHorizontalScrollBarVisibility(ScrollPane.NEVER);
         if (scrollPane instanceof AnimatableScrollPane) {
             ((AnimatableScrollPane)scrollPane).collapse();
         }
@@ -205,13 +207,15 @@ public class ResizableCompartmentFigure extends NodeFigure {
         if (scrollPane instanceof AnimatableScrollPane) {
             ((AnimatableScrollPane)scrollPane).setExpanded(true);
         }
-		scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
+        scrollPane.setHorizontalScrollBarVisibility(ScrollPane.AUTOMATIC);
+		scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);		
 	}
 	/**
 	 * Collapses the compartment figure
 	 */
 	public void setCollapsed() {
 		scrollPane.setVerticalScrollBarVisibility(ScrollPane.NEVER);
+		scrollPane.setHorizontalScrollBarVisibility(ScrollPane.NEVER);
         if (scrollPane instanceof AnimatableScrollPane) {
             ((AnimatableScrollPane)scrollPane).setExpanded(false);
         }

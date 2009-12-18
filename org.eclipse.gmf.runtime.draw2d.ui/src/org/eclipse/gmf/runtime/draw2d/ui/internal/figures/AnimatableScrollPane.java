@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2003  IBM Corporation and others.
+ * Copyright (c) 2000, 2009  IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -134,11 +134,11 @@ public class AnimatableScrollPane extends ScrollPane {
     
     protected void createVerticalScrollBar() {
         IMapMode mm= MapModeUtil.getMapMode(this);
-        int mm_1 = mm.DPtoLP(1);
-        Insets insets = new Insets(mm_1, mm.DPtoLP(2),
-            mm_1, mm.DPtoLP(0));
-        int mm_15 = mm.DPtoLP(15);
-        Dimension size = new Dimension(mm_15, mm_15);
+        int mm_0 = mm.DPtoLP(0);
+        Insets insets = new Insets(mm_0, mm.DPtoLP(2),
+        		mm_0, mm_0);
+        int mm_14 = mm.DPtoLP(14);
+        Dimension size = new Dimension(mm_14, mm_14);
         setVerticalScrollBar( new ListScrollBar(Orientable.VERTICAL, insets, size, 
             mm.DPtoLP(10), mm.DPtoLP(50)));
     }
@@ -146,11 +146,12 @@ public class AnimatableScrollPane extends ScrollPane {
     
     protected void createHorizontalScrollBar() {
         IMapMode mm= MapModeUtil.getMapMode(this);
+        int mm_0 = mm.DPtoLP(0);
         int mm_1 = mm.DPtoLP(1);
-        Insets insets = new Insets(mm_1, mm.DPtoLP(2),
-            mm_1, mm.DPtoLP(0));
-        int mm_15 = mm.DPtoLP(15);
-        Dimension size = new Dimension(mm_15, mm_15);
+        Insets insets = new Insets(mm_0, mm_0,
+        		mm_0, mm_1);
+        int mm_13 = mm.DPtoLP(12);
+        Dimension size = new Dimension(mm_13, mm_13);
         setHorizontalScrollBar( new ListScrollBar(Orientable.HORIZONTAL, insets, size, 
             mm.DPtoLP(10), mm.DPtoLP(50)));
     }
@@ -163,7 +164,4 @@ public class AnimatableScrollPane extends ScrollPane {
     public ScrollBar basicGetHorizontalScrollBar() {        
         return hBar;
     }
-
-
-
 }
