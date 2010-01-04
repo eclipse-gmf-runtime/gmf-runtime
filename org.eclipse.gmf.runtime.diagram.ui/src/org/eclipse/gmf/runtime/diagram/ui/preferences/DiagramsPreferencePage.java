@@ -61,6 +61,8 @@ public class DiagramsPreferencePage
 	
 	private BooleanFieldEditor showStatusLine = null;
 	
+	private Composite globalSettingsComposite;
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage#addFields(org.eclipse.swt.widgets.Composite)
 	 */
@@ -75,39 +77,39 @@ public class DiagramsPreferencePage
 		generalGlobalGroup.setLayoutData(gridData);
 		generalGlobalGroup.setText(GLOBAL_SETTINGS_GROUP_LABEL);
 
-		Composite composite = new Composite(generalGlobalGroup, SWT.NONE);		
+		globalSettingsComposite = new Composite(generalGlobalGroup, SWT.NONE);		
 
 		showConnectionHandles = new BooleanFieldEditor(
 			IPreferenceConstants.PREF_SHOW_CONNECTION_HANDLES,
-			SHOW_CONNECTION_HANDLES_LABEL, composite);
+			SHOW_CONNECTION_HANDLES_LABEL, globalSettingsComposite);
 		addField(showConnectionHandles);
 
 		showPopupBars = new BooleanFieldEditor(
 			IPreferenceConstants.PREF_SHOW_POPUP_BARS, SHOW_POPUP_BARS_LABEL,
-			composite);
+			globalSettingsComposite);
 		addField(showPopupBars);
 		
 		enableAnimatedLayout = new BooleanFieldEditor(
 			IPreferenceConstants.PREF_ENABLE_ANIMATED_LAYOUT, ENABLE_ANIMATED_LAYOUT,
-			composite);
+			globalSettingsComposite);
 		addField(enableAnimatedLayout);
 		
 		enableAnimatedZoom = new BooleanFieldEditor(
 			IPreferenceConstants.PREF_ENABLE_ANIMATED_ZOOM, ENABLE_ANIMATED_ZOOM,
-			composite);
+			globalSettingsComposite);
 		addField(enableAnimatedZoom);
 
 		enableAntiAlias = new BooleanFieldEditor(
 			IPreferenceConstants.PREF_ENABLE_ANTIALIAS, ENABLE_ANTIALIAS,
-			composite);
+			globalSettingsComposite);
 		addField(enableAntiAlias);
         
 		// enable anti-aliasing only if advanced graphics is supported.
-        enableAntiAlias.setEnabled(GCUtilities.supportsAdvancedGraphics(),composite);
+        enableAntiAlias.setEnabled(GCUtilities.supportsAdvancedGraphics(), globalSettingsComposite);
         
         showStatusLine = new BooleanFieldEditor(
 				IPreferenceConstants.PREF_SHOW_STATUS_LINE, SHOW_STATUS_LINE,
-				composite);
+				globalSettingsComposite);
 		addField(showStatusLine);
 		
 	}
@@ -140,6 +142,14 @@ public class DiagramsPreferencePage
 	protected void initHelp() {
 		//setPageHelpContextId(IHelpContextIds.VZ_U_UMLV_PAGE_PREF);
 		//do nothing, no context help for modeler yet
+	}
+	
+	/**
+	 * Returns the Composite containing global settings controls 
+	 * @return global settings controls container
+	 */
+	final protected Composite getGlobalSettingsComposite() {
+		return globalSettingsComposite;
 	}
 	
 }
