@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.emf.clipboard.core.BasePasteOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
+import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport2;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteTarget;
 
 /**
@@ -82,8 +83,21 @@ public class PasteOperation
 		PasteIntoParentOperation parentPasteProcess = (PasteIntoParentOperation) parentPasteRecordMap
 			.get(parentElement);
 		if (parentPasteProcess == null) {
-			parentPasteProcess = new PasteIntoParentOperation(this,
-				parentElement, getHintsMap());
+			
+			IClipboardSupport helper = getClipboardOperationHelper();
+			if (helper instanceof IClipboardSupport2
+					&& ((IClipboardSupport2) helper)
+							.shouldOverridePasteIntoParentOperation(
+									parentElement, getHintsMap())) {
+				parentPasteProcess = ((IClipboardSupport2) helper)
+						.getPasteIntoParentOperation(this, parentElement,
+								getHintsMap());
+			} 
+			
+			if (parentPasteProcess == null) {
+				parentPasteProcess = new PasteIntoParentOperation(this,
+						parentElement, getHintsMap());
+			}
 			parentPasteRecordMap.put(parentElement, parentPasteProcess);
 		}
 		return parentPasteProcess;
