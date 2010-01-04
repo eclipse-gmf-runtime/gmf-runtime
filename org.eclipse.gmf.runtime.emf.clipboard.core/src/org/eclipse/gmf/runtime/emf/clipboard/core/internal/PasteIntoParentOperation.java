@@ -450,7 +450,7 @@ public class PasteIntoParentOperation
 		}
 	}
 
-	private LoadingEMFResource loadEObjects()
+	protected LoadingEMFResource loadEObjects()
 		throws Exception {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(
 			getResourceInfo().data.getBytes(getResourceInfo().encoding));

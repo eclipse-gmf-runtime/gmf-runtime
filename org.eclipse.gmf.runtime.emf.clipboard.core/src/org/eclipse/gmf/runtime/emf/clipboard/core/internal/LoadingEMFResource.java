@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 /**
  * @author Yasser Lulu
  */
-class LoadingEMFResource
+public class LoadingEMFResource
 	extends SerializationEMFResource {
 
 	private final ResourceSet rset;
@@ -33,7 +33,7 @@ class LoadingEMFResource
 
 	private Map eObjectToIDMapCopy;
 
-	LoadingEMFResource(ResourceSet rset, String encoding, Map defaultLoadOptions,
+	public LoadingEMFResource(ResourceSet rset, String encoding, Map defaultLoadOptions,
 		IClipboardSupport clipboardOperationHelper) {
 		super(encoding, clipboardOperationHelper);
 		this.rset = rset;

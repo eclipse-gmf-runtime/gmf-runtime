@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -437,7 +437,7 @@ public class CopyOperation
 			new IllegalArgumentException("Uncopyable Object")); //$NON-NLS-1$
 	}
 
-	private CopyParentsCopier getCopyParentsCopier() {
+	protected CopyParentsCopier getCopyParentsCopier() {
 		if (copyParentsCopierCopier == null) {
 			copyParentsCopierCopier = new CopyParentsCopier();
 		}
@@ -445,7 +445,7 @@ public class CopyOperation
 
 	}
 
-	private class CopyParentsCopier
+	protected class CopyParentsCopier
 		extends EcoreUtil.Copier {
 
 		private static final long serialVersionUID = 6178429496879264655L;
@@ -481,7 +481,7 @@ public class CopyOperation
 			return this;
 		}
 
-		Map getCopy2ObjectMap() {
+		public Map getCopy2ObjectMap() {
 			return copyToObjectMap;
 		}
 
