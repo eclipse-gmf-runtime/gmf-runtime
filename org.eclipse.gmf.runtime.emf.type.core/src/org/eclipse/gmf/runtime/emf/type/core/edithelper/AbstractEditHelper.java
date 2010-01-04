@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.edithelper;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,6 +40,7 @@ import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyReferenceCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.MoveElementsCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
+import org.eclipse.gmf.runtime.emf.type.core.internal.impl.EClassUtil;
 import org.eclipse.gmf.runtime.emf.type.core.internal.requests.RequestCacheEntries;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
@@ -579,7 +579,8 @@ public abstract class AbstractEditHelper
 				eClass);
 
 		if (result == null) {
-			List superTypes = new ArrayList(eClass.getEAllSuperTypes());
+			// Bugzilla 298661: assume all models implicitly extend EObject
+			List superTypes = EClassUtil.getEAllSuperTypes(eClass);
 			Collections.reverse(superTypes);
 
 			Iterator i = superTypes.iterator();

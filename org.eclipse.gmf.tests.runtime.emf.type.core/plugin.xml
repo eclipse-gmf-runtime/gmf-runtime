@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<!-- Copyright (c) 2005  IBM Corporation and others.                       -->
+<!-- Copyright (c) 2005, 2010  IBM Corporation and others.                       -->
 <!-- All rights reserved. This program and the accompanying materials      -->
 <!-- are made available under the terms of the Eclipse Public License v1.0 -->
 <!-- which accompanies this distribution, and is available at              -->
@@ -397,6 +397,46 @@
       <binding 
             context="org.eclipse.gmf.tests.runtime.emf.type.core.157788_context">
          <elementType ref="org.eclipse.gmf.tests.runtime.emf.type.core.157788.employee"/>
+      </binding> 
+   </extension>
+   
+   <!-- EObject type for testing bugzilla 298661 -->
+   <extension
+         point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+         <metamodel
+                nsURI="http://www.eclipse.org/emf/2002/Ecore">
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.core.298661.eObject"     
+                   name="EObject"
+                   eclass="EObject"> 
+           </metamodelType>
+         </metamodel>
+         <metamodel
+                nsURI="http:///org.eclipse.gmf.tests.runtime.emf.type.core/Employee.ecore">      
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.core.298661.student"     
+                   name="Student"
+                   eclass="Student"> 
+           </metamodelType>
+         </metamodel>
+   </extension> 
+   
+   <!-- client context that is bound to the EObject type for bugzilla 298661 -->
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings">
+      <clientContext id="org.eclipse.gmf.tests.runtime.emf.type.core.298661_context">
+         <enablement>
+            <test
+               property="org.eclipse.gmf.runtime.emf.core.editingDomain"
+               value="org.eclipse.gmf.tests.runtime.emf.type.core.EditingDomain"/>
+            <test
+               property="org.eclipse.gmf.tests.runtime.emf.type.core.resourceURI"
+               value="null://org.eclipse.gmf.tests.runtime.emf.type.core.298661"/>
+         </enablement>
+      </clientContext> 
+
+      <binding 
+            context="org.eclipse.gmf.tests.runtime.emf.type.core.298661_context">
+         <elementType pattern="org.eclipse.gmf.tests.runtime.emf.type.core.298661.*"/>
       </binding> 
    </extension>
       

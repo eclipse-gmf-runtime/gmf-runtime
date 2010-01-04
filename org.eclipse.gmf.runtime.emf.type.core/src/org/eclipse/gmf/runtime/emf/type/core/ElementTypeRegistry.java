@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
@@ -45,6 +46,7 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelDescr
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.SpecializationTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.DefaultMetamodelType;
+import org.eclipse.gmf.runtime.emf.type.core.internal.impl.EClassUtil;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.SpecializationTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
@@ -410,9 +412,10 @@ public class ElementTypeRegistry {
 		for (Iterator i = classifiers.iterator(); i.hasNext();) {
 			EClassifier nextClassifier = (EClassifier) i.next();
 
+			// Bugzilla 298661: assume all models implicitly extend EObject
 			if (nextClassifier instanceof EClass
-				&& ((EClass) nextClassifier).getEAllSuperTypes()
-					.contains(eType)) {
+					&& ((eType == EcorePackage.Literals.EOBJECT) || ((EClass) nextClassifier)
+							.getEAllSuperTypes().contains(eType))) {
 				result.add(nextClassifier);
 			}
 		}
@@ -645,7 +648,9 @@ public class ElementTypeRegistry {
 			}
 		} 
 		// Find the metamodel type for the nearest supertype.
-		List supertypes = eClass.getEAllSuperTypes();
+		// Bugzilla 298661: assume all models implicitly extend EObject
+		List supertypes = EClassUtil.getEAllSuperTypes(eClass);
+		
 		for (int i = supertypes.size() - 1; i >= 0; i--) {
 			EClass nextEClass = (EClass) supertypes.get(i);
 
