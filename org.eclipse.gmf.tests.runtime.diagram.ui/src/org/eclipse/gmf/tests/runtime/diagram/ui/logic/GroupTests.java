@@ -428,13 +428,14 @@ public class GroupTests
         viewer.deselectAll();
 
         // should be disabled when there is only one shape and connections are included in the selection
-        viewer.setSelection(new StructuredSelection(getDiagramEditPart()
-            .getPrimaryEditParts()));
+        List<EditPart> selection = new LinkedList<EditPart>(getDiagramEditPart().getConnections());
+        selection.add(getNWShape());
+        viewer.setSelection(new StructuredSelection(selection));
         action.refresh();
         assertFalse(action.isEnabled());
         
         // should be enabled when connections are included in the selection
-        List<EditPart> selection = new LinkedList<EditPart>(getDiagramEditPart().getConnections());
+        selection = new LinkedList<EditPart>(getDiagramEditPart().getConnections());
         selection.addAll(getContainerEP().getChildren());
         viewer.setSelection(new StructuredSelection(selection));
         action.refresh();
