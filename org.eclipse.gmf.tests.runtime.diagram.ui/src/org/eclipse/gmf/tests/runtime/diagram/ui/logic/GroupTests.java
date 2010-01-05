@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -414,7 +414,8 @@ public class GroupTests
             .getFirstElement() instanceof GroupEditPart);
     }
 
-    public void testGroupActionEnablement()
+    @SuppressWarnings("unchecked")
+	public void testGroupActionEnablement()
         throws Exception {
         setupShapes();
 
@@ -426,9 +427,16 @@ public class GroupTests
             .getDiagramGraphicalViewer();
         viewer.deselectAll();
 
-        // should be enabled when connections are included in the selection
+        // should be disabled when there is only one shape and connections are included in the selection
         viewer.setSelection(new StructuredSelection(getDiagramEditPart()
             .getPrimaryEditParts()));
+        action.refresh();
+        assertFalse(action.isEnabled());
+        
+        // should be enabled when connections are included in the selection
+        List<EditPart> selection = new LinkedList<EditPart>(getDiagramEditPart().getConnections());
+        selection.addAll(getContainerEP().getChildren());
+        viewer.setSelection(new StructuredSelection(selection));
         action.refresh();
         assertTrue(action.isEnabled());
 
@@ -436,12 +444,6 @@ public class GroupTests
         viewer.setSelection(new StructuredSelection(getNWShape()));
         action.refresh();
         assertFalse(action.isEnabled());
-
-        // should be enabled when connections are included in the selection
-        viewer.setSelection(new StructuredSelection(getDiagramEditPart()
-            .getPrimaryEditParts()));
-        action.refresh();
-        assertTrue(action.isEnabled());
 
         // should be disabled when only connections are selected
         viewer.setSelection(new StructuredSelection(getDiagramEditPart()
