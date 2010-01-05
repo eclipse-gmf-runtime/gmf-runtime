@@ -51,6 +51,10 @@ import org.eclipse.swt.graphics.Font;
  */
 public class ResizableCompartmentFigure extends NodeFigure {
 
+	private final static int FLAG__FIT_CONTENTS = MAX_FLAG << 1;
+	
+	protected final static int FRAME_MAX_FLAG = FLAG__FIT_CONTENTS;
+
 	private boolean _horizontal = false;
 
 	/**
@@ -357,14 +361,19 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 */
 	public Dimension getPreferredSize(int wHint, int hHint) {
 		Dimension p = super.getPreferredSize(wHint, hHint);
-		return p.getUnioned(getMinimumSize(wHint, hHint));
+		return p.getUnioned(minSize != null ? minSize : getMinClientDimension()
+				.getExpanded(getInsets().getWidth(), getInsets().getHeight()));
 	}
+	
 	/**
 	 * @return makes sure that we can fit the collapse handles and the
 	 * contents of the scroll pane. 
 	 * @see org.eclipse.draw2d.IFigure#getMinimumSize(int, int)
 	 */
-	public Dimension getMinimumSize(int w, int h) {
+	public Dimension getMinimumSize(int w, int h) {		
+		if (isFitContents()) {
+			return getPreferredSize(w, h);
+		}
 		
 		if (minSize != null)
 			return minSize;
@@ -385,9 +394,9 @@ public class ResizableCompartmentFigure extends NodeFigure {
 		if (w >= 0)
 			minSize.width = Math.min(minSize.width, w);
 		
-		return minSize;
+		return minSize;		
 	}
-
+	
 	/**
 	 * getter for the horizontal flag
 	 * @return the horizontal flag
@@ -485,4 +494,28 @@ public class ResizableCompartmentFigure extends NodeFigure {
 			isScrollPaneInitialized = true;
 		}
 	}
+
+	/**
+	 * Checks whether the "fit contents" flag is set
+	 * @return <code>true</code> if fit contents flag is set
+	 */
+	public boolean isFitContents() {
+		return (this.flags & FLAG__FIT_CONTENTS) != 0; 
+	}
+	
+	/**
+	 * Sets the "fit contents" flag and updates the figure accordingly
+	 * @param fitContents
+	 */
+	public void setFitContents(boolean fitContents) {
+		if (fitContents != isFitContents()) {
+			if (fitContents) {
+				this.flags |= FLAG__FIT_CONTENTS;
+			} else {
+				this.flags &= ~FLAG__FIT_CONTENTS;
+			}
+			revalidate();
+		}
+	}
+
 }
