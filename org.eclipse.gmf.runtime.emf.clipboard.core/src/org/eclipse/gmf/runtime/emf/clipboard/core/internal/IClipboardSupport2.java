@@ -7,12 +7,13 @@
  * | restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  * +------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import java.util.Map;
 
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.PasteIntoParentOperation;
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.PasteOperation;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
+import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
+import org.eclipse.gmf.runtime.emf.clipboard.core.PasteTarget;
 
 /**
  * An additional interface that can be implemented by clients to inject
