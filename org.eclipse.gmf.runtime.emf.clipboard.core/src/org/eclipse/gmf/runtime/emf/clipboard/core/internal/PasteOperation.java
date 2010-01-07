@@ -18,7 +18,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.emf.clipboard.core.BasePasteOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
-import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport2;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteTarget;
 
 /**
