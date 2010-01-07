@@ -30,7 +30,6 @@
                   name="%resourceFixupValidation.name"
                   id="org.eclipse.gmf.runtime.emf.core.ResourceFixup"
                   statusCode="1">
-               <target class="EObject"/>
                <description>
                   %resourceFixupValidation.description
                </description>
@@ -46,7 +45,6 @@
                   name="%eobjectFixupValidation.name"
                   id="org.eclipse.gmf.runtime.emf.core.IdFixup"
                   statusCode="2">
-               <target class="EObject"/>
                <description>
                   %eobjectFixupValidation.description
                </description>
