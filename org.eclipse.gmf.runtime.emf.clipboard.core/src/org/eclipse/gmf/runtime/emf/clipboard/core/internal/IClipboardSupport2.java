@@ -1,17 +1,17 @@
-/*
- * +------------------------------------------------------------------------+
- * | Licensed Materials - Property of IBM                                   |
- * | Copyright IBM Corp. 2009.  All Rights Reserved.                        |
- * |                                                                        |
- * | US Government Users Restricted Rights - Use, duplication or disclosure |
- * | restricted by GSA ADP Schedule Contract with IBM Corp.                 |
- * +------------------------------------------------------------------------+
- */
+/******************************************************************************
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    IBM Corporation - initial API and implementation
+ ****************************************************************************/
 package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import java.util.Map;
 
-import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteTarget;
 
