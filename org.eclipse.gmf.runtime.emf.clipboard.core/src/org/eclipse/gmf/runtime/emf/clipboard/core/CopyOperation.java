@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -437,6 +437,9 @@ public class CopyOperation
 			new IllegalArgumentException("Uncopyable Object")); //$NON-NLS-1$
 	}
 
+	/**
+	 * @since 1.3
+	 */
 	protected CopyParentsCopier getCopyParentsCopier() {
 		if (copyParentsCopierCopier == null) {
 			copyParentsCopierCopier = new CopyParentsCopier();
@@ -445,6 +448,9 @@ public class CopyOperation
 
 	}
 
+	/**
+	 * @since 1.3
+	 */
 	protected class CopyParentsCopier
 		extends EcoreUtil.Copier {
 
