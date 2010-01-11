@@ -147,6 +147,7 @@ public class DiagramsPreferencePage
 	/**
 	 * Returns the Composite containing global settings controls 
 	 * @return global settings controls container
+	 * @since 1.3
 	 */
 	final protected Composite getGlobalSettingsComposite() {
 		return globalSettingsComposite;

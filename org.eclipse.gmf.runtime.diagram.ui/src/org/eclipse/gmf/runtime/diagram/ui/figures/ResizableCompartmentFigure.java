@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,6 +53,9 @@ public class ResizableCompartmentFigure extends NodeFigure {
 
 	private final static int FLAG__FIT_CONTENTS = MAX_FLAG << 1;
 	
+	/**
+	 * @since 1.3
+	 */
 	protected final static int FRAME_MAX_FLAG = FLAG__FIT_CONTENTS;
 
 	private boolean _horizontal = false;
@@ -494,6 +497,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	/**
 	 * Checks whether the "fit contents" flag is set
 	 * @return <code>true</code> if fit contents flag is set
+	 * @since 1.3
 	 */
 	public boolean isFitContents() {
 		return (this.flags & FLAG__FIT_CONTENTS) != 0; 
@@ -502,6 +506,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	/**
 	 * Sets the "fit contents" flag and updates the figure accordingly
 	 * @param fitContents
+	 * @since 1.3
 	 */
 	public void setFitContents(boolean fitContents) {
 		if (fitContents != isFitContents()) {
