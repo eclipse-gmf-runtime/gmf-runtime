@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -187,10 +187,6 @@ public abstract class AttachShapeAction
 			this.y1 = y1;
 			this.x2 = x2;
 			this.y2 = y2;
-		}
-
-		public Rectangle toRectangle() {
-			return new Rectangle(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
 		}
 	}
 
