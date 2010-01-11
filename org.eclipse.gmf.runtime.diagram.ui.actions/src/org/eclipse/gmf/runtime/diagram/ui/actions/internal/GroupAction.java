@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,11 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -74,21 +71,13 @@ public class GroupAction
     }
 
     protected List createOperationSet() {
-		List selection = getSelectedObjects();
-		if (selection.size() <= 1
-				|| !(selection.get(0) instanceof IGraphicalEditPart)) {
-			return Collections.EMPTY_LIST;
-		}
-		List<GraphicalEditPart> operationSet = new ArrayList<GraphicalEditPart>();
-		for (GraphicalEditPart editpart : (List<GraphicalEditPart>) selection) {
-			if (!(editpart instanceof ConnectionEditPart)
-					&& !ToolUtilities.isAncestorContainedIn(operationSet,
-							editpart)) {
-				operationSet.add(editpart);
-			}
-		}
-		return operationSet;
-	}
+        List selection = getSelectedObjects();
+        if (selection.size() <= 1
+            || !(selection.get(0) instanceof IGraphicalEditPart))
+            return Collections.EMPTY_LIST;
+
+        return ToolUtilities.getSelectionWithoutDependants(selection);
+    }
 
     protected boolean isSelectionListener() {
         return true;
