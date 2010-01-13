@@ -360,9 +360,9 @@ public class LineSeg
 		 * We need perform the calculations in double numbers to avoid possible integer
 		 * overflows in Point#getDistance2() method
 		 */
-		double lengthOfSegment = Math.sqrt((origin.x - terminus.x)*(origin.x - terminus.x) + (origin.y - terminus.y)*(origin.y - terminus.y));
-		double lengthFromOriginToPoint = Math.sqrt((origin.x - aPoint.x)*(origin.x - aPoint.x) + (origin.y - aPoint.y)*(origin.y - aPoint.y));
-		double lengthFromTerminusToPoint = Math.sqrt((terminus.x - aPoint.x)*(terminus.x - aPoint.x) + (terminus.y - aPoint.y)*(terminus.y - aPoint.y));
+		double lengthOfSegment = origin.getDistance(terminus);
+		double lengthFromOriginToPoint = origin.getDistance(aPoint);
+		double lengthFromTerminusToPoint = terminus.getDistance(aPoint);
 		
 		return lengthFromTerminusToPoint + lengthFromOriginToPoint - lengthOfSegment <= tolerance;
 	}
