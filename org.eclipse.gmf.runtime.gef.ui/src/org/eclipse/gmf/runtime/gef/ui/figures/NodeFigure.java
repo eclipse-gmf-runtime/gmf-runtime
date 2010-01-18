@@ -30,6 +30,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Path;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Base class that most shape figures should extend from to gain default connection anchor behavior.
@@ -354,6 +356,16 @@ public class NodeFigure
 	 */
 	public void setGradientData(int gradientColor1, int gradientColor2, int gradientStyle) {
 		boolean doRepaint = false;
+		// When in high contrast mode, there is no gradient, so set bg color to null to allow inheriting
+		// the system color.
+		Display display = Display.getCurrent();
+		if (display == null && PlatformUI.isWorkbenchRunning()) {
+			display = PlatformUI.getWorkbench().getDisplay();
+		}
+		if (display != null && display.getHighContrast()) {
+			setBackgroundColor(null);
+			return;
+		}		
 		if (gradientColor1 != this.gradientColor1 && gradientColor1 > -1) {
 			this.gradientColor1 = gradientColor1;
 			doRepaint = true;
@@ -378,6 +390,14 @@ public class NodeFigure
 	 * @since 1.2
 	 */
 	public boolean isUsingGradient() {
+		// When in high contrast mode, there is no gradient, so return false.
+		Display display = Display.getCurrent();
+		if (display == null && PlatformUI.isWorkbenchRunning()) {
+			display = PlatformUI.getWorkbench().getDisplay();
+		}
+		if (display != null && display.getHighContrast()) {		
+			return false;
+		}
 		return isUsingGradient && gradientColor1 > -1 && gradientColor2 > -1;
 	}
 		
