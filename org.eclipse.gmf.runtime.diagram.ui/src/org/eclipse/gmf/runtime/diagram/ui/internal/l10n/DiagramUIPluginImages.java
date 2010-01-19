@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,8 +48,10 @@ public class DiagramUIPluginImages {
 			
 	public static final String IMG_ZOOM_IN = PREFIX_ROOT + "zoomplus.gif"; //$NON-NLS-1$
 	
-	public static final String IMG_HANDLE_EXPAND = PREFIX_ROOT + "collapsed.gif"; //$NON-NLS-1$
+	public static final String IMG_HANDLE_EXPAND = PREFIX_ROOT + "collapsedEmpty.gif"; //$NON-NLS-1$
 	public static final String IMG_HANDLE_COLLAPSE = PREFIX_ROOT + "expanded.gif"; //$NON-NLS-1$
+	public static final String IMG_HANDLE_EXPAND_WIN = PREFIX_ROOT + "expand.gif"; //$NON-NLS-1$
+	public static final String IMG_HANDLE_COLLAPSE_WIN = PREFIX_ROOT + "collapse.gif"; //$NON-NLS-1$	
 	
 	public static final String IMG_HANDLE_INCOMING_WEST = PREFIX_ROOT + "handle_incoming_west.gif"; //$NON-NLS-1$
 	public static final String IMG_HANDLE_OUTGOING_WEST = PREFIX_ROOT + "handle_outgoing_west.gif"; //$NON-NLS-1$
@@ -69,6 +71,8 @@ public class DiagramUIPluginImages {
 
 	public static final ImageDescriptor DESC_HANDLE_COLLAPSE = createAndCache(IMG_HANDLE_COLLAPSE);
 	public static final ImageDescriptor DESC_HANDLE_EXPAND = createAndCache(IMG_HANDLE_EXPAND);
+	public static final ImageDescriptor DESC_HANDLE_COLLAPSE_WIN = createAndCache(IMG_HANDLE_COLLAPSE_WIN);
+	public static final ImageDescriptor DESC_HANDLE_EXPAND_WIN = createAndCache(IMG_HANDLE_EXPAND_WIN);
 	
 	public static final ImageDescriptor DESC_HANDLE_INCOMING_WEST = createAndCache(IMG_HANDLE_INCOMING_WEST);
 	public static final ImageDescriptor DESC_HANDLE_OUTGOING_WEST = createAndCache(IMG_HANDLE_OUTGOING_WEST);

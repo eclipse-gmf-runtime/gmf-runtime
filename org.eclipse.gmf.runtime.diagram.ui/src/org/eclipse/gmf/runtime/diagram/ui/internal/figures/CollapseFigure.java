@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -29,7 +30,8 @@ public class CollapseFigure extends RectangleFigure {
 	private boolean collapsed = false;
     private IFigure containerFigure = null;
     
-
+    private static boolean isWinOS = SWT.getPlatform().equals("win32"); //$NON-NLS-1$
+      
     /**
      * Constrcuts an instance
      */
@@ -57,11 +59,19 @@ public class CollapseFigure extends RectangleFigure {
 		
 		Image img;
 		
-		if (isCollapsed())
-			img = DiagramUIPluginImages.get(DiagramUIPluginImages.IMG_HANDLE_EXPAND);
-		else
-			img = DiagramUIPluginImages.get(DiagramUIPluginImages.IMG_HANDLE_COLLAPSE);
-		
+		if (isCollapsed()) {
+			if (isWinOS) {
+				img = DiagramUIPluginImages.get(DiagramUIPluginImages.IMG_HANDLE_EXPAND_WIN);
+			} else {
+				img = DiagramUIPluginImages.get(DiagramUIPluginImages.IMG_HANDLE_EXPAND);
+			}
+		} else {
+			if (isWinOS) {
+				img = DiagramUIPluginImages.get(DiagramUIPluginImages.IMG_HANDLE_COLLAPSE_WIN);
+			} else {			
+				img = DiagramUIPluginImages.get(DiagramUIPluginImages.IMG_HANDLE_COLLAPSE);
+			}
+		}
 		graphics.drawImage(img, getBounds().x, getBounds().y);
 	}
 	
