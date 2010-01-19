@@ -85,7 +85,7 @@ public class ListScrollBar extends ScrollBar {
 			upButtonFigure.setDirection(NORTH);
 		}
 		
-        IMapMode mm= MapModeUtil.getMapMode(this);
+        IMapMode mm= MapModeUtil.getMapMode();
         mm_1 = mm.DPtoLP(1);
         mm_2 = mm.DPtoLP(2);
 	}
