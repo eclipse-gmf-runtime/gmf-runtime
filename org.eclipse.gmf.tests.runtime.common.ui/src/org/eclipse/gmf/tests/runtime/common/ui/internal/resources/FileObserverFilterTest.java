@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFileInfoMatcherDescription;
+import org.eclipse.core.resources.FileInfoMatcherDescription;
 import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -1357,7 +1357,7 @@ public class FileObserverFilterTest
 		 * @see org.eclipse.core.resources.IContainer#createFilter(int, org.eclipse.core.resources.IFileInfoMatcherDescription, int, org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		public IResourceFilterDescription createFilter(int type,
-				IFileInfoMatcherDescription matcherDescription,
+				FileInfoMatcherDescription matcherDescription,
 				int updateFlags, IProgressMonitor monitor) throws CoreException {
 			return null;
 		}
