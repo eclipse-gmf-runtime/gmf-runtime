@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -230,6 +230,18 @@ public class ConstrainedToolbarLayoutEditPolicy
 	 */
 	protected Command getDeleteDependantCommand(Request request) {
 		return null;
+	}
+	
+	/*
+	 * Override to erase in case of GMF drop request, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=276033
+	 * (non-Javadoc)
+	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#eraseTargetFeedback(org.eclipse.gef.Request)
+	 */
+	@Override
+	public void eraseTargetFeedback(Request request) {
+		super.eraseTargetFeedback(request);
+		if (RequestConstants.REQ_DROP.equals(request.getType()))
+				eraseLayoutTargetFeedback(request);
 	}
 
 }
