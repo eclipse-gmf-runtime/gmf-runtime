@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,6 +89,11 @@ public class CopyToImageDialog extends Dialog {
 	private Text fileNameText = null;
 
 	/**
+	 * the file name text field
+	 */
+	private Text qualityText = null;
+	
+	/**
 	 * the image format pulldown field
 	 */
 	private Combo imageFormatCombo = null;
@@ -150,6 +155,16 @@ public class CopyToImageDialog extends Dialog {
 	 */
 	private static final String IMAGE_FORMAT_LABEL = DiagramUIMessages.CopyToImageDialog_imageformat_label; 
 
+	/**
+	 * the file name label text
+	 */
+	private static final String QUALITY_LABEL = DiagramUIMessages.CopyToImageDialog_quality_label; 
+
+	/**
+	 * the error message if quality is not a number
+	 */
+	private static final String QUALITY_ERROR_MESSAGE = DiagramUIMessages.CopyToImageDialog_quality_error_message; 
+	
 	/**
 	 * the browse button text
 	 */
@@ -347,7 +362,7 @@ public class CopyToImageDialog extends Dialog {
 	 *	@param parent the parent widget
 	 */
 	private void createImageFormatGroup(Composite parent) {
-		Composite composite = createComposite(parent, 2);
+		Composite composite = createComposite(parent, 4);		
 		createLabel(composite, IMAGE_FORMAT_LABEL);
 
 		imageFormatCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -358,7 +373,9 @@ public class CopyToImageDialog extends Dialog {
 				imageFormat =
 					ImageFileFormat.resolveImageFormat(
 						imageFormatCombo.getSelectionIndex());
-                
+				
+				qualityText.setEnabled(imageFormat.equals(ImageFileFormat.JPEG));
+				
                 // update filename to reflect new format
 				if (!exportToHTML) {
 					updateFileNameText(true);
@@ -368,9 +385,24 @@ public class CopyToImageDialog extends Dialog {
 		GridData gridData =
 			new GridData(
 				GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_HORIZONTAL);
-		gridData.widthHint = 250;
+		gridData.widthHint = 200;
 		imageFormatCombo.setLayoutData(gridData);
+		
+		createLabel(composite, QUALITY_LABEL);
 
+		qualityText = new Text(composite, SWT.BORDER);
+		qualityText.setText(convertQualityToString(ImageFileFormat.DEFAULT_QUALITY));
+		qualityText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				validateQualityText();
+			}
+		});
+		GridData gridData2 =
+			new GridData(
+				GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
+		gridData.widthHint = 50;
+		qualityText.setEnabled(imageFormat.equals(ImageFileFormat.JPEG));
+		qualityText.setLayoutData(gridData2);
 	}
 	
 	private void updateFileNameText(boolean validate) {
@@ -606,6 +638,31 @@ public class CopyToImageDialog extends Dialog {
 		}
 	}
 
+	private static String convertQualityToString(float f) {
+		return String.valueOf((int) f * 100);
+	}
+	
+	private static float convertQualityToFloat(String integer) throws NumberFormatException {
+		float quality = Float.parseFloat(integer);
+		quality = Math.max(quality, 100);
+		float qualityPercent = quality != 0 ? (quality / (float) 100.0) : 0;
+		return qualityPercent;
+	}
+	
+	/**
+	 * validate the file name text field.
+	 */
+	private void validateQualityText() {
+		try {
+			float qualityPercent = convertQualityToFloat(qualityText.getText());
+			if (imageFormat != null)
+				imageFormat.setQuality(qualityPercent);
+			setDialogOKState();
+		} catch (NumberFormatException e) {
+			setDialogErrorState(qualityText.getText() + QUALITY_ERROR_MESSAGE);
+		}
+	}
+	
 	/**
 	 * Set the dialog into error state mode. The error image (x) label and 
 	 * error label are made visible and the ok button is disabled.

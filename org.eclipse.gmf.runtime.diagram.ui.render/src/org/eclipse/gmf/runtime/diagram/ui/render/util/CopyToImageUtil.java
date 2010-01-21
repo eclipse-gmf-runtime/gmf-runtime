@@ -268,7 +268,7 @@ public class CopyToImageUtil {
 			monitor.worked(1);
 			if (image instanceof BufferedImage) {
 				ImageExporter.exportToFile(destination, (BufferedImage) image,
-						exportFormat, monitor);
+						exportFormat, monitor, format.getQuality());
 				found = true;
 			}
 		}
@@ -389,7 +389,7 @@ public class CopyToImageUtil {
 			monitor.worked(1);
 			if (image instanceof BufferedImage) {
 				ImageExporter.exportToFile(destination, (BufferedImage) image,
-						exportFormat, monitor);
+						exportFormat, monitor, format.getQuality());
 				found = true;
 			}
 		}

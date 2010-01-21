@@ -77,6 +77,13 @@ public class ImageFileFormat extends EnumeratedType {
 	public static final ImageFileFormat[] VALUES = { GIF, BMP, JPEG, JPG, SVG, PNG, PDF };
 
 	/**
+	 * The default quality.
+	 */
+	public static final Float DEFAULT_QUALITY = new Float(1.00);
+	
+	private Float quality = DEFAULT_QUALITY;
+	
+	/**
 	 * Constructs a new type with the specified
 	 * name and ordinal.
 	 * 
@@ -133,5 +140,19 @@ public class ImageFileFormat extends EnumeratedType {
 
 		return ImageFileFormat.getDefaultImageFormat();
 	}
-
+	
+	/**
+	 * Get the quality 
+	 */
+	public float getQuality() {
+		return quality;
+	}
+	
+	/**
+	 * Set the quality for image.
+	 */
+	public void setQuality(float quality) {
+		this.quality = quality;
+	}
+	
 }

@@ -46,6 +46,20 @@ public class ImageExporter {
     
     static public final String JPEG_FILE = "JPEG"; //$NON-NLS-1$
     static public final String PNG_FILE = "PNG"; //$NON-NLS-1$
+	static private final Float DEFAULT_QUALITY = new Float(1.00);
+    /**
+     * Allows export of an image to specific supported image file formats.
+     * 
+     * @param destination the <code>IPath</code> that is the path of the destination file to be created.
+     * @param image the <code>BufferedImage</code> class to be exported to the image file format.
+     * @param imageFormat the <code>String</code> that is the type of image file format to export to.  Can
+     * be one of <code>JPEG_FILE</code> or <code>PNG_FILE</code>
+     * @param monitor the <code>IProgressMonitor</code> that will update the progress monitor during the operation.
+     */
+    public static void exportToFile(IPath destination, BufferedImage image,
+            String imageFormat, IProgressMonitor monitor) throws CoreException {
+    	exportToFile(destination, image, imageFormat, monitor, DEFAULT_QUALITY);
+    }
     
     /**
      * Allows export of an image to specific supported image file formats.
@@ -57,7 +71,7 @@ public class ImageExporter {
      * @param monitor the <code>IProgressMonitor</code> that will update the progress monitor during the operation.
      */
     public static void exportToFile(IPath destination, BufferedImage image,
-            String imageFormat, IProgressMonitor monitor) 
+            String imageFormat, IProgressMonitor monitor, float quality) 
         throws CoreException {
 
         IStatus fileModificationStatus = createFile(destination);
@@ -69,7 +83,7 @@ public class ImageExporter {
         
         try {
             FileOutputStream os = new FileOutputStream(destination.toOSString());
-            exportToOutputStream(os, image, imageFormat, monitor);
+            exportToOutputStream(os, image, imageFormat, monitor, quality);
             os.close();
             monitor.worked(1);
             refreshLocal(destination);
@@ -94,6 +108,21 @@ public class ImageExporter {
      */
     public static void exportToOutputStream(OutputStream stream, BufferedImage image,
 			String imageFormat, IProgressMonitor monitor) throws CoreException {
+    	exportToOutputStream(stream, image, imageFormat, monitor, DEFAULT_QUALITY);
+	}
+    
+    /**
+     * Allows export of an image to specific supported image file formats.
+	 *
+     * @param stream stream to write the data to
+     * @param image the image
+     * @param imageFormat image format
+     * @param monitor progress monitor
+     * @param quality the quality
+     * @throws CoreException
+     */
+    public static void exportToOutputStream(OutputStream stream, BufferedImage image,
+			String imageFormat, IProgressMonitor monitor, float quality) throws CoreException {
 		monitor.worked(1);
 		ImageTranscoder imageTranscoder = null;
 		BufferedImage newImg = image;
@@ -108,7 +137,7 @@ public class ImageExporter {
 				g.dispose();
 			}
 			imageTranscoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY,
-					new Float(0.65));
+					quality);
 		} else if (imageFormat == PNG_FILE) {
 			imageTranscoder = new PNGTranscoder();
 		} else {
@@ -128,7 +157,7 @@ public class ImageExporter {
 			throw new CoreException(status);
 		}
 		monitor.worked(1);
-	}
+    }
     
     /**
 	 * create a file in the workspace if the destination is in a project in the
