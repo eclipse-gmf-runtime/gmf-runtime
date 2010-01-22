@@ -1,19 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="org.eclipse.gmf.runtime.gef.ui" version="2">
-<resource path="src/org/eclipse/gmf/runtime/gef/ui/internal/parts/TextCellEditorEx.java" type="org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx">
-<filter id="571473929">
-<message_arguments>
-<message_argument value="TextCellEditor"/>
-<message_argument value="TextCellEditorEx"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/gef/ui/internal/actions/MenuManagerEx.java" type="org.eclipse.gmf.runtime.gef.ui.internal.actions.MenuManagerEx">
-<filter id="574619656">
-<message_arguments>
-<message_argument value="IMenuManager"/>
-<message_argument value="MenuManagerEx"/>
-</message_arguments>
-</filter>
-</resource>
+    <resource path="src/org/eclipse/gmf/runtime/gef/ui/internal/actions/MenuManagerEx.java" type="org.eclipse.gmf.runtime.gef.ui.internal.actions.MenuManagerEx">
+        <filter id="574619656">
+            <message_arguments>
+                <message_argument value="IMenuManager"/>
+                <message_argument value="MenuManagerEx"/>
+            </message_arguments>
+        </filter>
+    </resource>
 </component>
