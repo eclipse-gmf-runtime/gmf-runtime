@@ -35,6 +35,8 @@ public class ImageFileFormat extends EnumeratedType {
 	private static final int IMAGE_PDF = IMAGE_SVG + 1;
 	static final long serialVersionUID = 1;
 	
+	public static final float DEFAULT_QUALITY = (float) 1.0;
+	
 	/**
 	 * supported format Graphics Interchange Format (GIF).
 	 */
@@ -79,9 +81,8 @@ public class ImageFileFormat extends EnumeratedType {
 	/**
 	 * The default quality.
 	 */
-	public static final Float DEFAULT_QUALITY = new Float(1.00);
 	
-	private Float quality = DEFAULT_QUALITY;
+	private float quality;
 	
 	/**
 	 * Constructs a new type with the specified
@@ -92,6 +93,7 @@ public class ImageFileFormat extends EnumeratedType {
 	 */
 	private ImageFileFormat(String name, int ordinal) {
 		super(name, ordinal);
+		this.quality = DEFAULT_QUALITY;
 	}
 
 	/**
