@@ -35,6 +35,9 @@ public class ImageFileFormat extends EnumeratedType {
 	private static final int IMAGE_PDF = IMAGE_SVG + 1;
 	static final long serialVersionUID = 1;
 	
+	/**
+	 * The default quality.
+	 */
 	public static final float DEFAULT_QUALITY = (float) 1.0;
 	
 	/**
@@ -77,10 +80,6 @@ public class ImageFileFormat extends EnumeratedType {
 	 * The list of values for this enumerated type.
 	 */
 	public static final ImageFileFormat[] VALUES = { GIF, BMP, JPEG, JPG, SVG, PNG, PDF };
-
-	/**
-	 * The default quality.
-	 */
 	
 	private float quality;
 	
