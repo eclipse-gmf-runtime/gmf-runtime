@@ -605,6 +605,13 @@ public class FileChangeEventTest extends TestCase {
 				IProgressMonitor monitor) throws CoreException {
 			//
 		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isVirtual()
+		 */
+		public boolean isVirtual() {
+			return false;
+		}
 	}
 	
 	public static void main(String[] args) {

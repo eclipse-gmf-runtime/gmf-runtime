@@ -572,6 +572,13 @@ public class FileObserverFilterTest
 				IProgressMonitor monitor) throws CoreException {
 			//
 		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isVirtual()
+		 */
+		public boolean isVirtual() {
+			return false;
+		}
 	}
 
 	protected class Folder
@@ -1367,6 +1374,13 @@ public class FileObserverFilterTest
 		 */
 		public void removeFilter(IResourceFilterDescription filterDescription,
 				int updateFlags, IProgressMonitor monitor) throws CoreException {
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isVirtual()
+		 */
+		public boolean isVirtual() {
+			return false;
 		}
 	}
 
