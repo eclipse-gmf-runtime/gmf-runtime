@@ -8,11 +8,43 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/CreateOrSelectElementCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand$LabelProvider">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="ElementTypeLabelProvider"/>
+                <message_argument value="LabelProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/PasteCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.PasteCommand">
         <filter id="576720909">
             <message_arguments>
                 <message_argument value="ClipboardCommand"/>
                 <message_argument value="PasteCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/PromptForConnectionAndEndCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand$ConnectionAndEndLabelProvider">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="ElementTypeLabelProvider"/>
+                <message_argument value="ConnectionAndEndLabelProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/PromptForConnectionAndEndCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand$ConnectionLabelProvider">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="ElementTypeLabelProvider"/>
+                <message_argument value="ConnectionLabelProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/commands/PromptForConnectionAndEndCommand.java" type="org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand$EndLabelProvider">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="ElementTypeLabelProvider"/>
+                <message_argument value="EndLabelProvider"/>
             </message_arguments>
         </filter>
     </resource>
@@ -135,12 +167,28 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editpolicies/DecorationEditPolicy.java" type="org.eclipse.gmf.runtime.diagram.ui.editpolicies.DecorationEditPolicy">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="GraphicalEditPolicyEx"/>
+                <message_argument value="DecorationEditPolicy"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editpolicies/ResizableShapeEditPolicy.java" type="org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy">
         <filter id="643846161">
             <message_arguments>
                 <message_argument value="ChangeBoundsDeferredRequest"/>
                 <message_argument value="ResizableShapeEditPolicy"/>
                 <message_argument value="getMoveDeferredCommand(ChangeBoundsDeferredRequest)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editpolicies/TetherConnectionEditPolicy.java" type="org.eclipse.gmf.runtime.diagram.ui.editpolicies.TetherConnectionEditPolicy">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="GraphicalEditPolicyEx"/>
+                <message_argument value="TetherConnectionEditPolicy"/>
             </message_arguments>
         </filter>
     </resource>
