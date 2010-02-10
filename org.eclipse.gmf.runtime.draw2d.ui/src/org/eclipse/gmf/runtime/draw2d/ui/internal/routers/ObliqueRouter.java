@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.graph.Path;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.IOvalAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
@@ -458,7 +459,16 @@ public class ObliqueRouter extends BendpointConnectionRouter {
     
      protected PointList getFigurePolygon(IFigure owner, Connection conn) {
         PointList polygon = new PointList();
-        if (owner instanceof IPolygonAnchorableFigure){
+        if (owner instanceof IOvalAnchorableFigure) {
+        	Rectangle rect = new PrecisionRectangle(((IOvalAnchorableFigure)owner).getOvalBounds());
+        	owner.translateToAbsolute(rect);
+        	conn.translateToRelative(rect);
+            polygon.addPoint(rect.getTopLeft());
+            polygon.addPoint(rect.getTopRight());
+            polygon.addPoint(rect.getBottomRight());
+            polygon.addPoint(rect.getBottomLeft());
+            polygon.addPoint(rect.getTopLeft());
+        } else if (owner instanceof IPolygonAnchorableFigure){
             PointList points =  ((IPolygonAnchorableFigure)owner).getPolygonPoints();
             for(int index = 0 ; index < points.size(); index++){
                 Point point  = points.getPoint(index).getCopy();
@@ -466,8 +476,8 @@ public class ObliqueRouter extends BendpointConnectionRouter {
                 conn.translateToRelative(point);
                 polygon.addPoint(point);
             }
-        }else {
-           Rectangle rect =  owner.getBounds().getCopy();
+        } else {
+           Rectangle rect =  new PrecisionRectangle(owner.getBounds());
            owner.translateToAbsolute(rect);
            conn.translateToRelative(rect);
            polygon.addPoint(rect.getTopLeft());
@@ -518,8 +528,8 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			return false;
 		
 		if (newLine.size() < 3) {
-			PrecisionRectangle sourceBounds = new PrecisionRectangle(conn.getSourceAnchor().getOwner().getBounds()); 
-			PrecisionRectangle targetBounds = new PrecisionRectangle(conn.getTargetAnchor().getOwner().getBounds());
+			PrecisionRectangle sourceBounds = getShapeBounds(conn.getSourceAnchor().getOwner()); 
+			PrecisionRectangle targetBounds = getShapeBounds(conn.getTargetAnchor().getOwner());
 			conn.getSourceAnchor().getOwner().translateToAbsolute(sourceBounds);
 			conn.getTargetAnchor().getOwner().translateToAbsolute(targetBounds);
 			if (sourceBounds.intersects(targetBounds) && !sourceBounds.contains(targetBounds) && !targetBounds.contains(sourceBounds)
@@ -531,6 +541,18 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			removeIntersectingShapesConnection(conn);
 		}
 		return false;
+	}
+	
+	private PrecisionRectangle getShapeBounds(IFigure figure) {
+		if (figure instanceof IOvalAnchorableFigure) {
+			return new PrecisionRectangle(((IOvalAnchorableFigure) figure)
+					.getOvalBounds());
+		} else if (figure instanceof IPolygonAnchorableFigure) {
+			return new PrecisionRectangle(((IPolygonAnchorableFigure) figure)
+					.getPolygonPoints().getBounds());
+		}
+		return new PrecisionRectangle(figure.getBounds());
+
 	}
 	
 	/**
@@ -740,14 +762,12 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		 * translated to the coordinates relative to the connection figure!
 		 */
 		IFigure sourceFig = conn.getSourceAnchor().getOwner();
-		PrecisionRectangle sourceRect = new PrecisionRectangle(sourceFig
-				.getBounds());
+		PrecisionRectangle sourceRect = getShapeBounds(sourceFig);
 		sourceFig.translateToAbsolute(sourceRect);
 		conn.translateToRelative(sourceRect);
 
 		IFigure targetFig = conn.getTargetAnchor().getOwner();
-		PrecisionRectangle targetRect = new PrecisionRectangle(targetFig
-				.getBounds());
+		PrecisionRectangle targetRect = getShapeBounds(targetFig);
 		targetFig.translateToAbsolute(targetRect);
 		conn.translateToRelative(targetRect);
 		PrecisionRectangle union = sourceRect.getPreciseCopy()

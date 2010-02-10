@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,20 +57,12 @@ public class SlidableOvalAnchor
 	
 	/* 
 	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.gef.ui.figures.SlidableAnchor#getBox()
-	 */
-	protected Rectangle getBox() {
-		PrecisionRectangle rBox = new PrecisionRectangle(((IOvalAnchorableFigure) getOwner()).getOvalBounds());
-		getOwner().translateToAbsolute(rBox);
-		return rBox;
-	}
-	
-	/* 
-	 * (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.gef.ui.figures.SlidableAnchor#getIntersectionPoints(org.eclipse.draw2d.geometry.Point, org.eclipse.draw2d.geometry.Point)
 	 */
 	protected PointList getIntersectionPoints(Point ownReference, Point foreignReference) {
-		return (new LineSeg(ownReference, foreignReference)).getLineIntersectionsWithEllipse(getBox());
+		Rectangle ellipseBox = new PrecisionRectangle(((IOvalAnchorableFigure)getOwner()).getOvalBounds());
+		getOwner().translateToAbsolute(ellipseBox);
+		return (new LineSeg(ownReference, foreignReference)).getLineIntersectionsWithEllipse(ellipseBox);
 	}
 }
 
