@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,9 +52,11 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.PathData;
+import org.eclipse.swt.graphics.TextLayout;
 
 /**
  * Objects of this class can be used with draw2d to render to a Graphics2D object.
@@ -440,6 +442,55 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 */
 	public void drawFocus(int x, int y, int w, int h) {
 		drawRectangle(x, y, w, h);
+	}
+
+	@Override
+	public void drawTextLayout(TextLayout layout, int x, int y,
+			int selectionStart, int selectionEnd, Color selectionForeground,
+			Color selectionBackground) {		
+		checkState();
+		Image image = new Image(DisplayUtils.getDisplay(), layout.getBounds().width, layout.getBounds().height);
+		GC gc = new GC(image);
+		cloneGC(gc);
+		layout.draw(gc, 0, 0, selectionStart, selectionEnd, selectionForeground, selectionBackground);
+		
+		ImageData imageData = image.getImageData();
+		imageData.transparentPixel = imageData.palette.getPixel(getBackgroundColor().getRGB());
+
+		gc.dispose();
+		image.dispose();
+		
+		getGraphics2D().drawImage(ImageConverter.convertFromImageData(imageData), x + transX, y + transY, null);		
+	}
+	
+	private void cloneGC(GC gc) {
+		gc.setAdvanced(getAdvanced());
+		gc.setAlpha(getAlpha());
+		gc.setAntialias(getAntialias());
+		gc.setFillRule(getFillRule());
+		gc.setFont(getFont());
+		gc.setInterpolation(getInterpolation());
+		gc.setLineAttributes(getLineAttributes());
+		gc.setTextAntialias(getTextAntialias());
+		gc.setBackground(getBackgroundColor());
+		gc.setForeground(getForegroundColor());
+	}
+	
+	@Override
+	public int getInterpolation() {
+		return swtGraphics.getInterpolation();
+	}
+
+	@Override
+	public LineAttributes getLineAttributes() {
+		LineAttributes la = new LineAttributes(1);
+		swtGraphics.getLineAttributes(la);
+		return la;
+	}
+
+	@Override
+	public int getTextAntialias() {
+		return swtGraphics.getTextAntialias();
 	}
 
 	/*
