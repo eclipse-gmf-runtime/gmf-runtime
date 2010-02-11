@@ -196,20 +196,23 @@ public class DiagramDocumentEditor
 			fTitleImage= null;
 		}
 		
-		RootEditPart rootEditPart = getGraphicalViewer().getRootEditPart();
-		if (rootEditPart instanceof DiagramRootEditPart) {
-			DiagramRootEditPart root = (DiagramRootEditPart) rootEditPart;
-			((IPreferenceStore) root
+		if (getGraphicalViewer() != null) {
+			RootEditPart rootEditPart = getGraphicalViewer().getRootEditPart();
+			if (rootEditPart instanceof DiagramRootEditPart) {
+				DiagramRootEditPart root = (DiagramRootEditPart) rootEditPart;
+				((IPreferenceStore) root
 					.getPreferencesHint().getPreferenceStore()).removePropertyChangeListener(propertyChangeListener);
-		}
+			}
 		
-        IDocumentProvider provider = getDocumentProvider();
-        IStatus status = provider.getStatus(getEditorInput());
+			IDocumentProvider provider = getDocumentProvider();
+			IStatus status = provider.getStatus(getEditorInput());
 
-		disposeDocumentProvider();
+			disposeDocumentProvider();
 		
-        if(status != null && status.isOK())
-            super.dispose();
+			if(status != null && status.isOK()) {
+				super.dispose();
+			}
+		}
 	}
 	
 
