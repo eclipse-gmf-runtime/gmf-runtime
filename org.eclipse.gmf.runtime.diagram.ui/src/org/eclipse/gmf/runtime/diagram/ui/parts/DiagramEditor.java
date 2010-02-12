@@ -852,8 +852,10 @@ public abstract class DiagramEditor
             .setParent(getKeyHandler());
         viewer.setKeyHandler(new DirectEditKeyHandler(viewer)
             .setParent(viewerKeyHandler));
-        ((FigureCanvas) viewer.getControl())
-            .setScrollBarVisibility(FigureCanvas.ALWAYS);
+        if (viewer.getControl() instanceof FigureCanvas) {
+        	((FigureCanvas) viewer.getControl())
+            	.setScrollBarVisibility(FigureCanvas.ALWAYS);
+        }
     }
 
     /**
