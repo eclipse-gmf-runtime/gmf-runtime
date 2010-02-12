@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -303,7 +303,6 @@ public class AbstractProviderConfiguration {
 						try {
 							MethodDescriptor methodDescriptor =
 								new MethodDescriptor(name);
-							methodDescriptor.setCall(name.intern());
 							ValueDescriptor value =
 								new ValueDescriptor(methodConfigs[i]);
 							if (value != null)
@@ -330,7 +329,6 @@ public class AbstractProviderConfiguration {
 						try {
 							StaticMethodDescriptor methodDescriptor =
 								new StaticMethodDescriptor(name);
-							methodDescriptor.setCall(name.intern());
 							ValueDescriptor value =
 								new ValueDescriptor(staticMethodConfigs[i]);
 							if (value != null)
@@ -403,11 +401,6 @@ public class AbstractProviderConfiguration {
 	private static class MethodDescriptor {
         
         protected String dataForIntialize = NULL;
-		
-		/**
-		 * The method call.
-		 */
-		private String call;
 		
 		/**
 		 * The method name.
@@ -678,38 +671,11 @@ public class AbstractProviderConfiguration {
 		}
 
 		/**
-		 * Gets the method call.
-		 * 
-		 * @return the method call.
-		 */
-		public String getCall() {
-			return call;
-		}
-		
-		/**
-		 * Sets the method call.
-		 * 
-		 * @param call
-		 *            the new method call
-		 */
-		public void setCall(String call) {
-			this.call = call;
-		}
-		
-		/**
 		 * Gets the Paramters List
 		 * @return The list of method parameters.
 		 */
 		protected List getParamtersList(){
 			return parameters;
-		}
-		
-		/**
-		 * Sets the Paramters List
-		 * @param Parameterlist
-		 */
-		protected void setParamtersList(List parameters1){
-			this.parameters = parameters1;
 		}
 		
 		/**
