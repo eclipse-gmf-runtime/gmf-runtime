@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,10 +21,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.Animation;
-import org.eclipse.draw2d.XYLayout;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -33,10 +31,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
@@ -338,60 +333,6 @@ public class ArrangeAction extends DiagramAction {
     public String getLabel() {
         return isArrangeAll() ? DiagramUIActionsMessages.ArrangeAction_toolbar_ArrangeAll_ActionLabelText
             : DiagramUIActionsMessages.ArrangeAction_toolbar_ArrangeSelection_ActionLabelText;
-    }
-    
-    protected boolean calculateEnabled() {
-        
-        List operationSet = getOperationSet();
-        
-        //arrange all, always enable
-        if( isArrangeAll() && !operationSet.isEmpty()){
-            return true;
-        }
-
-        EditPart parentEP = getSelectionParent(operationSet);
-        
-        // bugzilla 156733: disable this action if the parent or selected edit parts are not editable
-        if ((parentEP instanceof IEditableEditPart)
-                && !((IEditableEditPart) parentEP)
-                        .isEditModeEnabled()) {
-            return false;
-        }
-        
-        for (Iterator i = operationSet.iterator(); i.hasNext();) {
-            Object next = i.next();
-            if ((next instanceof IEditableEditPart)
-                    && !((IEditableEditPart) next)
-                            .isEditModeEnabled()) {
-                return false;
-            }
-        }
-        
-        //arrange selection
-        if (operationSet.size() >= 2) {
-            if (parentEP instanceof GraphicalEditPart) {
-                GraphicalEditPart parent = (GraphicalEditPart)parentEP;
-                if ((parent != null) &&(parent.getContentPane().getLayoutManager() instanceof XYLayout))
-                    return true;
-            }
-        } else if (operationSet.size() == 1) {
-            if (operationSet.get(0) instanceof GroupEditPart) {
-                return true;
-            }
-            else {
-                EditPart host = (EditPart) operationSet.get(0);
-                for (Iterator iterator = host.getChildren().iterator(); iterator
-                    .hasNext();) {
-                    Object childEP = iterator.next();
-                    if (childEP instanceof CompartmentEditPart
-                        && ((CompartmentEditPart) childEP).getContentPane()
-                            .getLayoutManager() instanceof XYLayout) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
 }

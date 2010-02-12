@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -49,10 +48,16 @@ import org.eclipse.gmf.runtime.notation.View;
 public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrimaryEditPart {
 
     /**
-     * A <code>ContainerEditPolicy</code> for a <code>ShapeEditPart</code>.
-     * 
-     * @since 2.1
-     */
+	 * A <code>ContainerEditPolicy</code> for a <code>ShapeEditPart</code> that
+	 * lays out compartments contained by the host editpart for
+	 * "arrange selection" request.
+	 * <p>
+	 * <b>Note:</b> it is not used by default, because a graph layout algorithm
+	 * may support arrange of 1 node in a graph. Therefore, the expected
+	 * behaviour is non-deterministic and is up to the API client
+	 * 
+	 * @since 2.1
+	 */
     protected static class ShapeContainerEditPolicy
         extends ContainerEditPolicy {
 
@@ -102,7 +107,7 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
     
     protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicy.CONTAINER_ROLE, new ShapeContainerEditPolicy());
+		installEditPolicy(EditPolicy.CONTAINER_ROLE, new ContainerEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
 		installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE, new PopupBarEditPolicy());
 	}

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,4 +56,27 @@ public interface ILayoutNodeProvider extends IProvider {
 	 */
 	public Runnable layoutLayoutNodes(List layoutNodes,
 			boolean offsetFromBoundingBox, IAdaptable layoutHint);
+
+	/**
+	 * Returns <code>true</code> if the nodes can be laid out by the provider,
+	 * e.g whether the layout is needed.
+	 * 
+	 * @param layoutNodes
+	 *            List of <code>ILayoutNode</code> objects that are to
+	 *            participate in the layout.
+	 * @param offsetFromBoundingBox
+	 *            <code>boolean</code> indicating whether the Nodes should be
+	 *            laid out relative to the bounding box of the Nodes in the
+	 *            nodesToSizes Map.
+	 * @param layoutHint
+	 *            <code>IAdaptable</code> hint to the provider to determine the
+	 *            layout kind. <code>IAdaptable</code> will typically adapt to
+	 *            string that can be one of <code>LayoutType.DEFAULT</code> or
+	 *            <code>LayoutType.RADIAL</code>.
+	 * @return <code>true</code> if nodes can be laid out
+	 * 
+	 * @since 1.3.1
+	 */
+	public boolean canLayoutNodes(List layoutNodes,
+			boolean shouldOffsetFromBoundingBox, IAdaptable layoutHint);
 }

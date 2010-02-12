@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.CanLayoutNodesOperation;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNode;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNodesOperation;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -297,5 +298,10 @@ final public class LayoutService extends Service implements
 		Assert.isNotNull(layoutHint);
 		return (Runnable) execute(new LayoutNodesOperation(layoutNodes,
 				offsetFromBoundingBox, layoutHint));
+	}
+
+	public boolean canLayoutNodes(List layoutNodes,
+			boolean shouldOffsetFromBoundingBox, IAdaptable layoutHint) {
+		return execute(new CanLayoutNodesOperation(layoutNodes, shouldOffsetFromBoundingBox, layoutHint)) == Boolean.TRUE;
 	}
 }

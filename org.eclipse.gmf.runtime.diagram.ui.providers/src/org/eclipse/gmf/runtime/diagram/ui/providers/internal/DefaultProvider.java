@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1226,7 +1226,19 @@ public abstract class DefaultProvider
         return new GMFDirectedGraphLayout();
     }
     
-    /**
+    /** 
+     * Allows "Arrange all" for 1 node, but doesn't allow "arrange selection" for 1 node
+     */
+    @Override
+	public boolean canLayoutNodes(List layoutNodes,
+			boolean shouldOffsetFromBoundingBox, IAdaptable layoutHint) {
+    	if (super.canLayoutNodes(layoutNodes, shouldOffsetFromBoundingBox, layoutHint)) {
+    		return !shouldOffsetFromBoundingBox || (shouldOffsetFromBoundingBox && layoutNodes.size() > 1);
+    	}
+    	return false;
+	}
+
+	/**
      * Indicates if the provider will consider the connections between ListItems 
      * while doing the arrange action
      * @return true or false

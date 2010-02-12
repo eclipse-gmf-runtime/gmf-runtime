@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -537,10 +537,10 @@ public abstract class CanonicalConnectionEditPolicy
 		List<IAdaptable> createdViews = super.refreshSemanticChildren();
 		List<IAdaptable> createdConnectionViews = refreshSemanticConnections();
 
-		if (createdViews.size() > 1) {
-			// perform a layout of the container
-			DeferredLayoutCommand layoutCmd = new DeferredLayoutCommand(host().getEditingDomain(),
-				createdViews, host());
+		// perform a layout of the container
+		DeferredLayoutCommand layoutCmd = new DeferredLayoutCommand(host()
+				.getEditingDomain(), createdViews, host());
+		if (layoutCmd.canExecute()) {
 			executeCommand(new ICommandProxy(layoutCmd));
 		}
 

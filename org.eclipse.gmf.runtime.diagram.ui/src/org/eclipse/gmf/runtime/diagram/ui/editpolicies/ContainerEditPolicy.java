@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,22 +21,16 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -47,6 +41,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.commands.BringToFrontComman
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendBackwardCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendToBackCommand;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ArrangeCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
@@ -63,8 +58,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.commands.RefreshEditPartComma
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SnapCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.IInternalLayoutRunnable;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNode;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
@@ -77,7 +70,6 @@ import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutService;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
@@ -282,8 +274,9 @@ public class ContainerEditPolicy
         }
         
         String layoutDesc = request.getLayoutType() != null ? request.getLayoutType() : LayoutType.DEFAULT;
+        
         boolean offsetFromBoundingBox = false;
-        List editparts = new ArrayList();
+        List<IGraphicalEditPart> editparts = new ArrayList<IGraphicalEditPart>();
         
         if ( (ActionIds.ACTION_ARRANGE_ALL.equals(request.getType())) || 
              (ActionIds.ACTION_TOOLBAR_ARRANGE_ALL.equals(request.getType()))) {
@@ -293,11 +286,6 @@ public class ContainerEditPolicy
         if ( (ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())) ||
              (ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request.getType()))) {
             editparts = request.getPartsToArrange();
-            if (editparts.size() < 2
-                || !(((GraphicalEditPart) ((EditPart) editparts.get(0))
-                    .getParent()).getContentPane().getLayoutManager() instanceof XYLayout)) {
-                return null;
-            }
             offsetFromBoundingBox = true;
         } 
         if (RequestConstants.REQ_ARRANGE_RADIAL.equals(request.getType())) {
@@ -305,64 +293,34 @@ public class ContainerEditPolicy
             offsetFromBoundingBox = true;
             layoutDesc = LayoutType.RADIAL;
         }
+        
         if (editparts.isEmpty())
             return null;
-        List nodes = new ArrayList(editparts.size());
-        ListIterator li = editparts.listIterator();     
-        while (li.hasNext()) {
-            IGraphicalEditPart ep = (IGraphicalEditPart)li.next();      
-            View view = ep.getNotationView();
-            if (ep.isActive() && view != null && view instanceof Node) {
-                Rectangle bounds = ep.getFigure().getBounds();
-                nodes.add(new LayoutNode((Node)view, bounds.width, bounds.height));
-            }
-        }
-        if (nodes.isEmpty()) {
-            return null;
-        }
         
         List hints = new ArrayList(2);
         hints.add(layoutDesc);
         hints.add(getHost());
         IAdaptable layoutHint = new ObjectAdapter(hints);
-        final Runnable layoutRun = layoutNodes(nodes, offsetFromBoundingBox, layoutHint);
-                
-        boolean isSnap = true;  
+        
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+        	.getEditingDomain(); 
+        
+        CompositeTransactionalCommand ctc = new CompositeTransactionalCommand(editingDomain, StringStatics.BLANK);
+        ctc.add(new ArrangeCommand(editingDomain, StringStatics.BLANK, null, editparts, layoutHint, offsetFromBoundingBox));
+        
         //retrieves the preference store from the first edit part
         IGraphicalEditPart firstEditPart = (IGraphicalEditPart)editparts.get(0);
         if (firstEditPart.getViewer() instanceof DiagramGraphicalViewer){           
              IPreferenceStore preferenceStore = ((DiagramGraphicalViewer)firstEditPart.getViewer())
             .getWorkspaceViewerPreferenceStore();
-             if (preferenceStore != null){
-                    isSnap = preferenceStore.getBoolean(WorkspaceViewerProperties.SNAPTOGRID);          
+             if (preferenceStore != null && preferenceStore.getBoolean(WorkspaceViewerProperties.SNAPTOGRID)){
+             	Command snapCmd = getSnapCommand(request);
+            	if (snapCmd != null) {
+            		ctc.add(new CommandProxy(getSnapCommand(request)));
+            	}
              }      
         }   
         
-        //the snapCommand still invokes proper calculations if snap to grid is turned off, this additional check
-        //is intended to make the code more appear more logical     
-                
-        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
-        	.getEditingDomain(); 
-        CompositeTransactionalCommand ctc = new CompositeTransactionalCommand(editingDomain, StringStatics.BLANK);        
-        if (layoutRun instanceof IInternalLayoutRunnable) {
-            ctc.add(new CommandProxy(((IInternalLayoutRunnable) layoutRun).getCommand()));        
-        }
-        else {
-            ctc.add(new AbstractTransactionalCommand(editingDomain, StringStatics.BLANK, null) {//$NON-NLS-1$
-                protected CommandResult doExecuteWithResult(
-                            IProgressMonitor progressMonitor, IAdaptable info)
-                        throws ExecutionException {
-                    layoutRun.run();
-                    return CommandResult.newOKCommandResult();
-                }
-            });     
-        }       
-        if (isSnap) {
-        	Command snapCmd = getSnapCommand(request);
-        	if (snapCmd != null) {
-        		ctc.add(new CommandProxy(getSnapCommand(request)));
-        	}
-        }
         return new ICommandProxy(ctc);
     }
     
@@ -371,6 +329,8 @@ public class ContainerEditPolicy
      * @param nodes
      * @param layoutHint
      * @return runnable
+     * 
+     * @deprecated call the {@link LayoutService} directly
      */
     public Runnable layoutNodes(List nodes, boolean offsetFromBoundingBox, IAdaptable layoutHint) {
         final Runnable layoutRun =  LayoutService.getInstance().layoutLayoutNodes(nodes, offsetFromBoundingBox, layoutHint);
@@ -606,7 +566,7 @@ public class ContainerEditPolicy
 
         if (parentEP == null || !parentEP.isEditModeEnabled()) {
             return null;
-    }
+        }
 
         GroupCommand cmd = new GroupCommand(((IGraphicalEditPart) getHost())
             .getEditingDomain(), shapeViews);
