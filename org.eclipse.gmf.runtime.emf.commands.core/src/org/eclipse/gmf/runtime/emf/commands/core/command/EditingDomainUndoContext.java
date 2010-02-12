@@ -27,6 +27,8 @@ public final class EditingDomainUndoContext
 
     private final EditingDomain editingDomain;
 
+    private String label;
+    
     /**
      * Initializes me with the editing domain that I represent.
      * 
@@ -34,11 +36,30 @@ public final class EditingDomainUndoContext
      *            the editing domain
      */
     public EditingDomainUndoContext(EditingDomain domain) {
-        this.editingDomain = domain;
+    	this(domain, null);
     }
 
-    // Documentation copied from the interface
+    /**
+     * Initializes me with the editing domain that I represent.
+     * 
+     * @param domain
+     *            the editing domain
+     * @param label
+     *            the label for the context
+     */
+    public EditingDomainUndoContext(EditingDomain domain, String label) {
+        this.editingDomain = domain;
+        this.label = label;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.commands.operations.IUndoContext#getLabel()
+     */
     public String getLabel() {
+    	if (label != null) {
+			return label;
+    	}
         return EMFCommandsCoreMessages.editingDomainContext;
     }
 
@@ -66,7 +87,10 @@ public final class EditingDomainUndoContext
         return result;
     }
 
-    // Redefines the inherited method
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     public int hashCode() {
         return editingDomain == null ? 0
             : editingDomain.hashCode();
@@ -79,5 +103,15 @@ public final class EditingDomainUndoContext
      */
     public final EditingDomain getEditingDomain() {
         return editingDomain;
+    }
+    
+    /**
+     * The string representation of this operation.  Used for debugging purposes only.
+     * This string should not be shown to an end user.
+     * 
+     * @return The string representation.
+     */
+    public String toString() {
+    	return getLabel();
     }
 }

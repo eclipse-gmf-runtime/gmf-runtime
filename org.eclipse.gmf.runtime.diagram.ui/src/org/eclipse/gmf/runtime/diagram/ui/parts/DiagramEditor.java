@@ -1111,17 +1111,38 @@ public abstract class DiagramEditor
     protected IUndoContext getUndoContext() {
 
         if (undoContext == null) {
-            TransactionalEditingDomain domain = getEditingDomain();
-
-            if (domain != null) {
-                undoContext = new EditingDomainUndoContext(domain);
-
-            } else {
-                undoContext = new ObjectUndoContext(this);
-            }
+            undoContext = createUndoContext();
         }
         return undoContext;
     }
+
+    /**
+     * Create the undo context. Subclasses may override to provide custom undo context.
+     * @return the created undo context
+     * @since 1.3.1
+     */
+    protected IUndoContext createUndoContext() {
+    	IUndoContext context;
+    	TransactionalEditingDomain domain = getEditingDomain();
+        if (domain != null) {
+            context = new EditingDomainUndoContext(domain, createUndoContextLabel());
+
+        } else {
+            context = new ObjectUndoContext(this);
+        }
+        return context;
+    }
+    
+    /**
+     * Determine the label to be used by my undo context. The default implementation
+     * returns null which provides the built-in default label.
+     * 
+     * @return label for undo context
+     * @since 1.3.1
+     */
+    protected String createUndoContextLabel() {
+           return null;
+	}
 
     /**
      * Sets my undo context
