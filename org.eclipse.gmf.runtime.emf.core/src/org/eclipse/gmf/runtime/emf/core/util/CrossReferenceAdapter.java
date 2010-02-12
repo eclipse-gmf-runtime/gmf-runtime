@@ -130,15 +130,17 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 		case Notification.RESOLVE:
 		case Notification.SET:
 		case Notification.UNSET: {
-			EObject oldValue = (EObject) notification.getOldValue();
-			if (oldValue != null) {
-				deregisterReference(((EObject) notification.getNotifier())
-						.eResource(), oldValue.eResource());
-			}
-			EObject newValue = (EObject) notification.getNewValue();
-			if (newValue != null) {
-				registerReference(((EObject) notification.getNotifier())
-						.eResource(), newValue.eResource());
+			if (notification.getPosition() != Notification.NO_INDEX) {
+				EObject oldValue = (EObject) notification.getOldValue();
+				if (oldValue != null) {
+					deregisterReference(((EObject) notification.getNotifier())
+							.eResource(), oldValue.eResource());
+				}
+				EObject newValue = (EObject) notification.getNewValue();
+				if (newValue != null) {
+					registerReference(((EObject) notification.getNotifier())
+							.eResource(), newValue.eResource());
+				}
 			}
 			break;
 		}
