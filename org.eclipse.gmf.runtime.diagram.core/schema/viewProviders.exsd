@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.gmf.runtime.diagram.core">
+<schema targetNamespace="org.eclipse.gmf.runtime.diagram.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.gmf.runtime.diagram.core" id="viewProviders" name="Presentation View Providers"/>
@@ -11,6 +11,11 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="viewProvider" minOccurs="1" maxOccurs="unbounded"/>
@@ -18,7 +23,7 @@
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
-                  The identifier of the extension point, i.e. &lt;tt&gt;org.eclipse.gmf.runtime.diagram.core.viewProviders&lt;/tt&gt;
+                  The identifier of the extension point, i.e. org.eclipse.gmf.runtime.diagram.core.viewProviders
                </documentation>
             </annotation>
          </attribute>
@@ -64,7 +69,7 @@
    <element name="Priority">
       <annotation>
          <documentation>
-            The description for the priority of the view provider
+            The description for the priority of the view provider.
          </documentation>
       </annotation>
       <complexType>
@@ -72,7 +77,7 @@
             <annotation>
                <documentation>
                   The priority of the provider. It can be one of the following values:
-&gt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them.
+Lowest, Low, Medium, High, Highest. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them.
                </documentation>
             </annotation>
             <simpleType>
@@ -114,8 +119,7 @@
          <attribute name="class" type="string">
             <annotation>
                <documentation>
-                  The fully qualified name of a class/interface who is assignable from or adaptable to the object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
-className&lt;(plugin id)&gt;?
+                  The fully qualified name of a class/interface who is assignable from or adaptable to the object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is: className(plugin id)
                </documentation>
             </annotation>
          </attribute>
@@ -129,10 +133,10 @@ className&lt;(plugin id)&gt;?
 The static method has a name and a value. The value could be described by its string representation (value &amp; notValue), or as an object &quot;value&quot; or &quot;notValue&quot;. 
 
 The rules of evaluation are as follows:
-1- The return value string has to be in the &quot;value&quot; string set.
-2- The return value string has to be not in the &quot;notValue&quot; string set.
-3- The return value object has to be in the &quot;value&quot; object set.
-4- The return value object has to be not in the &quot;notValue&quot; object set.
+1 - The return value string has to be in the &quot;value&quot; string set.
+2 - The return value string has to be not in the &quot;notValue&quot; string set.
+3 - The return value object has to be in the &quot;value&quot; object set.
+4 - The return value object has to be not in the &quot;notValue&quot; object set.
          </documentation>
       </annotation>
       <complexType>
@@ -143,14 +147,14 @@ The rules of evaluation are as follows:
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  The name of the Static Method, the format should be PluginID\ClassName.method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of primitive parameters or %Context(pluginID/className) to use the context object as a parameter . other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : &lt;pluginID/ClassName.func(&lt;param&lt;,param&gt;*&gt;?).&lt;&lt;func(&lt;param&lt;,param&gt;*&gt;?)&gt;*
+                  The name of the Static Method, the format should be PluginID\ClassName.method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of primitive parameters or %Context(pluginID/className) to use the context object as a parameter . other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : pluginID/ClassName.func(param,param)
                </documentation>
             </annotation>
          </attribute>
          <attribute name="value" type="string">
             <annotation>
                <documentation>
-                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: string,string*
 If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
                </documentation>
             </annotation>
@@ -158,7 +162,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
          <attribute name="notValue" type="string">
             <annotation>
                <documentation>
-                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: string,string*
 If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
                </documentation>
             </annotation>
@@ -172,11 +176,10 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
             A method to call by reflection on the object. The method has a name and a value. The value could be described by its string representation (value &amp; notValue), or as an object &quot;value&quot; or &quot;notValue&quot;. 
 
 The rules of evaluation are as follows:
-
-1- The return value string has to be in the &quot;value&quot; string set.
-2- The return value string has to be not in the &quot;notValue&quot; string set.
-3- The return value object has to be in the &quot;value&quot; object set.
-4- The return value object has to be not in the &quot;notValue&quot; object set.
+1 - The return value string has to be in the &quot;value&quot; string set.
+2 - The return value string has to be not in the &quot;notValue&quot; string set.
+3 - The return value object has to be in the &quot;value&quot; object set.
+4 - The return value object has to be not in the &quot;notValue&quot; object set.
          </documentation>
       </annotation>
       <complexType>
@@ -187,14 +190,14 @@ The rules of evaluation are as follows:
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  The name of the method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of string parameters (literals). other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : &lt;func(&lt;param&lt;,param&gt;*&gt;?).&lt;&lt;func(&lt;param&lt;,param&gt;*&gt;?)&gt;*
+                  The name of the method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of string parameters (literals). other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : func(param,param*).func(param,param*)*
                </documentation>
             </annotation>
          </attribute>
          <attribute name="value" type="string">
             <annotation>
                <documentation>
-                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: string,string*
 If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
                </documentation>
             </annotation>
@@ -202,7 +205,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
          <attribute name="notValue" type="string">
             <annotation>
                <documentation>
-                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: string,string*
 If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
                </documentation>
             </annotation>
@@ -224,7 +227,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
             <annotation>
                <documentation>
                   The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
-className&lt;(plugin id)&gt;?
+className(plugin id)
                </documentation>
             </annotation>
          </attribute>
@@ -245,7 +248,7 @@ className&lt;(plugin id)&gt;?
             <annotation>
                <documentation>
                   The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
-className&lt;(plugin id)&gt;?
+className(plugin id)
                </documentation>
             </annotation>
          </attribute>
