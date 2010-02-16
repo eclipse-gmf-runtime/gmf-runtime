@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -210,13 +210,19 @@ public class DiagramEditingDomainFactory
 						HashMap options = new HashMap(originatingTransaction.getOptions());
 						options.put(Transaction.OPTION_NO_UNDO, Boolean.FALSE);
 						InternalTransaction newTx = startTransaction(false, options);
-						deb.resourceSetChanged(
-							new ResourceSetChangeEvent(
-								this,
-								tx,
-								filtered));
+						try {
+							deb.resourceSetChanged(
+									new ResourceSetChangeEvent(
+											this,
+											tx,
+											filtered));
 
-						newTx.commit();
+							newTx.commit();
+						} catch (RuntimeException e) {
+							// close the internal transaction that was created.
+							newTx.rollback();
+							throw e;
+						}
 					} catch (RollbackException e) {
 						// Do nothing in the rollback case, we have no change descriptions
 						//  or notifications to propagate.
