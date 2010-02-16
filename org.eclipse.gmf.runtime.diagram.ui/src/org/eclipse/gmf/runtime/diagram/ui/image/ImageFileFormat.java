@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ public class ImageFileFormat extends EnumeratedType {
 	
 	/**
 	 * The default quality.
+	 * @since 1.3
 	 */
 	public static final float DEFAULT_QUALITY = (float) 1.0;
 	
@@ -144,6 +145,7 @@ public class ImageFileFormat extends EnumeratedType {
 	
 	/**
 	 * Get the quality 
+	 * @since 1.3
 	 */
 	public float getQuality() {
 		return quality;
@@ -151,6 +153,7 @@ public class ImageFileFormat extends EnumeratedType {
 	
 	/**
 	 * Set the quality for image.
+	 * @since 1.3
 	 */
 	public void setQuality(float quality) {
 		this.quality = quality;

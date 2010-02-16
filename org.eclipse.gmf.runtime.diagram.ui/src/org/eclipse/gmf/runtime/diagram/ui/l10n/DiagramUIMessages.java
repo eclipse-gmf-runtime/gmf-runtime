@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -260,7 +260,13 @@ public final class DiagramUIMessages extends NLS {
 	public static String CopyToImageDialog_filename_label;
 	public static String CopyToImageDialog_filename_default;
 	public static String CopyToImageDialog_imageformat_label;
+	/**
+	 * @since 1.3
+	 */
 	public static String CopyToImageDialog_quality_label;
+	/**
+	 * @since 1.3
+	 */
 	public static String CopyToImageDialog_quality_error_message;
 	public static String CopyToImageDialog_browse_label;
 	public static String CopyToImageDialog_DirectoryDialog_text;
