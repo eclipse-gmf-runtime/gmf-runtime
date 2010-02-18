@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
@@ -107,7 +106,7 @@ public class ConnectionAppearancePropertySection
 		Iterator it = getInput().iterator();
 
 		while (it.hasNext()) {
-			final ConnectionNodeEditPart ep = (ConnectionNodeEditPart) it
+			final ConnectionEditPart ep = (ConnectionEditPart) it
 				.next();
 
 			Resource res = ((View) ep.getModel()).eResource();
