@@ -39,7 +39,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * (e.g some layouts won't layout if nodes are laid out already)    
  * 
  * @author aboyko
- * @since 1.3.1
+ * @since 1.3 (1.3.1)
  */
 final public class ArrangeCommand extends AbstractTransactionalCommand {
 	
