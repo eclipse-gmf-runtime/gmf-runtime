@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,8 +101,7 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author James Bruck (jbruck)
  */
-public class JPSDiagramPrinter extends DiagramPrinter implements
-		java.awt.print.Printable {
+public class JPSDiagramPrinter extends DiagramPrinter implements java.awt.print.Printable {
 
 	// A constant that takes into account screen display DPI and the graphic DPI
 	// 72.0 DPI is an AWT constant @see java.awt.Graphics2D
@@ -138,10 +137,8 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	 * @param printerName
 	 */
 	public void setPrinter(String printerName) {
-		AttributeSet attributes = new HashPrintServiceAttributeSet(
-				new PrinterName(printerName, Locale.getDefault()));
-		PrintService[] services = PrintServiceLookup.lookupPrintServices(
-				DocFlavor.SERVICE_FORMATTED.PRINTABLE, attributes);
+		AttributeSet attributes = new HashPrintServiceAttributeSet(new PrinterName(printerName, Locale.getDefault()));
+		PrintService[] services = PrintServiceLookup.lookupPrintServices(DocFlavor.SERVICE_FORMATTED.PRINTABLE, attributes);
 		printService = services[0];
 	}
 
@@ -155,34 +152,23 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 		try {
 			while (it.hasNext()) {
 				Diagram diagram = it.next();
-				DiagramEditor openedDiagramEditor = DiagramEditorUtil
-						.findOpenedDiagramEditorForID(ViewUtil
-								.getIdStr(diagram));
-				DiagramEditPart dgrmEP = openedDiagramEditor == null ? PrintHelperUtil
-						.createDiagramEditPart(diagram, preferencesHint, shell)
-						: openedDiagramEditor.getDiagramEditPart();
+				DiagramEditor openedDiagramEditor = DiagramEditorUtil.findOpenedDiagramEditorForID(ViewUtil.getIdStr(diagram));
+				DiagramEditPart dgrmEP = openedDiagramEditor == null ? PrintHelperUtil.createDiagramEditPart(diagram, preferencesHint, shell) : openedDiagramEditor.getDiagramEditPart();
 
-				boolean loadedPreferences = openedDiagramEditor != null
-						|| PrintHelperUtil.initializePreferences(dgrmEP,
-								preferencesHint);
+				boolean loadedPreferences = openedDiagramEditor != null || PrintHelperUtil.initializePreferences(dgrmEP, preferencesHint);
 
 				RootEditPart rep = dgrmEP.getRoot();
 				if (rep instanceof DiagramRootEditPart) {
 					this.mapMode = ((DiagramRootEditPart) rep).getMapMode();
 				}
 
-				IPreferenceStore preferenceStore = ((DiagramGraphicalViewer) dgrmEP
-						.getViewer()).getWorkspaceViewerPreferenceStore();
-				if (preferenceStore
-						.getBoolean(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS)) {
+				IPreferenceStore preferenceStore = ((DiagramGraphicalViewer) dgrmEP.getViewer()).getWorkspaceViewerPreferenceStore();
+				if (preferenceStore.getBoolean(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS)) {
 					if (dgrmEP.getDiagramPreferencesHint().getPreferenceStore() != null) {
-						preferenceStore = (IPreferenceStore) dgrmEP
-								.getDiagramPreferencesHint()
-								.getPreferenceStore();
+						preferenceStore = (IPreferenceStore) dgrmEP.getDiagramPreferencesHint().getPreferenceStore();
 					}
 				}
-				doPrintDiagram(printService.createPrintJob(), dgrmEP,
-						loadedPreferences, preferenceStore);
+				doPrintDiagram(printService.createPrintJob(), dgrmEP, loadedPreferences, preferenceStore);
 			}
 		} finally {
 			dispose();
@@ -203,31 +189,25 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	 *            the preferenceStore that could either contain existing
 	 *            preferences or defaults
 	 */
-	protected void printToScale(DiagramEditPart dgrmEP,
-			boolean loadedPreferences, IPreferenceStore fPreferences) {
+	protected void printToScale(DiagramEditPart dgrmEP, boolean loadedPreferences, IPreferenceStore fPreferences) {
 
-		Rectangle figureBounds = PrintHelperUtil.getPageBreakBounds(dgrmEP,
-				loadedPreferences);
+		Rectangle figureBounds = PrintHelperUtil.getPageBreakBounds(dgrmEP, loadedPreferences);
 
-		org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper
-				.getPageSize(fPreferences, getMapMode());
+		org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper.getPageSize(fPreferences, getMapMode());
 		//
 		// Translate to offset initial figure position
 		//
-		translated = new Point((int) (-figureBounds.x * userScale),
-				(int) (-figureBounds.y * userScale));
+		translated = new Point((int) (-figureBounds.x * userScale), (int) (-figureBounds.y * userScale));
 		//
 		// Calculate the number of page rows and columns
 		//
 		int numRows = 0, numCols = 0;
 
-		PageMargins margins = adjustMarginsToScale(PageInfoHelper
-				.getPageMargins(fPreferences, getMapMode()));
+		PageMargins margins = adjustMarginsToScale(PageInfoHelper.getPageMargins(fPreferences, getMapMode()));
 
 		FontData fontData = JFaceResources.getDefaultFont().getFontData()[0];
 
-		org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP,
-				figureBounds, pageBounds, true);
+		org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageBounds, true);
 
 		numCols = pageCount.x;
 		numRows = pageCount.y;
@@ -244,8 +224,7 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			col = calculateColumnFromPage(this.pageFrom, numCols, row);
 
 			finalRow = calculateRowFromPage(this.pageTo, numCols);
-			finalColumn = calculateColumnFromPage(this.pageTo, numCols,
-					finalRow);
+			finalColumn = calculateColumnFromPage(this.pageTo, numCols, finalRow);
 		}
 		//
 		// Print the pages in row, column order
@@ -253,16 +232,13 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 		for (; row <= numRows; row++) {
 			for (; col <= numCols; col++) {
 
-				pageList.add(new PageData(pageList.size(), row, col, dgrmEP,
-						figureBounds, margins, fontData, fPreferences));
+				pageList.add(new PageData(pageList.size(), row, col, dgrmEP, figureBounds, margins, fontData, fPreferences));
 
-				if (row == finalRow && col == finalColumn
-						&& this.printRangePageSelection == true) {
+				if (row == finalRow && col == finalColumn && this.printRangePageSelection == true) {
 					break;
 				}
 			}
-			if (row == finalRow && col == finalColumn
-					&& this.printRangePageSelection == true) {
+			if (row == finalRow && col == finalColumn && this.printRangePageSelection == true) {
 				break;
 			}
 			col = 1;
@@ -284,16 +260,12 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	 *            the preferenceStore that could either contain existing
 	 *            preferences or defaults
 	 */
-	protected void printToPages(DiagramEditPart dgrmEP,
-			boolean loadedPreferences, IPreferenceStore fPreferences) {
+	protected void printToPages(DiagramEditPart dgrmEP, boolean loadedPreferences, IPreferenceStore fPreferences) {
 
-		Rectangle figureBounds = PrintHelperUtil.getPageBreakBounds(dgrmEP,
-				loadedPreferences);
+		Rectangle figureBounds = PrintHelperUtil.getPageBreakBounds(dgrmEP, loadedPreferences);
 
-		org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper
-				.getPageSize(fPreferences, getMapMode());
-		org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP,
-				figureBounds, pageBounds, false);
+		org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper.getPageSize(fPreferences, getMapMode());
+		org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageBounds, false);
 		int numCols = pageCount.x;
 		int numRows = pageCount.y;
 
@@ -316,11 +288,9 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 
 		this.userScale = Math.min(hScale, vScale);
 
-		PageMargins margins = adjustMarginsToScale(PageInfoHelper
-				.getPageMargins(fPreferences, getMapMode()));
+		PageMargins margins = adjustMarginsToScale(PageInfoHelper.getPageMargins(fPreferences, getMapMode()));
 
-		translated = new Point((int) (-figureBounds.x * userScale),
-				(int) (-figureBounds.y * userScale));
+		translated = new Point((int) (-figureBounds.x * userScale), (int) (-figureBounds.y * userScale));
 
 		FontData fontData = JFaceResources.getDefaultFont().getFontData()[0];
 
@@ -337,23 +307,19 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			col = calculateColumnFromPage(this.pageFrom, this.columns, row);
 
 			finalRow = calculateRowFromPage(this.pageTo, this.columns);
-			finalColumn = calculateColumnFromPage(this.pageTo, this.columns,
-					finalRow);
+			finalColumn = calculateColumnFromPage(this.pageTo, this.columns, finalRow);
 		}
 
 		for (; row <= rows; row++) {
 			for (; col <= columns; col++) {
 
-				pageList.add(new PageData(pageList.size(), row, col, dgrmEP,
-						figureBounds, margins, fontData, fPreferences));
+				pageList.add(new PageData(pageList.size(), row, col, dgrmEP, figureBounds, margins, fontData, fPreferences));
 
-				if (row == finalRow && col == finalColumn
-						&& this.printRangePageSelection == true) {
+				if (row == finalRow && col == finalColumn && this.printRangePageSelection == true) {
 					break;
 				}
 			}
-			if (row == finalRow && col == finalColumn
-					&& this.printRangePageSelection == true) {
+			if (row == finalRow && col == finalColumn && this.printRangePageSelection == true) {
 				break;
 			}
 			col = 1;
@@ -365,24 +331,19 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	 * (non-Javadoc)
 	 * 
 	 * @see java.awt.print.Printable#print(java.awt.Graphics,
-	 *      java.awt.print.PageFormat, int)
+	 * java.awt.print.PageFormat, int)
 	 */
-	public int print(java.awt.Graphics printGraphics, PageFormat pageFormat,
-			int pageIndex) throws PrinterException {
+	public int print(java.awt.Graphics printGraphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
 
 		if (pageIndex >= pages.length) {
 			return java.awt.print.Printable.NO_SUCH_PAGE;
 		}
 
 		try {
-			printGraphics.setClip(0, 0, (int) pageFormat.getWidth(),
-					(int) pageFormat.getHeight());
-			
-			swtGraphics = new PrinterGraphicsToGraphics2DAdapter(
-					(java.awt.Graphics2D) printGraphics, new Rectangle(0, 0,
-							(int) pageFormat.getWidth(), (int) pageFormat
-									.getHeight()));
-						
+			printGraphics.setClip(0, 0, (int) pageFormat.getWidth(), (int) pageFormat.getHeight());
+
+			swtGraphics = new PrinterGraphicsToGraphics2DAdapter((java.awt.Graphics2D) printGraphics, new Rectangle(0, 0, (int) pageFormat.getWidth(), (int) pageFormat.getHeight()));
+
 			graphics = createMapModeGraphics(createPrinterGraphics(swtGraphics));
 			graphics.scale(AWT_DPI_CONST / display_dpi.x);
 			drawPage(pages[pageIndex]);
@@ -397,7 +358,9 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter#createMapModeGraphics(org.eclipse.draw2d.Graphics)
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter
+	 * #createMapModeGraphics(org.eclipse.draw2d.Graphics)
 	 */
 	protected MapModeGraphics createMapModeGraphics(Graphics theGraphics) {
 		return new RenderedMapModeGraphics(theGraphics, getMapMode());
@@ -417,31 +380,25 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	 *            obtain page information from preferences
 	 * @return PrintRequestAttribute set suitable for Java print service
 	 */
-	protected PrintRequestAttributeSet initializePrintOptions(
-			DocPrintJob printJob, String jobName, IPreferenceStore fPreferences) {
+	protected PrintRequestAttributeSet initializePrintOptions(DocPrintJob printJob, String jobName, IPreferenceStore fPreferences) {
 
-		PrintOptions advancedOptions = ((PrintHelper) (printHelper))
-				.getPrintOptions();
+		PrintOptions advancedOptions = ((PrintHelper) (printHelper)).getPrintOptions();
 
 		PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
 
-		if (fPreferences
-				.getBoolean(WorkspaceViewerProperties.PREF_USE_PORTRAIT)) {
+		if (fPreferences.getBoolean(WorkspaceViewerProperties.PREF_USE_PORTRAIT)) {
 			printRequestAttributeSet.add(OrientationRequested.PORTRAIT);
 		} else {
 			printRequestAttributeSet.add(OrientationRequested.LANDSCAPE);
 		}
 
-		String pageSize = fPreferences
-				.getString(WorkspaceViewerProperties.PREF_PAGE_SIZE);
+		String pageSize = fPreferences.getString(WorkspaceViewerProperties.PREF_PAGE_SIZE);
 
 		if (pageSize.compareToIgnoreCase(PageSetupPageType.LETTER.getName()) == 0) {
 			printRequestAttributeSet.add(MediaSizeName.NA_LETTER);
-		} else if (pageSize.compareToIgnoreCase(PageSetupPageType.LEGAL
-				.getName()) == 0) {
+		} else if (pageSize.compareToIgnoreCase(PageSetupPageType.LEGAL.getName()) == 0) {
 			printRequestAttributeSet.add(MediaSizeName.NA_LEGAL);
-		} else if (pageSize.compareToIgnoreCase(PageSetupPageType.EXECUTIVE
-				.getName()) == 0) {
+		} else if (pageSize.compareToIgnoreCase(PageSetupPageType.EXECUTIVE.getName()) == 0) {
 			printRequestAttributeSet.add(MediaSizeName.EXECUTIVE);
 		} else if (pageSize.compareToIgnoreCase(PageSetupPageType.A3.getName()) == 0) {
 			printRequestAttributeSet.add(MediaSizeName.ISO_A3);
@@ -472,16 +429,11 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			printRequestAttributeSet.add(Chromaticity.MONOCHROME);
 		}
 
-		MediaSizeName media = (MediaSizeName) printRequestAttributeSet
-				.get(Media.class);
-		MediaSize mediaSize = MediaSize.getMediaSizeForName(media);
+		final MediaSize mediaSize = getMediaSize(pageSize, printRequestAttributeSet, fPreferences);
 
-		printRequestAttributeSet.add(new MediaPrintableArea(0f, 0f, (mediaSize
-				.getX(MediaSize.INCH)), (mediaSize.getY(MediaSize.INCH)),
-				MediaPrintableArea.INCH));
+		printRequestAttributeSet.add(new MediaPrintableArea(0f, 0f, (mediaSize.getX(MediaSize.INCH)), (mediaSize.getY(MediaSize.INCH)), MediaPrintableArea.INCH));
 
-		printRequestAttributeSet.add(new Copies(printHelper
-				.getDlgNumberOfCopies()));
+		printRequestAttributeSet.add(new Copies(printHelper.getDlgNumberOfCopies()));
 
 		if (printHelper.getDlgCollate()) {
 			printRequestAttributeSet.add(SheetCollate.COLLATED);
@@ -499,6 +451,31 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	}
 
 	/**
+	 * Get the media size to use for printing.
+	 * 
+	 * @return the media size. <code>null</code> is never returned.
+	 */
+	private MediaSize getMediaSize(String pageSize, PrintRequestAttributeSet printRequestAttributeSet, IPreferenceStore fPreferences) {
+
+		MediaSize mediaSize;
+
+		if (pageSize.compareToIgnoreCase(PageSetupPageType.USER_DEFINED.getName()) == 0) {
+			float width = (float) fPreferences.getDouble(WorkspaceViewerProperties.PREF_PAGE_WIDTH);
+			float height = (float) fPreferences.getDouble(WorkspaceViewerProperties.PREF_PAGE_HEIGHT);
+			int units = fPreferences.getBoolean(WorkspaceViewerProperties.PREF_USE_INCHES) ? MediaSize.INCH : MediaSize.MM;
+			mediaSize = new MediaSize(width, height, units);
+		} else {
+			MediaSizeName media = (MediaSizeName) printRequestAttributeSet.get(Media.class);
+			mediaSize = MediaSize.getMediaSizeForName(media);
+		}
+		/* we were not able to find the media size, use the default one */
+		if (mediaSize == null) {
+			mediaSize = MediaSize.ISO.A4;
+		}
+		return mediaSize;
+	}
+
+	/**
 	 * Prints to scale or prints to rows x columns pages
 	 * 
 	 * @param printJob
@@ -506,13 +483,9 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	 * @param loadedPreferences
 	 * @param fPreferences
 	 */
-	protected void doPrintDiagram(DocPrintJob printJob,
-			DiagramEditPart diagramEditPart, boolean loadedPreferences,
-			IPreferenceStore fPreferences) {
+	protected void doPrintDiagram(DocPrintJob printJob, DiagramEditPart diagramEditPart, boolean loadedPreferences, IPreferenceStore fPreferences) {
 
-		PrintRequestAttributeSet printRequestAttributeSet = initializePrintOptions(
-				printJob, diagramEditPart.getDiagramView().getName(),
-				fPreferences);
+		PrintRequestAttributeSet printRequestAttributeSet = initializePrintOptions(printJob, diagramEditPart.getDiagramView().getName(), fPreferences);
 
 		if (isScaledPercent) {
 			printToScale(diagramEditPart, loadedPreferences, fPreferences);
@@ -520,30 +493,21 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			printToPages(diagramEditPart, loadedPreferences, fPreferences);
 		}
 
-		Doc doc = new SimpleDoc(this, DocFlavor.SERVICE_FORMATTED.PRINTABLE,
-				new HashDocAttributeSet());
+		Doc doc = new SimpleDoc(this, DocFlavor.SERVICE_FORMATTED.PRINTABLE, new HashDocAttributeSet());
 
 		try {
 			printJob.print(doc, printRequestAttributeSet);
 		} catch (PrintException e) {
 
-			Trace.catching(DiagramPrintingPlugin.getInstance(),
-					DiagramPrintingDebugOptions.EXCEPTIONS_CATCHING,
-					DiagramPrinterUtil.class, e.getMessage(), e);
-			Log.warning(DiagramPrintingPlugin.getInstance(),
-					DiagramPrintingStatusCodes.RESOURCE_FAILURE,
-					e.getMessage(), e);
+			Trace.catching(DiagramPrintingPlugin.getInstance(), DiagramPrintingDebugOptions.EXCEPTIONS_CATCHING, DiagramPrinterUtil.class, e.getMessage(), e);
+			Log.warning(DiagramPrintingPlugin.getInstance(), DiagramPrintingStatusCodes.RESOURCE_FAILURE, e.getMessage(), e);
 
 			Display display = diagramEditPart.getViewer().getControl().getDisplay();
 			if (display == null) {
 				display = DisplayUtils.getDisplay();
 			}
-			
-			MessageDialog
-					.openError(
-							display.getActiveShell(),
-							DiagramUIPrintingMessages.JPSDiagramPrinterUtil_ErrorTitle,
-							DiagramUIPrintingMessages.JPSDiagramPrinterUtil_ErrorMessage);
+
+			MessageDialog.openError(display.getActiveShell(), DiagramUIPrintingMessages.JPSDiagramPrinterUtil_ErrorTitle, DiagramUIPrintingMessages.JPSDiagramPrinterUtil_ErrorMessage);
 		}
 	}
 
@@ -556,31 +520,28 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	 *            indicates which page to print.
 	 */
 	protected void drawPage(PageData page) {
-		
+
 		this.graphics.pushState();
 
 		Display display = DisplayUtils.getDisplay();
-		
+
 		int shellStyle = display.getActiveShell().getStyle();
 		boolean rtlEnabled = (shellStyle & SWT.MIRRORED) != 0;
-				
+
 		if (rtlEnabled) {
-			
-			org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-					.getPageSize(page.preferences, false, getMapMode());
 
-			Image image = new Image(display, getMapMode().LPtoDP(
-					pageSize.x), getMapMode().LPtoDP(pageSize.y));
+			org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper.getPageSize(page.preferences, false, getMapMode());
 
-			GC imgGC = new GC(image,  SWT.RIGHT_TO_LEFT);
+			Image image = new Image(display, getMapMode().LPtoDP(pageSize.x), getMapMode().LPtoDP(pageSize.y));
+
+			GC imgGC = new GC(image, SWT.RIGHT_TO_LEFT);
 			SWTGraphics tempSWTGraphic = new SWTGraphics(imgGC);
 			ScaledGraphics tempScaledGraphic = new RenderedScaledGraphics(tempSWTGraphic);
 			MapModeGraphics tempMapModeGraphic = createMapModeGraphics(tempScaledGraphic);
-			
+
 			imgGC.setFont(tempMapModeGraphic.getFont());
 
-			internalDrawPage(page.diagram, page.bounds, page.preferences,
-					page.margins, tempMapModeGraphic, page.row, page.column, true);
+			internalDrawPage(page.diagram, page.bounds, page.preferences, page.margins, tempMapModeGraphic, page.row, page.column, true);
 
 			this.graphics.drawImage(image, 0, 0);
 
@@ -589,11 +550,10 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			tempSWTGraphic.dispose();
 			imgGC.dispose();
 			image.dispose();
-			
+
 		} else {
-			
-			internalDrawPage(page.diagram, page.bounds, page.preferences,
-					page.margins, graphics, page.row, page.column, false);
+
+			internalDrawPage(page.diagram, page.bounds, page.preferences, page.margins, graphics, page.row, page.column, false);
 		}
 
 		this.graphics.popState();
@@ -602,13 +562,9 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	/**
 	 * The real rendering of the page to the given graphical object occurs here.
 	 */
-	protected void internalDrawPage(DiagramEditPart dgrmEP,
-			Rectangle figureBounds, IPreferenceStore fPreferences,
-			PageMargins margins, Graphics g, int rowIndex, int colIndex,
-			boolean RTL_ENABLED) {
+	protected void internalDrawPage(DiagramEditPart dgrmEP, Rectangle figureBounds, IPreferenceStore fPreferences, PageMargins margins, Graphics g, int rowIndex, int colIndex, boolean RTL_ENABLED) {
 
-		org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-				.getPageSize(fPreferences, false, getMapMode());
+		org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper.getPageSize(fPreferences, false, getMapMode());
 
 		int width = pageSize.x, height = pageSize.y;
 
@@ -627,7 +583,7 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 		int scaledHeight = (int) (height / userScale);
 
 		if (RTL_ENABLED) {
-			scaledTranslateX += (margins.left * (colIndex - 1))	+ (margins.right * (colIndex));
+			scaledTranslateX += (margins.left * (colIndex - 1)) + (margins.right * (colIndex));
 			scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
 		} else {
 			scaledTranslateX += ((margins.left * colIndex) + (margins.right * (colIndex - 1)));
@@ -636,13 +592,8 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 
 		g.translate(scaledTranslateX, scaledTranslateY);
 
-		Rectangle clip = new Rectangle(
-				(scaledWidth - margins.left - margins.right) * (colIndex - 1)
-						+ figureBounds.x,
-				(scaledHeight - margins.bottom - margins.top) * (rowIndex - 1)
-						+ figureBounds.y, scaledWidth - margins.right
-						- margins.left, scaledHeight - margins.top
-						- margins.bottom);
+		Rectangle clip = new Rectangle((scaledWidth - margins.left - margins.right) * (colIndex - 1) + figureBounds.x, (scaledHeight - margins.bottom - margins.top) * (rowIndex - 1) + figureBounds.y,
+				scaledWidth - margins.right - margins.left, scaledHeight - margins.top - margins.bottom);
 		g.clipRect(clip);
 
 		dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(g);
@@ -677,18 +628,17 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	 * @author James Bruck (jbruck)
 	 * 
 	 */
-	private class PrinterGraphicsToGraphics2DAdapter extends
-			GraphicsToGraphics2DAdaptor {
+	private class PrinterGraphicsToGraphics2DAdapter extends GraphicsToGraphics2DAdaptor {
 
-		public PrinterGraphicsToGraphics2DAdapter(Graphics2D graphics,
-				Rectangle viewPort) {
+		public PrinterGraphicsToGraphics2DAdapter(Graphics2D graphics, Rectangle viewPort) {
 			super(graphics, viewPort);
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.GraphicsToGraphics2DAdaptor#setLineWidth(int)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.
+		 * GraphicsToGraphics2DAdaptor#setLineWidth(int)
 		 */
 		public void setLineWidth(int width) {
 			super.setLineWidth(width);
@@ -698,11 +648,7 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			// Make a special case for line thickness to take the
 			// printer resolution into account.
 			//
-			scaledStroke = new BasicStroke(
-					(float) (width * AWT_DPI_CONST / 100), scaledStroke
-							.getEndCap(), scaledStroke.getLineJoin(),
-					scaledStroke.getMiterLimit(), scaledStroke.getDashArray(),
-					0);
+			scaledStroke = new BasicStroke((float) (width * AWT_DPI_CONST / 100), scaledStroke.getEndCap(), scaledStroke.getLineJoin(), scaledStroke.getMiterLimit(), scaledStroke.getDashArray(), 0);
 
 			getGraphics2D().setStroke(scaledStroke);
 		}
@@ -710,8 +656,8 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.GraphicsToGraphics2DAdaptor#fillGradient(int,
-		 *      int, int, int, boolean)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.
+		 * GraphicsToGraphics2DAdaptor#fillGradient(int, int, int, int, boolean)
 		 */
 		public void fillGradient(int x, int y, int w, int h, boolean vertical) {
 			//
@@ -719,16 +665,13 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			// offset if we use gradient fill. We will use an image
 			// instead.
 			//
-			Image tempImage = new Image(DisplayUtils.getDisplay(),
-					new org.eclipse.swt.graphics.Rectangle(x, y, w, h));
+			Image tempImage = new Image(DisplayUtils.getDisplay(), new org.eclipse.swt.graphics.Rectangle(x, y, w, h));
 			GC gc = new GC(tempImage);
 			SWTGraphics tempGraphics = new SWTGraphics(gc);
 
 			tempGraphics.setForegroundColor(swtGraphics.getForegroundColor());
 			tempGraphics.setBackgroundColor(swtGraphics.getBackgroundColor());
-			tempGraphics.fillGradient(
-					new org.eclipse.draw2d.geometry.Rectangle(0, 0, w, h),
-					vertical);
+			tempGraphics.fillGradient(new org.eclipse.draw2d.geometry.Rectangle(0, 0, w, h), vertical);
 			drawImage(tempImage, 0, 0, w, h, x, y, w, h);
 
 			tempGraphics.dispose();
