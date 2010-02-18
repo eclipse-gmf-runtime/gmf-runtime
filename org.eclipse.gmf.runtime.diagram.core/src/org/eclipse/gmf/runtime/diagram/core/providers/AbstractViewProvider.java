@@ -236,7 +236,7 @@ public class AbstractViewProvider
 				return null;
 			}
 
-			Object factory = constructor.newInstance((Object)null);
+			Object factory = constructor.newInstance(new Object[] { });
 			Method method = getCreationMethod(viewClass, constructorParams);
 			if (method == null) {
 				Log
