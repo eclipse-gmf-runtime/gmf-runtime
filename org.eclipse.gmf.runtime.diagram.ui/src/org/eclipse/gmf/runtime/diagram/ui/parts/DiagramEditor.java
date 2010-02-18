@@ -1119,7 +1119,7 @@ public abstract class DiagramEditor
     /**
      * Create the undo context. Subclasses may override to provide custom undo context.
      * @return the created undo context
-     * @since 1.3.1
+     * @since 1.3 (1.3.1)
      */
     protected IUndoContext createUndoContext() {
     	IUndoContext context;
@@ -1138,7 +1138,7 @@ public abstract class DiagramEditor
      * returns null which provides the built-in default label.
      * 
      * @return label for undo context
-     * @since 1.3.1
+     * @since 1.3 (1.3.1)
      */
     protected String createUndoContextLabel() {
            return null;

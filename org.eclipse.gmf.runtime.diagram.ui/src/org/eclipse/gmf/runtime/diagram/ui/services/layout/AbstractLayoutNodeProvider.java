@@ -85,6 +85,9 @@ abstract public class AbstractLayoutNodeProvider extends AbstractProvider
 		return viewsToSizesMap;
 	}
 
+	/**
+	 * @since 1.3 (1.3.1)
+	 */
 	public boolean canLayoutNodes(List layoutNodes,
 			boolean shouldOffsetFromBoundingBox, IAdaptable layoutHint) {
 		return layoutNodes != null && !layoutNodes.isEmpty();

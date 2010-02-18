@@ -300,6 +300,9 @@ final public class LayoutService extends Service implements
 				offsetFromBoundingBox, layoutHint));
 	}
 
+	/**
+	 * @since 1.3 (1.3.1)
+	 */
 	public boolean canLayoutNodes(List layoutNodes,
 			boolean shouldOffsetFromBoundingBox, IAdaptable layoutHint) {
 		return execute(new CanLayoutNodesOperation(layoutNodes, shouldOffsetFromBoundingBox, layoutHint)) == Boolean.TRUE;

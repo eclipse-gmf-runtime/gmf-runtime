@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
  * the provider. The layout operation is executed on the first provider (in
  * descending order of priority) that is found to provide the operation.
  * 
+ * @noimplement This interface is not intended to be implemented by clients.
  * IMPORTANT: This interface is <EM>not</EM> intended to be implemented by
  * clients. Clients should inherit from
  * {@link org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutNodeProvider}.
@@ -75,7 +76,7 @@ public interface ILayoutNodeProvider extends IProvider {
 	 *            <code>LayoutType.RADIAL</code>.
 	 * @return <code>true</code> if nodes can be laid out
 	 * 
-	 * @since 1.3.1
+	 * @since 1.3 (1.3.1)
 	 */
 	public boolean canLayoutNodes(List layoutNodes,
 			boolean shouldOffsetFromBoundingBox, IAdaptable layoutHint);
