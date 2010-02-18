@@ -13,9 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 import java.util.List;
 
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.ScrollPane;
@@ -514,12 +516,19 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 */
 	public void setFitContents(boolean fitContents) {
 		if (fitContents != isFitContents()) {
+			LayoutManager lm = getContentPane().getLayoutManager(); 
 			if (fitContents) {
 				this.flags |= FLAG__FIT_CONTENTS;
+				if (lm instanceof FreeformLayout) {
+					((FreeformLayout)lm).setPositiveCoordinates(true);
+				}
 			} else {
 				this.flags &= ~FLAG__FIT_CONTENTS;
+				if (lm instanceof FreeformLayout) {
+					((FreeformLayout)lm).setPositiveCoordinates(false);
+				}
 			}
-			revalidate();
+			getContentPane().revalidate();
 		}
 	}
 
