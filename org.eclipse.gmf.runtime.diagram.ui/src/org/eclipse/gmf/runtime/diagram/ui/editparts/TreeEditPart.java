@@ -166,7 +166,7 @@ public class TreeEditPart
             return text;
         }
 
-        return ""; //$NON-NLS-1$
+        return super.getText(); 
     }
 
     /**
