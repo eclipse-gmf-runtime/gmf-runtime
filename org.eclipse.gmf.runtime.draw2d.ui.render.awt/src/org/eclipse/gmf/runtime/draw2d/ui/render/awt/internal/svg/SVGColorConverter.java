@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,7 +48,6 @@ public class SVGColorConverter {
 	 */
 	private SVGColorConverter() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
@@ -88,12 +87,25 @@ public class SVGColorConverter {
 	public static final String COLON = ":"; 	//$NON-NLS-1$		
 
 	private boolean isBlack(String color) {
-		return color.equals( "#000000" ) || color.toUpperCase().equals("BLACK");//$NON-NLS-1$//$NON-NLS-2$
+		String cleanColorStr = cleanFromSpaces(color);
+		return cleanColorStr.equals("#000000") || cleanColorStr.equalsIgnoreCase("BLACK") || cleanColorStr.equalsIgnoreCase("rgb(0,0,0)");//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	}
 	
 	private boolean isWhite(String color) {
-		return color.equals( "#FFFFFF" ) || color.toUpperCase().equals("WHITE");//$NON-NLS-1$//$NON-NLS-2$
+		String cleanColorStr = cleanFromSpaces(color);
+		return cleanColorStr.equalsIgnoreCase("#FFFFFF") || cleanColorStr.equalsIgnoreCase("WHITE") || cleanColorStr.equalsIgnoreCase("rgb(255,255,255)");//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	}	
+	
+	private String cleanFromSpaces(String s) {
+		char [] chars = new char[s.length()];
+		int index = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) != ' ') {
+				chars[index++] = s.charAt(i); 
+			}
+		}
+		return new String(chars, 0, index);
+	}
 	
 	/**
 	 * setColorAttribute
