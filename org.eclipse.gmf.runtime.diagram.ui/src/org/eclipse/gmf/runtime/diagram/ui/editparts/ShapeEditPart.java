@@ -200,7 +200,8 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 	 * @return EditPolicy
 	 */
 	public EditPolicy getPrimaryDragEditPolicy() {
-		return new ResizableShapeEditPolicy();
+		EditPolicy policy = getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE);
+		return policy != null ? policy : new ResizableShapeEditPolicy();
 	}
 
     public EditPart getTargetEditPart(Request request) {
