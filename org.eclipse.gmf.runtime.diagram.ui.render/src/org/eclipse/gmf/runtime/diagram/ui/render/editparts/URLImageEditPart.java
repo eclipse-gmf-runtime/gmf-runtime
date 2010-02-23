@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,11 +11,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.render.editparts;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Path;
-
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.gmf.runtime.common.ui.util.FileUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
@@ -123,12 +126,26 @@ abstract public class URLImageEditPart
 	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.AbstractImageEditPart#regenerateImageFromSource()
 	 */
 	final protected RenderedImage regenerateImageFromSource() {
-		
 		URL url = getURL();
-		
-		// read in the file source specified by the URI, otherwise return null;
-		if (url != null)
-			return RenderedImageFactory.getInstance(url);
+		if (url != null) {
+			URI uri = URI.createURI(url.toString());
+			
+			try {
+				InputStream is = getEditingDomain().getResourceSet().getURIConverter().createInputStream(uri);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				
+				int b = is.read();
+				while (b != -1) {
+					baos.write(b);
+					b = is.read();
+				}
+				
+				// read in the file source specified by the URI, otherwise return null;
+				return RenderedImageFactory.getInstance(baos.toByteArray());
+			} catch (IOException e) {
+				// Ignore and return null;
+			}
+		}
 		
 		return null;
 	}
