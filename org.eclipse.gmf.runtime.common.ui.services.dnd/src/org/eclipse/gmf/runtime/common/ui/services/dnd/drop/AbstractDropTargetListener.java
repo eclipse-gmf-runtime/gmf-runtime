@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.drop;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +50,7 @@ public abstract class AbstractDropTargetListener
 	/**
 	 * Attribute for the drop target context.
 	 */
-	private IDropTargetContext context = null;
+	private WeakReference<IDropTargetContext> context = null;
 
 	/**
 	 * Attribute for the current transfer agent.
@@ -308,7 +309,8 @@ public abstract class AbstractDropTargetListener
 	 * @return IDropTargetContext
 	 */
 	protected final IDropTargetContext getContext() {
-		return context;
+		if(context==null) return null;
+		return context.get();
 	}
 
 	/*
@@ -359,7 +361,7 @@ public abstract class AbstractDropTargetListener
 	public final boolean canSupport(IDropTargetContext cntxt,
 			IDropTargetEvent currEvent, ITransferAgent currAgent) {
 		/* Set the context */
-		this.context = cntxt;
+		this.context = new WeakReference<IDropTargetContext>(cntxt);
 		/* Set the event */
 		this.currentEvent = currEvent;
 		/* Set the agent */

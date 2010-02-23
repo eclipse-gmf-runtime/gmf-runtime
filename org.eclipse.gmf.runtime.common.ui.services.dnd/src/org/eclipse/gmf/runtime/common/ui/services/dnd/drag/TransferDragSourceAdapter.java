@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,10 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.drag;
 
-import org.eclipse.swt.dnd.DragSourceEvent;
+import java.lang.ref.WeakReference;
 
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
+import org.eclipse.swt.dnd.DragSourceEvent;
 
 /**
  * Parent of all the transfer drag source adapters. Every transfer type drag
@@ -38,7 +39,7 @@ public class TransferDragSourceAdapter
 	/**
 	 * Attribute for the drag source context.
 	 */
-	private IDragSourceContext context;
+	private WeakReference<IDragSourceContext> context;
 
 	/**
 	 * Constructor for TransferDragSourceAdapter.
@@ -68,7 +69,8 @@ public class TransferDragSourceAdapter
 	 * @return IDragSourceContext
 	 */
 	protected final IDragSourceContext getContext() {
-		return context;
+		if (context == null) return null;
+		return context.get();
 	}
 
 	/*
@@ -119,7 +121,7 @@ public class TransferDragSourceAdapter
 		assert null != dragSourceContext : "dragSourceContext cannot be null"; //$NON-NLS-1$
 
 		this.listeners = dragSourceListeners;
-		this.context = dragSourceContext;
+		this.context = new WeakReference<IDragSourceContext>(dragSourceContext);
 	}
 
 	/*

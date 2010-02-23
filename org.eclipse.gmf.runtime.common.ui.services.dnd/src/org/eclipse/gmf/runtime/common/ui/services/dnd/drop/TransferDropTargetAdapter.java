@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.drop;
+
+import java.lang.ref.WeakReference;
 
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
@@ -47,7 +49,7 @@ public class TransferDropTargetAdapter
 	/**
 	 * Attribute for the drop target context.
 	 */
-	private IDropTargetContext context;
+	private WeakReference<IDropTargetContext> context;
 
 	/**
 	 * Attribute for the current event
@@ -168,7 +170,8 @@ public class TransferDropTargetAdapter
 	 * @return IDropTargetContext
 	 */
 	protected final IDropTargetContext getContext() {
-		return context;
+		if(context == null) return null;
+		return context.get();
 	}
 
 	/*
@@ -179,7 +182,7 @@ public class TransferDropTargetAdapter
 	public final void init(IDropTargetContext initialContext) {
 		assert null != initialContext : "initialContext cannot be null"; //$NON-NLS-1$
 		
-		this.context = initialContext;
+		this.context = new WeakReference<IDropTargetContext>(initialContext);
 	}
 
 	/**
@@ -237,7 +240,7 @@ public class TransferDropTargetAdapter
 				try {
 					/* Update the listener */
 					listener = listeners[i];
-					if (listener.canSupport(context, currentEvent,
+					if (listener.canSupport(getContext(), currentEvent,
 						transferAgent)) {
 						if (shouldTrace) {
 							Trace
@@ -309,7 +312,7 @@ public class TransferDropTargetAdapter
 		/* Get the drop target listeners */
 		IDropTargetListener[] listeners = DragDropListenerService.getInstance()
 			.getDropTargetListeners(
-				new DropListenerContext(context.getActivePart(), context
+				new DropListenerContext(getContext().getActivePart(), getContext()
 					.getCurrentTarget().getClass(), transferAgent
 					.getTransferId(), isCompatible));
 

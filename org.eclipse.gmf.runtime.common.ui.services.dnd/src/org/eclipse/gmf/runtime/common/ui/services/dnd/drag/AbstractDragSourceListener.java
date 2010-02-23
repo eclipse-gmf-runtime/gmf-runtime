@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.drag;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -29,7 +30,7 @@ public abstract class AbstractDragSourceListener
 	/**
 	 * Attribute for the drag source context.
 	 */
-	private IDragSourceContext context = null;
+	private WeakReference<IDragSourceContext> context = null;
 
 	/**
 	 * Attribute for the supporting transfer ids.
@@ -58,7 +59,7 @@ public abstract class AbstractDragSourceListener
 	 */
 	public final boolean isDraggable(IDragSourceContext cntxt) {
 		/* Set the context */
-		this.context = cntxt;
+		this.context = new WeakReference<IDragSourceContext>(cntxt);
 
 		/* Check if draggable */
 		return isDraggable();
@@ -106,7 +107,8 @@ public abstract class AbstractDragSourceListener
 	 * @return IDragSourceContext
 	 */
 	protected final IDragSourceContext getContext() {
-		return context;
+		if (context == null) return null;
+		return context.get();
 	}
 
 	/**
