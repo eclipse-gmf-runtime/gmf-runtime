@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,8 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation
- *    Mariot Chauvin <mariot.chauvin@obeo.fr> - patch 242283
+ *    Mariot Chauvin - Bugzilla 242283
+ *    Matt Biggs - Bugzilla 298155
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.core.util;
@@ -26,6 +27,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -643,10 +645,13 @@ public class ViewUtil {
      * @return String the GUID of a view (constant)
      */
     public static String getIdStr(View view) {
-        String id = ((XMLResource) view.eResource()).getID(view);
-        if (id != null) {
-            return id;
-        }
+    	Resource resource = view.eResource();
+    	if( resource instanceof XMLResource ) {
+	        String id = ((XMLResource) resource).getID(view);
+	        if (id != null) {
+	            return id;
+	        }
+    	}
 
         // Remain compatible with previous behavior.
         return StringStatics.BLANK;
@@ -693,8 +698,11 @@ public class ViewUtil {
         for (Iterator children = view.getChildren().iterator(); children
             .hasNext();) {
             View child = (View) children.next();
-            if (idStr.equals(((XMLResource) child.eResource()).getID(child))) {
-                return child;
+            Resource resource = child.eResource();
+            if( resource instanceof XMLResource ) {
+	            if (idStr.equals(((XMLResource) resource).getID(child))) {
+	                return child;
+	            }
             }
         }
         return null;
