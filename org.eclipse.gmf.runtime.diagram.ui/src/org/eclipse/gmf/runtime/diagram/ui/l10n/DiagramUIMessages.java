@@ -261,11 +261,11 @@ public final class DiagramUIMessages extends NLS {
 	public static String CopyToImageDialog_filename_default;
 	public static String CopyToImageDialog_imageformat_label;
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	public static String CopyToImageDialog_quality_label;
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	public static String CopyToImageDialog_quality_error_message;
 	public static String CopyToImageDialog_browse_label;
