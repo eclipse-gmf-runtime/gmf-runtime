@@ -37,7 +37,7 @@ public class ImageFileFormat extends EnumeratedType {
 	
 	/**
 	 * The default quality.
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	public static final float DEFAULT_QUALITY = (float) 1.0;
 	
@@ -145,7 +145,7 @@ public class ImageFileFormat extends EnumeratedType {
 	
 	/**
 	 * Get the quality 
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	public float getQuality() {
 		return quality;
@@ -153,7 +153,7 @@ public class ImageFileFormat extends EnumeratedType {
 	
 	/**
 	 * Set the quality for image.
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	public void setQuality(float quality) {
 		this.quality = quality;
