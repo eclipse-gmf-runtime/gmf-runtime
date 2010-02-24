@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,29 +44,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 public abstract class CompoundLayoutProvider
     extends CompositeLayoutProvider {
     
-    /* (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
-     */
-    /*public boolean provides(IOperation operation) {
-      if (operation instanceof ILayoutNodeOperation) {
-            Iterator nodes = ((ILayoutNodeOperation) operation)
-                .getLayoutNodes().listIterator();
-            if (nodes.hasNext()) {
-                View node = ((ILayoutNode) nodes.next()).getNode();
-                View container = (View) node.eContainer();
-                if (!(container instanceof Diagram)
-                    || !((Diagram) container).getType().equals("logic")) //$NON-NLS-1$
-                    return false;
-            }
-        } else {
-            return false;
-        }
-        IAdaptable layoutHint = ((ILayoutNodeOperation) operation)
-            .getLayoutHint();
-        String layoutType = (String) layoutHint.getAdapter(String.class);
-        return LayoutType.DEFAULT.equals(layoutType);
-    }*/
-
     /* (non-Javadoc)
      * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#build_nodes(java.util.List, java.util.Map, org.eclipse.draw2d.graph.Subgraph)
      */
@@ -199,8 +176,10 @@ public abstract class CompoundLayoutProvider
         parent.addMember(node);
     }
         
-    private class virtualNodesToNodes extends HashMap{
-        Set virtualNodes = new HashSet();
+    private class virtualNodesToNodes extends HashMap {
+		private static final long serialVersionUID = 8408938537765815482L;
+		
+		Set virtualNodes = new HashSet();
         public void addNode(Subgraph sg, Node node){
             virtualNodes.add(sg);
             put(node, sg);
@@ -210,10 +189,5 @@ public abstract class CompoundLayoutProvider
             return (Subgraph)get(node);
         }
         
-        public NodeList getVirtualNodes(){
-            NodeList nodeList = new NodeList();
-            nodeList.addAll(virtualNodes);
-            return nodeList;
-        }
     }
 }

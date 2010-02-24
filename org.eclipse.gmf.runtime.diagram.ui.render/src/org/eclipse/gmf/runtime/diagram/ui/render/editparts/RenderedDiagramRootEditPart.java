@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,6 +58,7 @@ public class RenderedDiagramRootEditPart
 	static protected class DiagramRenderedScalableFreeformLayeredPane
 		extends DiagramScalableFreeformLayeredPane implements AnimatedZoomListener {
 
+		@SuppressWarnings("unused")
 		private boolean animatedZoomOn;
 		static final private Dimension MAX_RENDER_SIZE;
 		static {

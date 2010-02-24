@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -209,27 +209,6 @@ class EdgesRouter {
 			for (int i = 1; i < ce.endingRoutedPoints.size(); i++) {
 				edge.getPoints().addPoint(ce.endingRoutedPoints.getPoint(i));
 			}
-		}
-	}
-	
-	private void addSourceObstacle(Edge e, float ratio, boolean leftEdge, ShortestPathRouter router) {
-		int rankHeight = GraphUtilities.getRankHeightFromNode(e.source, g);
-		if (leftEdge && e.source.getLeft() != null) {
-			int leftX = e.source.getLeft().x + e.source.getLeft().width + g.getPadding(e.source.getLeft()).right;
-			int rightX = e.source.x + e.source.getOffsetOutgoing();
-			int uniformObstacle = (int) (leftX * (1 - ratio) + ratio * rightX);
-			int obstacleRightX = Math.min(e.start.x - 1, uniformObstacle);
-			int width = Math.max(obstacleRightX, OBSTACLE_WIDTH);
-			int height = Math.max(rankHeight, 2);
-			router.addObstacle(new Rectangle(obstacleRightX - width, e.source.getLeft().y, width, height));
-		} else if (e.source.getRight() != null) {
-			int leftX = e.source.x + e.source.getOffsetOutgoing();
-			int rightX = e.source.getRight().x - g.getPadding(e.source.getRight()).left;
-			int uniformObstacle = (int) (rightX * (1 - ratio) + ratio * leftX);
-			int obstacleLeftX = Math.max(e.start.x + 1, uniformObstacle);
-			int width = Math.max(g.getLayoutSize().width - obstacleLeftX, OBSTACLE_WIDTH);
-			int height = Math.max(rankHeight, 2);
-			router.addObstacle(new Rectangle(obstacleLeftX, e.source.getRight().y, width, height));
 		}
 	}
 	

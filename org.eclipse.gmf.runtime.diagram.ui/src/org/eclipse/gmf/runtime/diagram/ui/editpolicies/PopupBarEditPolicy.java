@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,6 +72,7 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 		private Image _icon = null;
 
 		/** The typeinfo used to create the Request for the command */
+		@SuppressWarnings("unused")
 		private IElementType _elementType;
 
 		/** The DracgTracker / Tool associatd with the popup bar button */
@@ -94,14 +95,6 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 			_dragTracker = theTracker;
 			_elementType = elementType;
 
-		}
-
-		/**
-		 * gets the element type associated with this Descriptor
-		 * @return element type
-		 */
-		public final IElementType getElementtype() {
-			return _elementType;
 		}
 
 		/**

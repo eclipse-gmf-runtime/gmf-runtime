@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -202,10 +202,6 @@ public class BorderItemRectilinearRouter
             this.offset = offset;
         }
 
-        public void setPosition(int position) {
-            this.position = position;
-        }
-
         public Point getReferencePoint() {
             Point referencePoint = getAnchorPoint();
             if (position == PositionConstants.SOUTH)
@@ -247,10 +243,6 @@ public class BorderItemRectilinearRouter
 
         public void removeAnchorListener(AnchorListener listener) {
             // nothing to do
-        }
-
-        public ConnectionAnchor getAnchor() {
-            return anchor;
         }
 
     }

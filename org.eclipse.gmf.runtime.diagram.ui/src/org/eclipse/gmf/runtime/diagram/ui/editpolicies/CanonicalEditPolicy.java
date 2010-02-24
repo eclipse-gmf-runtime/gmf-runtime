@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -128,15 +128,6 @@ implements NotificationListener {
 
 		
 		/**
-		 * constructor
-		 * @param cmd the command
-		 */
-		public AsyncCommand( ICommand cmd ) {
-			this( cmd.getLabel() );
-			add( cmd );
-		}
-		
-		/**
 		 * Executes the command asynchonously. 
 		 * Calls {@link #doExecute}.
 		 */
@@ -162,15 +153,6 @@ implements NotificationListener {
 		protected void doExecute() {
 			getCommand().execute(); 
 		}
-		
-		/**
-		 * Add supplied command to the list of commands to be executed.
-		 * @param cmd command to add
-		 */
-		public void add( ICommand cmd ) {
-			_cc.add( new ICommandProxy(cmd));
-		}
-
 		
 		/**
 		 * Add supplied command to the list of commands to be executed.
