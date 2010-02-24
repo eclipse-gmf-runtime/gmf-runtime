@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -533,7 +533,7 @@ public class StringUtil {
 	 * Finds a position of a special character that shouldn't be url encoded
 	 * starting from the given start index.
 	 * 
-	 * Special characters are % / & = + ?
+	 * Special characters are % / & = + ? #
 	 * 
 	 * @param string look for the special character in this string
 	 * @param start index to start looking at the string from
@@ -548,7 +548,8 @@ public class StringUtil {
 		int indices[] = new int[] {string.indexOf('%', start),
 			string.indexOf('/', start), string.indexOf('&', start),
 			string.indexOf('=', start), string.indexOf('+', start),
-			string.indexOf('?', start)};
+			string.indexOf('?', start), string.indexOf('#', start)
+			};
 		int index = -1;
 		for (int i = 0; i < indices.length; i++) {
 			if (indices[i] != -1 && indices[i] < index || index == -1) {
