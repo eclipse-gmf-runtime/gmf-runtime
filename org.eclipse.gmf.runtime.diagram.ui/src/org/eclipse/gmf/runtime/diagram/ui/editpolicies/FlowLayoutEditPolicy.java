@@ -18,7 +18,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 /**
  * Extension of the GEF Flow Layout EditPolicy.
  * 
- * @since 1.3
+ * @since 1.4
  */
 public abstract class FlowLayoutEditPolicy extends org.eclipse.gef.editpolicies.FlowLayoutEditPolicy {
 

@@ -17,7 +17,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 /**
  * Extension of the GEF Layout EditPolicy.
  * 
- * @since 1.3
+ * @since 1.4
  */
 public abstract class LayoutEditPolicy extends org.eclipse.gef.editpolicies.LayoutEditPolicy {
 
