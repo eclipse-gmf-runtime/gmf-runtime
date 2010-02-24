@@ -46,7 +46,7 @@ public final class EditingDomainUndoContext
      *            the editing domain
      * @param label
      *            the label for the context
-     * @since 1.3 (1.3.1)
+     * @since 1.4
      */
     public EditingDomainUndoContext(EditingDomain domain, String label) {
         this.editingDomain = domain;
