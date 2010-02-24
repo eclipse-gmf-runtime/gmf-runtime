@@ -43,42 +43,42 @@ import org.eclipse.swt.graphics.RGB;
 public class ListScrollBar extends ScrollBar {
 
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected ArrowButton downButtonFigure;
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected ArrowButton upButtonFigure;
 	ThumbFigure thumb;
 	
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected static Color fillLightGrey = new Color(null, new RGB(240, 240, 240));
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected static Color outlineLightGrey = new Color(null, new RGB(185, 185, 185));
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected static Color fillDarkGrey = new Color(null, new RGB(84, 84, 84));
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected static Color outlineDarkGrey = new Color(null, new RGB(109, 109, 109));
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected static Color arrowFill = new Color(null, new RGB(187, 187, 187));
 	
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected int mm_1;
 	/**
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected int mm_2;
 
@@ -187,7 +187,7 @@ public class ListScrollBar extends ScrollBar {
 	/**
 	 * Updates colors of down button depending on its state (highlighted,
 	 * pressed, or neither)
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected void updateDownColors() {
 		boolean pressed = false;
@@ -219,7 +219,7 @@ public class ListScrollBar extends ScrollBar {
 	/**
 	 * Updates colors of up button depending on its state (highlighted,
 	 * pressed, or neither)
-	 * @since 1.3
+	 * @since 1.4
 	 */	
 	protected void updateUpColors() {
 		boolean pressed = false;
@@ -253,7 +253,7 @@ public class ListScrollBar extends ScrollBar {
 	 * 
 	 * @author lgrahek
 	 * 
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected class ArrowButton extends Figure 
 	{
@@ -406,7 +406,7 @@ public class ListScrollBar extends ScrollBar {
 	 * 
 	 * @author lgrahek
 	 * 
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected class ThumbFigure extends Panel {		
 		boolean highlighted;
@@ -475,7 +475,7 @@ public class ListScrollBar extends ScrollBar {
 	 * 
 	 * @author lgrahek
 	 * 
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	protected class ThumbDraggerColors extends ThumbDragger {
 		
