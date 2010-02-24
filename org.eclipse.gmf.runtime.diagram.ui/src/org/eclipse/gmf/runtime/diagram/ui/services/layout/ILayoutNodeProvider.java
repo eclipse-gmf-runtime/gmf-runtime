@@ -76,7 +76,7 @@ public interface ILayoutNodeProvider extends IProvider {
 	 *            <code>LayoutType.RADIAL</code>.
 	 * @return <code>true</code> if nodes can be laid out
 	 * 
-	 * @since 1.3 (1.3.1)
+	 * @since 1.4
 	 */
 	public boolean canLayoutNodes(List layoutNodes,
 			boolean shouldOffsetFromBoundingBox, IAdaptable layoutHint);

@@ -301,7 +301,7 @@ final public class LayoutService extends Service implements
 	}
 
 	/**
-	 * @since 1.3 (1.3.1)
+	 * @since 1.4
 	 */
 	public boolean canLayoutNodes(List layoutNodes,
 			boolean shouldOffsetFromBoundingBox, IAdaptable layoutHint) {
