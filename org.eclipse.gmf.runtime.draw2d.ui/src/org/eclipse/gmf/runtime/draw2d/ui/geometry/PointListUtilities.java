@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1921,7 +1921,25 @@ public class PointListUtilities {
     public static PointList calcRoundedCornersPolyline(PointList points, int r, 
     		Hashtable<Integer, Integer> rForBendpoint, boolean calculateAppoxPoints) {
     	PointList newPoints = new PointList();
-    	newPoints.addPoint(points.getFirstPoint());    	
+    	// First, clean up the points list if needed. Each segment is defined by two end points,
+    	// so if it happens that the segment has points in between, remove them since there is no
+    	// use for them, they can just create problems.
+    	int k = 1;
+    	while (k < points.size() - 1) {
+       		int x0 = points.getPoint(k-1).x;
+    		int y0 = points.getPoint(k-1).y;
+    		int x1 = points.getPoint(k).x;
+    		int y1 = points.getPoint(k).y;
+    		int x2 = points.getPoint(k+1).x;
+    		int y2 = points.getPoint(k+1).y;
+    		if ((x0 == x1 && x1 == x2) || (y0 == y1 && y1 == y2)) {
+    			// (x1, y1) is not needed, remove it
+    			points.removePoint(k);
+    		} else {
+    			k++;
+    		}
+    	}
+    	newPoints.addPoint(points.getFirstPoint()); 
     	int rDefault = r;
     	for (int i = 1; i < points.size() - 1; i++) {
     		int x0 = points.getPoint(i-1).x;
@@ -1949,7 +1967,7 @@ public class PointListUtilities {
     		} else if (x0 < x1 && x2 == x1 && y0 == y1 && y2 > y1) {
     			cornerCase = 8;
     		} else {
-    			return null; // not rectilinear routing
+    			return null; // not rectilinear routing - shouldn't happen
     		}
     		// It is possible that the distance between (x0, y0) and (x1, y1), or (x1, y1) and (x2, y2) 
     		// is smaller than the desired arc width and heighr r. In that case, we have to shrink the arc

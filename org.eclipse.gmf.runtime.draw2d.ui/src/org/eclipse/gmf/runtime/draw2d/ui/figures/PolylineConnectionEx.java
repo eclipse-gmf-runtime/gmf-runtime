@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -121,9 +121,13 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
 
     private static final int JUMPLINK_DEFAULT_SMOOTHNESS = 30;
     
-    // round bendpoints radius (applicable only for rectilinear routing with no smoothness)
-    // default value 0 means that bendpoints are not rounded
-    private int roundedBendpointsRadius = 0;
+	// round bendpoints radius (applicable only for rectilinear routing with no
+	// smoothness) default value 0 means that bendpoints are not rounded
+	private int roundedBendpointsRadius = 0;
+	// if rounding bendpoints fails (it shouldn't happen), then roundedBendpointsRadius is set to 0 so
+	// connection can be routed without rounded corners, and origRoundedBendpointsRad gets
+	// the original value of roundedBendpointsRadius (so it can be used in future attempts)
+	private int origRoundedBendpointsRad = 0;
     
     private long styleBits;
     private JumpLinkSet jumpLinkSet;
@@ -348,6 +352,11 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
         } else if (isRoundingBendpoints()){
         	PointList result = getRoundedCornersPoints(calculateAppox);
         	if (result == null) {
+        		// this shouldn't happen, but if it does happen that rounded corners
+        		// cannot be calculated set radius to 0 and use original bendpoints
+        		// (will produce non-rounded rectangular connection)
+        		origRoundedBendpointsRad = roundedBendpointsRadius;
+        		roundedBendpointsRadius = 0;
         		result = PointListUtilities.copyPoints(getPoints());
         	}
         	return result;
@@ -424,6 +433,11 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
         }
         if (!isRoundingBendpoints()) {
         	g.drawPolyline(displayPoints);
+        	if (origRoundedBendpointsRad > 0) {
+        		// we unsuccessfully tried to do rounding, allow the next routing to try again.
+        		roundedBendpointsRadius = origRoundedBendpointsRad;
+        		origRoundedBendpointsRad = 0;
+        	}        	
         } else {
         	// In originalDisplayPoints, each bendpoint will be replaced with two points: start and end point of the arc.
         	// If jump links is on, then displayPoints will also contain points identifying jump links, if any.
@@ -1084,6 +1098,9 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
      */
     public void setRoundedBendpointsRadius(int radius) {
     	roundedBendpointsRadius = radius;
+    	if (origRoundedBendpointsRad > 0) {
+    		origRoundedBendpointsRad = radius;
+    	}
     }
     
     /**

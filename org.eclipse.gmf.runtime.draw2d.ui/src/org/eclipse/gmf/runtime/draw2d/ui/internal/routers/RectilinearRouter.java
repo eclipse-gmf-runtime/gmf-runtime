@@ -70,6 +70,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 							getOffShapeDirection(getAnchorOffRectangleDirection(
 									newLine.getLastPoint(),
 									targetBoundsRelativeToConnection(conn))));
+			removeRedundantPoints(newLine);
 			return;
 		}
 		
