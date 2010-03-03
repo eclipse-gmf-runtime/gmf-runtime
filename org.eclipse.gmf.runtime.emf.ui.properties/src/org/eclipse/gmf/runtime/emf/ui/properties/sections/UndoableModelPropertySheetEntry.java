@@ -17,7 +17,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.TriggeredOperations;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -196,7 +198,7 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
             values[i] = newValue;
 
         // Inform our parent
-        getParentEntry().valueChanged(
+        IStatus status = getParentEntry().executeValueChangedCommand(
                 this,
                 getCompositeCommand(MessageFormat.format(
                 		EMFUIPropertiesMessages.UndoablePropertySheetEntry_commandName,
@@ -204,7 +206,8 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
         
         // Remember the new value so that we don't apply this same value more
         // than once.
-        editValue = newValue;
+        if (status.isOK())
+        	editValue = newValue;
     }
 
     /**
@@ -220,9 +223,34 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
      * @param child
      *            the child entry that changed its value
      * @param command
-     *            the command into which to compose my property chnage command
+     *            the command into which to compose my property change command
+     * @see executeValueChanged
      */
+    @Deprecated
     protected void valueChanged(UndoableModelPropertySheetEntry child,
+            ICommand command) {
+    	executeValueChangedCommand(child, command);
+    }
+    
+    
+    /**
+     * The value of the given child entry has changed. Therefore we must set
+     * this change into our value objects.
+     * <p>
+     * We must inform our parent so that it can update its value objects
+     * </p>
+     * <p>
+     * Subclasses may override to set the property value in some custom way.
+     * </p>
+     * 
+     * @param child
+     *            the child entry that changed its value
+     * @param command
+     *            the command into which to compose my property change command
+     * @return the the IStatus indicating whether the execution succeeded.
+     * @since 1.4
+     */
+    protected IStatus executeValueChangedCommand(UndoableModelPropertySheetEntry child,
             ICommand command) {
 
         String propertyName = child.getDescriptor().getDisplayName();
@@ -235,13 +263,13 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
 
         // inform our parent
         if (getParentEntry() != null) {
-            getParentEntry().valueChanged(this, command);
+            return getParentEntry().executeValueChangedCommand(this, command);
         } else {
             //I am the root entry
             try {
                 TriggeredOperations triggerOperation = 
                     new TriggeredOperations(command, getOperationHistory());
-                getOperationHistory().execute(triggerOperation, new NullProgressMonitor(), null);
+                return getOperationHistory().execute(triggerOperation, new NullProgressMonitor(), null);
           
             } catch (ExecutionException e) {
                 Trace.catching(EMFPropertiesPlugin.getDefault(),
@@ -252,8 +280,10 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
                     EMFPropertiesStatusCodes.COMMAND_FAILURE, e
                         .getLocalizedMessage(), e);
             }
+            return Status.CANCEL_STATUS;
         }
     }
+    
     
     /**
      * Extracts the editing domain from the <code>objects</code> if I am the
