@@ -102,8 +102,9 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
      * (non-Javadoc) Method declared on IPropertySheetEntry.
      */
     public void applyEditorValue() {
-    	if (editor == null || !editor.isActivated())
+    	if (editor == null) {
     	 	return;
+    	}
         
     	 if (!editor.isValueValid()) {
             setErrorText(editor.getErrorMessage());
