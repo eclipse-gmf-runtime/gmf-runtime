@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,6 +49,9 @@ public class BorderItemLocator
 	private Dimension borderItemOffset = new Dimension(1, 1);
 
 	private int preferredSide = PositionConstants.WEST;
+	
+	/** remembers the preferred side used when the locator was created*/
+	private int originalPreferredSide = PositionConstants.WEST;
 
 	private int currentSide = PositionConstants.WEST;
 	
@@ -96,6 +99,7 @@ public class BorderItemLocator
 	public BorderItemLocator(IFigure parentFigure, int preferredSide) {
 		this(parentFigure);
 		this.preferredSide = preferredSide;
+		this.originalPreferredSide = preferredSide;
 	}
 	
 	/**
@@ -110,6 +114,7 @@ public class BorderItemLocator
 	public BorderItemLocator(IFigure parentFigure, int preferredSide, int interval) {
 		this(interval, parentFigure);
 		this.preferredSide = preferredSide;
+		this.originalPreferredSide = preferredSide;
 	}
 	
 	/**
@@ -533,10 +538,15 @@ public class BorderItemLocator
         Dimension size = getSize(borderItem);
 		Rectangle rectSuggested = new Rectangle(
 			getPreferredLocation(borderItem), size);
-		int closestSide = findClosestSideOfParent(rectSuggested,
-			getParentBorder());
-		setPreferredSideOfParent(closestSide);
-
+		if (constraint.x == 0 && constraint.y == 0) {
+			// if setting back to the original position, use the preferred
+			// side that client indicated then
+			setPreferredSideOfParent(originalPreferredSide);
+		} else {
+			int closestSide = findClosestSideOfParent(rectSuggested,
+					getParentBorder());
+			setPreferredSideOfParent(closestSide);			
+		}
 		Point ptNewLocation = locateOnBorder(getPreferredLocation(borderItem),
 			getPreferredSideOfParent(), 0, borderItem);
         borderItem.setBounds(new Rectangle(ptNewLocation, size));
