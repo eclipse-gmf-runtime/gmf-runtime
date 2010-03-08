@@ -60,8 +60,7 @@ public class FreeFormLayoutEx
                 bounds.height = min.height;
             else if (max.height < bounds.height)
                 bounds.height = max.height;
-            bounds = bounds.getTranslated(offset);
-            f.setBounds(bounds);
+            f.setBounds(bounds.translate(offset));
         }
     }
     
