@@ -27,6 +27,7 @@ import org.eclipse.core.resources.FileInfoMatcherDescription;
 import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -577,6 +578,20 @@ public class FileObserverFilterTest
 		 * @see org.eclipse.core.resources.IResource#isVirtual()
 		 */
 		public boolean isVirtual() {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#getPathVariableManager()
+		 */
+		public IPathVariableManager getPathVariableManager() {
+			return null;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isFiltered()
+		 */
+		public boolean isFiltered() {
 			return false;
 		}
 	}
@@ -1380,6 +1395,20 @@ public class FileObserverFilterTest
 		 * @see org.eclipse.core.resources.IResource#isVirtual()
 		 */
 		public boolean isVirtual() {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#getPathVariableManager()
+		 */
+		public IPathVariableManager getPathVariableManager() {
+			return null;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isFiltered()
+		 */
+		public boolean isFiltered() {
 			return false;
 		}
 	}

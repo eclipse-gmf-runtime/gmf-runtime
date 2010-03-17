@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResourceProxy;
@@ -610,6 +611,20 @@ public class FileChangeEventTest extends TestCase {
 		 * @see org.eclipse.core.resources.IResource#isVirtual()
 		 */
 		public boolean isVirtual() {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#getPathVariableManager()
+		 */
+		public IPathVariableManager getPathVariableManager() {
+			return null;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isFiltered()
+		 */
+		public boolean isFiltered() {
 			return false;
 		}
 	}
