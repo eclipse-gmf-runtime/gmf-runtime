@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,6 +87,7 @@ public class SelectConnectionEditPartTracker extends SelectEditPartTracker {
 		
 		PointList points = getConnection().getPoints();
 		Dimension size = new Dimension(7, 7);
+		getConnection().translateToRelative(size);
 		for (int i=1; i<points.size()-1; i++) {
 			Point ptCenter = points.getPoint(i);
 			Rectangle rect = new Rectangle( ptCenter.x - size.width / 2, ptCenter.y - size.height / 2, size.width, size.height);
