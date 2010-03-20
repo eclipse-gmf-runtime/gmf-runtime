@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -124,7 +125,10 @@ final public class ArrangeCommand extends AbstractTransactionalCommand {
         TransactionalEditingDomain editingDomain = getEditingDomain(); 
         CompositeTransactionalCommand ctc = new CompositeTransactionalCommand(editingDomain, StringStatics.BLANK);        
         if (layoutRun instanceof IInternalLayoutRunnable) {
-            ctc.add(new CommandProxy(((IInternalLayoutRunnable) layoutRun).getCommand()));        
+        	Command cmd = ((IInternalLayoutRunnable) layoutRun).getCommand();
+        	if (cmd != null) {
+        		ctc.add(new CommandProxy(cmd));
+        	}
         }
         else {
             ctc.add(new AbstractTransactionalCommand(editingDomain, StringStatics.BLANK, null) {

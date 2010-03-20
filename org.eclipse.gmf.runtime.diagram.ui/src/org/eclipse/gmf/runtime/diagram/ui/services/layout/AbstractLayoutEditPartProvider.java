@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,7 +56,9 @@ abstract public class AbstractLayoutEditPartProvider extends
 			final Command cmdSelect = layoutEditParts(editparts, layoutHint);
 			return new IInternalLayoutRunnable() {
 				public void run() {
-					cmdSelect.execute();
+					if (cmdSelect != null && cmdSelect.canExecute()) {
+						cmdSelect.execute();
+					}
 				}
 
 				public Command getCommand() {
@@ -68,7 +70,9 @@ abstract public class AbstractLayoutEditPartProvider extends
 
 			return new IInternalLayoutRunnable() {
 				public void run() {
-					cmdDiag.execute();
+					if (cmdDiag != null && cmdDiag.canExecute()) {
+						cmdDiag.execute();
+					}
 				}
 
 				public Command getCommand() {
