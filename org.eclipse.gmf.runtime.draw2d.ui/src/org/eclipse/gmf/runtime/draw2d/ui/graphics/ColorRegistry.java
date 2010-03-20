@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 2010 IBM Corporation and others.
+ * Copyright (c) 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,37 +9,43 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.l10n;
+package org.eclipse.gmf.runtime.draw2d.ui.graphics;
 
-import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 /**
  * Manages color resources.
  * 
- * @author cmahoney
+ * @author cmahoney, ldamus
  */
-public class DiagramColorRegistry {
+public class ColorRegistry {
 
 	/**
 	 * Singleton instance for the color registry.
 	 */
-	private static DiagramColorRegistry singletonInstance = new DiagramColorRegistry();
+	private static ColorRegistry singletonInstance = new ColorRegistry();
 
 	/**
 	 * Return singleton instance of the color registry.
 	 * 
 	 * @return the color registry
 	 */
-	public static DiagramColorRegistry getInstance() {
+	public static ColorRegistry getInstance() {
 		return singletonInstance;
 	}
+
+	// HashMap that holds onto Color instances
+	private final static Map colorRegistry = new HashMap();
 
 	/**
 	 * Private constructor.
 	 */
-	private DiagramColorRegistry() {
+	private ColorRegistry() {
 		super();
 	}
 
@@ -52,7 +58,13 @@ public class DiagramColorRegistry {
 	 * @return Color
 	 */
 	public Color getColor(Integer id) {
-		return ColorRegistry.getInstance().getColor(id);
+		Object value = colorRegistry.get(id);
+		if (value != null) {
+			return (Color) value;
+		}
+		Color newColor = FigureUtilities.integerToColor(id);
+		colorRegistry.put(id, newColor);
+		return newColor;
 	}
 
 	/**
@@ -63,7 +75,8 @@ public class DiagramColorRegistry {
 	 * @return Color
 	 */
 	public Color getColor(RGB rgb) {
-		return ColorRegistry.getInstance().getColor(rgb);
+		Integer colorID = FigureUtilities.RGBToInteger(rgb);
+		return getColor(colorID);
 	}
 
 }

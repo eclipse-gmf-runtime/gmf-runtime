@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,9 +24,9 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Path;
@@ -428,8 +428,8 @@ public class NodeFigure
 	protected void fillGradient(Graphics g, Path path, int fillMode) {
 		if (path != null) {
 			g.pushState();
-			g.setForegroundColor(FigureUtilities.integerToColor(new Integer(getGradientColor1())));
-			g.setBackgroundColor(FigureUtilities.integerToColor(new Integer(getGradientColor2())));
+			g.setForegroundColor(ColorRegistry.getInstance().getColor(new Integer(getGradientColor1())));
+			g.setBackgroundColor(ColorRegistry.getInstance().getColor(new Integer(getGradientColor2())));
 			if (fillMode == SWT.FILL_EVEN_ODD || fillMode == SWT.FILL_WINDING) {
 				g.setFillRule(fillMode);
 			}
