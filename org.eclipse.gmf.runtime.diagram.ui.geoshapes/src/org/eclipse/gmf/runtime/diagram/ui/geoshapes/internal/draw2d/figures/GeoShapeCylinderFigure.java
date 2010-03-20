@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,12 @@ public class GeoShapeCylinderFigure extends GeoShapeFigure implements IPolygonAn
 		if (!isUsingGradient()) {
 			// Fill cylinder with fill color
 			g.setFillRule(SWT.FILL_WINDING);
-			g.fillPath(getPath());
+			Path path = getPath();
+			try {
+				g.fillPath(path);
+			} finally {
+				path.dispose();
+			}
 		} else {
 			// Use gradient info to fill the cylinder with gradient
 			fillGradient(g, SWT.FILL_WINDING);
