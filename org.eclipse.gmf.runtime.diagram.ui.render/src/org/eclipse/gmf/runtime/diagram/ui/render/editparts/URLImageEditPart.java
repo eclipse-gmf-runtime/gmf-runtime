@@ -127,10 +127,10 @@ abstract public class URLImageEditPart
 	 */
 	final protected RenderedImage regenerateImageFromSource() {
 		URL url = getURL();
-		if (url != null) {
-			URI uri = URI.createURI(url.toString());
-			
+		if (url != null) {			
 			try {
+				URI uri = URI.createURI(url.toString());
+				
 				InputStream is = getEditingDomain().getResourceSet().getURIConverter().createInputStream(uri);
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				
@@ -143,6 +143,8 @@ abstract public class URLImageEditPart
 				// read in the file source specified by the URI, otherwise return null;
 				return RenderedImageFactory.getInstance(baos.toByteArray());
 			} catch (IOException e) {
+				// Ignore and return null;
+			} catch (IllegalArgumentException e) {
 				// Ignore and return null;
 			}
 		}
