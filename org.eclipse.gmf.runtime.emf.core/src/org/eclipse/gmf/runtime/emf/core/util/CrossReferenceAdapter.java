@@ -130,7 +130,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 		case Notification.RESOLVE:
 		case Notification.SET:
 		case Notification.UNSET: {
-			if (notification.getPosition() != Notification.NO_INDEX) {
+			if (!reference.isMany() || notification.getPosition() != Notification.NO_INDEX) {
 				EObject oldValue = (EObject) notification.getOldValue();
 				if (oldValue != null) {
 					deregisterReference(((EObject) notification.getNotifier())
