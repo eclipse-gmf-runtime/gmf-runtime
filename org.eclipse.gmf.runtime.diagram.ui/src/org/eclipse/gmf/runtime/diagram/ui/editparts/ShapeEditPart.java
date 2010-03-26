@@ -60,7 +60,11 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 	 */
     protected static class ShapeContainerEditPolicy
         extends ContainerEditPolicy {
-
+    	
+    	public ShapeContainerEditPolicy() {
+			super();			
+		}
+    	
         protected Command getArrangeCommand(ArrangeRequest request) {
             if (ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())
                 || ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request
