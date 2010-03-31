@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.gmf.tests.runtime.diagram.core.DiagramEditingDomainFactoryTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandUtilitiesTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.SemanticCreateCommandTest;
@@ -86,6 +87,7 @@ public class AllTests extends TestCase {
         suite.addTest(GroupsInCompartmentTests.suite());
         suite.addTest(LayoutTests.suite());
         suite.addTest(TextAlignmentTests.suite());
+        suite.addTest(DiagramEditingDomainFactoryTests.suite());
 
 		return suite;
 	}

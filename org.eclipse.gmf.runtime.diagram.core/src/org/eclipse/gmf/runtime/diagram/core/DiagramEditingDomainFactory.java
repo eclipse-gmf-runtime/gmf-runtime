@@ -313,7 +313,6 @@ public class DiagramEditingDomainFactory
 
     public TransactionalEditingDomain createEditingDomain() {
 		TransactionalEditingDomain result = createEditingDomain(OperationHistoryFactory.getOperationHistory());
-		configure(result);
 		return result;
     }
     
@@ -335,7 +334,6 @@ public class DiagramEditingDomainFactory
 		TransactionalEditingDomain result = createEditingDomain(
 			rset,
 			OperationHistoryFactory.getOperationHistory());
-		configure(result);
 		return result;
     }
     
