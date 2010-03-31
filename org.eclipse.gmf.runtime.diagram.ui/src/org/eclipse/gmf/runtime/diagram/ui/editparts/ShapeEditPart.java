@@ -61,6 +61,10 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
     protected static class ShapeContainerEditPolicy
         extends ContainerEditPolicy {
     	
+    	/**
+    	 * Constructor for ShapeContainerEditPolicy
+		 * @since 1.4
+		 */
     	public ShapeContainerEditPolicy() {
 			super();			
 		}
