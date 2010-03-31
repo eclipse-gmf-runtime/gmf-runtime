@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.RGB;
  * Manages color resources.
  * 
  * @author cmahoney, ldamus
+ * @since 1.4
  */
 public class ColorRegistry {
 
