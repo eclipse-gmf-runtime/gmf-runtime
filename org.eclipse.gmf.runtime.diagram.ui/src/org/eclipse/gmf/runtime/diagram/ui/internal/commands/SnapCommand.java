@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,7 +73,7 @@ public class SnapCommand extends AbstractTransactionalCommand {
 			// we only need the first child since all the edit parts being
 			// snapped originate from the same diagram
 			IGraphicalEditPart parent = (IGraphicalEditPart) editparts.get(0);
-			View view = (View) parent.getParent().getModel();
+			View view = (View) parent.getPrimaryView();
 			return getWorkspaceFiles(view);
 		}
 		return super.getAffectedFiles();
