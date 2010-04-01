@@ -102,6 +102,10 @@ public class GeoShapeCylinderFigure extends GeoShapeFigure implements IPolygonAn
     protected PointList getAnchorBorderPointList() {
         Rectangle rBounds = getBounds();
         
+        if (rBounds.isEmpty()) {
+        	return new PointList(new int[]{rBounds.x, rBounds.y});
+        }
+        
         // similar calculations as those made in paintFigure()
         int height = (int) (rBounds.height * 0.25);
         Rectangle rUpperEllipse = new Rectangle( rBounds.x,rBounds.y, rBounds.width, height );
