@@ -20,7 +20,9 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.RoundedRectangleBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.PrecisionPointList;
 import org.eclipse.swt.graphics.Path;
 
 /**
@@ -29,8 +31,6 @@ import org.eclipse.swt.graphics.Path;
  * This Figure represents a Rounded Rectangle Figure
  */
 public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure implements IPolygonAnchorableFigure {
-
-	private int radius = 0;
     
     // cache the anchor border point list since the calculation is costly.
     private PointList anchorBorderPointList;
@@ -41,20 +41,12 @@ public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure implements IP
 	 * @param width inital width of the figure
 	 * @param height initial height of the figure
 	 * @param spacing <code>int<code> the spacing between children in logical units
-	 * @param radius <code>int</code> the radius size of the corner roundness in logical units
 	 */
-	public GeoShapeRoundedRectangleFigure( int width, int height, int spacing, int radius ) {
+	public GeoShapeRoundedRectangleFigure( int width, int height, int spacing) {
 		super(width, height, spacing);
-		this.radius = radius; 
 	}
 
-	/** Return the corner radius. */
-	protected int getCornerRadius() {
-		return radius;
-	}
-	
 	/**
-	 * Draw the state object.
 	 * @see org.eclipse.draw2d.Figure#paintBorder(org.eclipse.draw2d.Graphics)
 	 */
 	protected void paintFigure(Graphics g) {
@@ -63,7 +55,6 @@ public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure implements IP
 		int cornerRadius = getCornerRadius();
 
 		g.pushState();
-		// don't apply transparency to the outline
 		applyTransparency(g);
 		if (!isUsingGradient()) {
 			// Draw the rectangle with the fill color
@@ -72,25 +63,27 @@ public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure implements IP
 			fillGradient(g);
 		}
 		g.popState();
-
-		// set the line type and line width
-		g.setLineStyle(getLineStyle());
-		g.setLineWidth(getLineWidth());
-
-		// Draw the rectangle outline		
-		g.drawRoundRectangle(r, cornerRadius, cornerRadius);
 	}
-      
-     /**
+
+	/**
      * Estimate the anchor intersection points by using a polyline smoothed
      * with bezier curves for the rounded top and bottom arcs.
      * 
      * @return PointList of the border of the shape
      */
     public PointList getAnchorBorderPointList() {
-        int arcSize = getCornerRadius();
-
+    	int arcSize = getCornerRadius();
         PrecisionRectangle rBounds = new PrecisionRectangle(getBounds());
+        if (arcSize == 0) {
+        	// rectangle, no rounded corners
+    		PrecisionPointList ptList = new PrecisionPointList(5);
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX, rBounds.preciseY));
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX + rBounds.preciseWidth, rBounds.preciseY));
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX + rBounds.preciseWidth, rBounds.preciseY + rBounds.preciseHeight));
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX, rBounds.preciseY + rBounds.preciseHeight));
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX, rBounds.preciseY));
+    		return ptList;        	
+        }
 
         // working our way counter-clockwise find key points.
         Point keyPoint1 = new PrecisionPoint(rBounds.getTopLeft().x + arcSize/2, rBounds.getTopLeft().y);
@@ -201,6 +194,13 @@ public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure implements IP
         path.close();        
         
     	return path;
+    }
+    
+    /**
+     * @return Radius from RoundedRectangleBorder 
+     */
+    private int getCornerRadius() {
+    	return ((RoundedRectangleBorder)getBorder()).getArcHeight();
     }
     
 }

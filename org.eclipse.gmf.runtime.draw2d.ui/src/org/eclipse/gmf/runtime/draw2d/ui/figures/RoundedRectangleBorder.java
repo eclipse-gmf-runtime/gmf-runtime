@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -92,9 +92,12 @@ public class RoundedRectangleBorder extends LineBorder {
 	 * @see org.eclipse.draw2d.LineBorder#paint(org.eclipse.draw2d.IFigure, org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
 	 */
 	public void paint(IFigure figure, Graphics graphics, Insets insets) {
-		tempRect.setBounds(getPaintRectangle(figure, insets));
+		getPaintRectangle(figure, insets);
 		// Shrink to accommodate for the line width
-		tempRect.shrink(getWidth() / 2, getWidth() / 2);
+		tempRect.x = tempRect.x + getWidth() / 2;
+		tempRect.y = tempRect.y + getWidth() / 2;
+		tempRect.width = tempRect.width - getWidth();
+		tempRect.height = tempRect.height - getWidth();
 
 		graphics.setLineWidth(getWidth());
 		graphics.setLineStyle(getStyle());

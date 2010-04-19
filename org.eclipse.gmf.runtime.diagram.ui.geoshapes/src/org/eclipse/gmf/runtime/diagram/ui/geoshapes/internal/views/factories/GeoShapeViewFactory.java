@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories;
 import java.util.List;
 
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.type.GeoshapeType;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
@@ -41,6 +42,9 @@ public class GeoShapeViewFactory
 		if (style != null) {
 			style.setLineWidth(1);
 			style.setTransparency(0);
+			if (view.getType().equals(GeoshapeType.ROUNDRECTANGLE.getSemanticHint())) { 
+				style.setRoundedBendpointsRadius(20);
+			}
 		}
 		
 		super.initializeFromPreferences(view);

@@ -333,5 +333,19 @@ public abstract class ShapeNodeEditPart
 		return false;
 	}    
 
+	/**
+	 * Returns true if rounded corners is supported, false, otherwise. By
+	 * default, this method returns false. Clients who do support rounded
+	 * corners should override this method to return true. This method can be
+	 * used by UI as an indication if rounded corners should be available or
+	 * not. Note that rounded corners style is part of line style, meaning that
+	 * most or all shapes will have it installed (but not all of them will support it) 
+	 * 
+	 * @return true if rounded corners style is supported, false otherwise
+	 * @since 1.4
+	 */	
+	public boolean supportsRoundedCorners() {
+		return false;
+	}
 }
 

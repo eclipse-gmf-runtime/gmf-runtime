@@ -1767,7 +1767,7 @@ abstract public class ConnectionEditPart
                 feature)
             || NotationPackage.Literals.ROUTING_STYLE__JUMP_LINKS_REVERSE
                 .equals(feature)
-            || NotationPackage.Literals.ROUTING_STYLE__ROUNDED_BENDPOINTS_RADIUS.equals(feature)) {
+            || NotationPackage.Literals.ROUNDED_CORNERS_STYLE__ROUNDED_BENDPOINTS_RADIUS.equals(feature)) {
             refreshVisuals();
         } else if (NotationPackage.Literals.LINE_STYLE__LINE_COLOR.equals(
             feature)) {

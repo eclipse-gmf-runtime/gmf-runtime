@@ -138,7 +138,7 @@ public interface Properties {
 	/**
 	 *the rounded bendpoints property ID 
 	 */
-	public static String ID_ROUNDED_BENDPOINTS_RADIUS = PackageUtil.getID(NotationPackage.eINSTANCE.getRoutingStyle_RoundedBendpointsRadius());
+	public static String ID_ROUNDED_BENDPOINTS_RADIUS = PackageUtil.getID(NotationPackage.eINSTANCE.getRoundedCornersStyle_RoundedBendpointsRadius());
 	/**
 	 * the  jump links status property ID
 	 */
