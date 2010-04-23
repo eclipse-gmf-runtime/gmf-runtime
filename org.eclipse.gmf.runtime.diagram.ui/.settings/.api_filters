@@ -81,13 +81,6 @@
         </filter>
         <filter id="643842064">
             <message_arguments>
-                <message_argument value="PageBreakEditPart"/>
-                <message_argument value="DiagramRootEditPart"/>
-                <message_argument value="getPageBreakEditPart()"/>
-            </message_arguments>
-        </filter>
-        <filter id="643842064">
-            <message_arguments>
                 <message_argument value="DiagramRuler"/>
                 <message_argument value="DiagramRootEditPart"/>
                 <message_argument value="getHorizontalRuler()"/>
@@ -100,6 +93,13 @@
                 <message_argument value="getVerticalRuler()"/>
             </message_arguments>
         </filter>
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="PageBreakEditPart"/>
+                <message_argument value="DiagramRootEditPart"/>
+                <message_argument value="getPageBreakEditPart()"/>
+            </message_arguments>
+        </filter>
     </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editparts/DiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart$DiagramScalableFreeformLayeredPane">
         <filter id="576720909">
@@ -110,16 +110,16 @@
         </filter>
         <filter id="643842064">
             <message_arguments>
-                <message_argument value="ScaledGraphics"/>
+                <message_argument value="MapModeGraphics"/>
                 <message_argument value="DiagramScalableFreeformLayeredPane"/>
-                <message_argument value="createScaledGraphics(MapModeGraphics)"/>
+                <message_argument value="createMapModeGraphics(Graphics)"/>
             </message_arguments>
         </filter>
         <filter id="643842064">
             <message_arguments>
-                <message_argument value="MapModeGraphics"/>
+                <message_argument value="ScaledGraphics"/>
                 <message_argument value="DiagramScalableFreeformLayeredPane"/>
-                <message_argument value="createMapModeGraphics(Graphics)"/>
+                <message_argument value="createScaledGraphics(MapModeGraphics)"/>
             </message_arguments>
         </filter>
         <filter id="643846161">
@@ -248,13 +248,13 @@
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/editpart/AbstractEditPartProvider.java" type="org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider">
         <filter id="576725006">
             <message_arguments>
-                <message_argument value="Properties"/>
+                <message_argument value="IEditPartProvider"/>
                 <message_argument value="AbstractEditPartProvider"/>
             </message_arguments>
         </filter>
         <filter id="576725006">
             <message_arguments>
-                <message_argument value="IEditPartProvider"/>
+                <message_argument value="Properties"/>
                 <message_argument value="AbstractEditPartProvider"/>
             </message_arguments>
         </filter>

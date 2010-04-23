@@ -1,18 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="org.eclipse.gmf.runtime.common.ui" version="2">
-    <resource path="src/org/eclipse/gmf/runtime/common/ui/resources/FileObserverManager.java" type="org.eclipse.gmf.runtime.common.ui.resources.FileObserverManager">
-        <filter id="643846161">
+    <resource path="src/org/eclipse/gmf/runtime/common/ui/action/ActionMenuManager.java" type="org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager$MenuCreatorAction">
+        <filter id="571473929">
             <message_arguments>
-                <message_argument value="MarkerChangeEvent"/>
-                <message_argument value="FileObserverManager"/>
-                <message_argument value="notify(MarkerChangeEvent)"/>
-            </message_arguments>
-        </filter>
-        <filter id="643846161">
-            <message_arguments>
-                <message_argument value="FileChangeEvent"/>
-                <message_argument value="FileObserverManager"/>
-                <message_argument value="notify(FileChangeEvent)"/>
+                <message_argument value="LabelRetargetAction"/>
+                <message_argument value="MenuCreatorAction"/>
             </message_arguments>
         </filter>
     </resource>
@@ -24,11 +16,19 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/gmf/runtime/common/ui/action/ActionMenuManager.java" type="org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager$MenuCreatorAction">
-        <filter id="571473929">
+    <resource path="src/org/eclipse/gmf/runtime/common/ui/resources/FileObserverManager.java" type="org.eclipse.gmf.runtime.common.ui.resources.FileObserverManager">
+        <filter id="643846161">
             <message_arguments>
-                <message_argument value="LabelRetargetAction"/>
-                <message_argument value="MenuCreatorAction"/>
+                <message_argument value="FileChangeEvent"/>
+                <message_argument value="FileObserverManager"/>
+                <message_argument value="notify(FileChangeEvent)"/>
+            </message_arguments>
+        </filter>
+        <filter id="643846161">
+            <message_arguments>
+                <message_argument value="MarkerChangeEvent"/>
+                <message_argument value="FileObserverManager"/>
+                <message_argument value="notify(MarkerChangeEvent)"/>
             </message_arguments>
         </filter>
     </resource>
