@@ -540,7 +540,7 @@ public abstract class CanonicalConnectionEditPolicy
 		// perform a layout of the container
 		DeferredLayoutCommand layoutCmd = new DeferredLayoutCommand(host()
 				.getEditingDomain(), createdViews, host());
-		if (layoutCmd.canExecute()) {
+		if (!createdViews.isEmpty() && layoutCmd.canExecute()) {
 			executeCommand(new ICommandProxy(layoutCmd));
 		}
 

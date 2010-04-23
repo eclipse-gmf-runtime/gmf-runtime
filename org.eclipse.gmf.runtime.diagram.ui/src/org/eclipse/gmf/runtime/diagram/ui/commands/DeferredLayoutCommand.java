@@ -260,7 +260,6 @@ public class DeferredLayoutCommand
 
 	@Override
 	public boolean canExecute() {
-		return super.canExecute() && containerEP != null
-				&& viewAdapters != null && !viewAdapters.isEmpty();
+		return super.canExecute() && containerEP != null;
 	}
 }
