@@ -4,7 +4,7 @@
 feature@org.eclipse.gmf.tests=v20100421-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/features/org.eclipse.gmf.tests-feature
 
 !*** GMF tests plug-ins *********************************************************************
-plugin@org.eclipse.gmf.tests=v20100422-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/tests/org.eclipse.gmf.tests
+plugin@org.eclipse.gmf.tests=v20100423-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/tests/org.eclipse.gmf.tests
 plugin@org.eclipse.gmf.tests.runtime.common.core=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/tests/org.eclipse.gmf.tests.runtime.common.core
 plugin@org.eclipse.gmf.tests.runtime.common.ui.services=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/tests/org.eclipse.gmf.tests.runtime.common.ui.services
 plugin@org.eclipse.gmf.tests.runtime.common.ui.services.action=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/tests/org.eclipse.gmf.tests.runtime.common.ui.services.action
