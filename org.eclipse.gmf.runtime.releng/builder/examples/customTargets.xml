@@ -1,0 +1,235 @@
+<project name="Build specific targets and properties" default="noDefault" basedir=".">
+
+	<property name="archiveName" value="gmf-examples-${buildAlias}.zip"/>
+	
+	<!-- ===================================================================== -->
+	<!-- Run a given ${target} on all elements being built -->
+	<!-- ===================================================================== -->
+	<target name="allElements">
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.gmf.examples" />
+		</ant>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Targets to assemble the built elements for particular configurations  -->
+	<!-- These generally call the generated assemble scripts (named in -->
+	<!-- ${assembleScriptName}) but may also add pre and post processing -->
+	<!-- Add one target for each root element and each configuration -->
+	<!-- ===================================================================== -->
+
+	<target name="assemble.org.eclipse.gmf.examples">
+		<ant antfile="${assembleScriptName}" />
+		<!-- ADD POST STEPS -->
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Check out map files from correct repository -->
+	<!-- Replace values for cvsRoot, package and mapVersionTag as desired. -->
+	<!-- ===================================================================== -->
+	<target name="checkLocal">
+		<available property="mapsLocal" file="${buildDirectory}/maps" />
+	</target>
+
+	<target name="getMapFiles" depends="checkLocal" unless="mapsLocal">
+
+		<!-- ***  change the repo info -->
+		<property name="mapCvsRoot" value=":${cvsReadProtocol}:${cvsReadUser}@${cvsHost}:${cvsRep}" />
+		<property name="mapVersionTag" value="HEAD" />
+		<property name="packagePath" value="org.eclipse.${projectName}/org.eclipse.${subprojectName}.releng/maps"/>
+
+		<cvs cvsRsh="ssh" cvsRoot="${mapCvsRoot}" tag="${mapVersionTag}" 
+			package="${packagePath}" dest="${buildDirectory}/maps" />
+		<copy todir="${buildDirectory}/maps/CVS" overwrite="true">
+			<fileset dir="${buildDirectory}/maps/${packagePath}/CVS" />
+		</copy>
+		<copy todir="${buildDirectory}/maps" overwrite="true">
+			<fileset dir="${buildDirectory}/maps/${packagePath}" />
+		</copy>
+		<delete dir="${buildDirectory}/maps/org.eclipse.${projectName}" />
+
+		<!--tag the map files project-->
+		<antcall target="tagMapFiles" />
+
+		<!-- Downloading Orbit map files -->
+		<get src="${orbitURL}" dest="${buildDirectory}/maps/orbit.map" usetimestamp="true"/>
+	</target>
+
+	<target name="tagMapFiles" if="tagMaps">
+		<cvs cvsRsh="ssh" dest="${buildDirectory}/maps" command="tag v${timestamp}" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before setup -->
+	<!-- ===================================================================== -->
+	<target name="preSetup">
+		<mkdir dir="${buildDirectory}/${buildLabel}" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after setup but before starting the build proper -->
+	<!-- ===================================================================== -->
+	<target name="postSetup">
+		<!-- TODO: if your project requires more dependencies, add them here; if it does not require all of these, remove those not required -->
+		<echo message="Download, then unpack: Eclipse, EMF, UML2, OCL, Query, Transaction, Validation, GEF ..." />
+		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${eclipseURL}" />
+			<property name="file" value="${eclipseFile}" />
+			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.platform.doc.isv/plugin.xml" />
+		</ant>
+		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${emfURL}" />
+			<property name="file" value="${emfFile}" />
+			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.emf.ecore/plugin.xml" />
+		</ant>
+		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${emfExamplesURL}" />
+			<property name="file" value="${emfExamplesFile}" />
+			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.emf.examples.library.editor/plugin.xml" />
+		</ant>
+		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${uml2URL}" />
+			<property name="file" value="${uml2File}" />
+			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.uml2/plugin.xml" />
+		</ant>
+		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${oclURL}" />
+			<property name="file" value="${oclFile}" />
+			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.ocl/plugin.xml" />
+		</ant>
+		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${queryURL}" />
+			<property name="file" value="${queryFile}" />
+			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.emf.query/plugin.xml" />
+		</ant>
+		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${transactionURL}" />
+			<property name="file" value="${transactionFile}" />
+			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.emf.transaction/plugin.xml" />
+		</ant>
+		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${validationURL}" />
+			<property name="file" value="${validationFile}" />
+			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.emf.validation/plugin.xml" />
+		</ant>
+		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${gefURL}" />
+			<property name="file" value="${gefFile}" />
+			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.gef/plugin.xml" />
+		</ant>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="preFetch">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the fetch -->
+	<!-- ===================================================================== -->
+	<target name="postFetch">
+		<replace dir="${buildDirectory}/plugins" value="${timestamp}" token="@buildId@">
+			<include name="**/about.mappings" />
+		</replace>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before generating build scripts -->
+	<!-- ===================================================================== -->
+	<target name="preGenerate">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after generating the build scripts -->
+	<!-- ===================================================================== -->
+	<target name="postGenerate">
+		<antcall target="clean" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before assembling -->
+	<!-- ===================================================================== -->
+	<target name="preAssemble">
+
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after assembling-->
+	<!-- ===================================================================== -->
+	<target name="postAssemble">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running package. -->
+	<!-- ===================================================================== -->
+	<target name="prePackage">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after  running package. -->
+	<!-- ===================================================================== -->
+	<target name="postPackage">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="preProcess">
+		<replace dir="${buildDirectory}/plugins" value="${timestamp}" token="@build@">
+			<include name="**/about.mappings" />
+		</replace>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="postProcess">
+
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after everything is built and assembled -->
+	<!-- (e.g., testing, posting, emailing, ...) -->
+	<!-- ===================================================================== -->
+	<target name="postBuild">
+   		<!-- contributing jars for the update site -->
+   		<zip destfile="${buildDirectory}/${buildLabel}/${masterZip}" update="true">
+   			<zipfileset src="${buildDirectory}/${buildLabel}/${archiveName}" dirmode="775" filemode="664" 
+   				includes="**/plugins/*.jar, **/plugins/*.jar.pack.gz, **/features/*.jar, **/features/*.jar.pack.gz" />
+   		</zip>
+		<!-- Unpacking jars to produce downloadable zips -->
+		<ant target="unpackUpdateJarsAndRepack" antfile="${helper}"/>
+		<antcall target="gatherLogs" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Helper targets -->
+	<!-- ===================================================================== -->
+	<target name="gatherLogs">
+		<mkdir dir="${buildDirectory}/${buildLabel}/compilelogs" />
+		<antcall target="allElements">
+			<param name="target" value="gatherLogs" />
+		</antcall>
+
+		<unzip dest="${buildDirectory}/${buildLabel}/compilelogs" overwrite="true">
+			<fileset dir="${buildDirectory}/features/org.eclipse.gmf">
+				<include name="*.log.zip" />
+			</fileset>
+		</unzip>
+	</target>
+	<target name="clean" unless="noclean">
+		<antcall target="allElements">
+			<param name="target" value="cleanElement" />
+		</antcall>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+		<echo message="You must specify a target when invoking this file" />
+	</target>
+	
+</project>

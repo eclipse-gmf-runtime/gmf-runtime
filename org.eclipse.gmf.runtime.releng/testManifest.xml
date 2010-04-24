@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<topLevel>
+	<zipTypes>
+		<zipType name="SDK">
+			<platform id="SDK"
+				name="All"
+				fileName='&lt;a href="@base@GMF-SDK-@build@.zip">GMF-SDK-@build@.zip&lt;/a>'>
+			</platform>
+		</zipType>
+		<zipType name="SDK Experimental">
+			<platform id="EXP"
+				name="All"
+				fileName='&lt;a href="@base@GMF-SDK-experimental-@build@.zip">GMF-SDK-experimental-@build@.zip&lt;/a>'>
+			</platform>
+		</zipType>
+		<zipType name="Runtime">
+			<platform id="RUN"
+				name="All"
+				fileName='&lt;a href="@base@GMF-runtime-@build@.zip">GMF-runtime-@build@.zip&lt;/a>'>
+			</platform>
+		</zipType>
+		<zipType name="Examples">
+			<platform id="EX" name="All"
+				fileName='&lt;a href="@base@GMF-examples-@build@.zip">GMF-examples-@build@.zip&lt;/a>'>
+			</platform>
+		</zipType>
+		<zipType name="Examples PDE">
+			<platform id="EXPDE" name="All"
+				fileName='&lt;a href="@base@GMF-examples-pde-@build@.zip">GMF-examples-pde-@build@.zip&lt;/a>'>
+			</platform>
+		</zipType>
+		<zipType name="Tests">
+			<platform id="T" name="All"
+				fileName='&lt;a href="@base@GMF-tests-@build@.zip">GMF-tests-@build@.zip&lt;/a>'>
+			</platform>
+		</zipType>
+	</zipTypes>
+
+	<logFiles>
+		<logFile name="org.eclipse.gmf.tests.lite.xml">
+			<effectedFile id="EXP"></effectedFile>
+		</logFile>
+
+		<logFile name="org.eclipse.gmf.tests.xml">
+			<effectedFile id="SDK"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.emf.clipboard.core.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.emf.commands.core.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.emf.type.core.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.emf.type.ui.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.emf.ui.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.gef.ui.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.common.core.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.common.ui.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.common.ui.services.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.common.ui.services.action.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.diagram.ui.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.draw2d.ui.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile
+			name="org.eclipse.gmf.tests.runtime.draw2d.ui.render.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+		<logFile name="org.eclipse.gmf.tests.xpand.xml">
+			<effectedFile id="SDK"></effectedFile>
+		</logFile>
+		<logFile name="org.eclipse.gmf.tests.xpand.migration.xml">
+			<effectedFile id="SDK"></effectedFile>
+		</logFile>
+
+		<logFile
+			name="plugins/org.eclipse.gmf.runtime.common.core_*/@dot.bin.log">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="RUN"></effectedFile>
+		</logFile>
+	</logFiles>
+</topLevel>
+

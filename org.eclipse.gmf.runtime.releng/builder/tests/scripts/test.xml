@@ -1,0 +1,201 @@
+<project name="Automated Testing" default="all"  basedir="." >
+
+	<!--properties file containing the plugin directory name including version number-->
+	<property file="test.properties" />
+	
+	<!-- urls and such from the build -->
+	<property file="${basedir}/../../../build.cfg" />
+
+	<!--default directory where test-eclipse will be installed-->
+	<property name="install" value="${basedir}/target" />
+	
+	<!--name that can be added to report name to identify which platform tests results come from-->
+	<property name="platform" value="" />
+
+	<!-- The root of the eclipse installation -->
+	<property name="eclipse-home" value="${install}/eclipse" />
+
+	<!-- The directory that will contain the xml and html results from the tests that are run -->
+ 	<property name="results" value="${basedir}/results" />
+
+	<target name="setup" if="clean" description="Reinstall the test Eclipse installation if specified by user">
+		<delete dir="${install}" /><mkdir dir="${install}" />
+		
+		<!-- TODO: if your project requires more dependencies, add them here; if it does not require all of these, remove those not required -->
+		<echo message="Download, then unpack dependencies ..." />
+		<property name="common.releng.dir" value="${basedir}/../../../org.eclipse.modeling.common.releng"/>
+		<property name="getTestDependencies.xml" value="${common.releng.dir}/scripts/getTestDependencies.xml"/>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${eclipseURL}" />
+			<property name="file" value="${eclipseFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${orbitURL}" />
+			<property name="file" value="${orbitFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${emfURL}" />
+			<property name="file" value="${emfFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${emfExamplesURL}" />
+			<property name="file" value="${emfExamplesFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${uml2URL}" />
+			<property name="file" value="${uml2File}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${oclURL}" />
+			<property name="file" value="${oclFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${queryURL}" />
+			<property name="file" value="${queryFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${transactionURL}" />
+			<property name="file" value="${transactionFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${validationURL}" />
+			<property name="file" value="${validationFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${gefURL}" />
+			<property name="file" value="${gefFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+			<property name="url" value="${qvtoURL}" />
+			<property name="file" value="${qvtoFile}" />
+			<property name="unpackDest" value="${install}"/>
+		</ant>
+		<property name="dir" location="."/>
+		<echo message="Unpack SDK + examples + JUnit Tests (${dir}/gmf-*.zip) ..."/>		
+		<unzip dest="${install}" overwrite="true">
+		    <fileset dir="${dir}"><include name="**/gmf-*.zip"/></fileset>
+		</unzip>
+	</target>
+
+	<target name="runtests" description="Runs ant on the test.xml for a specified plugin.  Requires a property value setting for testPlugin only if test.properties is not available.  The property testPlugin represents a directory name made up of the plugin id and plugin version.  This directory must contain a valid test.xml.">
+		<!-- TODO: if your test plugin is jarred, comment the next line and uncomment the 4 lines after that.
+		     TODO: if your test plugin is NOT a jarred plugin, do nothing here -->
+		<echo message="${eclipse-home}/plugins/${testPlugin} is not a jarred plugin. No unpack required!"/> 
+<!--		<echo message="Unpack ${eclipse-home}/plugins/${testPlugin}.jar to ${eclipse-home}/plugins/${testPlugin} ... "/>
+		<move file="${eclipse-home}/plugins/${testPlugin}.jar" tofile="${eclipse-home}/plugins/${testPlugin}_.jar"/>
+		<unjar src="${eclipse-home}/plugins/${testPlugin}_.jar" dest="${eclipse-home}/plugins/${testPlugin}"/>
+		<delete file="${eclipse-home}/plugins/${testPlugin}_.jar"/> -->
+		
+		<echo message="Running test.xml from jarfile ${eclipse-home}/plugins/${testPlugin} ... "/>
+		<ant antfile="${eclipse-home}/plugins/${testPlugin}/test.xml" dir="${eclipse-home}"/>
+		<copy file="${eclipse-home}/${report}.xml" tofile="${results}/xml/${report}_${platform}.xml" />
+	</target>
+
+	<target name="sdk" depends="setup" description="Runs the test.xml of the tests plugin">
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests}" />
+			<param name="report" value="org.eclipse.gmf.tests" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.emf.clipboard.core}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.emf.clipboard.core" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.emf.commands.core}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.emf.commands.core" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.emf.core}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.emf.core" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.emf.type.core}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.emf.type.core" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.emf.type.ui}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.emf.type.ui" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.emf.ui}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.emf.ui" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.gef.ui}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.gef.ui" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.common.core}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.common.core" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.common.ui}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.common.ui" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.common.ui.services}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.common.ui.services" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.common.ui.services.action}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.common.ui.services.action" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.diagram.ui}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.diagram.ui" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.draw2d.ui}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.draw2d.ui" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.draw2d.ui.render}" />
+			<param name="report" value="org.eclipse.gmf.tests.runtime.draw2d.ui.render" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.xpand}" />
+			<param name="report" value="org.eclipse.gmf.tests.xpand" />
+		</antcall>
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.xpand.migration}" />
+			<param name="report" value="org.eclipse.gmf.tests.xpand.migration" />
+		</antcall>
+		<!-- TODO:
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.gmf.tests.lite}" />
+			<param name="report" value="org.eclipse.gmf.tests.lite" />
+		</antcall>
+		-->
+
+		<!-- test if chkpii script exists before proceeding -->
+		<property name="common.releng.dir" value="${basedir}/../../../org.eclipse.modeling.common.releng"/>
+		<property name="chkpii.xml" value="${common.releng.dir}/scripts/chkpii.xml"/>
+		<available file="${chkpii.xml}" property="chkpiiXMLAvailable"/>
+		<antcall target="runChkpii"/>
+	</target>
+
+	<target name="runChkpii" if="chkpiiXMLAvailable">
+		<ant target="chkpii" antfile="${chkpii.xml}" inheritall="true">
+			<property name="zipPattern" value="gmf-*.zip"/>
+		</ant>
+	</target>
+
+	<target name="all">
+		<antcall target="sdk" />
+		<antcall target="genHtml" />
+	</target>
+	
+	<target name="genHtml" description="Generates HTML results with provided JUNIT.XSL provided">
+		<style style="JUNIT.XSL" basedir="${results}/xml" destdir="${results}/html" />
+	</target>
+</project>
