@@ -1,6 +1,6 @@
 <project name="Build specific targets and properties" default="noDefault" basedir=".">
 
-	<property name="archiveName" value="gmf-junit-tests-${buildAlias}.zip" />
+	<property name="archiveName" value="gmf-runtime-junit-tests-${buildAlias}.zip" />
 
 	<!-- ===================================================================== -->
 	<!-- Run a given ${target} on all elements being built -->
@@ -8,7 +8,7 @@
 	<target name="allElements">
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.gmf.runtime.tests" />
+			<property name="id" value="org.eclipse.gmf.tests.runtime" />
 		</ant>
 	</target>
 
@@ -19,7 +19,7 @@
 	<!-- Add one target for each root element and each configuration -->
 	<!-- ===================================================================== -->
 
-	<target name="assemble.org.eclipse.gmf.runtime.tests">
+	<target name="assemble.org.eclipse.gmf.tests.runtime">
 		<ant antfile="${assembleScriptName}" />
 		<!-- ADD POST STEPS -->
 	</target>
@@ -37,7 +37,7 @@
 		<!-- ***  change the repo info -->
 		<property name="mapCvsRoot" value=":${cvsReadProtocol}:${cvsReadUser}@${cvsHost}:${cvsRep}" />
 		<property name="mapVersionTag" value="HEAD" />
-		<property name="packagePath" value="org.eclipse.${projectName}/org.eclipse.${subprojectName}.releng/maps"/>
+		<property name="packagePath" value="org.eclipse.${projectName}/org.eclipse.${projectName}.${subprojectName}.releng/maps"/>
 
 		<cvs cvsRsh="ssh" cvsRoot="${mapCvsRoot}" tag="${mapVersionTag}" 
 			package="${packagePath}" dest="${buildDirectory}/maps" />
@@ -217,7 +217,7 @@
 		</antcall>
 
 		<unzip dest="${buildDirectory}/${buildLabel}/compilelogs" overwrite="true">
-			<fileset dir="${buildDirectory}/features/org.eclipse.gmf">
+			<fileset dir="${buildDirectory}/features/org.eclipse.gmf.tests.runtime">
 				<include name="*.log.zip" />
 			</fileset>
 		</unzip>
