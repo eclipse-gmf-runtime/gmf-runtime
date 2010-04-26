@@ -31,7 +31,7 @@
 		</zipType>
 		<zipType name="Tests">
 			<platform id="T" name="All"
-				fileName='&lt;a href="@base@gmf-tests-@build@.zip">gmf-tests-@build@.zip&lt;/a>'>
+				fileName='&lt;a href="@base@gmf-runtime-tests-@build@.zip">gmf-runtime-tests-@build@.zip&lt;/a>'>
 			</platform>
 		</zipType>
 	</zipTypes>

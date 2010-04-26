@@ -138,7 +138,7 @@
 		
 		<build component="builder/runtime" zip="gmf-runtime-${buildAlias}.zip"/>
 		<build component="builder/examples" zip="gmf-examples-${buildAlias}.zip"/>
-		<build component="builder/tests" zip="gmf-tests-${buildAlias}.zip"/>
+		<build component="builder/tests" zip="gmf-runtime-tests-${buildAlias}.zip"/>
    		<ant target="signMasterZip" antfile="${helper}">
 			<property name="mailStatus" value="nomail" />
 		</ant>	

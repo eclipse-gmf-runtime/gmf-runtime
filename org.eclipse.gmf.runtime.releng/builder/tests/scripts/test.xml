@@ -103,10 +103,6 @@
 
 	<target name="sdk" depends="setup" description="Runs the test.xml of the tests plugin">
 		<antcall target="runtests">
-			<param name="testPlugin" value="${org.eclipse.gmf.tests}" />
-			<param name="report" value="org.eclipse.gmf.tests" />
-		</antcall>
-		<antcall target="runtests">
 			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.emf.clipboard.core}" />
 			<param name="report" value="org.eclipse.gmf.tests.runtime.emf.clipboard.core" />
 		</antcall>
@@ -162,20 +158,6 @@
 			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.draw2d.ui.render}" />
 			<param name="report" value="org.eclipse.gmf.tests.runtime.draw2d.ui.render" />
 		</antcall>
-		<antcall target="runtests">
-			<param name="testPlugin" value="${org.eclipse.gmf.tests.xpand}" />
-			<param name="report" value="org.eclipse.gmf.tests.xpand" />
-		</antcall>
-		<antcall target="runtests">
-			<param name="testPlugin" value="${org.eclipse.gmf.tests.xpand.migration}" />
-			<param name="report" value="org.eclipse.gmf.tests.xpand.migration" />
-		</antcall>
-		<!-- TODO:
-		<antcall target="runtests">
-			<param name="testPlugin" value="${org.eclipse.gmf.tests.lite}" />
-			<param name="report" value="org.eclipse.gmf.tests.lite" />
-		</antcall>
-		-->
 
 		<!-- test if chkpii script exists before proceeding -->
 		<property name="common.releng.dir" value="${basedir}/../../../org.eclipse.modeling.common.releng"/>
