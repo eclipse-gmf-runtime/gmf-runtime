@@ -113,11 +113,6 @@
 			<property name="file" value="${gefFile}" />
 			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.gef/plugin.xml" />
 		</ant>
-		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
-			<property name="url" value="${qvtoURL}" />
-			<property name="file" value="${qvtoFile}" />
-			<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.m2m.qvt.oml/plugin.xml" />
-		</ant>
 	</target>
 
 	<!-- ===================================================================== -->
