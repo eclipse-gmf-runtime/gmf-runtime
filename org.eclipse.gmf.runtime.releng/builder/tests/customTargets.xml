@@ -7,6 +7,14 @@
 	<!-- ===================================================================== -->
 	<target name="allElements">
 		<echo message="AAAAAAAAAAAAAAAAAAAAAAAAAAAAA genericTargets=${genericTargets} target=${target}"/>
+		<echo message="elements=${type}@${id}"/>
+		<echo message="buildDirectory=${buildDirectory}"/>
+		<echo message="configInfo=${configs}"/>
+		<echo message="baseLocation=${baseLocation}"/>
+		<echo message="product=${product}"/>
+		<echo message="pluginPath=${transformedRepoLocation}${path.separator}${pluginPath}"/>
+		<echo message="platformProperties=${platformProperties}"/>
+
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.gmf.tests.runtime" />
