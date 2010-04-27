@@ -253,7 +253,7 @@
 
 	    <generateTestProperties 
 	            buildDirectory="${buildDirectory}" 
-	            featureId="org.eclipse.gmf.tests" 
+	            featureId="org.eclipse.gmf.tests.runtime" 
 	            outputFile="${workingDirectory}/testing/test.properties" 
 	    /> 
 
