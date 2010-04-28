@@ -119,10 +119,16 @@ public class FileChangeManager
 						.equals(
 							delta.getResource().getFullPath()
 								.removeLastSegments(1))) {
-						trace("...FileChangeManager: Resource " //$NON-NLS-1$
-							+ getAbsolutePath(delta.getResource())
-							+ " was renamed from " //$NON-NLS-1$
-							+ delta.getMovedFromPath().toString());
+						
+						if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
+							CommonUIDebugOptions.RESOURCE)) {
+							Trace.trace(CommonUIPlugin.getDefault(),
+								"...FileChangeManager: Resource " //$NON-NLS-1$
+										+ getAbsolutePath(delta.getResource())
+										+ " was renamed from " //$NON-NLS-1$
+										+ delta.getMovedFromPath().toString());
+						}
+						
 						if (delta.getResource() instanceof IFile) {
 							FileChangeEvent event = new FileChangeEvent(
 								FileChangeEventType.RENAMED,
@@ -131,10 +137,15 @@ public class FileChangeManager
 							fileObserverManager.notify(event);
 						}
 					} else {
-						trace("...FileChangeManager: Resource " //$NON-NLS-1$
-							+ getAbsolutePath(delta.getResource())
-							+ " was moved from " //$NON-NLS-1$
-							+ delta.getMovedFromPath().toString());
+						if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
+							CommonUIDebugOptions.RESOURCE)) {
+							Trace.trace(CommonUIPlugin.getDefault(),
+									"...FileChangeManager: Resource " //$NON-NLS-1$
+									+ getAbsolutePath(delta.getResource())
+									+ " was moved from " //$NON-NLS-1$
+									+ delta.getMovedFromPath().toString());
+						}
+						
 						if (delta.getResource() instanceof IFile) {
 							FileChangeEvent event = new FileChangeEvent(
 								FileChangeEventType.MOVED,
@@ -143,22 +154,25 @@ public class FileChangeManager
 							fileObserverManager.notify(event);
 						}
 					}
-                } else if (delta.getResource() instanceof IFile) {
-                    FileChangeEvent event = new FileChangeEvent(
-                        FileChangeEventType.CHANGED, (IFile) delta
-                            .getResource());
-                    fileObserverManager.notify(event);
-					trace("...FileChangeManager: Resource " //$NON-NLS-1$ 
-							+ getAbsolutePath(delta.getResource()) + " was added"); //$NON-NLS-1$ 
 				} else {
-					trace("...FileChangeManager: Resource " //$NON-NLS-1$ 
-						+ getAbsolutePath(delta.getResource()) + " was added"); //$NON-NLS-1$ 
+					if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
+						CommonUIDebugOptions.RESOURCE)) {
+						Trace.trace(CommonUIPlugin.getDefault(),
+								"...FileChangeManager: Resource " //$NON-NLS-1$ 
+								+ getAbsolutePath(delta.getResource()) + " was added"); //$NON-NLS-1$ 
+					}
 				}
 				break;
 			case IResourceDelta.REMOVED:
 				if ((delta.getFlags() & IResourceDelta.MOVED_TO) == 0) {
-					trace("...FileChangeManager: Resource " //$NON-NLS-1$
-						+ getAbsolutePath(delta.getResource()) + " was deleted"); //$NON-NLS-1$
+					
+					if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
+							CommonUIDebugOptions.RESOURCE)) {
+							Trace.trace(CommonUIPlugin.getDefault(),
+									"...FileChangeManager: Resource " //$NON-NLS-1$
+									+ getAbsolutePath(delta.getResource()) + " was deleted"); //$NON-NLS-1$ 
+					}
+					
 					if (delta.getResource() instanceof IFile) {
 						FileChangeEvent event = new FileChangeEvent(
 							FileChangeEventType.DELETED, (IFile) delta
@@ -168,16 +182,27 @@ public class FileChangeManager
 				}
 				break;
 			case IResourceDelta.CHANGED:
-				trace("...FileChangeManager: Resource " //$NON-NLS-1$
-					+ getAbsolutePath(delta.getResource()) + " was changed"); //$NON-NLS-1$
+				
+				if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
+						CommonUIDebugOptions.RESOURCE)) {
+						Trace.trace(CommonUIPlugin.getDefault(),
+								"...FileChangeManager: Resource " //$NON-NLS-1$
+								+ getAbsolutePath(delta.getResource()) + " was changed"); //$NON-NLS-1$ 
+				}
+				
 				if ((delta.getFlags() & IResourceDelta.MARKERS) != 0) {
 					// fire notifications if markers have been
 					// added/removed/changed
 					List markers = Arrays.asList(delta.getMarkerDeltas());
 					for (Iterator i = markers.iterator(); i.hasNext();) {
-						trace("...FileChangeManager: Resource marker of " //$NON-NLS-1$
-							+ getAbsolutePath(delta.getResource())
-							+ " was changed"); //$NON-NLS-1$
+						
+						if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
+								CommonUIDebugOptions.RESOURCE)) {
+								Trace.trace(CommonUIPlugin.getDefault(),
+										"...FileChangeManager: Resource marker of " //$NON-NLS-1$
+										+ getAbsolutePath(delta.getResource())
+										+ " was changed"); //$NON-NLS-1$ 
+						}
 
 						MarkerChangeEvent event = null;
 						IMarkerDelta markerDelta = (IMarkerDelta) i.next();
@@ -216,19 +241,6 @@ public class FileChangeManager
 				break;
 		}
 		return true;
-	}
-
-	/**
-	 * Print a trace message if tracing is on for resource management.
-	 * 
-	 * @param message
-	 *            the trace message to print.
-	 */
-	private void trace(String message) {
-		if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
-			CommonUIDebugOptions.RESOURCE)) {
-			Trace.trace(CommonUIPlugin.getDefault(), message);
-		}
 	}
 
 	/*
@@ -321,8 +333,14 @@ public class FileChangeManager
 
 				public void run(IProgressMonitor monitor)
 					throws CoreException {
-
-					trace("...FileChangeManager: Resource " + getAbsolutePath(file) + " was refreshed"); //$NON-NLS-2$//$NON-NLS-1$
+					
+					if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
+							CommonUIDebugOptions.RESOURCE)) {
+							Trace.trace(CommonUIPlugin.getDefault(),
+									"...FileChangeManager: Resource " +  //$NON-NLS-1$ 
+									getAbsolutePath(file) + " was refreshed"); //$NON-NLS-1$ 
+					}
+					
 					file.refreshLocal(IResource.DEPTH_ZERO, null);
 
 				}

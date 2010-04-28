@@ -1,12 +1,12 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.common.ui.resources;
@@ -162,27 +162,27 @@ public class FileObserverManager {
 			IFileObserver fileObserver = (IFileObserver) entry.getKey();
 			FileObserverFilter filter = (FileObserverFilter) entry.getValue();
 			if (event.getEventType() == FileChangeEventType.MOVED) {
-				if (filter.matches(event.getOldFile())) {
+				if (filter.matches(event.getOldFilePath())) {
 					trace("...FileObserverManager: Notify " //$NON-NLS-1$
 						+ fileObserver.toString() + " handleFileMoved"); //$NON-NLS-1$
 					fileObserver.handleFileMoved(event.getOldFile(), event
 						.getFile());
 				}
 			} else if (event.getEventType() == FileChangeEventType.RENAMED) {
-				if (filter.matches(event.getOldFile())) {
+				if (filter.matches(event.getOldFilePath())) {
 					trace("...FileObserverManager: Notify " //$NON-NLS-1$
 						+ fileObserver.toString() + " handleFileRenamed"); //$NON-NLS-1$
 					fileObserver.handleFileRenamed(event.getOldFile(), event
 						.getFile());
 				}
 			} else if (event.getEventType() == FileChangeEventType.DELETED) {
-				if (filter.matches(event.getFile())) {
+				if (filter.matches(event.getFilePath())) {
 					trace("...FileObserverManager: Notify " //$NON-NLS-1$
 						+ fileObserver.toString() + " handleFileDeleted"); //$NON-NLS-1$
 					fileObserver.handleFileDeleted(event.getFile());
 				}
 			} else if (event.getEventType() == FileChangeEventType.CHANGED) {
-				if (filter.matches(event.getFile())) {
+				if (filter.matches(event.getFilePath())) {
 					trace("...FileObserverManager: Notify " //$NON-NLS-1$
 						+ fileObserver.toString() + " handleFileChanged"); //$NON-NLS-1$
 					fileObserver.handleFileChanged(event.getFile());

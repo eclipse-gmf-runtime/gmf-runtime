@@ -1,17 +1,18 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.common.ui.internal.resources;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 
 
 /**
@@ -36,6 +37,16 @@ public class FileChangeEvent {
 	 * the event file.
 	 */
 	private IFile file;
+	
+	/**
+	 * The original file's absolute path.
+	 */
+	private IPath oldFilePath;
+	
+	/**
+	 * The event file's absolute path.
+	 */
+	private IPath filePath;
 
 	/**
 	 * Constructor for a file change event.
@@ -128,5 +139,31 @@ public class FileChangeEvent {
 	private void setOldFile(IFile aFile) {
 		this.oldFile = aFile;
 	}
+
+	/**
+	 * Gets the cached original file's absolute path.
+	 * 
+	 * @return
+	 */
+	public IPath getOldFilePath() {
+		if (oldFilePath == null) {
+			oldFilePath = oldFile.getFullPath();
+		}
+		
+		return oldFilePath;
+	}
+
+	/**
+	 * Gets the cached event file's absolute path.
+	 * 
+	 * @return
+	 */
+	public IPath getFilePath() {
+		if (filePath == null) {
+			filePath = file.getFullPath();
+		}
+		
+		return filePath;
+	}	
 
 }
