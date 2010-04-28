@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -298,31 +298,37 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 				 * This a special case for old diagrams with rectilinear connections routed by
 				 * the old router to look good with the new router
 				 */
-				double startX = Math.max(source.preciseX, target.preciseX);
-				double endX = Math.min(source.preciseX + source.preciseWidth,
-						target.preciseX + target.preciseWidth);
-				double startY = Math.max(source.preciseY, target.preciseY);
-				double endY = Math.min(source.preciseY + source.preciseHeight,
-						target.preciseY + target.preciseHeight);
-				if (startX < endX) {
-					if (source.preciseY < target.preciseY) {
-						newLine.addPoint((int) Math
-								.round((startX + endX) / 2.0), (source
-								.getBottom().y + target.getTop().y) / 2);
-					} else {
-						newLine.addPoint((int) Math
-								.round((startX + endX) / 2.0),
-								(source.getTop().y + target.getBottom().y) / 2);
-					}
-				} else if (startY < endY) {
-					if (source.preciseX < target.preciseX) {
-						newLine.addPoint((source.getRight().x + target
-								.getLeft().x) / 2, (int) Math
-								.round((startY + endY) / 2.0));
-					} else {
-						newLine.addPoint((source.getLeft().x + target
-								.getRight().x) / 2, (int) Math
-								.round((startY + endY) / 2.0));
+				if (lastRemovedFromSource != null && lastRemovedFromTarget != null) {
+					newLine.addPoint((lastRemovedFromSource.x + lastRemovedFromTarget.x) / 2, (lastRemovedFromSource.y + lastRemovedFromTarget.y) / 2); 
+				} else {
+					double startX = Math.max(source.preciseX, target.preciseX);
+					double endX = Math.min(source.preciseX
+							+ source.preciseWidth, target.preciseX
+							+ target.preciseWidth);
+					double startY = Math.max(source.preciseY, target.preciseY);
+					double endY = Math.min(source.preciseY
+							+ source.preciseHeight, target.preciseY
+							+ target.preciseHeight);
+					if (startX < endX) {
+						if (source.preciseY < target.preciseY) {
+							newLine.addPoint((int) Math
+									.round((startX + endX) / 2.0), (source
+									.getBottom().y + target.getTop().y) / 2);
+						} else {
+							newLine.addPoint((int) Math
+									.round((startX + endX) / 2.0), (source
+									.getTop().y + target.getBottom().y) / 2);
+						}
+					} else if (startY < endY) {
+						if (source.preciseX < target.preciseX) {
+							newLine.addPoint((source.getRight().x + target
+									.getLeft().x) / 2, (int) Math
+									.round((startY + endY) / 2.0));
+						} else {
+							newLine.addPoint((source.getLeft().x + target
+									.getRight().x) / 2, (int) Math
+									.round((startY + endY) / 2.0));
+						}
 					}
 				}
 			}
