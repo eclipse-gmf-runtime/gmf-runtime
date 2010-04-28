@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,8 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.eclipse.draw2d.AnchorListener;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.ImageFigure;
+import org.eclipse.draw2d.IImageFigure;
+import org.eclipse.draw2d.IImageFigure.ImageChangedListener;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
@@ -35,7 +37,7 @@ import org.eclipse.swt.graphics.ImageData;
  *
  */
 public class SlidableImageAnchor
-	extends SlidableAnchor {
+	extends SlidableAnchor implements ImageChangedListener {
 
 	static private class ImageAnchorLocation {
 
@@ -239,7 +241,7 @@ public class SlidableImageAnchor
 		}
 	}
 
-	private ImageFigure imageFig;
+	private IImageFigure imageFig;
 
 	/**
 	 * Empty constructor
@@ -254,17 +256,38 @@ public class SlidableImageAnchor
 	 */
 	public SlidableImageAnchor(IFigure f) {
 		super(f);
+		if (f instanceof IImageFigure) {
+			this.imageFig = (IImageFigure) f;
+		}
 	}
-
+	
 	/**
 	 * Default constructor, for which reference point is at the cneter of the figure
 	 * 
 	 * @param container the <code>IFigure</code> bounding figure
 	 * @param imageFig the <code>ImageFigure</code> inside the bounding figure
 	 */
-	public SlidableImageAnchor(IFigure container, ImageFigure imageFig) {
+	public SlidableImageAnchor(IFigure container, IImageFigure imageFig) {
 		super(container);
 		this.imageFig = imageFig;
+	}
+
+	@Override
+	public void addAnchorListener(AnchorListener listener) {
+		if (listener == null)
+			return;
+		if (listeners.isEmpty() && imageFig != null) {
+			imageFig.addImageChangedListener(this);
+		}
+		super.addAnchorListener(listener);
+	}
+
+	@Override
+	public void removeAnchorListener(AnchorListener listener) {
+		super.removeAnchorListener(listener);
+		if (listeners.isEmpty() && imageFig != null) {
+			imageFig.removeImageChangedListener(this);
+		}
 	}
 
 	/**
@@ -274,11 +297,11 @@ public class SlidableImageAnchor
 	 * @param imageFig the <code>ImageFigure</code> inside the bounding figure
 	 * @param p the <code>PrecisionPoint</code> relative reference
 	 */
-	public SlidableImageAnchor(IFigure f, ImageFigure imageFig, PrecisionPoint p) {
+	public SlidableImageAnchor(IFigure f, IImageFigure imageFig, PrecisionPoint p) {
 		super(f, p);
 		this.imageFig = imageFig;
 	}
-
+	
 	/**
 	 * Returns the image.
 	 * 
@@ -322,6 +345,10 @@ public class SlidableImageAnchor
 			return location;
 		}
 		return null;
+	}
+
+	public void imageChanged() {
+		fireAnchorMoved();
 	}
 
 }
