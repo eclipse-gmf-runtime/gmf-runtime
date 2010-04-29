@@ -1537,4 +1537,17 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
     	}
     }
 
+	@Override
+	public void clipPath(Path path) {
+		if (((appliedState.graphicHints ^ currentState.graphicHints) & FILL_RULE_MASK) != 0) {
+			//If there is a pending change to the fill rule, apply it first.
+			//As long as the FILL_RULE is stored in a single bit, just toggling it works.
+			appliedState.graphicHints ^= FILL_RULE_MASK;
+		}
+		setClip(path);
+		getGraphics2D().clipRect(relativeClipRegion.x + transX, relativeClipRegion.y + transY, relativeClipRegion.width, relativeClipRegion.height);
+		java.awt.Rectangle bounds = getGraphics2D().getClip().getBounds();
+		relativeClipRegion = new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height);
+	}
+
 }

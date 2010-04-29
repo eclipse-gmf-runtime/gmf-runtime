@@ -731,6 +731,15 @@ public class ScaledGraphics
 			scaledPath.dispose();
 		}
 	}
+	
+	public void clipPath(Path path) {
+		Path scaledPath = createScaledPath(path);
+		try {
+			graphics.clipPath(scaledPath);
+		} finally {
+			scaledPath.dispose();
+		}
+	}
 		
 	/** @see Graphics#setBackgroundPattern(Pattern) */
 	public void setBackgroundPattern(Pattern pattern) {

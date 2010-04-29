@@ -433,7 +433,7 @@ public class NodeFigure
 			if (fillMode == SWT.FILL_EVEN_ODD || fillMode == SWT.FILL_WINDING) {
 				g.setFillRule(fillMode);
 			}
-			g.setClip(path);
+			g.clipPath(path);
 			g.fillGradient(getBounds(), getGradientStyle() == 0);	
 			path.dispose();
 			g.popState();
