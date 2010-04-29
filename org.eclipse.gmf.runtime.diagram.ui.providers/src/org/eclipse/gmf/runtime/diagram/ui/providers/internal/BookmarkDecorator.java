@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -194,7 +194,7 @@ public class BookmarkDecorator
 		 * @see org.eclipse.gmf.runtime.common.ui.resources.IFileObserver#handleMarkerDeleted(org.eclipse.core.resources.IMarker, java.util.Map)
 		 */
 		public void handleMarkerDeleted(IMarker marker, final Map attributes) {
-			if ( mapOfIdsToDecorators == null ) {
+			if ( mapOfIdsToDecorators == null || attributes == null) {
 				return;
 			}
 			
