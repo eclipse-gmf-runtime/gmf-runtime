@@ -237,10 +237,9 @@
         </filter>
     </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/services/decorator/AbstractDecorator.java" type="org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator">
-        <filter id="643842064">
+        <filter id="338792546">
             <message_arguments>
-                <message_argument value="Decoration"/>
-                <message_argument value="AbstractDecorator"/>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator"/>
                 <message_argument value="getDecoration()"/>
             </message_arguments>
         </filter>
