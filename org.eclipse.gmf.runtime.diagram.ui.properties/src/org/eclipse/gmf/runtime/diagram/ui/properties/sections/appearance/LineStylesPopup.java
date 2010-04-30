@@ -1,12 +1,12 @@
 /******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance;
 
@@ -144,4 +144,19 @@ public abstract class LineStylesPopup {
 	public Object getSelectedItem() {
 		return selectedItem;
 	}
+	
+	/**
+	 * Gets the image corresponding to the item the user selected.  Could be null.
+	 * 
+	 * @return Image corresponding to the item the user selected or null.
+	 * @since 1.4
+	 */
+	public Image getSelectedItemImage() {
+		if (getSelectedItem() == null) {
+			return null;
+		} else {
+			return (Image) imageMap.get(getSelectedItem());
+		}
+	}
+	
 }
