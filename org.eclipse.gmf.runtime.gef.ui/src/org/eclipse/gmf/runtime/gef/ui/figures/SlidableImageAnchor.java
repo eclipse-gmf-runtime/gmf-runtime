@@ -347,6 +347,9 @@ public class SlidableImageAnchor
 		return null;
 	}
 
+	/**
+	 * @since 1.4
+	 */
 	public void imageChanged() {
 		fireAnchorMoved();
 	}
