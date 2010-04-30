@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<psf version="2.0">
-	<provider id="org.eclipse.team.cvs.core.cvsnature">
-		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmf/features/org.eclipse.gmf.doc-feature,org.eclipse.gmf.doc-feature"/>
-		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmf/doc/org.eclipse.gmf.doc,org.eclipse.gmf.doc"/>
-	</provider>
-</psf>
