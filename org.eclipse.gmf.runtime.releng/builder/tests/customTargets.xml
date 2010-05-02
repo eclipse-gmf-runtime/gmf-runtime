@@ -37,7 +37,7 @@
 		<!-- ***  change the repo info -->
 		<property name="mapCvsRoot" value=":${cvsReadProtocol}:${cvsReadUser}@${cvsHost}:${cvsRep}" />
 		<property name="mapVersionTag" value="HEAD" />
-		<property name="packagePath" value="org.eclipse.${projectName}/org.eclipse.${projectName}.${subprojectName}.releng/maps"/>
+		<property name="packagePath" value="org.eclipse.${projectName}/org.eclipse.${subprojectName2}.releng/maps"/>
 
 		<cvs cvsRsh="ssh" cvsRoot="${mapCvsRoot}" tag="${mapVersionTag}" 
 			package="${packagePath}" dest="${buildDirectory}/maps" />

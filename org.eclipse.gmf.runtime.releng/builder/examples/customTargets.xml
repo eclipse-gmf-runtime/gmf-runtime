@@ -1,6 +1,6 @@
 <project name="Build specific targets and properties" default="noDefault" basedir=".">
 
-	<property name="archiveName" value="gmf-examples-${buildAlias}.zip"/>
+	<property name="archiveName" value="gmf-runtime-examples-${buildAlias}.zip"/>
 	
 	<!-- ===================================================================== -->
 	<!-- Run a given ${target} on all elements being built -->
@@ -37,7 +37,7 @@
 		<!-- ***  change the repo info -->
 		<property name="mapCvsRoot" value=":${cvsReadProtocol}:${cvsReadUser}@${cvsHost}:${cvsRep}" />
 		<property name="mapVersionTag" value="HEAD" />
-		<property name="packagePath" value="org.eclipse.${projectName}/org.eclipse.${subprojectName}.releng/maps"/>
+		<property name="packagePath" value="org.eclipse.${projectName}/org.eclipse.${subprojectName2}.releng/maps"/>
 
 		<cvs cvsRsh="ssh" cvsRoot="${mapCvsRoot}" tag="${mapVersionTag}" 
 			package="${packagePath}" dest="${buildDirectory}/maps" />
