@@ -1,6 +1,6 @@
 <project name="Build specific targets and properties" default="noDefault" basedir=".">
 
-	<property name="archiveName" value="${subprojectName}-${buildAlias}.zip" />
+	<property name="archiveName" value="${subprojectName}-sdk-${buildAlias}.zip" />
 
 	<!-- ===================================================================== -->
 	<!-- Run a given ${target} on all elements being built -->
@@ -8,7 +8,7 @@
 	<target name="allElements">
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.gmf" />
+			<property name="id" value="org.eclipse.gmf.runtime.sdk" />
 		</ant>
 	</target>
 
@@ -19,7 +19,7 @@
 	<!-- Add one target for each root element and each configuration -->
 	<!-- ===================================================================== -->
 
-	<target name="assemble.org.eclipse.gmf">
+	<target name="assemble.org.eclipse.gmf.runtime.sdk">
 		<ant antfile="${assembleScriptName}" />
 		<!-- ADD POST STEPS -->
 	</target>
