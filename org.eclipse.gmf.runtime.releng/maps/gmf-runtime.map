@@ -2,12 +2,13 @@
 
 !*** GMF runtime features *******************************************************************
 feature@org.eclipse.gmf=v20100421-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/features/org.eclipse.gmf.runtime-feature
-feature@org.eclipse.gmf.runtime.notation=v20100421-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/features/org.eclipse.gmf.runtime.notation-feature
+feature@org.eclipse.gmf.runtime.sdk=v20100503-0919,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/features/org.eclipse.gmf.runtime.sdk-feature
 feature@org.eclipse.gmf.runtime.thirdparty=v20100421-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/features/org.eclipse.gmf.runtime.thirdparty-feature
 feature@org.eclipse.gmf.runtime.thirdparty.source=v20100421-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/features/org.eclipse.gmf.runtime.thirdparty.source-feature
 
 !*** GMF runtime plug-ins *******************************************************************
 plugin@org.eclipse.gmf=v20090615-0700,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf
+plugin@org.eclipse.gmf.runtime.sdk=v20100503-0919,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf.runtime.sdk
 plugin@org.eclipse.gmf.runtime.common.core=v20100423-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf.runtime.common.core
 plugin@org.eclipse.gmf.runtime.common.ui=v20100428-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf.runtime.common.ui
 plugin@org.eclipse.gmf.runtime.common.ui.action=v20090403-1720,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf.runtime.common.ui.action
