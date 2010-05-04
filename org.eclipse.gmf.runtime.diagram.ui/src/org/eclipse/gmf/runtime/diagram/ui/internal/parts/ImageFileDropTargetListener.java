@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,7 +97,6 @@ public class ImageFileDropTargetListener
      *
      */
     public boolean isEnabled(DropTargetEvent event) {
-
         if (super.isEnabled(event)) {
             Object modelObj = getViewer().getContents().getModel();
             
@@ -116,16 +115,5 @@ public class ImageFileDropTargetListener
         }
         return false;
     }
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramDropTargetListener#isDataTransfered()
-	 */
-	protected boolean isDataTransfered() {
-		/*
-		 * The data transfer occurs at the drop time on Linux, hence data is transfered when the request
-		 * has some objects that are being dropped.
-		 */
-		return super.isDataTransfered() && !getDropObjectsRequest().getObjects().isEmpty();
-	}
 
 }
