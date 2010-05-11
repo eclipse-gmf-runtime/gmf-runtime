@@ -1,7 +1,7 @@
 !*** Graphical Modeling Framework (GMF) tests map *******************************************
 
 !*** GMF tests features *********************************************************************
-feature@org.eclipse.gmf.tests.runtime=v20100426-1707,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.tests.runtime-feature
+feature@org.eclipse.gmf.tests.runtime=v20100511-1424,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.tests.runtime-feature
 
 !*** GMF tests plug-ins *********************************************************************
 plugin@org.eclipse.gmf.tests.runtime.common.core=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.common.core
