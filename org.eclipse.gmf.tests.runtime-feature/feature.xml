@@ -30,57 +30,7 @@ http://www.eclipse.org/legal/epl-v10.html
          version="0.0.0"/>
 
    <requires>
-      <import plugin="org.eclipse.core.runtime" version="3.3.0" match="compatible"/>
-      <import plugin="org.eclipse.core.resources" version="3.3.0" match="compatible"/>
-      <import plugin="org.eclipse.jdt.core" version="3.3.0" match="compatible"/>
-      <import plugin="org.junit" version="3.8.0" match="compatible"/>
-      <import plugin="org.eclipse.jface" version="3.3.0" match="compatible"/>
-      <import plugin="org.eclipse.gef" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.emf.validation" version="1.1.0" match="compatible"/>
-      <import plugin="org.eclipse.ui.ide" version="3.3.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.bridge" version="1.1.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.bridge.ui" version="1.1.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.ui" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.emf.commands.core" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.graphdef.codegen" version="2.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.tooldef" version="2.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.validate" version="1.1.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.map.edit" version="2.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.common.core" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.ui.ide" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.ui" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.core.resources" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.ui.actions" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.draw2d" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.emf.core" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.notation" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.common.ui" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.ui.render" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.ui.geoshapes" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.ui.providers" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.tests.runtime.common.core" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.ui.resources.editor" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.examples.runtime.diagram.logic" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.examples.runtime.diagram.logic.model" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.draw2d.ui" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render.awt" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.pde.runtime" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.emf.type.core" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.common.ui.services" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.emf.type.ui" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.tests.runtime.emf.type.core" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.emf.ui" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.gef.ui" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.core.expressions" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.emf.ecore" version="2.2.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.emf.clipboard.core" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.emf.examples.library" version="2.2.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.common.ui.action" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.runtime.common.ui.services.action" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.gmf.tests.runtime.common.ui.services.provider" version="1.0.0" match="compatible"/>
+      <import feature="org.eclipse.gmf" version="1.4.0" match="compatible"/>
    </requires>
 
    <plugin
