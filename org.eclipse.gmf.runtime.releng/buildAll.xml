@@ -135,9 +135,9 @@
 			</sequential>
 		</macrodef>
 		
-		<build component="builder/runtime" zip="gmf-runtime-sdk-${buildAlias}.zip"/>
-		<build component="builder/examples" zip="gmf-examples-${buildAlias}.zip"/>
-		<build component="builder/tests" zip="gmf-runtime-tests-${buildAlias}.zip"/>
+		<build component="builder/runtime" zip="gmf-sdk-runtime-${buildAlias}.zip"/>
+		<build component="builder/examples" zip="gmf-examples-runtime-${buildAlias}.zip"/>
+		<build component="builder/tests" zip="gmf-tests-runtime-${buildAlias}.zip"/>
    		<ant target="signMasterZip" antfile="${helper}">
 			<property name="mailStatus" value="nomail" />
 		</ant>	

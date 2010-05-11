@@ -1,6 +1,6 @@
 <project name="Build specific targets and properties" default="noDefault" basedir=".">
 
-	<property name="archiveName" value="${subprojectName}-sdk-${buildAlias}.zip" />
+	<property name="archiveName" value="gmf-sdk-runtime-${buildAlias}.zip" />
 
 	<!-- ===================================================================== -->
 	<!-- Run a given ${target} on all elements being built -->
