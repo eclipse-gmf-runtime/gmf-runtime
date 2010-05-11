@@ -37,7 +37,7 @@ http://www.eclipse.org/legal/epl-v10.html
          name="%runtimeSourceFeatureName"/>
 
    <includes
-         id="org.eclipse.gmf.examples.pde"
+         id="org.eclipse.gmf.examples.runtime.ui.pde"
          version="0.0.0"
          name="%examplesFeatureName"/>
 
