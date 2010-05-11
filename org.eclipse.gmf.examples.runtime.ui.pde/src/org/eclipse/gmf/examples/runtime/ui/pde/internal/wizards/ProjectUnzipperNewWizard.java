@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -32,13 +34,17 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesPlugin;
+import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesStatusCodes;
+import org.eclipse.gmf.examples.runtime.ui.pde.internal.l10n.ResourceManager;
+import org.eclipse.gmf.examples.runtime.ui.pde.util.Log;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -47,11 +53,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
-
-import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesPlugin;
-import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesStatusCodes;
-import org.eclipse.gmf.examples.runtime.ui.pde.internal.l10n.ResourceManager;
-import org.eclipse.gmf.examples.runtime.ui.pde.util.Log;
 
 /**
  * This abstract wizard serves as the base for our zipped project wizards. At
@@ -62,7 +63,7 @@ import org.eclipse.gmf.examples.runtime.ui.pde.util.Log;
  * 
  * @see Wizard
  */
-abstract public class ProjectUnzipperNewWizard
+public class ProjectUnzipperNewWizard
 	extends Wizard
 	implements INewWizard, IExecutableExtension {
 
@@ -130,62 +131,9 @@ abstract public class ProjectUnzipperNewWizard
 
 	/**
 	 * Constructor
-	 * 
-	 * @param pageNameIn
-	 *            The name of the project creation page
-	 * @param pageTitleIn
-	 *            The title of the project creation page
-	 * @param pageDescriptionIn
-	 *            The description of the project creation page
-     * @param pageProjectNameIn
-     *            The project name in the project creation page
-	 * @param projectZipURLIn
-	 *            The URL pointing to the location of the project archive
 	 */
-	public ProjectUnzipperNewWizard(String pageNameIn, String pageTitleIn,
-			String pageDescriptionIn, String pageProjectNameIn, URL projectZipURLIn) {
-		this(pageNameIn, pageTitleIn, pageDescriptionIn, pageProjectNameIn,
-			new URL[] {projectZipURLIn}, new String[] {"{0}"}); //$NON-NLS-1$
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param pageNameIn
-	 *            The name of the project creation page
-	 * @param pageTitleIn
-	 *            The title of the project creation page
-	 * @param pageDescriptionIn
-	 *            The description of the project creation page
-     * @param pageProjectNameIn
-     *            The project name in the project creation page
-	 * @param projectZipURLListIn
-	 *            The list of URL pointing to the location of the project
-	 *            archives
-	 * @param formatsIn
-	 *            The list of formats to be applied to the user supplied name.
-	 *            The {@link java.text.MessageFormat} class should be consulted
-	 *            to understand substitutions. The &quot;{0}&quot; substitution
-	 *            will be overridden with the user supplied name. Otherwise, the
-	 *            absolute strings may be passed in, which will completely
-	 *            ignore the user supplied name.
-	 */
-	public ProjectUnzipperNewWizard(String pageNameIn, String pageTitleIn,
-			String pageDescriptionIn, String pageProjectNameIn, 
-            URL[] projectZipURLListIn,
-			String[] nameFormatsIn) {
+	public ProjectUnzipperNewWizard() {
 		super();
-
-		assert projectZipURLListIn.length > 0;
-		assert nameFormatsIn.length > 0;
-		assert projectZipURLListIn.length == nameFormatsIn.length;
-
-		pageName = pageNameIn;
-		pageTitle = pageTitleIn;
-		pageDescription = pageDescriptionIn;
-        pageProjectName = pageProjectNameIn;
-		projectZipURL = projectZipURLListIn;
-		nameFormats = nameFormatsIn;
 		setNeedsProgressMonitor(true);
 	}
 
@@ -328,7 +276,7 @@ abstract public class ProjectUnzipperNewWizard
 		 */
 		// URL urlZip = PdeUiPlugin.getDefault().find();
 		// URL urlZipLocal = Platform.asLocalURL(urlZip);
-		URL urlZipLocal = Platform.asLocalURL(url);
+		URL urlZipLocal = FileLocator.toFileURL(url);
 
 		/*
 		 * Walk each element and unzip
@@ -541,6 +489,32 @@ abstract public class ProjectUnzipperNewWizard
 			String propertyName, Object data)
 		throws CoreException {
 		config = configIn;
+		pageName = config.getAttribute("name"); //$NON-NLS-1$
+		pageTitle = config.getAttribute("projectPageTitle"); //$NON-NLS-1$
+		pageDescription = config.getAttribute("projectPageDescription"); //$NON-NLS-1$
+		pageProjectName = config.getAttribute("projectName"); //$NON-NLS-1$
+
+		List nameFormatsL = new ArrayList();
+		List zipURLs = new ArrayList();
+		
+		IConfigurationElement[] projectElements = config.getChildren("project"); //$NON-NLS-1$
+		for (int i=0;i<projectElements.length;i++) {
+			zipURLs.add(GmfExamplesPlugin.getDefault().find(new Path(projectElements[i].getAttribute("zipPath")))); //$NON-NLS-1$
+			if (projectElements[i].getAttribute("nameFormat") == null) { //$NON-NLS-1$
+				nameFormatsL.add("{0}"); //$NON-NLS-1$
+			} else { 
+				nameFormatsL.add(projectElements[i].getAttribute("nameFormat")); //$NON-NLS-1$
+			}
+		}
+		
+		projectZipURL = new URL[zipURLs.size()];
+		zipURLs.toArray(projectZipURL);
+		assert projectZipURL.length > 0;
+		nameFormats = new String[nameFormatsL.size()];
+		nameFormatsL.toArray(nameFormats);
+		assert nameFormats.length > 0;
+		assert projectZipURL.length == nameFormats.length;
+		
 	}
 
 }

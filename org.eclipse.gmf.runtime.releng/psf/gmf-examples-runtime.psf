@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psf version="2.0">
 	<provider id="org.eclipse.team.cvs.core.cvsnature">
-		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.tooling/features/org.eclipse.gmf.examples-feature,org.eclipse.gmf.examples-feature"/>
-		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.tooling/features/org.eclipse.gmf.examples.pde-feature,org.eclipse.gmf.examples.pde-feature"/>
-		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.tooling/examples/org.eclipse.gmf.examples,org.eclipse.gmf.examples"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.tooling/features/org.eclipse.gmf.examples.runtime-feature,org.eclipse.gmf.examples.runtime-feature"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.tooling/features/org.eclipse.gmf.examples.runtime.ui.pde-feature,org.eclipse.gmf.examples.runtime.ui.pde-feature"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.tooling/examples/org.eclipse.gmf.examples.runtime,org.eclipse.gmf.examples.runtime"/>
 		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/examples/org.eclipse.gmf.examples.runtime.common.service,org.eclipse.gmf.examples.runtime.common.service"/>
 		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/examples/org.eclipse.gmf.examples.runtime.diagram.geoshapes,org.eclipse.gmf.examples.runtime.diagram.geoshapes"/>
 		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/examples/org.eclipse.gmf.examples.runtime.diagram.logic,org.eclipse.gmf.examples.runtime.diagram.logic"/>
@@ -13,7 +13,6 @@
 		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/examples/org.eclipse.gmf.examples.runtime.diagram.decorator,org.eclipse.gmf.examples.runtime.diagram.decorator"/>
 		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/examples/org.eclipse.gmf.examples.runtime.diagram.layout,org.eclipse.gmf.examples.runtime.diagram.layout"/>
 		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/examples/org.eclipse.gmf.examples.runtime.emf.clipboard,org.eclipse.gmf.examples.runtime.emf.clipboard"/>
-		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.tooling/examples/org.eclipse.gmf.ecore.editor,org.eclipse.gmf.ecore.editor"/>
-		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.tooling/examples/org.eclipse.gmf.examples.ui.pde,org.eclipse.gmf.examples.ui.pde"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.tooling/examples/org.eclipse.gmf.examples.runtime.ui.pde,org.eclipse.gmf.examples.runtime.ui.pde"/>
 	</provider>
 </psf>

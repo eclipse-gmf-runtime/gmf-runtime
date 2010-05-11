@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="org.eclipse.gmf.runtime.diagram.ui.render" version="2">
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/render/clipboard/DiagramSVGGenerator.java" type="org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator">
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="RenderedImage"/>
+                <message_argument value="DiagramSVGGenerator"/>
+                <message_argument value="getRenderedImage()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/render/editparts/AbstractImageEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.render.editparts.AbstractImageEditPart">
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="RenderedImage"/>
+                <message_argument value="AbstractImageEditPart"/>
+                <message_argument value="getRenderedImage()"/>
+            </message_arguments>
+        </filter>
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="RenderedImage"/>
+                <message_argument value="AbstractImageEditPart"/>
+                <message_argument value="regenerateImageFromSource()"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/render/editparts/RenderedDiagramRootEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.render.editparts.RenderedDiagramRootEditPart$DiagramRenderedScalableFreeformLayeredPane">
         <filter id="576725006">
             <message_arguments>
@@ -26,6 +51,15 @@
                 <message_argument value="MapModeGraphics"/>
                 <message_argument value="DiagramRenderedScalableFreeformLayeredPane"/>
                 <message_argument value="createScaledGraphics(MapModeGraphics)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/render/editparts/URLImageEditPart.java" type="org.eclipse.gmf.runtime.diagram.ui.render.editparts.URLImageEditPart">
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="RenderedImage"/>
+                <message_argument value="URLImageEditPart"/>
+                <message_argument value="regenerateImageFromSource()"/>
             </message_arguments>
         </filter>
     </resource>

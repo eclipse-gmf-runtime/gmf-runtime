@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.Plugin;
-
 import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesDebugOptions;
 import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesPlugin;
 import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesStatusCodes;
@@ -49,7 +48,7 @@ import org.eclipse.gmf.examples.runtime.ui.pde.util.Trace;
  * </p>
  * <p>
  * Each cluster-oriented resource management package will have a single 
- * <code>org.eclipse.gmf.examples.runtime.ui.pde.internal.l10n.AbstractResourceManager</code> subclass. The subclass should
+ * <code>org.eclipse.gmf.examples.ui.pde.internal.l10n.AbstractResourceManager</code> subclass. The subclass should
  * have a singleton instance and override, if necessary, the resource initialization method
  * <code>
  * 	initializeMessageResources()

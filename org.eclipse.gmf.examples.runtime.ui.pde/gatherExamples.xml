@@ -17,6 +17,7 @@
 		
 		<!-- IMPORTANT: Include new examples here.  Example that is added here must be added as a dependency in plugin.xml of this plugin -->		
 		<patternset id="examples">
+			<include name="org.eclipse.gmf.examples.runtime.emf.clipboard/emf-clipboard-copypaste.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.geoshapes/geoshapes.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic/logic.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model/logicSemantic.zip"/>
@@ -31,9 +32,6 @@
 		<patternset id="icons">
 			<include name="org.eclipse.gmf.examples.runtime.diagram.geoshapes/icons/geoshape.gif"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic/icons/logic.gif"/>
-			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model/icons/Circuit.gif"/>
-			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model.edit/icons/full/obj16/Element.gif"/>
-			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model.editor/icons/full/obj16/SemanticModelFile.gif"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.decorator/icons/diagram.gif"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.layout/icons/diagram2.gif"/>
 		</patternset>

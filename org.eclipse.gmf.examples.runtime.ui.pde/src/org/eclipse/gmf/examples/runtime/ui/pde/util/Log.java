@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-
 import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesDebugOptions;
 import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesPlugin;
 import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesStatusCodes;
@@ -26,7 +25,6 @@ import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesStatusCodes;
  * interface for generating logs based on status objects.
  * 
  * @author khussey
- * @canBeSeenBy %partners
  */
 public class Log {
 
