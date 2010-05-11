@@ -81,20 +81,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.xerces.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.xml.resolver.source"
-         download-size="0"
-         install-size="0"
-         version="1.2.0.v200902170519"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.batik.css.source"
          download-size="0"
          install-size="0"
@@ -134,27 +120,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.xml.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.xml.serializer.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.batik.pdf.source"
-         download-size="0"
-         install-size="0"
-         version="1.6.0.v200806031500"
          unpack="false"/>
 
    <plugin
