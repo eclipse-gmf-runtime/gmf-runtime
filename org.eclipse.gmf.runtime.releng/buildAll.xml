@@ -160,7 +160,7 @@
 	
 	<target name="updateZips" if="sign">
 		<!-- [233486] Update zip content with signed jars (note: temporary, as there must be a better way) -->
-		<zip destfile="${buildDirectory}/${buildLabel}/gmf-sdk-notation-${buildAlias}.zip" update="true" duplicate="preserve">
+		<zip destfile="${buildDirectory}/${buildLabel}/gmf-sdk-runtime-${buildAlias}.zip" update="true" duplicate="preserve">
 			<zipfileset 
 				src="${buildDirectory}/${buildLabel}/${masterZip}" 
 				dirmode="775" filemode="664" 
