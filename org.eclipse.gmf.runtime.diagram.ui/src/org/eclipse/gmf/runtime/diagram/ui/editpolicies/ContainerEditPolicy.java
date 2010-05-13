@@ -22,10 +22,12 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -577,21 +579,23 @@ public class ContainerEditPolicy
      * @see org.eclipse.gef.EditPolicy#getTargetEditPart(org.eclipse.gef.Request)
      */
     public EditPart getTargetEditPart(Request request) {
-        return understandsRequest(request) ? getHost() : null;
-    }
+		if (isArrangeRequest(request)) {
+			if (getHost() instanceof GraphicalEditPart
+					&& !(((GraphicalEditPart) getHost()).getContentPane()
+							.getLayoutManager() instanceof XYLayout)) {
+				return getHost().getParent() != null ? getHost().getParent().getTargetEditPart(request)
+						: null;
+			}
+		}
+		return understandsRequest(request) ? getHost() : null;
+	}
 
     /**
      * @see org.eclipse.gef.EditPolicy#understandsRequest(org.eclipse.gef.Request)
      */
     public boolean understandsRequest(Request request) {
-        return (
-            ActionIds.ACTION_ARRANGE_ALL.equals(request.getType())
-                || ActionIds.ACTION_TOOLBAR_ARRANGE_ALL.equals(request.getType())
-                || ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())
+        return ( isArrangeRequest(request)
                 || ActionIds.ACTION_GROUP.equals(request.getType())
-                || ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request.getType())             
-                || RequestConstants.REQ_ARRANGE_RADIAL.equals(request.getType())
-                || RequestConstants.REQ_ARRANGE_DEFERRED.equals(request.getType())
                 || RequestConstants.REQ_REFRESH.equals(request.getType())
                 || RequestConstants.REQ_PASTE.equals(request.getType())
                 || RequestConstants.REQ_DUPLICATE.equals(request.getType())
@@ -600,6 +604,22 @@ public class ContainerEditPolicy
                 || ZOrderRequest.REQ_BRING_FORWARD.equals(request.getType())
                 || ZOrderRequest.REQ_SEND_TO_BACK.equals(request.getType())
                 || ZOrderRequest.REQ_SEND_BACKWARD.equals(request.getType()));
+    }
+    
+    /**
+     * Checks whether the request is some type of arrange request
+     * 
+     * @param request the request
+     * @return <code>true</code> if the request is an arrange request
+     * @since 1.4
+     */
+    final protected boolean isArrangeRequest(Request request) {
+        return ActionIds.ACTION_ARRANGE_ALL.equals(request.getType())
+        || ActionIds.ACTION_TOOLBAR_ARRANGE_ALL.equals(request.getType())
+        || ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())
+        || ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request.getType())             
+        || RequestConstants.REQ_ARRANGE_RADIAL.equals(request.getType())
+        || RequestConstants.REQ_ARRANGE_DEFERRED.equals(request.getType());
     }
 
 }

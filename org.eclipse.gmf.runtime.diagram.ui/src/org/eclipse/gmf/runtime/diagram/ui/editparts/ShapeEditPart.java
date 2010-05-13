@@ -102,6 +102,12 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
             newRequest.setPartsToArrange(partsToArrange);
             return newRequest;
         }
+
+		@Override
+		public EditPart getTargetEditPart(Request request) {
+			return understandsRequest(request) ? getHost() : null;
+		}
+		
     }
     
 	/**

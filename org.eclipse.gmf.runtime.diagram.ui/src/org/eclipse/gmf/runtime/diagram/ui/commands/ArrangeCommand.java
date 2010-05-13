@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -107,7 +108,7 @@ final public class ArrangeCommand extends AbstractTransactionalCommand {
         while (li.hasNext()) {
             IGraphicalEditPart ep = li.next();      
             View view = ep.getNotationView();
-            if (ep.isActive() && view != null && view instanceof Node) {
+            if (ep.isActive() && view != null && view instanceof Node && ep != layoutHint.getAdapter(EditPart.class)) {
                 Rectangle bounds = ep.getFigure().getBounds();
                 nodes.add(new LayoutNode((Node)view, bounds.width, bounds.height));
             }
