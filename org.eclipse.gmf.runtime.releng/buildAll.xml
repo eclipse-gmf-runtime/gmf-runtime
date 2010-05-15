@@ -169,7 +169,13 @@
 						  **/pack.properties, 
 						  **/features/*.jar,
 						  **/*.gmf.examples*.jar" 
-				includes="**/*.gmf.examples.runtime.ui.pde*.jar"/>
+				includes="**/*.gmf.runtime*.jar,
+						  **/*.gmf.examples.runtime.ui.pde*.jar"/>
+		</zip>
+		<echo message="GMF 2.2.x: backwards compatibility, add gmf-sdk-notation to gmf-sdk-runtime zip"/>
+		<zip destfile="${buildDirectory}/${buildLabel}/gmf-sdk-notation-${buildAlias}.zip" update="true" duplicate="preserve">
+			<zipfileset 
+				src="${downloadsDir}/${gmfFile}"/>
 		</zip>
 		<zip destfile="${buildDirectory}/${buildLabel}/gmf-runtime-${buildAlias}.zip" update="true" duplicate="preserve">
 			<zipfileset 
@@ -179,12 +185,12 @@
 				excludes="**/*.pack.gz, 
 						  **/pack.properties, 
 						  **/features/*.jar,
-						  **/plugins/*.lite*.jar,
 						  **/plugins/*.source_*.jar,
 						  **/plugins/*.ant.optional.junit*.jar" 
 				includes="**/*.gmf.runtime*.jar,
 						  **/*.gmf_*.jar,
 						  **/*.apache*.jar,
+						  **/javax.xml*.jar,
 						  **/*.w3c*.jar"/>
 		</zip>
 		<zip destfile="${buildDirectory}/${buildLabel}/gmf-examples-runtime-${buildAlias}.zip" update="true" duplicate="preserve">
