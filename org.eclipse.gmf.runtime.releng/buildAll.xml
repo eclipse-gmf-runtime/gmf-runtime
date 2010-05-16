@@ -135,7 +135,8 @@
 			</sequential>
 		</macrodef>
 		
-		<build component="builder/runtime" zip="gmf-sdk-runtime-${buildAlias}.zip"/>
+		<build component="builder/runtime" zip="gmf-runtime-${buildAlias}.zip"/>
+		<build component="builder/sdk-runtime" zip="gmf-sdk-runtime-${buildAlias}.zip"/>
 		<build component="builder/examples" zip="gmf-examples-runtime-${buildAlias}.zip"/>
 		<build component="builder/tests" zip="gmf-tests-runtime-${buildAlias}.zip"/>
    		<ant target="signMasterZip" antfile="${helper}">
@@ -185,8 +186,7 @@
 				excludes="**/*.pack.gz, 
 						  **/pack.properties, 
 						  **/features/*.jar,
-						  **/plugins/*.source_*.jar,
-						  **/plugins/*.ant.optional.junit*.jar" 
+						  **/plugins/*.source_*.jar" 
 				includes="**/*.gmf.runtime*.jar,
 						  **/*.gmf_*.jar,
 						  **/*.apache*.jar,
