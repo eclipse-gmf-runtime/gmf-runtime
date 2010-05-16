@@ -186,7 +186,7 @@
 				excludes="**/*.pack.gz, 
 						  **/pack.properties, 
 						  **/features/*.jar,
-						  **/plugins/plugins/*.gmf.runtime.sdk_*.jar,
+						  **/plugins/*.gmf.runtime.sdk_*.jar,
 						  **/plugins/*.source_*.jar" 
 				includes="**/*.gmf.runtime*.jar,
 						  **/*.gmf_*.jar,
