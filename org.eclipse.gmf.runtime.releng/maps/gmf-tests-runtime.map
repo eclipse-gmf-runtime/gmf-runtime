@@ -1,0 +1,26 @@
+!*** Graphical Modeling Framework (GMF) tests map *******************************************
+
+!*** GMF tests features *********************************************************************
+feature@org.eclipse.gmf.tests.runtime=v20100511-1424,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.tests.runtime-feature
+
+!*** GMF tests plug-ins *********************************************************************
+plugin@org.eclipse.gmf.tests.runtime.common.core=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.common.core
+plugin@org.eclipse.gmf.tests.runtime.common.ui.services=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.common.ui.services
+plugin@org.eclipse.gmf.tests.runtime.common.ui.services.action=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.common.ui.services.action
+plugin@org.eclipse.gmf.tests.runtime.common.ui.services.provider=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.common.ui.services.provider
+plugin@org.eclipse.gmf.tests.runtime.common.ui=v20100317-1028,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.common.ui
+plugin@org.eclipse.gmf.tests.runtime.diagram.ui=v20100430-1457,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.diagram.ui
+plugin@org.eclipse.gmf.tests.runtime.draw2d.ui.render=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.draw2d.ui.render
+plugin@org.eclipse.gmf.tests.runtime.draw2d.ui=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.draw2d.ui
+plugin@org.eclipse.gmf.tests.runtime.gef.ui=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.gef.ui
+plugin@org.eclipse.gmf.tests.runtime.emf.clipboard.core=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.emf.clipboard.core
+plugin@org.eclipse.gmf.tests.runtime.emf.commands.core=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.emf.commands.core
+plugin@org.eclipse.gmf.tests.runtime.emf.ui=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.emf.ui
+plugin@org.eclipse.gmf.tests.runtime.emf.ui.properties=v20100303-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.emf.ui.properties
+plugin@org.eclipse.gmf.tests.runtime.emf.type.core=v20100107-1101,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.emf.type.core
+plugin@org.eclipse.gmf.tests.runtime.emf.type.ui=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.emf.type.ui
+plugin@org.eclipse.gmf.tests.runtime.emf.core=v20091216-1048,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/tests/org.eclipse.gmf.tests.runtime.emf.core
+
+!*** Special entries from eclipse  
+plugin@org.eclipse.test=v20100118,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
+fragment@org.eclipse.ant.optional.junit=v20080717,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
