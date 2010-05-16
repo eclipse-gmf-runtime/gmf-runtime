@@ -287,7 +287,7 @@
 	    <copy todir="${workingDirectory}/testing" file="${buildDirectory}/../build.cfg" />
 
 		<!--create zip file of the automated testing framework-->	
-		<zip destfile="${buildDirectory}/${buildLabel}/gmf-runtime-tests-${buildAlias}.zip">
+		<zip destfile="${buildDirectory}/${buildLabel}/gmf-tests-runtime-${buildAlias}.zip">
 			 <zipfileset dir="${workingDirectory}/testing" prefix="testing"/>
 		</zip>
 
