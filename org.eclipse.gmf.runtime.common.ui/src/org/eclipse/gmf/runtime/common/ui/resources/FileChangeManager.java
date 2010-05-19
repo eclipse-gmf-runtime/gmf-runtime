@@ -154,6 +154,17 @@ public class FileChangeManager
 							fileObserverManager.notify(event);
 						}
 					}
+                } else if (delta.getResource() instanceof IFile) {
+                    FileChangeEvent event = new FileChangeEvent(
+                        FileChangeEventType.CHANGED, (IFile) delta
+                            .getResource());
+                    fileObserverManager.notify(event);
+                    if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
+    						CommonUIDebugOptions.RESOURCE)) {
+    						Trace.trace(CommonUIPlugin.getDefault(),
+    								"...FileChangeManager: Resource " //$NON-NLS-1$ 
+    								+ getAbsolutePath(delta.getResource()) + " was added"); //$NON-NLS-1$
+                    }
 				} else {
 					if (Trace.shouldTrace(CommonUIPlugin.getDefault(),
 						CommonUIDebugOptions.RESOURCE)) {
