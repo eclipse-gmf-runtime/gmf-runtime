@@ -161,23 +161,6 @@
 	
 	<target name="updateZips" if="sign">
 		<!-- [233486] Update zip content with signed jars (note: temporary, as there must be a better way) -->
-		<zip destfile="${buildDirectory}/${buildLabel}/gmf-sdk-runtime-${buildAlias}.zip" update="true" duplicate="preserve">
-			<zipfileset 
-				src="${buildDirectory}/${buildLabel}/${masterZip}" 
-				dirmode="775" filemode="664" 
-				id="NotationZipFiles" 
-				excludes="**/*.pack.gz, 
-						  **/pack.properties, 
-						  **/features/*.jar,
-						  **/*.gmf.examples*.jar" 
-				includes="**/*.gmf.runtime*.jar,
-						  **/*.gmf.examples.runtime.ui.pde*.jar"/>
-		</zip>
-		<echo message="GMF 2.2.x: backwards compatibility, add gmf-sdk-notation to gmf-sdk-runtime zip"/>
-		<zip destfile="${buildDirectory}/${buildLabel}/gmf-sdk-notation-${buildAlias}.zip" update="true" duplicate="preserve">
-			<zipfileset 
-				src="${downloadsDir}/${gmfFile}"/>
-		</zip>
 		<zip destfile="${buildDirectory}/${buildLabel}/gmf-runtime-${buildAlias}.zip" update="true" duplicate="preserve">
 			<zipfileset 
 				src="${buildDirectory}/${buildLabel}/${masterZip}" 
@@ -186,24 +169,13 @@
 				excludes="**/*.pack.gz, 
 						  **/pack.properties, 
 						  **/features/*.jar,
-						  **/plugins/*.gmf.runtime.sdk_*.jar,
-						  **/plugins/*.source_*.jar" 
+						  **/plugins/*.lite*.jar,
+						  **/plugins/*.source_*.jar,
+						  **/plugins/*.ant.optional.junit*.jar" 
 				includes="**/*.gmf.runtime*.jar,
 						  **/*.gmf_*.jar,
 						  **/*.apache*.jar,
-						  **/javax.xml*.jar,
 						  **/*.w3c*.jar"/>
-		</zip>
-		<zip destfile="${buildDirectory}/${buildLabel}/gmf-examples-runtime-${buildAlias}.zip" update="true" duplicate="preserve">
-			<zipfileset 
-				src="${buildDirectory}/${buildLabel}/${masterZip}" 
-				dirmode="775" filemode="664" 
-				id="ExamplesZipFiles" 
-				excludes="**/*.pack.gz, 
-						  **/pack.properties, 
-						  **/features/*.jar,
-						  **/*.gmf.examples.runtime.ui.pde*.jar" 
-				includes="**/*.gmf.examples*.jar"/>
 		</zip>
 	</target>
 	
