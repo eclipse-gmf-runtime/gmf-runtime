@@ -48,3 +48,7 @@ plugin@org.eclipse.gmf.runtime.emf.clipboard.core=v20090922-0314,:pserver:anonym
 
 !*** GMF fragments ***************************************************************************
 fragment@org.eclipse.gmf.runtime.common.ui.printing.win32=v20080612-1355,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.printing.win32
+
+!*** GMF Runtime SDK added for Old R2_1_maintenance build ************************************
+feature@org.eclipse.gmf.runtime.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.runtime.sdk-feature
+plugin@org.eclipse.gmf.runtime.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.sdk
