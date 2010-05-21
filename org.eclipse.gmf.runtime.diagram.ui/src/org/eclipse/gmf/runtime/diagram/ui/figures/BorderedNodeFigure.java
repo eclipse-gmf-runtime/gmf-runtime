@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.DelegatingLayout;
+import org.eclipse.draw2d.IClippingStrategy;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.TreeSearch;
@@ -21,7 +22,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.BorderItemContainerFigure;
-import org.eclipse.gmf.runtime.diagram.ui.figures.IExpandableFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -59,6 +59,7 @@ public class BorderedNodeFigure
 
 		setBounds(getMainFigure().getBounds().getCopy());
 		getBorderItemContainer().setBounds(new Rectangle(0, 0, 1, 1));
+		setClippingStrategy(new BorderItemClippingStrategy());
 	}
 
 	/**
@@ -266,4 +267,15 @@ public class BorderedNodeFigure
     	super.fireFigureMoved();
         extendedBounds = null;
     }
+
+	private class BorderItemClippingStrategy implements IClippingStrategy {
+		
+		public Rectangle[] getClip(IFigure childFigure) {
+			if (childFigure == borderItemContainer) {
+				return new Rectangle[] {borderItemContainer.getExtendedBounds()};
+			}
+			return new Rectangle[] {childFigure.getBounds()};
+		}
+	}
+
 }
