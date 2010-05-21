@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.gmf.runtime.sdk"
       label="%featureName"
-      version="1.4.0.qualifier"
+      version="1.1.4.qualifier"
       provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
@@ -37,19 +37,14 @@ http://www.eclipse.org/legal/epl-v10.html
          name="%runtimeSourceFeatureName"/>
 
    <includes
-         id="org.eclipse.gmf.examples.runtime.ui.pde"
-         version="0.0.0"
-         name="%examplesFeatureName"/>
-
-   <includes
          id="org.eclipse.gmf.runtime.thirdparty.source"
          version="0.0.0"
          name="%thirdPartySourceFeatureName"/>
 
    <requires>
-      <import feature="org.eclipse.emf" version="2.6.0" match="compatible"/>
-      <import feature="org.eclipse.gef" version="3.6.0" match="compatible"/>
-      <import feature="org.eclipse.ocl" version="3.0.0" match="compatible"/>
+      <import feature="org.eclipse.emf" version="2.4.0" match="compatible"/>
+      <import feature="org.eclipse.gef" version="3.4.0" match="compatible"/>
+      <import feature="org.eclipse.ocl" version="1.0.0" match="compatible"/>
       <import feature="org.eclipse.emf.validation" version="1.1.0" match="compatible"/>
    </requires>
 
