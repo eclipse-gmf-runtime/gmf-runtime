@@ -1,9 +1,0 @@
-!*** Graphical Modeling Framework (GMF) Experimental tests map ******************************************
-
-!** GMF Experimental tests ******************************************************************************
-feature@org.eclipse.gmf.tests.experimental=v20080716-1600,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/features/org.eclipse.gmf.tests.experimental-feature
-plugin@org.eclipse.gmf.tests.lite=v20080521,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/tests/org.eclipse.gmf.tests.lite
-
-!*** Special entries from eclipse  
-plugin@org.eclipse.test=v20080313,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
-fragment@org.eclipse.ant.optional.junit=v20070202,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
