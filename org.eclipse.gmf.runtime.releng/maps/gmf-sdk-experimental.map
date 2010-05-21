@@ -1,0 +1,11 @@
+!*** Graphical Modeling Framework (GMF) SDK experimental map ********************************************
+
+!*** GMF Experimental features ***************************************************************************
+feature@org.eclipse.gmf.sdk.experimental=v20080716-1600,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/features/org.eclipse.gmf.sdk.experimental-feature
+
+!*** GMF Experimental plug-ins ***************************************************************************
+plugin@org.eclipse.gmf.codegen.lite=v20080507-1326,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf.codegen.lite
+plugin@org.eclipse.gmf.codegen.lite.ui=v20080425-1959,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf.codegen.lite.ui
+plugin@org.eclipse.gmf.graphdef.editor=v20080718-1700,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf.graphdef.editor
+plugin@org.eclipse.gmf.bridge.trace=v20080425-1959,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf.bridge.trace
+plugin@org.eclipse.gmf.runtime.lite=v20080425-1959,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/plugins/org.eclipse.gmf.runtime.lite

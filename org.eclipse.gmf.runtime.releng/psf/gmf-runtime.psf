@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+	<provider id="org.eclipse.team.cvs.core.cvsnature">
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.runtime-feature,org.eclipse.gmf.runtime-feature,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.runtime.sdk-feature,org.eclipse.gmf.runtime.sdk-feature,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf,org.eclipse.gmf,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.sdk,org.eclipse.gmf.runtime.sdk,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.core,org.eclipse.gmf.runtime.common.core,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui,org.eclipse.gmf.runtime.common.ui,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.action,org.eclipse.gmf.runtime.common.ui.action,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.action.ide,org.eclipse.gmf.runtime.common.ui.action.ide,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.printing,org.eclipse.gmf.runtime.common.ui.printing,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.services,org.eclipse.gmf.runtime.common.ui.services,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.services.action,org.eclipse.gmf.runtime.common.ui.services.action,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.services.dnd,org.eclipse.gmf.runtime.common.ui.services.dnd,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.services.dnd.ide,org.eclipse.gmf.runtime.common.ui.services.dnd.ide,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.services.properties,org.eclipse.gmf.runtime.common.ui.services.properties,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.core,org.eclipse.gmf.runtime.diagram.core,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.notation.providers,org.eclipse.gmf.runtime.notation.providers,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.actions,org.eclipse.gmf.runtime.diagram.ui.actions,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.dnd,org.eclipse.gmf.runtime.diagram.ui.dnd,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.geoshapes,org.eclipse.gmf.runtime.diagram.ui.geoshapes,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.printing,org.eclipse.gmf.runtime.diagram.ui.printing,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.printing.render,org.eclipse.gmf.runtime.diagram.ui.printing.render,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.properties,org.eclipse.gmf.runtime.diagram.ui.properties,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.providers,org.eclipse.gmf.runtime.diagram.ui.providers,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.providers.ide,org.eclipse.gmf.runtime.diagram.ui.providers.ide,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.render,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.resources.editor,org.eclipse.gmf.runtime.diagram.ui.resources.editor,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.draw2d.ui,org.eclipse.gmf.runtime.draw2d.ui,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.draw2d.ui.render,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.draw2d.ui.render.awt,org.eclipse.gmf.runtime.draw2d.ui.render.awt,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.gef.ui,org.eclipse.gmf.runtime.gef.ui,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.commands.core,org.eclipse.gmf.runtime.emf.commands.core,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.core,org.eclipse.gmf.runtime.emf.core,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.ui,org.eclipse.gmf.runtime.emf.ui,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.ui.properties,org.eclipse.gmf.runtime.emf.ui.properties,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.type.core,org.eclipse.gmf.runtime.emf.type.core,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.type.ui,org.eclipse.gmf.runtime.emf.type.ui,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.clipboard.core,org.eclipse.gmf.runtime.emf.clipboard.core,R2_1_maintenance"/>
+		<project reference="1.0,:extssh:dev.eclipse.org:/cvsroot/modeling,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.printing.win32,org.eclipse.gmf.runtime.common.ui.printing.win32,R2_1_maintenance"/>
+	</provider>
+</psf>
