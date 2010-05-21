@@ -135,8 +135,8 @@
 			</sequential>
 		</macrodef>
 
-		<!-- [286834] only build GMF Runtime --> 
-		<build component="builder/runtime" zip="gmf-runtime-${buildAlias}.zip"/>
+		<!-- [286834] only build GMF SDK Runtime  --> 
+		<build component="builder/sdk-runtime" zip="gmf-sdk-runtime-${buildAlias}.zip"/>
    		<ant target="signMasterZip" antfile="${helper}">
 			<property name="mailStatus" value="nomail" />
 		</ant>	
@@ -159,22 +159,15 @@
 	
 	<target name="updateZips" if="sign">
 		<!-- [233486] Update zip content with signed jars (note: temporary, as there must be a better way) -->
-		<!-- [286834] only build GMF Runtime --> 
-		<zip destfile="${buildDirectory}/${buildLabel}/gmf-runtime-${buildAlias}.zip" update="true" duplicate="preserve">
+		<!-- [286834] only build GMF SDK Runtime --> 
+		<zip destfile="${buildDirectory}/${buildLabel}/gmf-sdk-runtime-${buildAlias}.zip" update="true" duplicate="preserve">
 			<zipfileset 
 				src="${buildDirectory}/${buildLabel}/${masterZip}" 
 				dirmode="775" filemode="664" 
 				id="RuntimeZipFiles" 
 				excludes="**/*.pack.gz, 
 						  **/pack.properties, 
-						  **/features/*.jar,
-						  **/plugins/*.lite*.jar,
-						  **/plugins/*.source_*.jar,
-						  **/plugins/*.ant.optional.junit*.jar" 
-				includes="**/*.gmf.runtime*.jar,
-						  **/*.gmf_*.jar,
-						  **/*.apache*.jar,
-						  **/*.w3c*.jar"/>
+						  **/features/*.jar"/>
 		</zip>
 	</target>
 	
