@@ -1,4 +1,0 @@
-references/javadoc/*.html
-reference/api/*.html
-**/epl-v10.html
-**/test.xml
