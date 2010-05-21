@@ -1,0 +1,8 @@
+!*** Graphical Modeling Framework (GMF) documentation map ***************************************
+
+!*** GMF doc features ***************************************************************************
+feature@org.eclipse.gmf.doc=v20080916-2008,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/features/org.eclipse.gmf.doc-feature
+
+!*** GMF doc plug-ins ***************************************************************************
+plugin@org.eclipse.gmf.doc=v20080916-2008,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/doc/org.eclipse.gmf.doc
+plugin@org.eclipse.gmf.doc.ui=v20070601-1400,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmf/doc/org.eclipse.gmf.doc.ui

@@ -1,0 +1,44 @@
+<project name="Customized testing instructions" default="customSetup">
+
+	<property name="buildConfigFile" value="${testDir}/../../build.cfg" />
+	<available file="${buildConfigFile}" type="file" property="buildConfigIsAvailable" />
+
+	<target name="loadbuildConfig" if="buildConfigIsAvailable">
+		<property file="${buildConfigFile}" />
+	</target>
+
+	<target name="customSetup">
+		<fail unless="buildConfigIsAvailable" message="ERROR! Can't find ${buildConfigFile}"/>
+		<antcall target="loadbuildConfig"/>
+			
+		<echo message="Unpack Eclipse SDK to ${testDir}..."/>
+		<echo message="customTest.xml: basedir = ${basedir}"/>
+		<property name="getTestDependencies.xml" value="${testDir}/../../org.eclipse.modeling.common.releng/scripts/getTestDependencies.xml"/>
+		<ant target="getTestDependency" antfile="${getTestDependencies.xml}">
+			<property name="basedir" value="${basedir}"/>
+			<property name="url" value="${eclipseURL}"/>
+			<property name="file" value="${eclipseFile}"/>
+			<property name="unpackDest" value="${testDir}"/>
+		</ant>
+		
+		<!-- TODO: if your project requires more dependencies for testing, add them here -->
+		<echo message="Copy Eclipse, EMF, UML2, OCL, Query, Transaction, Validation, GEF, and Orbit to ${executionDir}..."/>
+		<copy todir="${executionDir}">
+			<fileset dir="${downloadsDir}" includes="${eclipseFile},${orbitFile},${emfFile},${emfExamplesFile},${uml2File},${oclFile},${queryFile},${transactionFile},${validationFile},${gefFile},${qvtoFile}"/>
+		</copy>
+		<property name="shell" value="relengbuildgtk.sh"/>
+		
+		<!--copy in the examples to test-->
+		<copy todir="${executionDir}" file="${dropLocation}/${buildLabel}/${examples}" />
+	
+		<!--copy the script which invokes the tests -->
+		<copy file="${tester}/${shell}" todir="${executionDir}"/>
+		<chmod file="${executionDir}/${shell}" perm="ugo+rx"/>		
+
+		<!--copy the testing.property files  -->
+		<copy file="${tester}/testing.properties" todir="${executionDir}"/>
+
+		<!-- at this point, we exit from this script and back into the parent script (presumably in pde or eclipse.releng?) -->
+		<echo message="Running ${shell} ..."/>
+	</target>
+</project>
