@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class TreeContainerEditPart extends TreeEditPart {
 	 */
 	protected List getModelChildren() {
 		if (getModel() instanceof View)
-			return ((View) getModel()).getChildren();
+			return new ArrayList(((View) getModel()).getChildren());
 		return Collections.EMPTY_LIST;
 	}
 
