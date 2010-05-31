@@ -266,7 +266,9 @@ public class DiagramIOUtil {
 	}
 	
 	public static void unload(TransactionalEditingDomain domain, Diagram diagram) {
-		diagram.eResource().unload();
+		if (diagram.eResource() != null) {
+			diagram.eResource().unload();
+		}
 	}
 
 	public static boolean hasUnrecognizedData(Resource resource) {
