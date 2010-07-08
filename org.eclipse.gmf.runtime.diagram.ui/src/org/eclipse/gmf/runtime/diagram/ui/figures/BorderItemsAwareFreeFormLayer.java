@@ -19,6 +19,7 @@ import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FreeformFigure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformListener;
+import org.eclipse.draw2d.IClippingStrategy;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -36,7 +37,21 @@ public class BorderItemsAwareFreeFormLayer
     
     private BorderItemAwareFreeFormHelper _helper = new BorderItemAwareFreeFormHelper(this);
     
+    private static final IClippingStrategy BORDER_ITEM_CLIPPING_STRATEGY = new IClippingStrategy() {
+		public Rectangle[] getClip(IFigure childFigure) {
+			if (childFigure instanceof IExpandableFigure) {
+				return new Rectangle[] {((IExpandableFigure)childFigure).getExtendedBounds()};
+			}
+			return new Rectangle[] {childFigure.getBounds()};
+		}
+    };
+    
     Rectangle extendedBounds = null;
+    
+    public BorderItemsAwareFreeFormLayer() {
+    	super();
+    	setClippingStrategy(BORDER_ITEM_CLIPPING_STRATEGY);
+    }
     
     /**
      * The helper class used by the border item aware free form layer
