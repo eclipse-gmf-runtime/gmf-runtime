@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<!-- Copyright (c) 2005, 2008  Borland Software Corporation and others.    -->
+<!-- Copyright (c) 2005, 2010  Borland Software Corporation and others.    -->
 <!-- All rights reserved. This program and the accompanying materials      -->
 <!-- are made available under the terms of the Eclipse Public License v1.0 -->
 <!-- which accompanies this distribution, and is available at              -->
@@ -22,10 +22,10 @@
             name="%newWizards.examples.logic.name"
             icon="icons/logic.gif"
             category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
-            class="org.eclipse.gmf.examples.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
+            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
             project="true"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            id="org.eclipse.gmf.examples.ui.pde.wizards.logic"
+            id="org.eclipse.gmf.examples.runtime.ui.pde.wizards.logic"
             projectPageTitle="%newWizards.examples.logic.projectPage.title"
             projectPageDescription="%newWizards.examples.logic.projectPage.desc"
             projectName="%newWizards.examples.logic.projectName">
@@ -55,7 +55,7 @@
             name="%newWizards.examples.geoshapes.name"
             icon="icons/geoshape.gif"
             category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
-            class="org.eclipse.gmf.examples.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
+            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
             project="true"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
             id="org.eclipse.gmf.examples.ui.pde.wizards.geoshapes"
@@ -75,7 +75,7 @@
             name="%newWizards.examples.layoutservice.name"
             icon="icons/diagram2.gif"
             category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
-            class="org.eclipse.gmf.examples.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
+            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
             project="true"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
             id="org.eclipse.gmf.examples.ui.pde.wizards.layoutService"
@@ -95,7 +95,7 @@
             name="%newWizards.examples.decorationservice.name"
             icon="icons/diagram.gif"
             category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
-            class="org.eclipse.gmf.examples.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
+            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
             project="true"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
             id="org.eclipse.gmf.examples.ui.pde.wizards.decoratorService"
@@ -113,7 +113,7 @@
       <!-- Service Example -->
       <wizard
             category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
-            class="org.eclipse.gmf.examples.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
+            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
             icon="icons/diagram.gif"
             id="org.eclipse.gmf.examples.runtime.common.service.wizards"
@@ -133,7 +133,7 @@
 	  <!-- Clipboard Support Example -->
       <wizard
             category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
-            class="org.eclipse.gmf.examples.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
+            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.ProjectUnzipperNewWizard"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
             icon="icons/clipboard.gif"
             id="org.eclipse.gmf.examples.runtime.common.service.wizards"
