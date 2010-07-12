@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,6 +59,7 @@ public class Graphics2DToGraphicsAdaptor
 	private GC swtGC;
 	private RGB transparency;
 	private RGB transparency_replace;
+	private Path clipPath;
 	
 	/**
 	 * Constructor
@@ -95,6 +96,10 @@ public class Graphics2DToGraphicsAdaptor
 		if (currentTransform != null) 
 			currentTransform.dispose();
 		currentTransform = null;
+		
+		if (clipPath != null && !clipPath.isDisposed()) {
+			clipPath.dispose();
+		}
 		
 		if (swtGraphics != null)
 			swtGraphics.dispose();
@@ -272,12 +277,15 @@ public class Graphics2DToGraphicsAdaptor
 	}
 
 	private boolean configureClipping(Shape clipShape) {
-		Path path = getPath(clipShape);
+		if (clipPath != null && !clipPath.isDisposed()) {
+			clipPath.dispose();
+		}
+		clipPath = getPath(clipShape);
 		java.awt.Rectangle rectClip = clipShape.getBounds();
-		if (path != null) {
+		if (clipPath != null) {
 			swtGraphics.setClip(new Rectangle(rectClip.x, rectClip.y,
 				rectClip.width, rectClip.height));
-			swtGC.setClipping(path);
+			swtGC.setClipping(clipPath);
 		}
 		return true;
 	}
@@ -305,6 +313,11 @@ public class Graphics2DToGraphicsAdaptor
 		currentTransform = null;
 		
 		swtGC.setClipping((Path)null);
+		
+		if (clipPath != null && !clipPath.isDisposed()) {
+			clipPath.dispose();
+		}
+		
 		swtGraphics.popState();
 	}
 
@@ -350,8 +363,10 @@ public class Graphics2DToGraphicsAdaptor
 		boolean supportedByDraw2d = configureGraphics();
 		if (supportedByDraw2d) {
 			Path path = getPath(s);
-			if (path != null)
+			if (path != null) {
 				swtGraphics.drawPath(path);
+				path.dispose();
+			}
 		} else {
 			java.awt.Rectangle rect = s.getBounds();
 			BufferedImage bufImg = createImage(s);
@@ -373,8 +388,10 @@ public class Graphics2DToGraphicsAdaptor
 		boolean supportedByDraw2d = configureGraphics();
 		if (supportedByDraw2d) {
 			Path path = getPath(s);
-			if (path != null)
+			if (path != null) {
 				swtGraphics.fillPath(path);
+				path.dispose();
+			}
 		} else {
 			java.awt.Rectangle rect = s.getBounds();
 			BufferedImage bufImg = createImage(s);

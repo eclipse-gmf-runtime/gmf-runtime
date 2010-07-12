@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,11 +77,17 @@ public class SVGImageConverter {
 	 */
 	public Image renderSVGtoSWTImage(Document document, RenderInfo info)
 		throws Exception {
-		
 		SWTImageTranscoder transcoder = new SWTImageTranscoder();
-		setUpTranscoders(document, transcoder, info);
-		
-		return transcoder.getSWTImage();
+		try {			
+			setUpTranscoders(document, transcoder, info);
+			return transcoder.getSWTImage();
+		} catch (Exception e) {
+			Image image = transcoder.getSWTImage();
+			if (image != null && !image.isDisposed()) {
+				image.dispose();
+			}
+			throw e;
+		}
 	}
 	
 	/**
