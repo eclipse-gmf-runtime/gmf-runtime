@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -127,7 +127,11 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 		if (img != null)
 			return img;
 
-		img = renderImage();
+		Image image = renderImage();
+		if (img != null && !img.isDisposed()) {
+			img.dispose();
+		}
+		img = image;
 
 		return img;
 	}

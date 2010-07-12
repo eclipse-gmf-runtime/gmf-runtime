@@ -1032,7 +1032,10 @@ implements NotificationListener {
 	
 	private List<IAdaptable> prepareAdapterList(List<IAdaptable> createdViews) {
 		List<IAdaptable> viewAdapters = new ArrayList<IAdaptable>();
-		viewAdapters.add( host() );
+		View hostView = host().getNotationView();
+		if (hostView != null) {
+			viewAdapters.add(new EObjectAdapter(hostView));
+		}
 		
 		ListIterator<IAdaptable> li = createdViews.listIterator();
 		while (li.hasNext()) {
