@@ -1,12 +1,12 @@
 /******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.draw2d.ui.figures;
@@ -164,7 +164,9 @@ public class BaseSlidableAnchor
 	protected Point getLocation(Point ownReference, Point foreignReference) {
 		PointList intersections = getIntersectionPoints(ownReference, foreignReference);
 		if (intersections!=null && intersections.size()!=0) {
-			Point location = PointListUtilities.pickClosestPoint(intersections, foreignReference);
+			Point location = PointListUtilities.pickClosestPoint(intersections,
+					((getBox().contains(foreignReference)) ? ownReference
+							: foreignReference));
 			return location;
 		}
 		return null;
