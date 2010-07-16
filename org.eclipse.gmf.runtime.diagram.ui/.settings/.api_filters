@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<component id="org.eclipse.gmf.runtime.diagram.ui" version="2">
+<?xml version="1.0" encoding="UTF-8"?><component id="org.eclipse.gmf.runtime.diagram.ui" version="2">
     <resource path="src/org/eclipse/gmf/runtime/diagram/ui/actions/CheckedPropertyAction.java" type="org.eclipse.gmf.runtime.diagram.ui.actions.CheckedPropertyAction">
         <filter id="576720909">
             <message_arguments>
@@ -166,6 +165,15 @@
             <message_arguments>
                 <message_argument value="GraphicalEditPolicyEx"/>
                 <message_argument value="DecorationEditPolicy"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/ui/editpolicies/DiagramPopupBarEditPolicy.java" type="org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramPopupBarEditPolicy">
+        <filter id="623939596">
+            <message_arguments>
+                <message_argument value="Image"/>
+                <message_argument value="DiagramPopupBarEditPolicy"/>
+                <message_argument value="type"/>
             </message_arguments>
         </filter>
     </resource>
