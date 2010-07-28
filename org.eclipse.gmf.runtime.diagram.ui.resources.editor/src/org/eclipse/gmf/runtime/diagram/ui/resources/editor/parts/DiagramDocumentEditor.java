@@ -32,7 +32,6 @@ import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.services.statusline.StatusLineService;
 import org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette;
@@ -1681,13 +1680,10 @@ public class DiagramDocumentEditor
 		if (isStatusLineOn() && statusLineLabelProvider != null) {
 			IStructuredSelection selection = (IStructuredSelection)getSite().
 				getSelectionProvider().getSelection();
-			if (selection.getFirstElement() instanceof IGraphicalEditPart) {
-				IGraphicalEditPart container = (IGraphicalEditPart) selection
-						.getFirstElement();
-				updateStatusLineMessageContribution(
-						statusLineLabelProvider.getText(container), 
-						statusLineLabelProvider.getImage(container));
-			}
+			
+			updateStatusLineMessageContribution(
+					statusLineLabelProvider.getText(selection), 
+					statusLineLabelProvider.getImage(selection));
 		}
 	}
 }
