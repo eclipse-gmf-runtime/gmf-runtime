@@ -63,7 +63,7 @@ public final class DiagramImageUtils {
 			IFigure figure = editPart.getFigure();
 			Rectangle bounds = null;
 			if (figure instanceof IExpandableFigure)
-				bounds = ((IExpandableFigure) figure).getExtendedBounds();
+				bounds = ((IExpandableFigure) figure).getExtendedBounds().getCopy();
 			else
 				bounds = figure.getBounds().getCopy();
 			translateTo(bounds, figure, printableLayer);
