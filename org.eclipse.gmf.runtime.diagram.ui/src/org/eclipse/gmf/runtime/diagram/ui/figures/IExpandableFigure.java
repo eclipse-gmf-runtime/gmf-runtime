@@ -21,6 +21,14 @@ import org.eclipse.draw2d.geometry.Rectangle;
  */
 public interface IExpandableFigure {
 
+	/**
+	 * Returns the smallest rectangle completely enclosing the IFigure and its
+	 * border children figures. Implementation may return the Rectangle by
+	 * reference. For this reason, callers of this method must not modify the
+	 * returned Rectangle. The Rectangle's values may change in the future.
+	 * 
+	 * @return This IExpandableFigure bounds that include border items.
+	 */
 	Rectangle getExtendedBounds();
 
 }
