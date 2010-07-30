@@ -517,9 +517,11 @@ public abstract class CanonicalConnectionEditPolicy
         if (semanticChildren.contains(element)) {
             if (view instanceof Edge) {
                 Edge edge = (Edge) view;
-                if (edge.getSource().getElement() != getSourceElement(element)
-                    || edge.getTarget().getElement() != getTargetElement(element))
-                    return true;
+                if ((edge.getSource() == null || (edge.getSource().getElement() != getSourceElement(element)))
+						|| (edge.getTarget() == null || (edge.getTarget()
+								.getElement() != getTargetElement(element)))) {
+					return true;
+				}
             }
         } else {
             return true;
