@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.AncestorListener;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.TextUtilities;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
@@ -164,9 +165,10 @@ public class TextDirectEditManager
                     Rectangle rect = label.getTextBounds().getCopy();
                     if (label.getText().length() <= 0) {
                         // if there is no text, let's assume a default size
-                        // because it looks silly when the cell editor it tiny.
-                        rect.setSize(new Dimension(text.computeSize(
-                            SWT.DEFAULT, SWT.DEFAULT)));
+                        // of one character because it looks silly when the cell
+                        // editor is tiny.
+                        rect.setSize(TextUtilities.INSTANCE.getTextExtents(
+                            "a", text.getFont())); //$NON-NLS-1$
 
                         if (label.isTextWrapOn()) {
                             // adjust the location of the cell editor based on text
