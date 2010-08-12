@@ -19,9 +19,9 @@ export LANG=C
 
 # configure X server thread for tests; see http://wiki.eclipse.org/Modeling_Project_Releng/Building_Zips_And_Jars#UI_Testing
 xport=15; # should be a unique port number to avoid collisions
-echo "[relengbuild] Start Xvfb on localhost:${xport}"
-Xvfb localhost:${xport} -screen 0 1024x768x24 -ac &
-export DISPLAY=localhost:${xport}.0
+echo "[relengbuild] Start Xvfb on :${xport}"
+Xvfb :${xport} -screen 0 1024x768x24 -ac &
+export DISPLAY=:${xport}.0
 xhost +
 
 #startkde &
