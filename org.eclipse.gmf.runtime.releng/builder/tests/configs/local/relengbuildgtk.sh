@@ -1,26 +1,26 @@
 #!/bin/bash
 
-echo -n "[relengbuild] $0 started on: `date +%Y%m%d\ %H\:%M\:%S`";
+echo "[relengbuild] $0 started on: `date +%Y%m%d\ %H\:%M\:%S`";
 
 # environment variables
 PATH=.:/bin:/usr/bin:/usr/bin/X11:/usr/local/bin:/usr/X11R6/bin:`pwd`/../linux;export PATH
 
 export USERNAME=`whoami`
-echo " running as $USERNAME";
-echo " currently in dir: `pwd`";
+echo "[relengbuild] running as $USERNAME";
+echo "[relengbuild] currently in dir: `pwd`";
 
 # fix for org.eclipse.swt.SWTError: No more handles [gtk_init_check() failed]
 # fix for Failed to invoke suite():org.eclipse.swt.SWTError: No more handles [gtk_init_check() failed]
 export CVS_RSH=ssh
 ulimit -c unlimited; # set corefile size to unlimited
-echo "Set JAVA_HIGH_ZIPFDS=500 & LANG=C";
+echo "[relengbuild] Set JAVA_HIGH_ZIPFDS=500 & LANG=C";
 export JAVA_HIGH_ZIPFDS=500
 export LANG=C
 
 # configure X server thread for tests; see http://wiki.eclipse.org/Modeling_Project_Releng/Building_Zips_And_Jars#UI_Testing
 xport=15; # should be a unique port number to avoid collisions
-echo "Start Xvfb on :${xport}"
-Xvfb :${xport} -screen 0 1024x768x24 -ac &
+echo "[relengbuild] Start Xvfb on localhost:${xport}"
+Xvfb localhost:${xport} -screen 0 1024x768x24 -ac &
 export DISPLAY=localhost:${xport}.0
 xhost +
 
@@ -91,7 +91,7 @@ checkIfDefined ()
 
 execCmd ()
 {
-	echo ""; echo "[relengbuild] [`date +%H\:%M\:%S`]"; 
+	echo "[relengbuild]"; echo "[relengbuild] [`date +%H\:%M\:%S`]"; 
 	echo "  $1" | perl -pe "s/ -/\n  -/g";
 	if [ "x$2" != "x" ]; then
 		$1 | tee $2;
@@ -142,7 +142,7 @@ if [ -d $workspaceDir ] ; then
 	rm -rf $dir/workspace
 fi
 
-echo "[runtests] Currently in `pwd`:"
+echo "[relengbuild] Currently in `pwd`:"
 # need conditional processing here: M3.0.2 = zip, I3.1.0 = tar.gz
 sdks=`find $dir -name "eclipse-SDK-*"`
 # get extension from file(s)
@@ -164,7 +164,7 @@ for sdk in $sdks; do
 				#echo " tar.Z. Unpacking...";
 				tar -xZf $sdk
 			else
-				echo "[runtests] ERROR: Eclipse SDK $sdk is an UNKNOWN file type. Failure.";
+				echo "[relengbuild] ERROR: Eclipse SDK $sdk is an UNKNOWN file type. Failure.";
 				exit 2
 			fi
 		fi
@@ -197,12 +197,12 @@ cpAndMain=`find eclipse/ -name "org.eclipse.swt_*.jar" | sort | head -1`":"$cpAn
 cpAndMain=`find eclipse/ -name "org.eclipse.swt.gtk.linux.${arch}_*.jar" | sort | head -1`":"$cpAndMain; 
 
 # run tests
-echo "[runtests] [`date +%H\:%M\:%S`] Launching Eclipse (installmode = $installmode with -enableassertions turned on) ..."
+echo "[relengbuild] [`date +%H\:%M\:%S`] Launching Eclipse (installmode = $installmode with -enableassertions turned on) ..."
 execCmd "$JAVA_HOME/bin/java $Xflags -enableassertions -cp $cpAndMain -ws $ws -os $os -arch $arch \
 -application org.eclipse.ant.core.antRunner -data $workspaceDir -file test.xml $antTestTarget \
 $Dflags -Dws=$ws -Dos=$os -Darch=$arch -D$installmode=true $J2SE1flags \
 $properties -logger org.apache.tools.ant.DefaultLogger" $consolelog;
-echo "[runtests] [`date +%H\:%M\:%S`] Eclipse test run completed. "
+echo "[relengbuild] [`date +%H\:%M\:%S`] Eclipse test run completed. "
 
 # xwd -silent -display :${xport} -root -out /tmp/snap.xwd; # save a snapshot
 
