@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -210,7 +210,8 @@ public final class PartPositionInfoGenerator {
 	 */
 	private static PointList calculateEnvelopingPolyline(PointList polyPts, int margin) {
 		PointList result = new PrecisionPointList(polyPts.size() << 1);
-		List<LineSeg> mainSegs = (List<LineSeg>) PointListUtilities.getLineSegments(polyPts);		
+		List<LineSeg> mainSegs = (List<LineSeg>) PointListUtilities.getLineSegments(polyPts);
+		removeRedundantSegments(mainSegs);
 		if (mainSegs.size() > 0) {		
 			result = calculateParallelPolyline(mainSegs, margin);
 			PointList pts = calculateParallelPolyline(mainSegs, -margin);
@@ -220,6 +221,15 @@ public final class PartPositionInfoGenerator {
 			result.addPoint(result.getFirstPoint());
 		}
 		return result;
+	}
+	
+	private static void removeRedundantSegments(List<LineSeg> polyPts) {
+		for (Iterator<LineSeg> itr = polyPts.listIterator(); itr.hasNext();) {
+			LineSeg lineSeg = itr.next();
+			if (lineSeg.getOrigin().equals(lineSeg.getTerminus())) {
+				itr.remove();
+			}
+		}
 	}
 	
 	/**
