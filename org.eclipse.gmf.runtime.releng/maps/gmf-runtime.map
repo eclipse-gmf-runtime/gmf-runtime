@@ -1,8 +1,8 @@
 !*** Graphical Modeling Framework (GMF) runtime map *****************************************
 
 !*** GMF runtime features *******************************************************************
-feature@org.eclipse.gmf=v20100720-0030,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.runtime-feature
-feature@org.eclipse.gmf.runtime.sdk=v20100720-0030,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.runtime.sdk-feature
+feature@org.eclipse.gmf=v20100909-1300,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.runtime-feature
+feature@org.eclipse.gmf.runtime.sdk=v20100909-1300,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.runtime.sdk-feature
 feature@org.eclipse.gmf.runtime.thirdparty=v20100521-1113,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.runtime.thirdparty-feature
 feature@org.eclipse.gmf.runtime.thirdparty.source=v20100511-1424,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.runtime.thirdparty.source-feature
 
