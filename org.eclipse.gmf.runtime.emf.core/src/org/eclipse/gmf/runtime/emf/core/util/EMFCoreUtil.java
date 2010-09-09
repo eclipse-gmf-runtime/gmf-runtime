@@ -1,12 +1,12 @@
 /******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.core.util;
@@ -407,9 +407,17 @@ public class EMFCoreUtil {
 	private static String getProxyName(EObject proxy) {
 
 		URI uri = EcoreUtil.getURI(proxy);
-
-		Resource.Factory factory = Resource.Factory.Registry.INSTANCE
-			.getFactory(uri);
+        Resource.Factory factory = null;
+        
+        ResourceSet rs = null;
+        Resource r = proxy.eResource();
+        if (r != null)
+            rs = r.getResourceSet();
+        if (rs != null)
+            factory = rs.getResourceFactoryRegistry().getFactory(uri);
+        if (factory == null)
+            factory = Resource.Factory.Registry.INSTANCE
+                .getFactory(uri);
 
 		String result = null;
 		
