@@ -43,7 +43,7 @@ plugin@org.eclipse.gmf.runtime.emf.ui=v20090403-1720,:pserver:anonymous@dev.ecli
 plugin@org.eclipse.gmf.runtime.emf.ui.properties=v20100304-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.ui.properties
 plugin@org.eclipse.gmf.runtime.emf.type.core=v20100423-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.type.core
 plugin@org.eclipse.gmf.runtime.emf.type.ui=v20090403-1720,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.type.ui
-plugin@org.eclipse.gmf.runtime.emf.clipboard.core=v20100430-1518,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.clipboard.core
+plugin@org.eclipse.gmf.runtime.emf.clipboard.core=v20101013-2230,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.emf.clipboard.core
 
 !*** GMF fragments ***************************************************************************
 fragment@org.eclipse.gmf.runtime.common.ui.printing.win32=v20100223-2359,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/plugins/org.eclipse.gmf.runtime.common.ui.printing.win32
