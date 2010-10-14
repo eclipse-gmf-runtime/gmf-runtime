@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.factory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -114,14 +115,16 @@ public class RenderedImageFactory {
 
         try {
             InputStream is = theURL.openStream();
-
-            int size = is.available();
-            byte[] buffer = new byte[size];
-
-            is.read(buffer);
+            
+            ByteArrayOutputStream bos = new ByteArrayOutputStream(is.available());
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+            	bos.write(buffer, 0, bytesRead);
+            }
             is.close();
-
-            return getInstance(buffer, info, theURL.toString());
+            
+            return getInstance(bos.toByteArray(), info, theURL.toString());
 
         } catch (Exception e) {
             Trace.throwing(Draw2dRenderPlugin.getInstance(),
@@ -200,13 +203,16 @@ public class RenderedImageFactory {
     static public RenderedImage getInstance(String szFilePath, RenderInfo info) {
         try {
             FileInputStream fis = new FileInputStream(szFilePath);
-            int size = fis.available();
-            byte[] buffer = new byte[size];
-
-            fis.read(buffer);
+            
+            ByteArrayOutputStream bos = new ByteArrayOutputStream(fis.available());
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+            	bos.write(buffer, 0, bytesRead);
+            }
             fis.close();
 
-            return getInstance(buffer, info, szFilePath);
+            return getInstance(bos.toByteArray(), info, szFilePath);
 
         } catch (Exception e) {
             Trace.throwing(Draw2dRenderPlugin.getInstance(),
