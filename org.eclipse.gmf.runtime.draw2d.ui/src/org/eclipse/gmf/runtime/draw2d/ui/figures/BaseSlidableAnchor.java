@@ -172,7 +172,7 @@ public class BaseSlidableAnchor
 		return null;
 	}
 
-	static private int STRAIGHT_LINE_TOLERANCE = 3;
+	static private int STRAIGHT_LINE_TOLERANCE = 10;
 
 	/* 
 	 * (non-Javadoc)
