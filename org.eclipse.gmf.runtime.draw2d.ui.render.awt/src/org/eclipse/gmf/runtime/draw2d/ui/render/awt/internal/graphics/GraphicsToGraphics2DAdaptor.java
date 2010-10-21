@@ -31,7 +31,6 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Stack;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -39,12 +38,14 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiFont;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderingListener;
+import org.eclipse.gmf.runtime.draw2d.ui.text.TextUtilitiesEx;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -56,6 +57,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.PathData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.TextLayout;
 
 /**
@@ -174,7 +176,21 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	private Stack<State> states = new Stack<State>();
 	private final State currentState = new State();
 	private final State appliedState = new State();
-
+	
+	/**
+	 * Some strings, Asian string in particular, are painted differently between
+	 * SWT and AWT. SWT falls back to some default locale font if Asian string
+	 * cannot be painted with the current font - this is done via the platform.
+	 * AWT, unlike platform biased SWT, does not. Hence, Asian string widths are
+	 * very different between SWT and AWT. To workaround the issue, if the flag
+	 * below is set to <code>true</code> then once SWT and AWT string width are
+	 * not equal, a bitmap of the SWT string will be painted. Otherwise the
+	 * string is always painted with AWT Graphics 2D string rendering.
+	 */
+	protected boolean paintNotCompatibleStringsAsBitmaps = true;
+	
+	private static final TextUtilitiesEx TEXT_UTILITIES = new TextUtilitiesEx(MapModeTypes.IDENTITY_MM);
+	
 	private Rectangle relativeClipRegion;
 	
 	private org.eclipse.swt.graphics.Rectangle viewBox;
@@ -449,18 +465,20 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			int selectionStart, int selectionEnd, Color selectionForeground,
 			Color selectionBackground) {		
 		checkState();
-		Image image = new Image(DisplayUtils.getDisplay(), layout.getBounds().width, layout.getBounds().height);
-		GC gc = new GC(image);
-		cloneGC(gc);
-		layout.draw(gc, 0, 0, selectionStart, selectionEnd, selectionForeground, selectionBackground);
-		
-		ImageData imageData = image.getImageData();
-		imageData.transparentPixel = imageData.palette.getPixel(getBackgroundColor().getRGB());
-
-		gc.dispose();
-		image.dispose();
-		
-		getGraphics2D().drawImage(ImageConverter.convertFromImageData(imageData), x + transX, y + transY, null);		
+		if (!layout.getBounds().isEmpty()) {
+			Image image = new Image(DisplayUtils.getDisplay(), layout.getBounds().width, layout.getBounds().height);
+			GC gc = new GC(image);
+			cloneGC(gc);
+			layout.draw(gc, 0, 0, selectionStart, selectionEnd, selectionForeground, selectionBackground);
+			
+			ImageData imageData = image.getImageData();
+			imageData.transparentPixel = imageData.palette.getPixel(getBackgroundColor().getRGB());
+	
+			gc.dispose();
+			image.dispose();
+			
+			getGraphics2D().drawImage(ImageConverter.convertFromImageData(imageData), x + transX, y + transY, null);
+		}
 	}
 	
 	private void cloneGC(GC gc) {
@@ -747,67 +765,73 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 */
 	public void drawString(String s, int x, int y) {
 
-		if( s == null )
+		if (s == null)
 			return;
-		
-		java.awt.Font swappedFont = null;
 
 		java.awt.FontMetrics metrics = getGraphics2D().getFontMetrics();
 		int stringLength = metrics.stringWidth(s);
+		Dimension swtStringSize = TEXT_UTILITIES.getStringExtents(s, swtGraphics.getFont());
 
-		/**
-		 * Workaround non-latin strings for AWT
-		 */
-		if (getGraphics2D().getFont().canDisplayUpTo(s) != -1) {
-			swappedFont = getGraphics2D().getFont();
-			java.awt.Font font = null; 
-			if ("ja".equals(Platform.getNL()) && Platform.getOS().startsWith(Platform.OS_WIN32)) { //$NON-NLS-1$
-				font = new java.awt.Font("MS UI Gothic", swappedFont.getStyle(), swappedFont.getSize()); //$NON-NLS-1$
-				if (font.canDisplayUpTo(s) != -1) {
-					font = null;
-				}
-			}
-			if (font == null) {
-				font = new java.awt.Font(null, swappedFont.getStyle(), swappedFont.getSize());
-			}
-			getGraphics2D().setFont(font);
-		}
-		
 		float xpos = x + transX;
 		float ypos = y + transY;
-
-		ypos += metrics.getAscent();
-
-		checkState();
-		getGraphics2D().setPaint(getColor(swtGraphics.getForegroundColor()));
-		getGraphics2D().drawString(s, xpos, ypos);
-
 		int lineWidth;
 
-		if( isFontUnderlined(getFont()) ) {
-			int baseline = y + metrics.getAscent();
-			lineWidth = getLineWidth();
-			
-			setLineWidth( 1 );
-			setLineWidth( lineWidth );
-			drawLine( x, baseline,	x + stringLength, baseline );
-		}
-		
-		if( isFontStrikeout(getFont()) ) {
-			int strikeline = y + (metrics.getHeight() / 2);
-			lineWidth = getLineWidth();
-			
-			setLineWidth( 1 );
-			setLineWidth( lineWidth );
-			drawLine( x, strikeline, x + stringLength, strikeline );
+		if (paintNotCompatibleStringsAsBitmaps && Math.abs(swtStringSize.width - stringLength) > 2) {
+			// create SWT bitmap of the string then
+			Image image = new Image(DisplayUtils.getDisplay(),
+					swtStringSize.width, swtStringSize.height);
+			GC gc = new GC(image);
+			gc.setForeground(getForegroundColor());
+			gc.setBackground(getBackgroundColor());
+			gc.setAntialias(getAntialias());
+			gc.setFont(getFont());
+			gc.drawString(s, 0, 0);
+			gc.dispose();
+			ImageData data = image.getImageData();
+			image.dispose();
+			RGB backgroundRGB = getBackgroundColor().getRGB();
+			for (int i = 0; i < data.width; i++) {
+				for (int j = 0; j < data.height; j++) {
+					if (data.palette.getRGB(data.getPixel(i, j)).equals(
+							backgroundRGB)) {
+						data.setAlpha(i, j, 0);
+					} else {
+						data.setAlpha(i, j, 255);
+					}
+				}
+			}
+			getGraphics2D().drawImage(
+					ImageConverter.convertFromImageData(data),
+					new AffineTransform(1f, 0f, 0f, 1f, xpos, ypos), null);
+			stringLength = swtStringSize.width;
+		} else {
+
+			ypos += metrics.getAscent();
+
+			checkState();
+			getGraphics2D()
+					.setPaint(getColor(swtGraphics.getForegroundColor()));
+			getGraphics2D().drawString(s, xpos, ypos);
 		}
 
-		/**
-		 * Workaround non-latin strings for AWT (cont.)
-		 */
-		if (swappedFont != null) {
-			getGraphics2D().setFont(swappedFont);
+		if (isFontUnderlined(getFont())) {
+			int baseline = y + metrics.getAscent();
+			lineWidth = getLineWidth();
+
+			setLineWidth(1);
+			drawLine(x, baseline, x + stringLength, baseline);
+			setLineWidth(lineWidth);
 		}
+		
+		if (isFontStrikeout(getFont())) {
+			int strikeline = y + (metrics.getHeight() / 2);
+			lineWidth = getLineWidth();
+
+			setLineWidth(1);
+			drawLine(x, strikeline, x + stringLength, strikeline);
+			setLineWidth(lineWidth);
+		}
+
 	}
 
 	/*
