@@ -33,7 +33,7 @@ public class GetParserOperation
 	 * @param hint IAdaptable hint for the parser to be used
 	 */
 	protected GetParserOperation(IAdaptable hint) {
-		assert null!=hint : "GetParserOperation constoructor received NULL as argument"; //$NON-NLS-1$
+		assert null!=hint : "GetParserOperation constructor received NULL as argument"; //$NON-NLS-1$
 		
 		this.hint = hint;
 	}
