@@ -34,7 +34,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Returns a command to position a label's offset to it default set at creation.
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class LabelSnapBackEditPolicy
 	extends GraphicalNodeEditPolicy {

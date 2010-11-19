@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
  * A list of debug options for this plug-in.
  * 
  *  @author Yasser Lulu
- *  @canBeSeenBy %level1
  *
  */
 public final class DiagramActionsDebugOptions {

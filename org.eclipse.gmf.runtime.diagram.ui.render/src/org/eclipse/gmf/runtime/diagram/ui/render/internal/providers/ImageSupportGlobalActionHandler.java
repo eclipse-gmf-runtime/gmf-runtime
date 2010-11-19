@@ -35,7 +35,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * <code>GlobalActionId.COPY</code>, and <code>GlobalActionId.PASTE</code>.
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.render.*
  */
 public class ImageSupportGlobalActionHandler
 	extends DiagramGlobalActionHandler {

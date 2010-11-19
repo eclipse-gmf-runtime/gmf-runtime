@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.diagram.ui.render.internal;
  * A list of debug options for this plug-in.
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.render.*
  *  
  */
 public final class DiagramUIRenderDebugOptions {

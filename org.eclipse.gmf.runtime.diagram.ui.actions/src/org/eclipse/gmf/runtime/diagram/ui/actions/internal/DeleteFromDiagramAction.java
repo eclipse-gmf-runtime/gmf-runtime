@@ -41,7 +41,6 @@ import org.eclipse.ui.PlatformUI;
  * Action for delete from diagram.  Used by diagram context menus.
  *
  * @author schafe
- * @canBeSeenBy %level1
  */
 public class DeleteFromDiagramAction extends DiagramAction{
 	

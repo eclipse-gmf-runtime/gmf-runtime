@@ -27,7 +27,6 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  *
  * Class for handling display of an image whose source is a URI.
  */

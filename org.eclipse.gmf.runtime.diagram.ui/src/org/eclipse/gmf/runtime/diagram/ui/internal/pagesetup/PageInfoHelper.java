@@ -41,7 +41,6 @@ import org.eclipse.swt.printing.Printer;
  * preview.
  * 
  * @author Wayne Diu, wdiu
- * @canBeSeenBy %level1
  */
 public class PageInfoHelper {
     /**

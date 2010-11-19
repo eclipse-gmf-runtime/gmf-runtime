@@ -19,7 +19,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
  * Request to Recalculate Page Breaks.
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class RecalculatePageBreaksRequest extends Request {
 

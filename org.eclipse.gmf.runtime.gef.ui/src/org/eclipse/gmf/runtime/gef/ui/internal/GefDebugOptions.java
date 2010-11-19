@@ -16,7 +16,6 @@ package org.eclipse.gmf.runtime.gef.ui.internal;
  * A list of debug options for this plug-in.
  * 
  * @author khussey
- * @canBeSeenBy org.eclipse.gmf.runtime.gef.ui.*
  *
  */
 public final class GefDebugOptions {

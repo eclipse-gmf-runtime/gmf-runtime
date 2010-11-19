@@ -19,7 +19,6 @@ import com.ibm.icu.text.NumberFormat;
  * page setup dialog to verify the integrity of margin and page size values.
  * 
  * @author etworkow
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 class StringValidator {
 

@@ -25,7 +25,6 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 class BitmapHelper 
 {

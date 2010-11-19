@@ -27,7 +27,6 @@ import org.eclipse.gmf.runtime.common.core.util.StringStatics;
  * @author ldamus
  * 
  * @see org.eclipse.core.runtime.IStatus
- * @canBeSeenBy %partners
  */
 public final class CommandResult {
 

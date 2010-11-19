@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Text;
  * PageSetupConfigBlock and PageSetupSelectionConfigBlock.
  * 
  * @author etworkow
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class PageSetupWidgetFactory {
 	

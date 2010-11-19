@@ -56,7 +56,6 @@ import org.eclipse.swt.widgets.Shell;
  * Simple dialog that support filtering of list compartment items through visibililty
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class FilterDialog
 	extends Dialog {

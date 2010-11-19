@@ -23,7 +23,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Implementation for the regular tree edit part
  * 
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class TreeContainerEditPart extends TreeEditPart {
 

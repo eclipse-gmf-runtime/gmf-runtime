@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.gef.ui.figures.SlidableOvalAnchor;
  * Draws a circle figure.  The figures bounds are guaranteed to be the circle
  * diameter
  * @author mhanner
- * @canBeSeenBy org.eclipse.gmf.runtime.gef.ui.*
  */
 public class CircleFigure extends DefaultSizeNodeFigure implements IOvalAnchorableFigure {
 

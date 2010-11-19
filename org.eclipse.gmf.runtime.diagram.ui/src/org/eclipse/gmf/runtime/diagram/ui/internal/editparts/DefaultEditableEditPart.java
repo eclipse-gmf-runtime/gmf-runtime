@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IEditableEditPart;
  * Default implementation of the <code>IEditableEditPart</code> interface
  * 
  * @author Vishy Ramaswamy
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class DefaultEditableEditPart
 	implements IEditableEditPart {

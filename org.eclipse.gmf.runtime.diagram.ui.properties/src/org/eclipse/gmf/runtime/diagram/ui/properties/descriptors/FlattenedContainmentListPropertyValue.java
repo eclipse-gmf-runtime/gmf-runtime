@@ -29,7 +29,6 @@ import org.eclipse.gmf.runtime.emf.ui.properties.descriptors.EObjectContainmentL
  * Use for Styles containment list.
  * 
  * @author nbalaba
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.properties.*
  */
 public class FlattenedContainmentListPropertyValue
 	extends EObjectContainmentListPropertyValue {

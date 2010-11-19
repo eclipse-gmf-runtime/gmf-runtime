@@ -44,7 +44,6 @@ import org.eclipse.gmf.runtime.common.core.util.StringStatics;
  * @author ldamus
  *
  * @see org.eclipse.gmf.runtime.common.core.command.ICommand
- * @canBeSeenBy %partners
  */
 public abstract class AbstractCommand extends AbstractOperation
 		implements ICommand, ICommandWithSettableResult {

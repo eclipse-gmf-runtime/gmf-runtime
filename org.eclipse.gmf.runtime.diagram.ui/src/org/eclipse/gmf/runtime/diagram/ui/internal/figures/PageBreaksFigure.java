@@ -31,7 +31,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
  * as a feedback figure. 
  *  
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class PageBreaksFigure extends Figure {
 

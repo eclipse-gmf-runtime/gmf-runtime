@@ -22,7 +22,6 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * Diagram.
  * 
  * @author wdiu, Wayne Diu
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.resources.editor.*
  */
 public class FileResourceDiagramEditorInput extends FileResourceEditorInput{
 	

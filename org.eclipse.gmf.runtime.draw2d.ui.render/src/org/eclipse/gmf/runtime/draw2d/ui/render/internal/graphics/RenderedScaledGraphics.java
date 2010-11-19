@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderingListener;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  * 
  * Subclass to allow implementation of the DrawableRenderedImage interface
  */

@@ -16,7 +16,6 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  *
  * This class defines the unique key used to get the appropriate RenderedImage from the map.
  */

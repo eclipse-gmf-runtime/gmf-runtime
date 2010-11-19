@@ -30,7 +30,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * Checked action for the View Grid workspace property
  * 
  * @author jschofie
- * @canBeSeenBy %level1
  */
 public class ViewGridAction extends DiagramAction {
 

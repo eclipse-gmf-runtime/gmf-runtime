@@ -30,9 +30,6 @@ import org.eclipse.ui.IWorkbenchPage;
 /**
  * This action is used to change the order of views within it's parent container
  */
-/*
- * @canBeSeenBy %level1
- */
 public class ZOrderAction
 	extends DiagramAction {
 

@@ -26,7 +26,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
  * 
  * Used by List compartment figures that are nested within other resizable compartment 
  * @author choang
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class NestedResizableCompartmentFigure extends ResizableCompartmentFigure {
     

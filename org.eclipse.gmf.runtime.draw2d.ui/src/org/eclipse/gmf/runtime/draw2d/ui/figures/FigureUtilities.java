@@ -27,7 +27,6 @@ import org.eclipse.swt.graphics.RGB;
  * geometry calculations that may be common across different parts of a hierarchy.
  * 
  * @author sshaw
- * @canBeSeenBy %partners
  */
 public class FigureUtilities extends org.eclipse.draw2d.FigureUtilities {
 

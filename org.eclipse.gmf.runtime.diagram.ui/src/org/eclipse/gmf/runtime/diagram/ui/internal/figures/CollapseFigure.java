@@ -21,7 +21,6 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  *
  * Figure used to represent the collapse handle in the corner of a list compartment or shape compartment.
  */

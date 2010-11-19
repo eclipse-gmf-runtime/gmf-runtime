@@ -35,9 +35,6 @@ import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
-/*
- * @canBeSeenBy %partners
- */
 /**
  * the top graphic controller
  * @author mmostafa

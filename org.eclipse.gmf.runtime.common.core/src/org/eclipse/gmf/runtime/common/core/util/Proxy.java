@@ -18,7 +18,6 @@ import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
  * A proxy object that handles exceptions.
  * 
  * @author khussey
- * @canBeSeenBy %partners
  */
 public abstract class Proxy {
 

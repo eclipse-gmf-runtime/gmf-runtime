@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.Viewer;
  * Content Provider for the sort filter dialog.
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class SortFilterContentProvider implements IStructuredContentProvider {
 

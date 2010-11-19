@@ -25,7 +25,6 @@ import org.eclipse.swt.graphics.Color;
  * without instantiating a new figure.
  * 
  * @author sshaw
- * @canBeSeenBy %partners
  */
 public class OneLineBorder extends LineBorder {
 

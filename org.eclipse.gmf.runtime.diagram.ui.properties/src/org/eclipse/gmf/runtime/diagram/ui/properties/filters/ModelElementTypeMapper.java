@@ -19,9 +19,7 @@ import org.eclipse.ui.views.properties.tabbed.AbstractTypeMapper;
  * Create a filter that is used assist in input filtering for the
  * propertySection extension point.
  * 
- * @author Anthony Hunter <a
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.properties.*
- *         href="mailto:anthonyh@ca.ibm.com">anthonyh@ca.ibm.com </a>
+ * @author Anthony Hunter <a href="mailto:anthonyh@ca.ibm.com">anthonyh@ca.ibm.com </a>
  */
 public class ModelElementTypeMapper
 	extends AbstractTypeMapper {

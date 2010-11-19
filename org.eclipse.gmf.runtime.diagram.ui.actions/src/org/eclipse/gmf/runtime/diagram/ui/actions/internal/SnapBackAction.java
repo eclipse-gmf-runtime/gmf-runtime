@@ -25,9 +25,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * can't be located.
  * 
  */
-/*
- * @canBeSeenBy %level1
- */
 public class SnapBackAction extends DiagramAction {
 
 	/**

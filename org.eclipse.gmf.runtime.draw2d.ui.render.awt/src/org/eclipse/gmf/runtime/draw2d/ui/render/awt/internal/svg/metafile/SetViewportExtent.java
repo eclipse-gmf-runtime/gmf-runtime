@@ -11,10 +11,6 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile;
 
-/**  
- * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
- */
 
 import java.awt.Graphics2D;
 import java.awt.Point;

@@ -26,7 +26,6 @@ import org.eclipse.gef.EditPart;
  * viewers.
  * 
  * @author chmahone
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class ElementToEditPartsMap {
 

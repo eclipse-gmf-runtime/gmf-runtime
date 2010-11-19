@@ -11,10 +11,6 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile;
 
-/**  
- * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
- */
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.io.IOException;
@@ -30,7 +26,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record
 /**  
  * @author dhabib
  */
-
 public class CreatePen implements IEmf2SvgConverter, IWmf2SvgConverter
 {
 	private static final int	EMF_ID_OFFSET			= 0;

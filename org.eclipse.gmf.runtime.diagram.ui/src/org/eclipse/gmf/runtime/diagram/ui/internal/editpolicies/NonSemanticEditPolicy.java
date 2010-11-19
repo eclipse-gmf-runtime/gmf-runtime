@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
  * semantic requests for non-semantic shapes.
  * 
  * @author Jody Schofield
- * @canBeSeenBy %level1
  */
 public class NonSemanticEditPolicy extends SemanticEditPolicy {
 

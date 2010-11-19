@@ -34,14 +34,8 @@ import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
- * 
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.actions.*
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
-
 public abstract class PropertyChangeAction extends DiagramAction {
 
 	// id of the property this action will change

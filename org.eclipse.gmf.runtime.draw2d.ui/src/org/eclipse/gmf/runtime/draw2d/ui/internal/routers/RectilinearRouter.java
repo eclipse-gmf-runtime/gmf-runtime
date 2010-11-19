@@ -30,7 +30,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * @author sshaw/aboyko
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  *
  * RectilinearRouter which routes the Connection so that the lines
  * are always vertical or horizontal.

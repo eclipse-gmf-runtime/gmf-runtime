@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
  * ignored except for the most recent.
  * 
  * @author Yasser Lulu
- * @canBeSeenBy %partners
  */
 public class RequestCollapser {
 

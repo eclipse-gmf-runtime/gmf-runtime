@@ -16,7 +16,6 @@ import org.eclipse.gef.commands.Command;
 
 /**
  * @author sshaw
- * @canBeSeenBy %level1
  *
  * Interface for accessing the wrapped GEF command
  */

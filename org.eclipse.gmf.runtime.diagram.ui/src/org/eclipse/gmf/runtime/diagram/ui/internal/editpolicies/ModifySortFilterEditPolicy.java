@@ -34,7 +34,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * EditPolicy which supports modifying sorting and filtering properties.
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class ModifySortFilterEditPolicy
 	extends AbstractEditPolicy {

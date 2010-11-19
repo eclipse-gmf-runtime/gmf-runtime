@@ -18,7 +18,6 @@ import java.util.List;
 
 /**
  * @author qili
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.resources.editor.*
  */
 public class RunnableQueue {
 	

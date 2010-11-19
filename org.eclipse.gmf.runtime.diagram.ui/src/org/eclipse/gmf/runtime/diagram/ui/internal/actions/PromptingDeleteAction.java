@@ -45,7 +45,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * Delete Action originating via keyboard using the 'Delete' hot/shortcut key
  * 
  * @author bagrodia
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  * Created on Jun 30, 2004
  */
 public class PromptingDeleteAction

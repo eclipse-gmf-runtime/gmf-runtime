@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * clipboard
  * 
  * @author Vishy Ramaswamy
- * @canBeSeenBy %level1
  */
 public class CopyCommand extends ClipboardCommand {
     /**

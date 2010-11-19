@@ -35,9 +35,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 /**
  * An action to insert new objects into a container.
  */
-/*
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
- */
 public class InsertAction
 	extends SelectionAction
 {

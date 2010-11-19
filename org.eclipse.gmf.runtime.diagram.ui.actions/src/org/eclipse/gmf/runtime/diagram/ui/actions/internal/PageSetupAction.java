@@ -24,7 +24,6 @@ import org.eclipse.ui.PlatformUI;
  * This is the action for page setup.  It shows the page setup dialog.
  * 
  * @author Wayne Diu, wdiu
- * @canBeSeenBy %level1
  */
 public class PageSetupAction
 	extends Action

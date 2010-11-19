@@ -13,9 +13,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.notationprovider;
 
 
-/*
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.resources.editor.*
- */
 public class EmfNotationException extends Exception {
 	static final long serialVersionUID = 1;
 	

@@ -18,7 +18,6 @@ import org.eclipse.swt.graphics.Cursor;
  * This is class that stores a series of globally accessible cursors.
  * 
  * @author sshaw
- * @canBeSeenBy %partners
  *
  */
 public class Cursors {

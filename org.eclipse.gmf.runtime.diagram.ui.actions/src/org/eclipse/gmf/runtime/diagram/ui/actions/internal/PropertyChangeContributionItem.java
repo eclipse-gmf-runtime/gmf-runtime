@@ -35,8 +35,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * and changing properties of the selected objects in a workbench part
  * 
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.actions.*
- *  
  */
 public abstract class PropertyChangeContributionItem
 	extends CustomContributionItem {

@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IAdaptable;
  * Tests if an element is updatable
  * 
  * @author Michael Yee
- * @canBeSeenBy %partners
  */
 public interface IUpdateable {
     /**

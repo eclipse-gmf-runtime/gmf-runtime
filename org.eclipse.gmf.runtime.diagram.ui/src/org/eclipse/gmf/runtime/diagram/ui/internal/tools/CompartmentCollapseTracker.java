@@ -27,9 +27,6 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 
-/*
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
- */
 public class CompartmentCollapseTracker
 	extends AbstractTool
 	implements DragTracker {

@@ -20,7 +20,6 @@ import org.eclipse.jface.action.Action;
  * The filters menu manager. It contains all filters-related actions.
  *
  * @author chmahone
- * @canBeSeenBy %level1
  */
 public class FiltersMenuManager extends ActionMenuManager {
 

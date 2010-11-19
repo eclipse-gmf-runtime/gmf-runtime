@@ -22,7 +22,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record
  * record and the size of the record.
  * 
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public class WMFRecord extends Record
 {

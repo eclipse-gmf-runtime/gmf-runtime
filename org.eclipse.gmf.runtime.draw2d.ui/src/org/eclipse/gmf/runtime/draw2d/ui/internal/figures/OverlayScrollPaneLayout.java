@@ -21,9 +21,6 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 /*
- * @canBeSeenBy %partners
- * 
- * <p>
  * Code taken from Eclipse reference bugzilla #98820
  * 
  */

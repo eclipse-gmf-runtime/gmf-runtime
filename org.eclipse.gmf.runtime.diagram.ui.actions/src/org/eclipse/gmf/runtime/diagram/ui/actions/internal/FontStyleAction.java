@@ -21,7 +21,6 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author melaasar
- * @canBeSeenBy %level1
  * 
  * An action to change one of the font style properties: BOLD or ITALIC
  */

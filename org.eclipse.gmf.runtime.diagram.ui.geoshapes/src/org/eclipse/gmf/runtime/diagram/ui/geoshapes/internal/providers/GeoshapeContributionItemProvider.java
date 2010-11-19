@@ -23,7 +23,6 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author jschofie
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.geoshapes.*
  * 
  * Creates the actions that can be performed on the various Geometric Shapes
  */

@@ -15,8 +15,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The main plugin class to be used in the desktop.
- * 
- * @canBeSeenBy org.eclipse.gmf.runtime.common.ui.services.properties.*
  */
 public class PSFCommonUIPlugin
 	extends AbstractUIPlugin {

@@ -24,7 +24,6 @@ import org.eclipse.ui.PlatformUI;
  * An IFile based editor input that does not extend FileEditorInput.
  * 
  * @author wdiu, Wayne Diu
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.resources.editor.*
  */
 public class FileResourceEditorInput
 	implements IPathEditorInput, IPersistableElement {

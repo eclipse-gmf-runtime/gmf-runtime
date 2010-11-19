@@ -43,9 +43,6 @@ import org.eclipse.swt.widgets.ToolBar;
  * 
  * @deprecated Use MenuManager or ActionMenuManager instead.
  */
-/*
- * @canBeSeenBy %partners
- */
 public class MenuManagerEx
 	extends ContributionManager
 	implements IMenuManager {

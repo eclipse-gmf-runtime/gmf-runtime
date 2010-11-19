@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 /**
  * Draws a diamond figure.
  * @author mmuszyns
- * @canBeSeenBy %level0
  */
 public class DiamondFigure extends NodeFigure implements IPolygonAnchorableFigure{
 

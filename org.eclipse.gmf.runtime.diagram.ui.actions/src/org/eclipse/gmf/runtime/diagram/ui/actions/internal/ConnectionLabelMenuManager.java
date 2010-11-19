@@ -19,7 +19,6 @@ import org.eclipse.jface.action.Action;
 
 /**
  * @author mboos
- * @canBeSeenBy %level1
  * 
  * The connection label menu manager. It contains all connection label-related
  * actions

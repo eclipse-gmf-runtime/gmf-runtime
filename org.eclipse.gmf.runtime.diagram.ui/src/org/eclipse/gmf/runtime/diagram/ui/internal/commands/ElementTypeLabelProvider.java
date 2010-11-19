@@ -22,7 +22,6 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
  * <code>IElementType</code> objects. 
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class ElementTypeLabelProvider
 	extends LabelProvider {

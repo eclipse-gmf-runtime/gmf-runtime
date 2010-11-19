@@ -37,7 +37,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * otherwise it will just set the ratio's value
  * 
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class SetCompartmentRatioCommand extends SetPropertyCommand {
 

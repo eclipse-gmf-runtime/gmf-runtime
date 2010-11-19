@@ -19,7 +19,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  *
  * Override for List compartments that removes deletion capability.
  */

@@ -23,7 +23,6 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author tmacdoug
- * @canBeSeenBy %level1
  *
  * This action is used to handle open actions on a diagram
  *

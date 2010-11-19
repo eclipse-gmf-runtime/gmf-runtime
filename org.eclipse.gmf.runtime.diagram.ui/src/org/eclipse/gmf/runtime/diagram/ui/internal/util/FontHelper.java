@@ -25,7 +25,6 @@ import org.eclipse.swt.graphics.FontData;
  * For now, it contains a method to get the font names.
  * 
  * @author wdiu, Wayne Diu
- * @canBeSeenBy %level1
  */
 public class FontHelper {
 	

@@ -17,7 +17,6 @@ import java.awt.Font;
  * Represents a font on the system.  There may be multiple fonts created in the system at
  * any one time.  The currently selected font can be retrieved from the DeviceContext.  
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public class GdiFont 
 {

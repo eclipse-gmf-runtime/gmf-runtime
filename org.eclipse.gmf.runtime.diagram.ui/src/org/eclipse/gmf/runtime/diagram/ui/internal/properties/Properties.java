@@ -14,9 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.properties;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
-/*
- * @canBeSeenBy %partners
- */
 /**
  * constants for the Diagtam ui
  * @author sshae

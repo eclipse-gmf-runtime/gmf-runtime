@@ -32,7 +32,6 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author jschofie
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.geoshapes.*
  *
  * Geoshape Edit Part provider
  */

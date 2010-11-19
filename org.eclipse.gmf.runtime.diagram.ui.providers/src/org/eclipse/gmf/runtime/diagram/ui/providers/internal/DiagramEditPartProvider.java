@@ -37,7 +37,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Diagram elements are commonly used by all plugins.
  *  
  * @author schafe
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  * 
  */
 public class DiagramEditPartProvider extends AbstractEditPartProvider {

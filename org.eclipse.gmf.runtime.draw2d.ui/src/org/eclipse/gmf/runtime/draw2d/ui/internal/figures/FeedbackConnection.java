@@ -23,9 +23,6 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 
-/*
- * @canBeSeenBy %level0
- */
 public class FeedbackConnection extends PolylineConnectionEx {
 
 	private Connection master = null;

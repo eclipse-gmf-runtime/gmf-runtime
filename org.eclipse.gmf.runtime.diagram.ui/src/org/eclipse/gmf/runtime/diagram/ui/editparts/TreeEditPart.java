@@ -42,7 +42,6 @@ import com.ibm.icu.util.StringTokenizer;
 
 /**
  * @author melaasar, mmostafa
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class TreeEditPart
     extends AbstractTreeEditPart

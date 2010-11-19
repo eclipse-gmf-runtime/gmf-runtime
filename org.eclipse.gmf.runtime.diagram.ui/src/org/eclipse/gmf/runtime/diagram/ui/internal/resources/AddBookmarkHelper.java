@@ -48,7 +48,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * Helper class for creating a bookmark for the selected element
  * 
  * @author Kevin Cornell
- * @canBeSeenBy %level1
  * @author Michael Yee
  */
 public class AddBookmarkHelper {

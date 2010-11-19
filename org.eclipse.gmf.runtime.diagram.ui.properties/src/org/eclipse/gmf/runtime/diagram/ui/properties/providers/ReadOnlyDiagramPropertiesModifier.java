@@ -32,7 +32,6 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
  * must not be editable.
  * 
  * @author Wayne Diu, wdiu
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.properties.*
  */
 
 public class ReadOnlyDiagramPropertiesModifier

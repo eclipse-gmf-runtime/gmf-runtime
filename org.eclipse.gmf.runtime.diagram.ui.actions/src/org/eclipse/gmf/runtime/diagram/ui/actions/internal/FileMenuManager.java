@@ -20,7 +20,6 @@ import org.eclipse.jface.action.Action;
  * The file menu manager. It contains all file-related actions.
  *
  * @author chmahone
- * @canBeSeenBy %level1
  */
 public class FileMenuManager extends ActionMenuManager {
 

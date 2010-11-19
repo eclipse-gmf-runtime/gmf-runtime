@@ -19,7 +19,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiReg
 
 /**
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 class SelectClipRgn extends ObjectBase
 {

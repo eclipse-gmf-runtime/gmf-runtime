@@ -29,8 +29,6 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * Toggles routing style for selected connections
- * 
- * @canBeSeenBy %level1
  */
 public class ToggleRouterAction extends CheckedPropertyAction {
 

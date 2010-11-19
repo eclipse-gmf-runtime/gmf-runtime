@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.gef.ui.figures.SlidableOvalAnchor;
 
 /**
  * @author choang
- * @canBeSeenBy org.eclipse.gmf.runtime.gef.ui.*
  *
  * Graphic 2D figure for a oval whoses anchoring will use the OvalAnchor
  * 

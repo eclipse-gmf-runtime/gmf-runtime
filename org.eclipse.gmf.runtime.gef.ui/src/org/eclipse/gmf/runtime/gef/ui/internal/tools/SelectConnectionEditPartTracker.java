@@ -43,8 +43,6 @@ import org.eclipse.swt.graphics.Cursor;
  * or a <code>RequestConstants.REQ_CREATE_BENDPOINT</code> request respectively.
  * 
  * @author sshaw
- * @canBeSeenBy %partners
- *
  */
 public class SelectConnectionEditPartTracker extends SelectEditPartTracker {
 

@@ -22,7 +22,6 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  *
  * The contribute to palette operation
  */

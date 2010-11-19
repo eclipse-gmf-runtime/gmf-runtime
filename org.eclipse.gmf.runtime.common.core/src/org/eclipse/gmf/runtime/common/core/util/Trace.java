@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.Plugin;
  * filtering and generating trace output.
  * 
  * @author khussey
- * @canBeSeenBy %partners
  */
 public class Trace {
 

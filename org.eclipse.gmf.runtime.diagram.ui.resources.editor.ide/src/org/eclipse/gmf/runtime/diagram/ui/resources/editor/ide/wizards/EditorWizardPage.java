@@ -44,7 +44,6 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 
 /**
  * @author qili
- * @canBeSeenBy %level1
  * 
  * Create Diagram Wizard Page
  */

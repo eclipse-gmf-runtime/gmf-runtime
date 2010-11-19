@@ -48,9 +48,6 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.View;
 
-/*
- * @canBeSeenBy %partners
- */
 /**
  * the xy layout edit policy 
  * @see org.eclipse.gef.editpolicies.XYLayoutEditPolicy

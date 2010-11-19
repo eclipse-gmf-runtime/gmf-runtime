@@ -41,7 +41,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * create note and text views.
  *
  * @author schafe
- * @canBeSeenBy %level1
  */
 public class CreateViewAction extends DiagramAction {
 	

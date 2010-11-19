@@ -78,9 +78,6 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 
-/*
- * @canBeSeenBy %partners
- */
 /**
  * the graphical node edit policy
  * @see org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy

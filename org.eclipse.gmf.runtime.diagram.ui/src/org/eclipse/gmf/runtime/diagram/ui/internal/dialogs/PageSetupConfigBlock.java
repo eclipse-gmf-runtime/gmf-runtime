@@ -55,7 +55,6 @@ import com.ibm.icu.text.NumberFormat;
  * PSConfiguration Block is also used by PSPreferencePage.
  * 
  * @author etworkow
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class PageSetupConfigBlock implements ILabels {
 	

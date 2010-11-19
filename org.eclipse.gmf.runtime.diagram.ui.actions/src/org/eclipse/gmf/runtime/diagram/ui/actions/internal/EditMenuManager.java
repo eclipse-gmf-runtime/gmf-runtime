@@ -20,7 +20,6 @@ import org.eclipse.jface.action.Action;
  * The edit menu manager. It contains all edit-related actions.
  *
  * @author chmahone
- * @canBeSeenBy %level1
  */
 public class EditMenuManager extends ActionMenuManager {
 

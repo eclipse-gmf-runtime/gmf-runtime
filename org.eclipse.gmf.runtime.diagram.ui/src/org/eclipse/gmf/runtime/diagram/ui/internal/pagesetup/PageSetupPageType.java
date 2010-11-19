@@ -20,7 +20,6 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
  * { LETTER, LEBAL, EXECUTIVE, 11x17, A3, A4, B4, B5, USER_DEFINED }
  * 
  * @author etworkow
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class PageSetupPageType {
 

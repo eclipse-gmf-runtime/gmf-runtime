@@ -26,7 +26,6 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
  * A label provider object used by the notation property descriptors.
  * 
  * @author nbalaba
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.properties.*
  */
 class NotationItemLabelProvider
 	extends LabelProvider {

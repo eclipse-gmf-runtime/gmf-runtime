@@ -17,7 +17,6 @@ import org.eclipse.gmf.runtime.notation.Node;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  *
  * Concrete class implementing the ILayoutNode interface
  */

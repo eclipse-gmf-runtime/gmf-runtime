@@ -19,7 +19,6 @@ import java.awt.geom.GeneralPath;
  * Represents a selectable region.  Not currently implemented or used, this is just a placeholder.
  *  
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public class GdiRegion 
 {

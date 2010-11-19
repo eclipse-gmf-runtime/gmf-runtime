@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
  * interface for generating logs based on status objects.
  * 
  * @author khussey
- * @canBeSeenBy %partners
  */
 public class Log {
 

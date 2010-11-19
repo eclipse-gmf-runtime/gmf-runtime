@@ -34,7 +34,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * the contribution item service
  * 
  * @author melaasar
- * @canBeSeenBy %level1
  * @see ContributionItemService
  */
 public class DiagramContextMenuProvider extends ContextMenuProvider {

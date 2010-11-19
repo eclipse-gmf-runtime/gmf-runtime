@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.properties;
  * Contains the property identifiers for the workspace preferences.
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public interface WorkspaceViewerProperties {
 

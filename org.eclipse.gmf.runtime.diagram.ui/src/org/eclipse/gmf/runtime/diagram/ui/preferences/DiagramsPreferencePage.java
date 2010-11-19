@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Group;
  * functionality.
  * 
  * @author schafe, cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class DiagramsPreferencePage
 	extends AbstractPreferencePage {

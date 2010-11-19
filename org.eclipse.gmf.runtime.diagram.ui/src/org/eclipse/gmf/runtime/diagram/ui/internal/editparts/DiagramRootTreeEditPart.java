@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.TreeItem;
  * of deleting a view selects the next node in the tree istead of the diagram node
  * 
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class DiagramRootTreeEditPart extends RootTreeEditPart {
 

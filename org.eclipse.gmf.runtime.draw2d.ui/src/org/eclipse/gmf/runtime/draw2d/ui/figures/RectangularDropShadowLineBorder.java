@@ -19,9 +19,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.LineBorderEx;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
-/*
- * @canBeSeenBy %partners
- */
 /**
  * @author sshaw
  *

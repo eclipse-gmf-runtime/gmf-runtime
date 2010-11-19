@@ -21,7 +21,6 @@ import org.eclipse.draw2d.geometry.Translatable;
  * @see org.eclipse.gmf.runtime.gef.ui.internal.figure.surface.mapmode.HiMetricMapMode
  *
  * @author jschofie / sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  */
 public interface IMapMode {
 

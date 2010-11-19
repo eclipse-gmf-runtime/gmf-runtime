@@ -18,7 +18,6 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  *
  * A provider configuration for the PaletteService. It helps in filtering out
  * and delay loading unrelated providers.

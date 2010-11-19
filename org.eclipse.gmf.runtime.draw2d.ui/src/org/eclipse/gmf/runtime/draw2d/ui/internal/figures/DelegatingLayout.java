@@ -19,9 +19,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.geometry.Dimension;
 
-/*
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
- */
 public class DelegatingLayout extends org.eclipse.draw2d.DelegatingLayout {
 	private Map constraints = new HashMap();
 

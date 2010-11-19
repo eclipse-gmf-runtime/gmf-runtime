@@ -22,7 +22,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * An action to show/hide compartment title
  * 
  * @author melaasar
- * @canBeSeenBy %level1
  */
 public class ShowCompartmentTitleAction
 	extends BooleanPropertyAction {

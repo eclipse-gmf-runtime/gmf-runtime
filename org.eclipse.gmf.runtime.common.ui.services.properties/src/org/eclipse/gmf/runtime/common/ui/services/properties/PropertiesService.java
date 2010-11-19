@@ -32,7 +32,6 @@ import org.osgi.framework.Bundle;
  * providers and assembles these properties into a property source object.
  * 
  * @author Tauseef A. Israr
- * @canBeSeenBy %partners 
  */
 public class PropertiesService
 	extends Service

@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.gef.ui.internal.palette;
  * An interface that adds identity to a palette entry
  * 
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.gef.ui.*
  */
 public interface PaletteIdentity {
 

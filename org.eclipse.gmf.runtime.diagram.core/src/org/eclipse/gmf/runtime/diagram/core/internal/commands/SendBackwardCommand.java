@@ -26,7 +26,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * closer to the "back" of the list.
  * 
  * @author jschofie
- * @canBeSeenBy %level1
  */
 public class SendBackwardCommand extends ZOrderCommand {
 	

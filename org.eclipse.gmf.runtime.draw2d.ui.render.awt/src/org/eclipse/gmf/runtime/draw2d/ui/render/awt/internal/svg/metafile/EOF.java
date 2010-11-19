@@ -23,7 +23,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record
  * This is a placeholder.  It handles the EOF metafile record which appears at the end of
  * every Enhanced Metafile, though it does nothing.
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public class EOF implements IEmf2SvgConverter
 {

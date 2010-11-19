@@ -19,7 +19,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Device
  * This is used for generating fillable paths (See Windows 'BeginPath'/'EndPath'/etc functions).
  * 
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public interface IRenderToPath
 {

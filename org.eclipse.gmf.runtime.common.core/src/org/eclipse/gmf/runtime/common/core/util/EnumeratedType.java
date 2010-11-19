@@ -19,7 +19,6 @@ import java.util.List;
  * An enumeration of constants based on the typesafe enum pattern.
  * 
  * @author khussey
- * @canBeSeenBy %partners
  */
 public abstract class EnumeratedType
 	implements Serializable {

@@ -40,9 +40,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
-/*
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
- */
 public class ObliqueRouter extends BendpointConnectionRouter {
 
 	static public class ArrayListMap {

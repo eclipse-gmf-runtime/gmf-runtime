@@ -27,7 +27,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
  * and end point are the same.
  * 
  * @author chmahone
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  */
 public class FanRouter extends org.eclipse.draw2d.FanRouter {
 

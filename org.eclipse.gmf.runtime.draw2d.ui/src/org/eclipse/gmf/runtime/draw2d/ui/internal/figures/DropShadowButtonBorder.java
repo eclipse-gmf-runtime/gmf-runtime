@@ -24,9 +24,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-/*
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
- */
 public class DropShadowButtonBorder 
 	extends AbstractBorder
 {

@@ -20,7 +20,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record
  * This interface must be implemented by each class that handles an EMF metafile record.  
  * This is the basis for all metafile conversions.  
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public interface IEmf2SvgConverter extends IRenderableObject
 {

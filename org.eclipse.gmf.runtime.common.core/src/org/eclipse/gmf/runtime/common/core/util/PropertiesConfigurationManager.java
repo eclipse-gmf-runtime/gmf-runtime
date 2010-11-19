@@ -32,7 +32,6 @@ import org.osgi.framework.Bundle;
  * Manages the properties files declared in the textConfiguration extensions
  * 
  * @author myee
- * @canBeSeenBy %partners
  */
 public class PropertiesConfigurationManager {
 

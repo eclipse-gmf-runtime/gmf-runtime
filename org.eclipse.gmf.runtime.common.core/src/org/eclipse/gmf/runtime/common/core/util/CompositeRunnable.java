@@ -18,7 +18,6 @@ import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
  * A utility class that is a composite of runnables
  * 
  * @author Yasser Lulu
- * @canBeSeenBy %partners
  */
 public class CompositeRunnable
 	implements Runnable {

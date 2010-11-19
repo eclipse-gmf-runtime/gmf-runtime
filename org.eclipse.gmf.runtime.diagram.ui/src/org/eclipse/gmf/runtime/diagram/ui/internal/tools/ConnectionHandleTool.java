@@ -59,7 +59,6 @@ import org.eclipse.swt.widgets.Display;
  * to source.
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class ConnectionHandleTool
 	extends ConnectionCreationTool

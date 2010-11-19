@@ -32,7 +32,6 @@ import com.ibm.icu.util.StringTokenizer;
  * To avoid confusion, the method names are different too.
  * 
  * @author wdiu, Wayne Diu
- * @canBeSeenBy %partners
  */
 public class StringUtil {
 

@@ -34,7 +34,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * Action to sort/filter list compartment items.
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class SortFilterAction extends DiagramAction {
 	

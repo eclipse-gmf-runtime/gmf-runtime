@@ -21,8 +21,6 @@ import org.eclipse.swt.widgets.Composite;
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
- * 
- * @canBeSeenBy %partners
  */
 public class WrapTextCellEditor extends TextCellEditorEx {
 

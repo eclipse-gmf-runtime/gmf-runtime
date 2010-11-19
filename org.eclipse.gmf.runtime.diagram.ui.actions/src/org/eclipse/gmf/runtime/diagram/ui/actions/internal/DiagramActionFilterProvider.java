@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
  * An action filter provider for the Diagram UI Actions plugin.
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.actions.*
  */
 public class DiagramActionFilterProvider
 	extends AbstractModelActionFilterProvider {

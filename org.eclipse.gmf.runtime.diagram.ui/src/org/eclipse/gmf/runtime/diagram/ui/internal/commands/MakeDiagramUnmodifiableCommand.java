@@ -28,7 +28,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
  * </p>
  * 
  * @author cmcgee
- * @canBeSeenBy %level1
  */
 public class MakeDiagramUnmodifiableCommand
 	extends Command {

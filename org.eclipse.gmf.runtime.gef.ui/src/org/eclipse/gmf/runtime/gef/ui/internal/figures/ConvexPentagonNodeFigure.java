@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
  * Provides support for Convex Pentagon figure (Send Signal Action for Activity diagram) 
  * 
  * @author oboyko
- * @canBeSeenBy org.eclipse.gmf.runtime.gef.ui.*
  */
 public class ConvexPentagonNodeFigure
 	extends DefaultSizeNodeFigure implements IPolygonAnchorableFigure{

@@ -20,7 +20,6 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
  * Create Editor Diagram Wizard
  *
  * @author qili
- * @canBeSeenBy %level1
  * 
  */
 public class EditorCreationWizard

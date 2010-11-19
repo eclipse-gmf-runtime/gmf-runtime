@@ -24,8 +24,6 @@ import org.eclipse.gmf.runtime.common.core.util.StringStatics;
  * 
  * @author melaasar
  * @author ldamus
- * 
- * @canBeSeenBy %partners
  */
 public class UnexecutableCommand extends AbstractCommand {
 

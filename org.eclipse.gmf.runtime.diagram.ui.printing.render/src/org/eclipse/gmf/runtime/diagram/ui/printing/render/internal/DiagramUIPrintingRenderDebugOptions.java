@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.render.internal;
  * A list of debug options for this plug-in.
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.printing.render.*
  *  
  */
 public final class DiagramUIPrintingRenderDebugOptions {

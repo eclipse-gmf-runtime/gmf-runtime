@@ -38,7 +38,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * Edit part which controls the page breaks figure. 
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class PageBreakEditPart extends AbstractGraphicalEditPart {
 

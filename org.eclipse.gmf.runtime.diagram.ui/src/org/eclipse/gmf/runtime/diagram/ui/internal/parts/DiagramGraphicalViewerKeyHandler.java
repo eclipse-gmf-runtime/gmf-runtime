@@ -32,11 +32,6 @@ import org.eclipse.swt.events.KeyEvent;
 
 /**
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- *
  * <p>
  * Code taken from Eclipse reference bugzilla #98820
  *

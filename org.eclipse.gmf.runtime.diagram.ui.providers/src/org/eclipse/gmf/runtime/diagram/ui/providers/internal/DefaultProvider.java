@@ -86,7 +86,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Provider that creates a command for the DirectedGraph layout in GEF.
  * 
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  * 
  */
 public abstract class DefaultProvider

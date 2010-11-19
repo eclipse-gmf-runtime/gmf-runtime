@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.PageSetupAction;
  * Add the page setup action.
  * 
  * @author Wayne Diu, wdiu
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  */
 public class PrintingContributionItemProvider
 	extends AbstractContributionItemProvider {

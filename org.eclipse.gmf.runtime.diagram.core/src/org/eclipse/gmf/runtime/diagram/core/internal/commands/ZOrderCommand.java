@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * the ZOrder Commands.
  * 
  * @author jschofie
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.core.*
  */
 public abstract class ZOrderCommand extends AbstractTransactionalCommand {
 	

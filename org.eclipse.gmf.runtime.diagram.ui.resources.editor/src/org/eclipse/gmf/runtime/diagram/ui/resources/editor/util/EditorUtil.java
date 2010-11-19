@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Shell;
  * Diagram Utility Class for Editor.
  *
  * @author qili
- * @canBeSeenBy %level1
  * 
  */
 public class EditorUtil {

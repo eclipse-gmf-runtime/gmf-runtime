@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.common.ui.services.properties.internal;
 
 /**
- * @canBeSeenBy org.eclipse.gmf.runtime.common.ui.services.properties.*
  * @author nbalaba
  */
 public class PSFPluginStatusCodes {

@@ -24,7 +24,6 @@ import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author melaasar
- * @canBeSeenBy %level1
  *
  * The arrange menu manager. It contains all arrange-related actions
  */

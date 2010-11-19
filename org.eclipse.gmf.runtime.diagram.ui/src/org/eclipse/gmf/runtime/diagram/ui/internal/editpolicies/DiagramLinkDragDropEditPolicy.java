@@ -33,7 +33,6 @@ import org.eclipse.swt.dnd.DND;
  * semantic model get sets to the dropped diagram.
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class DiagramLinkDragDropEditPolicy extends DragDropEditPolicy {
 

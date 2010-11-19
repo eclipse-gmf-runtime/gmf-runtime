@@ -17,7 +17,6 @@ import org.eclipse.jface.preference.PreferenceManager;
  * <code>PageManager</code> for the Sort/Filter dialog.
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class SortFilterPageManager extends PreferenceManager {
 	

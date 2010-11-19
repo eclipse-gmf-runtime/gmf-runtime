@@ -31,7 +31,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Edit Part which supports only diagram links.
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class DiagramLinkEditPart extends ShapeNodeEditPart {
 

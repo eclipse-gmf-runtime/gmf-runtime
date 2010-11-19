@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.internal;
  * A list of debug options for this plug-in.
  * 
  * @author khussey
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  *
  */
 public final class Draw2dRenderDebugOptions {

@@ -23,7 +23,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
  * role.
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class SortFilterContentRequest extends Request {
 

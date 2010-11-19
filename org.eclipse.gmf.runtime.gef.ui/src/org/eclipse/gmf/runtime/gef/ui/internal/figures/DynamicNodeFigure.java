@@ -18,9 +18,6 @@ import org.eclipse.draw2d.ConnectionAnchor;
 
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
-/*
- * @canBeSeenBy org.eclipse.gmf.runtime.gef.ui.*
- */
 public class DynamicNodeFigure extends NodeFigure {
 
 	protected Hashtable connectionAnchors = new Hashtable(7);

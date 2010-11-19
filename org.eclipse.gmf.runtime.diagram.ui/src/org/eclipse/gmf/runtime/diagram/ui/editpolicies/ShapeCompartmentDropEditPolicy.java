@@ -33,7 +33,6 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 /**
  * Supports droping model elements onto the shape compartment editpart.
  * @author mhanner
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class ShapeCompartmentDropEditPolicy
 	extends DragDropEditPolicy {

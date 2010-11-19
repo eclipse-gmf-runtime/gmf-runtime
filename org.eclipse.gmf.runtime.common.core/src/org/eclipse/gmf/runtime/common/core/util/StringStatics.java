@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IPath;
  * This class contains string statics that are not to be translated.
  * 
  * @author wdiu, Wayne Diu
- * @canBeSeenBy %partners
  */
 public class StringStatics {
 

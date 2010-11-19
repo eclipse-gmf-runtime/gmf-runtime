@@ -27,7 +27,6 @@ import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration
  * and delay loading unrelated providers.
  * 
  * @author chmahone
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class EditPolicyProviderConfiguration
 	extends AbstractProviderConfiguration {

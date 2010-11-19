@@ -22,9 +22,6 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 /**
  * A Request to change the Z-Order
  */
-/*
- * @canBeSeenBy %partners
- */
 public class ZOrderRequest extends Request {
 	
 	/**

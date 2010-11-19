@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record
  * No-op class.  This is used for converter records that do not seem to have any
  * visible effect on the output.
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 class Noop implements IEmf2SvgConverter, IWmf2SvgConverter
 {

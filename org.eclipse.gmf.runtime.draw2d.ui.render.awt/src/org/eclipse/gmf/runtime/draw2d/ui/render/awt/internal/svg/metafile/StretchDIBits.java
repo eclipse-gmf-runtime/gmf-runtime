@@ -26,7 +26,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record
 /**
  * Very similar to StretchBlt, but the offsets are completely different.
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public class StretchDIBits implements IWmf2SvgConverter, IEmf2SvgConverter
 {

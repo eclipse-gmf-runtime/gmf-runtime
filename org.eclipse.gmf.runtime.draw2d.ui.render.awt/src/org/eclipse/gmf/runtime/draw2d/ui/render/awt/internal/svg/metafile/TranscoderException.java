@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile;
 /**
  * Represents an thrown by the transcoder.
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public class TranscoderException extends Exception
 {

@@ -19,7 +19,6 @@ import java.util.Locale;
  * exist: one set in workspace and one set in diagram preference store.
  * 
  * @author etworkow
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class DefaultValues {
 

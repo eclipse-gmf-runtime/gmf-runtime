@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.emf.ui.properties.descriptors.EMFCompositePropert
  * views and styles.
  * 
  * @author nbalaba
- * @canBeSeenBy %level1
  */
 public class NotationPropertySource
 	extends EMFCompositePropertySource {

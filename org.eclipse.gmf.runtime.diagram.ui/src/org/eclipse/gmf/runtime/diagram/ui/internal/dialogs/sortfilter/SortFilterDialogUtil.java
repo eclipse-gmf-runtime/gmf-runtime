@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Display;
  * EditPolicy must provide before the dialog is invoked.
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class SortFilterDialogUtil {
 	

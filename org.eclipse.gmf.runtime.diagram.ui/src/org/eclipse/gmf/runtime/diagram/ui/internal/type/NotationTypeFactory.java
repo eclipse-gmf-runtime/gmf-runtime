@@ -22,7 +22,6 @@ import org.eclipse.gmf.runtime.emf.type.core.SpecializationType;
  * a semantic hint parameter.
  * 
  * @author ldamus
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class NotationTypeFactory
 	extends AbstractElementTypeFactory {

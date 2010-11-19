@@ -43,7 +43,6 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
  * 3. Configure workspace settings button
  * 
  * @author etworkow
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class PageSetupSelectionConfigBlock implements ILabels {
 	

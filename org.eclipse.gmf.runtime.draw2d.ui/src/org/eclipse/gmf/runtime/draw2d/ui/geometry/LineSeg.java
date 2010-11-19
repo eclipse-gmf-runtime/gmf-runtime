@@ -30,7 +30,6 @@ import org.eclipse.draw2d.geometry.Translatable;
  * origin and the other is the terminal.
  * 
  * @author sshaw
- * @canBeSeenBy %partners
  */
 public class LineSeg 
 	implements Cloneable, java.io.Serializable, Translatable {

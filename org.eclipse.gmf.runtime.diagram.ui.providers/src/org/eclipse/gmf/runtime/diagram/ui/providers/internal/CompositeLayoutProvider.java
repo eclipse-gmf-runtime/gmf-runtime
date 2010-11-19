@@ -55,7 +55,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Provider that creates a command for the CompoundDirectedGraph layout in GEF.
  * 
  * @author mmostafa
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  * 
  */
 

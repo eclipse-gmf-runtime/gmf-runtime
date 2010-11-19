@@ -15,9 +15,6 @@ import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Insets;
 
-/*
- * @canBeSeenBy %level0
- */
 public interface TransparentBorder extends Border {
 
 	/**

@@ -75,9 +75,6 @@ import org.eclipse.swt.widgets.Display;
  *
  *and the 2. is the auto-scroll capability.
  */
-/*
- * @canBeSeenBy %level1
- */
 public class RubberbandSelectionTool
 	extends AbstractTool
 {

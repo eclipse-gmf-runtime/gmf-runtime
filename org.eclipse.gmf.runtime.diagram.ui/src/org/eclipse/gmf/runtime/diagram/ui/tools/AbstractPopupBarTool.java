@@ -41,8 +41,6 @@ import org.eclipse.swt.widgets.Display;
  * Handle.getDragTracker during mouseDown.
  * 
  * @author affrantz
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
- * 
  */
 
 public abstract class AbstractPopupBarTool

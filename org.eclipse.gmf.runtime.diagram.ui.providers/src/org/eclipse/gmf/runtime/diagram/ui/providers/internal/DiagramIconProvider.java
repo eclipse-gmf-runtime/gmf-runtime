@@ -32,7 +32,6 @@ import org.eclipse.swt.graphics.Image;
  * Provides Geoshape Icons
  * 
  *  @author jschofie
- *  @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  */
 public class DiagramIconProvider extends AbstractProvider
 implements IIconProvider {

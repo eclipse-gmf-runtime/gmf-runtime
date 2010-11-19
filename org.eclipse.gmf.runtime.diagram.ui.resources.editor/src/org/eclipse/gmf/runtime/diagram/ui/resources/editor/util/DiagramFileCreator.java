@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author qili
- * @canBeSeenBy %level1
  *
  * Class used for the creation of diagram files.
  * 

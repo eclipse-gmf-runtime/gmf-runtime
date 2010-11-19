@@ -32,7 +32,6 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author mmostafa
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.core.*
  * Command that will persist transient views.
  */
 public class PersistElementCommand extends AbstractTransactionalCommand { 

@@ -54,7 +54,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Provides bookmark decorations for views 
  * 
  * @author Michael Yee
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  */
 public class BookmarkDecorator
 	extends AbstractDecorator {

@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter.SortFilterPage;
  * PreferenceDialog</code>.
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class SortFilterRootPreferenceNode extends PreferenceNode {
 	

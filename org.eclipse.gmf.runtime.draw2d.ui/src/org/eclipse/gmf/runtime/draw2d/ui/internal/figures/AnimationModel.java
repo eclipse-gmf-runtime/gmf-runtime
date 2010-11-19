@@ -22,7 +22,6 @@ import java.util.Date;
  * <p>
  * Code taken from Eclipse reference bugzilla #98820
  *
- * @canBeSeenBy %level0
  */
 public class AnimationModel {
 

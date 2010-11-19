@@ -28,8 +28,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record
 
 /**
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
- *
  */
 public class Ellipse implements IEmf2SvgConverter, IWmf2SvgConverter, IRenderToPath
 {

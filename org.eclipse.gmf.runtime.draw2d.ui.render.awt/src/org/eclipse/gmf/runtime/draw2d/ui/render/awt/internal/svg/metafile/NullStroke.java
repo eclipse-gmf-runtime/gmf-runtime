@@ -20,7 +20,6 @@ import java.awt.geom.GeneralPath;
  * specifies a pen type of 'PS_NULL', this is used.
  * 
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 class NullStroke implements Stroke
 {

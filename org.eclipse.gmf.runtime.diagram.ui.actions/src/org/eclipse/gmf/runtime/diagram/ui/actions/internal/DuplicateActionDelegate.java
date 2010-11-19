@@ -51,7 +51,6 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * views on a diagram.
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.actions.*
  */
 public class DuplicateActionDelegate
 	extends AbstractActionDelegate

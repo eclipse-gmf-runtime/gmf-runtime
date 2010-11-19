@@ -18,7 +18,6 @@ import java.util.Vector;
  * 
  * This class is cloned from org.eclipse.ui.internal.misc.StringMatcher
  * 
- * @canBeSeenBy %partners
  */
 public class StringMatcher {
 

@@ -38,7 +38,6 @@ import org.eclipse.ui.PlatformUI;
  * Appearance General preference page.
  * 
  * @author schafe
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class AppearancePreferencePage
     extends AbstractPreferencePage {

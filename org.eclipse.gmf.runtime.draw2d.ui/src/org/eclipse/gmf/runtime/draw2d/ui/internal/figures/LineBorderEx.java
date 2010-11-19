@@ -24,7 +24,6 @@ import org.eclipse.swt.graphics.Color;
  * incorrectly.
  * 
  * @author jschofie
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  */
 public class LineBorderEx
 	extends LineBorder {

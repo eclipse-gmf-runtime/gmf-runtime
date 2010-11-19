@@ -28,7 +28,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * Drop down combo box conbtribution item that changes font's name
  * 
  * @author Natalia Balaba
- * @canBeSeenBy %level1
  */
 public class FontNameContributionItem
 	extends PropertyChangeContributionItem

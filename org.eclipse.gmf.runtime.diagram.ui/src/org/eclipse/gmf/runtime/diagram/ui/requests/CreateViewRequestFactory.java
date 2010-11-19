@@ -27,7 +27,6 @@ import org.eclipse.gmf.runtime.notation.Node;
  * IElementType.
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class CreateViewRequestFactory {
 

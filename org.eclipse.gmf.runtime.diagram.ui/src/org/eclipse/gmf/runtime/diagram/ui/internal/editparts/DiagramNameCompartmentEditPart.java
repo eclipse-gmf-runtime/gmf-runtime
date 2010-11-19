@@ -43,7 +43,6 @@ import org.eclipse.swt.graphics.Image;
  * This compartment is not editable. 
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
 	

@@ -45,7 +45,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
  * Command for copying an image to the clipboard
  * 
  * @author sshaw
- * @canBeSeenBy %level1
  */
 public class CopyImageCommand
 	extends AbstractCommand {

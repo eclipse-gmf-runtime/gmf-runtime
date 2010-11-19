@@ -17,7 +17,6 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
  * Internationalized labels displayed Page Setup Dialog.
  * 
  * @author etworkow
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public interface ILabels {
 

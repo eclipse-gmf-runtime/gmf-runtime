@@ -31,7 +31,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * Action to show all connection labels.
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class ShowConnectionLabelsAction extends DiagramAction {
 	

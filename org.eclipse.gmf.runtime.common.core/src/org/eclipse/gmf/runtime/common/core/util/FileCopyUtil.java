@@ -23,7 +23,6 @@ import java.io.OutputStream;
  * Utility class for copying files and folders
  * 
  * @author gsturov
- * @canBeSeenBy %partners
  */
 public class FileCopyUtil {
 

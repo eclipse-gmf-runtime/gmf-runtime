@@ -18,7 +18,6 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
  * "diagram edit parts" will implement this interface.
  * 
  * @author schafe
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public interface IContainedEditPart {
 	//marker to denote all edit parts that are not diagram edit parts

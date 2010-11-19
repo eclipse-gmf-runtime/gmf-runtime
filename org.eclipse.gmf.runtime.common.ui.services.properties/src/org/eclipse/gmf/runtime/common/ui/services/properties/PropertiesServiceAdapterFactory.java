@@ -22,7 +22,6 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
  * can be build by the properties service.
  * 
  * @author Tauseef A. Israr
- * @canBeSeenBy %partners 
  */
 public class PropertiesServiceAdapterFactory
 	implements IAdapterFactory, IPropertySourceProvider {

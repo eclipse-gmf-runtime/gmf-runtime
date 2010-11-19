@@ -17,7 +17,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  *
  * Interface for drawing a rendered image.
  */

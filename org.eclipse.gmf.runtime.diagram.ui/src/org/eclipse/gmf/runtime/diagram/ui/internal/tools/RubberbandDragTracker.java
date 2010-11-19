@@ -16,9 +16,6 @@ import org.eclipse.gef.DragTracker;
 
 /**
  * @author tisrar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
- *
- * 
  */
 public class RubberbandDragTracker
 	extends RubberbandSelectionTool

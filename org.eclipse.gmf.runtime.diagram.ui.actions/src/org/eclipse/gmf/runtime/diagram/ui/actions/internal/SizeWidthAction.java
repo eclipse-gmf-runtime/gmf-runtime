@@ -35,9 +35,6 @@ import org.eclipse.ui.IWorkbenchPage;
 /**
  * This action is used to change the size of the selected shapes
  */
-/*
- * @canBeSeenBy %level1
- */
 public class SizeWidthAction extends DiagramAction {
 
 	/**

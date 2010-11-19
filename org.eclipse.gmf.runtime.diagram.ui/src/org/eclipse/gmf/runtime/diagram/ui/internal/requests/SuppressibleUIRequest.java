@@ -16,7 +16,6 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.requests;
  * 
  * Request that can optional have any UI suppressed.
  * @author choang
- * @canBeSeenBy %level1
  */
 public interface SuppressibleUIRequest {
 

@@ -34,7 +34,6 @@ import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
  * @see org.eclipse.gmf.runtime.common.core.service
  * 
  * @author khussey
- * @canBeSeenBy %partners
  */
 public abstract class ExecutionStrategy extends EnumeratedType {
 

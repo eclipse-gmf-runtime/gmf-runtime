@@ -41,7 +41,6 @@ import org.eclipse.ui.actions.ActionFactory;
 /**
  * 
  * @author melaasar
- * @canBeSeenBy %level1
  * 
  */
 public class SelectAllAction extends DiagramAction {

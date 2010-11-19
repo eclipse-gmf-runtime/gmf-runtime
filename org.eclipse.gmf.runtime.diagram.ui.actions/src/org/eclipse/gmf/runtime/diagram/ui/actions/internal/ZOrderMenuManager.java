@@ -21,7 +21,6 @@ import org.eclipse.jface.action.Action;
  * The ZOrder menu manager. It contains all Order-related actions
  * 
  * @author jschofie
- * @canBeSeenBy %level1
  */
 public class ZOrderMenuManager extends ActionMenuManager {
 

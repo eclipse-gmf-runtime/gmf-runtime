@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
 /**
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public interface FixedLocationResizableEditPart {
 	// Marker interface

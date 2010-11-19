@@ -24,7 +24,6 @@ import org.eclipse.swt.graphics.Image;
 * Abstract class for RenderedImage interface.
 *  
 * @author sshaw
-* @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
 */
 abstract public class AbstractRenderedImage implements RenderedImage {
 	

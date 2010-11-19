@@ -20,7 +20,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author melaasar
- * @canBeSeenBy %level1
  *
  * The align menu manager. It contains all align-related actions
  */

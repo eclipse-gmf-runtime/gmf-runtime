@@ -34,7 +34,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * on a diagram that expect a non-null model reference.
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  */
 public class UnresolvedViewDecorator
 	extends AbstractDecorator {

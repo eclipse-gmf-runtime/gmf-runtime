@@ -29,7 +29,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest.C
  * create note and text views.
  *
  * @author schafe
- * @canBeSeenBy %level1
  */
 public class CreateConnectionViewAction extends DiagramAction {
 

@@ -26,7 +26,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Provides decorators for the GMF diagram layer.
  *
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  */
 public class DiagramDecoratorProvider
 	extends AbstractProvider

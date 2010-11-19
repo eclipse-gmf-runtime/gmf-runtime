@@ -29,7 +29,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * Checked action for the View Page Breaks workspace property
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class ViewPageBreaksAction extends DiagramAction {
 

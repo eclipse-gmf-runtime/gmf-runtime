@@ -19,7 +19,6 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
  * Tree edit part customized for a diagram.
  *
  * @author schafe
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class TreeDiagramEditPart extends TreeContainerEditPart{
 	

@@ -40,7 +40,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * create note and text views.
  *
  * @author schafe
- * @canBeSeenBy %level1
  */
 public class CreateShapeViewAction extends DiagramAction {
 

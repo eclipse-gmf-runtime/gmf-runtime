@@ -21,7 +21,6 @@ import org.eclipse.jface.action.Action;
  * The View Menu Manager contains all View related actions
  * 
  * @author jschofie
- * @canBeSeenBy %level1
  */
 public class ViewMenuManager extends ActionMenuManager {
 

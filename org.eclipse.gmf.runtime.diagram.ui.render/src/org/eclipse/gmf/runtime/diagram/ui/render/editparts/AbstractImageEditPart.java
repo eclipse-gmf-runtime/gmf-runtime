@@ -23,7 +23,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  * 
  * Abstract EditPart for handling display of a image of the diagram surface.
  * There are no assumptions about a semantic element being owned by the view. It

@@ -35,7 +35,6 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
  * @see org.eclipse.gmf.runtime.common.core.service
  * 
  * @author khussey
- * @canBeSeenBy %partners
  */
 public class ProviderPriority extends EnumeratedType {
 

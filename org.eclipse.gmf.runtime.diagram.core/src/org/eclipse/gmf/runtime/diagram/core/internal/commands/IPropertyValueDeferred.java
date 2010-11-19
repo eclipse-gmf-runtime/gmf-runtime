@@ -13,7 +13,6 @@ package org.eclipse.gmf.runtime.diagram.core.internal.commands;
 
 /**
  * @author sshaw
- * @canBeSeenBy %level1
  *
  * This is an empty interface used for type checking when getting a deferred value
  * in the SetPropertyCommand.  It is used as a kind passed to the getAdapter method.

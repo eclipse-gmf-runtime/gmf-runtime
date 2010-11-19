@@ -42,7 +42,6 @@ import com.ibm.icu.util.StringTokenizer;
  * subclasses.
  * 
  * @author melaasar, mmostafa
- * @canBeSeenBy %partners
  */
 public class AbstractProviderConfiguration {
 	/**

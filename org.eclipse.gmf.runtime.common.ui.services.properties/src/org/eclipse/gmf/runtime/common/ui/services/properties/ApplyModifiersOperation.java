@@ -18,7 +18,6 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
  * Operation which is excuted in order to apply modifiers to a property source provided by a provider
  * 
  * @author nbalaba
- * @canBeSeenBy %partners 
  */
 public class ApplyModifiersOperation
 	implements IOperation {

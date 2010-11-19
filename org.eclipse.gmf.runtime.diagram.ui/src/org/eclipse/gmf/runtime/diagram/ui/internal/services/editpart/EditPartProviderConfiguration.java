@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  *
  * A provider configuration for the EditPartService. It helps in filtering out
  * and delay loading unrelated providers.

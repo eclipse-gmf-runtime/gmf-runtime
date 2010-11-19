@@ -41,7 +41,6 @@ import com.ibm.icu.text.NumberFormat;
  * Diagram Ruler & Grid preference page.
  * 
  * @author jschofie
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class RulerGridPreferencePage
 	extends AbstractPreferencePage {

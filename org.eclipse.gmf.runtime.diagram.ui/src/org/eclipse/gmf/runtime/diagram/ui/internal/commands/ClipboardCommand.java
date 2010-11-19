@@ -38,7 +38,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Abstract parent for all concrete clipboard commands used for IViews
  * 
  * @author Vishy Ramaswamy
- * @canBeSeenBy %level1
  */
 public abstract class ClipboardCommand extends AbstractTransactionalCommand {
     /**

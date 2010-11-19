@@ -16,7 +16,6 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal;
  * A list of debug options for this plug-in.
  * 
  * @author qili
- * @canBeSeenBy %level1
  *
  */
 public final class EditorDebugOptions {

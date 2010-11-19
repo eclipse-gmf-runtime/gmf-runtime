@@ -65,7 +65,6 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  * 
  * RadialProvider class that provides for LayoutType.RADIAL.
  */

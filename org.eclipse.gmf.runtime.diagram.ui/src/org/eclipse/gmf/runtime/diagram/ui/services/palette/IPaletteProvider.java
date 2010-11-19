@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**
  * @author melaasar
- * @canBeSeenBy %level1
  *
  * The palette provider interface.
  */

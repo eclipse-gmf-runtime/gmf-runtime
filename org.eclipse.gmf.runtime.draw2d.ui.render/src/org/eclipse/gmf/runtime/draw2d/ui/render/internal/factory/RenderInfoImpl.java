@@ -16,7 +16,6 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  * 
  * Contains information needed by RenderedImage to perform the rendering of the
  * graphics data.

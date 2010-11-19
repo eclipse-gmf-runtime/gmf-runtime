@@ -28,7 +28,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * Drop down combo box conbtribution item that changes font's size
  * 
  * @author Natalia Balaba
- * @canBeSeenBy %level1
  */
 public class FontSizeContributionItem
 	extends PropertyChangeContributionItem

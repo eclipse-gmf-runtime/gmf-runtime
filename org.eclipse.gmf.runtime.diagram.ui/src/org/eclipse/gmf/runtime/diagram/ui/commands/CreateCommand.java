@@ -33,9 +33,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * Before execution, after undo or after redo, the returned <code>IAdaptable</code>
  * adapts to nothing (will return <code>null</code> when adapted to <code>View</code>)
  */
-/*
- * @canBeSeenBy %partners
- */
 public class CreateCommand extends AbstractTransactionalCommand {
 	
 	/** the view descriptor */

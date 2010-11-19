@@ -62,7 +62,6 @@ import org.eclipse.osgi.util.NLS;
  * This implementation will manage connections owned by the semantic host.
  * 
  * @author mhanner / sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public abstract class CanonicalConnectionEditPolicy
 	extends CanonicalEditPolicy {

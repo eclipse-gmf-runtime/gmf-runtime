@@ -32,7 +32,6 @@ import org.eclipse.ui.views.properties.IPropertySource;
 
 /**
  * @author Tauseef A. Israr Created: Nov 15, 2002
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  * 
  * This is a properties provider class based on Properties Service Provider
  * infrastructure.

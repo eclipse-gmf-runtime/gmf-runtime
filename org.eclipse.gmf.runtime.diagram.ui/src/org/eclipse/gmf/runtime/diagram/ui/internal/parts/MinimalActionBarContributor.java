@@ -19,7 +19,6 @@ import org.eclipse.gef.ui.actions.ActionBarContributor;
  * Item Service.
  * 
  * @author wdiu, Wayne Diu
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class MinimalActionBarContributor extends ActionBarContributor{
 

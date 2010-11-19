@@ -17,7 +17,6 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  * 
  * Concrete subclass of AbstractImageEditPart for images that are based on a
  * stored buffer instead of a file.

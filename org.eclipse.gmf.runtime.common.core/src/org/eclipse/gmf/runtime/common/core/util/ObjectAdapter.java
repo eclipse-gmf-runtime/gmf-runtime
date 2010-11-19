@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IAdaptable;
  * An adapter that allows for the setting of the object later.
  * 
  * @author cmahoney
- * @canBeSeenBy %partners
  */
 public class ObjectAdapter
 	implements IAdaptable {

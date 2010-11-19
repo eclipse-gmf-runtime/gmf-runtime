@@ -40,7 +40,6 @@ import org.eclipse.ui.PlatformUI;
  * from the model.
  * 
  * @author melaasar
- * @canBeSeenBy %level1
  * @author choang 
  */
 public class DeleteFromModelAction

@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Device
  * Paths may be filled with a brush or stroked with a pen.  There is only ever one path
  * open on the system, it may be retrieved from the DeviceContext.
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public class GdiPath
 {

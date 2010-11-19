@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * accessor method to all subclasses.
  * 
  * @author gsturov
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public abstract class EditPartOperation
 	implements IEditPartOperation {

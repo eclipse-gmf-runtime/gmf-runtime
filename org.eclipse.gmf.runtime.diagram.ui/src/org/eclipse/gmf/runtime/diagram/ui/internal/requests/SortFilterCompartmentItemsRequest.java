@@ -19,7 +19,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
  * Request to sort/filter list compartment items.
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class SortFilterCompartmentItemsRequest
 	extends GroupRequest {

@@ -32,7 +32,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
  * diagram bounds.
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class PageBreakNonResizableEditPolicy
     extends SelectionHandlesEditPolicy {

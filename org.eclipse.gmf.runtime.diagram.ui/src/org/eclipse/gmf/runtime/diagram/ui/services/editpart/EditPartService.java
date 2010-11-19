@@ -49,9 +49,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * if no sub-implementation creates one.
  * @see #createGraphicEditPart(View)
  */
-/*
- * @canBeSeenBy %partners
- */
 final public class EditPartService
 	extends Service
 	implements IEditPartProvider, EditPartFactory {

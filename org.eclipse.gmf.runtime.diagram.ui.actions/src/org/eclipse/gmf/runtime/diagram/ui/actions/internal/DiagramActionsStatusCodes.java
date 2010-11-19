@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
  * A list of status codes for this plug-in.
  * 
  *  @author Yasser Lulu
- *  @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.actions.*
  *
  */
 public final class DiagramActionsStatusCodes {

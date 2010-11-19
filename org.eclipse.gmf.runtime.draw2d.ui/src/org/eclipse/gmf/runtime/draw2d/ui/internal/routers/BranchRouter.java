@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  *
  * Final router class for routing a specific branch on a connection tree.
  * Package protected - no should be using this router directly.  Use the Forest

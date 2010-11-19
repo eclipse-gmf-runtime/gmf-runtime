@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * notational diagram.
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 
 public class CreateDiagramLinkCommand extends AbstractTransactionalCommand {

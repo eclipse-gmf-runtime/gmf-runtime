@@ -20,9 +20,6 @@ import org.eclipse.gmf.runtime.notation.View;
 /**
  * Defines the factory methods for creating the various editpart elements.
  */
-/*
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
- */
 public interface IEditPartProvider extends IProvider 
 {
 

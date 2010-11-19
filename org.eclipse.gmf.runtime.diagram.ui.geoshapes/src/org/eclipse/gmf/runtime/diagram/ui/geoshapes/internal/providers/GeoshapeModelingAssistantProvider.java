@@ -31,7 +31,6 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
  * handles, connection creation to a new geoshape).
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.geoshapes.*
  */
 public class GeoshapeModelingAssistantProvider
 	extends ModelingAssistantProvider {

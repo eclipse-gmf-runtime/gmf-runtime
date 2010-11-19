@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Display;
  * and jump-links behavior.
  * 
  * @author sshaw
- * @canBeSeenBy %partners
  */
 public class PolylineConnectionEx extends PolylineConnection implements IPolygonAnchorableFigure {
 	

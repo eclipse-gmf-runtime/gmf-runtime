@@ -34,7 +34,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
  * @param owner The <code>GraphicalEditPart</code> owner.
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  * @author melaasar
  */
 public class CompartmentResizeHandle extends AbstractHandle {

@@ -29,7 +29,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * only when the pagebreaks are visible.
  * 
  * @author jcorchis
- * @canBeSeenBy %level1
  */
 public class RecalculatePageBreaksAction extends DiagramAction {
 

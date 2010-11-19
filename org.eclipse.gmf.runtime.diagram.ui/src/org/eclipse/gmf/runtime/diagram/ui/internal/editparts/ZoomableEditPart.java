@@ -17,7 +17,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  *
  * Interface that abstracts the methods needed to perform zoom within a specific EditPart.
  * 

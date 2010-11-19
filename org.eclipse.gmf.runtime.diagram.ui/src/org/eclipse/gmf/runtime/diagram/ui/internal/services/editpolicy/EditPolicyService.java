@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.diagram.ui.services.editpolicy.IEditPolicyProvide
  * This service is used to install editpolicies on editparts.
  * 
  * @author chmahone
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class EditPolicyService extends Service implements IEditPolicyProvider {
 

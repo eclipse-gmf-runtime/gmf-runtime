@@ -40,9 +40,6 @@ import org.eclipse.osgi.util.NLS;
  * @see #provides(IOperation)
  * 
  */
-/*
- * @canBeSeenBy %partners
- */
 public abstract class AbstractEditPartProvider extends AbstractProvider
 	implements IEditPartProvider, Properties {
 

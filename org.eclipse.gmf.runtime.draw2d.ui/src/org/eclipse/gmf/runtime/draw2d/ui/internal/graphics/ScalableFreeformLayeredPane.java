@@ -27,7 +27,6 @@ import org.eclipse.swt.SWTException;
 
 /**
  * @author jcorchis / sshaw / jschofie
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  *
  * Override for supporting anti-aliasing lines
  */

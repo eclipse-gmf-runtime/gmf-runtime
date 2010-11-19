@@ -43,7 +43,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * The Arrange Action: arranges a container editpart or a set of selected editparts
  * 
  * @author melaasar
- * @canBeSeenBy %level1
  */
 public class ArrangeAction extends DiagramAction {
 

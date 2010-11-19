@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.common.core.util;
  * A utility for generating unique hash values.
  * 
  * @author khussey
- * @canBeSeenBy %partners
  */
 public final class HashUtil {
 

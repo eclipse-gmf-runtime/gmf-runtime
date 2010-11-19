@@ -32,7 +32,6 @@ import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssista
  * handles, connection creation to a new shape).
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  */
 public class DiagramModelingAssistantProvider
 	extends ModelingAssistantProvider {

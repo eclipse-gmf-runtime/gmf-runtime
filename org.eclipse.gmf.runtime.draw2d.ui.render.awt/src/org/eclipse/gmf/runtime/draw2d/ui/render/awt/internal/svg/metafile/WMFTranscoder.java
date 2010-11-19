@@ -72,7 +72,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.WMFRec
  * additional record types.  See 'getConverter' and the IWmf2SvgConverter interface for more details.  
  * 
  * @author dhabib
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.awt.*
  */
 public class WMFTranscoder extends AbstractTranscoder
 { 

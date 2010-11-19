@@ -18,7 +18,6 @@ import org.eclipse.jface.action.Action;
 
 /**
  * @author gsturov
- * @canBeSeenBy %level1
  */
 public class ShowInMenuManager extends ActionMenuManager {
 	/**

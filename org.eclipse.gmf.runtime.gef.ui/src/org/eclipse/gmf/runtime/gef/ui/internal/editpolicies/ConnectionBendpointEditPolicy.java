@@ -49,9 +49,6 @@ import org.eclipse.gmf.runtime.gef.ui.internal.handles.LineSegMoveInvisibleHandl
 /**
  * This EditPolicy defines the behavior of Bendpoints on a Connection.
  */
-/*
- * @canBeSeenBy org.eclipse.gmf.runtime.gef.ui.*
- */
 abstract public class ConnectionBendpointEditPolicy
 	extends SelectionHandlesEditPolicy
 	implements PropertyChangeListener {

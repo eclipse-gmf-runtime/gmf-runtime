@@ -39,8 +39,6 @@ import org.eclipse.core.resources.IFile;
  * 
  * @author khussey
  * @author ldamus
- * 
- * @canBeSeenBy %partners
  */
 public interface ICommand extends IUndoableOperation {
 

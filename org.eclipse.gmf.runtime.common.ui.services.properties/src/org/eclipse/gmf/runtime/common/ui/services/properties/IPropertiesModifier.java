@@ -27,7 +27,6 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
  * should specify the class of the provider as a '*'. 
  * 
  * @author nbalaba
- * @canBeSeenBy %partners 
  */
 public interface IPropertiesModifier extends IProvider {
 	

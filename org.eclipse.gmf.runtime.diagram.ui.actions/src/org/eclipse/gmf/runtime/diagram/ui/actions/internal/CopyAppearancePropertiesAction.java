@@ -27,7 +27,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * applies it to the rest of the selected objects.
  * 
  * @author Natalia Balaba
- * @canBeSeenBy %level1
  * @author melaasar
  */
 public class CopyAppearancePropertiesAction extends DiagramAction {

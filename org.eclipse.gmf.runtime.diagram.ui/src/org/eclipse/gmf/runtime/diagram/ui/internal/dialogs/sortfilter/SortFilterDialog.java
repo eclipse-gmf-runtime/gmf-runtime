@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Shell;
  * page starting with the ROOT page. 
  * 
  * @author jcorchis
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class SortFilterDialog extends PreferenceDialog {
 	

@@ -29,7 +29,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * closer to the "front" of the list.
  * 
  * @author jschofie
- * @canBeSeenBy %level1
  */
 public class BringForwardCommand extends ZOrderCommand {
 	

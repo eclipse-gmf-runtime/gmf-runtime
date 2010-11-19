@@ -19,7 +19,6 @@ import org.eclipse.jface.action.Action;
 
 /**
  * @author melaasar
- * @canBeSeenBy %level1
  *
  * The router menu manager. It contains all router-related actions
  */

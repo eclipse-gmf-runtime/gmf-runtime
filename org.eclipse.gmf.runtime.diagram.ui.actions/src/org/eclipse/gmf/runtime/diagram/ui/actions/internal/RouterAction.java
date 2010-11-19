@@ -31,7 +31,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * Connection router action
  * 
  * @author melaasar
- * @canBeSeenBy %level1
  */
 public class RouterAction extends CheckedPropertyAction {
 

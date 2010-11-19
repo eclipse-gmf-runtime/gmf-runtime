@@ -62,7 +62,6 @@ import com.ibm.icu.util.StringTokenizer;
  * interface should be implemented directly instead 
  * 
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
  */
 public class DefaultPaletteProvider
     extends AbstractProvider

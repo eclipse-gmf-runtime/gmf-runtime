@@ -23,7 +23,6 @@ import org.eclipse.swt.graphics.Cursor;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  * 
  * Implementation for the ZoomTool that supports marquee selection of zoom area
  * and zoom-in / zoom-out capability.

@@ -17,7 +17,6 @@ import java.util.ArrayList;
  * All controls that appear in Page Setup Dialog.
  * 
  * @author etworkow
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class PageSetupControlType {
 

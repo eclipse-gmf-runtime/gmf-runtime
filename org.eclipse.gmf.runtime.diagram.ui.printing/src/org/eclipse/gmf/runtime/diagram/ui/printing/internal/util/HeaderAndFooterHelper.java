@@ -26,7 +26,6 @@ import com.ibm.icu.text.DateFormat;
  * Helper for header and footers. 
  * 
  * @author wdiu, Wayne Diu
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.printing.*
  */
 public class HeaderAndFooterHelper {
 	

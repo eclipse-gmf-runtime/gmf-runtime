@@ -43,7 +43,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * </p>
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class DuplicateViewsCommand
 	extends DuplicateEObjectsCommand {

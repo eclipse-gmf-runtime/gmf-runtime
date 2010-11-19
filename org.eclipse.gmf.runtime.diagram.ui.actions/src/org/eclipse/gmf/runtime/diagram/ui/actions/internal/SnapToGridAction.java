@@ -30,7 +30,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * Checked action for the Snap to Grid workspace property
  * 
  * @author jschofie
- * @canBeSeenBy %level1
  */
 public class SnapToGridAction extends DiagramAction {
 	

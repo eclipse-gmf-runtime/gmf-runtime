@@ -26,7 +26,6 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
  * A palette factory for Geoshapes Entries
  * 
  * @author jschofie
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.geoshapes.*
  */
 public class GeoshapePaletteFactory
 	extends PaletteFactory.Adapter {

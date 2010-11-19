@@ -32,7 +32,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.RectilinearRouter;
  * surface.  Specifically, the oblique, rectilinear and tree routers.
  * 
  * @author sshaw
- * @canBeSeenBy %partners
  */
 public class ConnectionLayerEx extends ConnectionLayer {
 

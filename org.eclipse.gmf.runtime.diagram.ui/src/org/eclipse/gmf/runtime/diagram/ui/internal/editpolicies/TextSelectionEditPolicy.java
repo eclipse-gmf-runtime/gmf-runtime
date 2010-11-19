@@ -19,7 +19,6 @@ import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
  * and focus feedback of text compartments.
  * 
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class TextSelectionEditPolicy
     extends SelectionEditPolicy {

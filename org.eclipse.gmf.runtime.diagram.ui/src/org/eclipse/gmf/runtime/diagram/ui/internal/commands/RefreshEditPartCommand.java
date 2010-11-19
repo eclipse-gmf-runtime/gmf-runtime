@@ -31,7 +31,6 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Command to refresh and revalidate a given <code>IGraphicalEditPart</code>
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class RefreshEditPartCommand 
 	extends AbstractCommand {

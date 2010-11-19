@@ -15,7 +15,6 @@ import org.eclipse.draw2d.Connection;
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  *
  * Extended interface used to distinguish between tree types.  The hint describes which
  * tree to add the connection to.

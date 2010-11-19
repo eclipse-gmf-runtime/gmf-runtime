@@ -48,10 +48,6 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author melaasar
- * @canBeSeenBy %level1
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ColorPropertyContributionItem
 	extends PropertyChangeContributionItem
