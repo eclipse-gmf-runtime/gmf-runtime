@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,14 +18,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.CreationFactory;
-
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewCommand;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
@@ -42,6 +43,7 @@ import org.eclipse.gmf.runtime.notation.Node;
  * individual request.
  * 
  * @author cmahoney
+ * @author Mickael Istria, BonitaSoft - bug 288695
  */
 public class CreateUnspecifiedTypeRequest
 	extends CreateRequest {
@@ -215,13 +217,34 @@ public class CreateUnspecifiedTypeRequest
 		newObjectList.addAll(theNewObjects);
 	}
 
+	/**
+	 * See bug 288695
+	 * 
+	 * if there is only one {@link CreateRequest}, returns this {@link CreateRequest#getNewObject()},
+	 * else, returns a list containing a single {@link IAdaptable} that delegates to the
+	 * {@link CreateRequest#getNewObject()} after the command is executed.
+	 * It is safe to use the return {@link IAdaptable} in a {@link DeferredCreateConnectionViewCommand}.
+	 */
 	public Object getNewObject() {
-        if (newObjectList.isEmpty() && requests.size() == 1) {
-            Object createRequest = requests.values().toArray()[0];
-            if (createRequest instanceof CreateRequest) {
-                return ((CreateRequest) createRequest).getNewObject();
-            }
-        }
+		if (newObjectList.isEmpty()) {
+			if (requests.size() == 1) {
+	            Object createRequest = requests.values().toArray()[0];
+	            if (createRequest instanceof CreateRequest) {
+	                return ((CreateRequest) createRequest).getNewObject();
+	            }
+	        } else if (requests.size() > 1) {
+	        	/* See bug 288695 */
+	        	CreateUnspecifiedAdapter adapter = new CreateUnspecifiedAdapter();
+	        	for (Object request : requests.values()) {
+	        		if (request instanceof CreateRequest) {
+	        			adapter.add((CreateRequest)request);
+	        		}
+	        	}
+	        	List<IAdaptable> newObjects = new ArrayList<IAdaptable>();
+	        	newObjects.add(adapter);
+	        	return newObjects;
+	        }
+		}
         return newObjectList;
     }
 
