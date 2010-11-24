@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,9 +20,6 @@ import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ElementToEditPartsMap;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -33,19 +30,14 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author melaasar
+ * @author Aurelien Pupier: remove resourceManager as implemented by superclass (bug 180171)
  * 
  * Implementation of a diagram graphical viewer
  */
 public class DiagramGraphicalViewer
     extends ScrollingGraphicalViewer
     implements IDiagramGraphicalViewer {
-
-    /**
-     * Resource manager to remember the resources allocated for this graphical
-     * viewer.
-     */
-    private ResourceManager resourceManager;
-    
+ 
     /**
      * Constructor
      */
@@ -192,12 +184,7 @@ public class DiagramGraphicalViewer
      * @see org.eclipse.gef.ui.parts.AbstractEditPartViewer#hookControl()
      */
     protected void hookControl() {
-        super.hookControl();
-        
-        if (resourceManager == null) {
-            resourceManager = new LocalResourceManager(JFaceResources
-                .getResources());
-        }          
+        super.hookControl();        
     }
 
     /**
@@ -343,16 +330,7 @@ public class DiagramGraphicalViewer
     public IPreferenceStore getWorkspaceViewerPreferenceStore() {
         return workspacePreferenceStore;
     }
-
-    /**
-     * Gets the resource manager to remember the resources allocated for this
-     * graphical viewer. All resources will be disposed when the graphical
-     * viewer is closed if they have not already been disposed.
-     */
-    public final ResourceManager getResourceManager() {
-        return resourceManager;
-    }
-    
+  
     /*
      * (non-Javadoc)
      * 
@@ -361,10 +339,6 @@ public class DiagramGraphicalViewer
     protected void unhookControl() {
         fireEmptySelection();
         super.unhookControl();
-        
-        if (resourceManager != null) {
-            resourceManager.dispose();
-        }
     }
 
     /*
