@@ -1,12 +1,12 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.properties.sections;
@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.ui.util.StatusLineUtil;
+import org.eclipse.gmf.runtime.diagram.ui.properties.views.TextChangeHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FormAttachment;
@@ -27,10 +30,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.common.ui.util.StatusLineUtil;
-import org.eclipse.gmf.runtime.diagram.ui.properties.views.TextChangeHelper;
 
 /**
  * A generic class to edit a property via text field. This class supports
@@ -83,10 +82,13 @@ public abstract class AbstractBasicTextPropertySection
 		 */
 		public void handleEvent(Event event) {
 			switch (event.type) {
+				case SWT.Modify :
+					textModified = !isNonUserChange();
+					break;
 				case SWT.KeyDown :
-					textModified = true;
-					if (event.character == SWT.CR)
+					if (event.character == SWT.CR) {
 						textChanged((Control)event.widget);
+					}
 					break;
 				case SWT.FocusOut :
 					textChanged((Control)event.widget);
