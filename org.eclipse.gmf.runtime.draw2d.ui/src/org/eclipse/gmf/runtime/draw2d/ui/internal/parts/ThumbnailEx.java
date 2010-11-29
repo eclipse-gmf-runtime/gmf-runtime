@@ -1,13 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+/******************************************************************************
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ *    IBM Corporation - initial API and implementation
+ ****************************************************************************/
 package org.eclipse.gmf.runtime.draw2d.ui.internal.parts;
 
 import java.util.Iterator;
@@ -46,7 +46,8 @@ public class ThumbnailEx
  * several tiles and updating each tile individually.  
  */
 class ThumbnailUpdater implements Runnable {
-	static final int MAX_BUFFER_SIZE = 256;
+	private static final int NUMBER_OF_TILES = 16;
+	int maxHBufferSize = 256, maxVBufferSize = 256;
 	private int currentHTile, currentVTile;
 	private int hTiles, vTiles;
 	private boolean isActive = true;
@@ -109,10 +110,13 @@ class ThumbnailUpdater implements Runnable {
 	 * size and current tile index.
 	 */
 	public void resetTileValues() {
+		maxHBufferSize = Math.max(1, getSourceRectangle().width / NUMBER_OF_TILES); 
+		maxVBufferSize = Math.max(1, getSourceRectangle().width / NUMBER_OF_TILES); 
+		
 		hTiles = (int)Math.ceil((float)getSourceRectangle().width 
-									/ (float)MAX_BUFFER_SIZE);
+									/ (float)maxHBufferSize);
 		vTiles = (int)Math.ceil((float)getSourceRectangle().height 
-									/ (float)MAX_BUFFER_SIZE);
+									/ (float)maxVBufferSize);
 		
 		tileSize = new Dimension((int)Math.ceil((float)getSourceRectangle().width 
 									/ (float)hTiles),
