@@ -165,8 +165,7 @@ public class BaseSlidableAnchor
 		PointList intersections = getIntersectionPoints(ownReference, foreignReference);
 		if (intersections!=null && intersections.size()!=0) {
 			Point location = PointListUtilities.pickClosestPoint(intersections,
-					((getBox().contains(foreignReference)) ? ownReference
-							: foreignReference));
+					foreignReference);
 			return location;
 		}
 		return null;
@@ -355,7 +354,21 @@ public class BaseSlidableAnchor
 		bounds.expand(0.000001, 0.000001);
 		PrecisionPoint preciseOrthoReference = new PrecisionPoint(orthoReference);
 		int orientation = PositionConstants.NONE;
-		if (preciseOrthoReference.preciseX >= bounds.preciseX && preciseOrthoReference.preciseX <= bounds.preciseX + bounds.preciseWidth) {
+		if (bounds.contains(preciseOrthoReference)) {
+			int side = getClosestSide(ownReference, bounds);
+			switch (side) {
+			case PositionConstants.LEFT:
+			case PositionConstants.RIGHT:
+				ownReference.preciseY = preciseOrthoReference.preciseY();
+				orientation = PositionConstants.HORIZONTAL;
+				break;
+			case PositionConstants.TOP:
+			case PositionConstants.BOTTOM:
+				ownReference.preciseX = preciseOrthoReference.preciseX();
+				orientation = PositionConstants.VERTICAL;
+				break;
+			}
+		} else if (preciseOrthoReference.preciseX >= bounds.preciseX && preciseOrthoReference.preciseX <= bounds.preciseX + bounds.preciseWidth) {
 			ownReference.preciseX = preciseOrthoReference.preciseX;
 			orientation = PositionConstants.VERTICAL;
 		} else if (preciseOrthoReference.preciseY >= bounds.preciseY && preciseOrthoReference.preciseY <= bounds.preciseY + bounds.preciseHeight) {
@@ -383,5 +396,32 @@ public class BaseSlidableAnchor
 		
 		return location;
 	}
-
+	
+	/**
+	 * Returns the position of the closest edge of the rectangle closest to the point
+	 * @param p the point
+	 * @param r the rectangle
+	 * @return position of the closest edge
+	 */
+	private static int getClosestSide(Point p, Rectangle r) {
+		double diff = Math.abs(r.preciseX() + r.preciseWidth() - p.preciseX());
+		int side = PositionConstants.RIGHT;
+		double currentDiff = Math.abs(r.preciseX() - p.preciseX());
+		if (currentDiff < diff) {
+			diff = currentDiff;
+			side = PositionConstants.LEFT;
+		}
+		currentDiff = Math.abs(r.preciseY() + r.preciseHeight() - p.preciseY());
+		if (currentDiff < diff) {
+			diff = currentDiff;
+			side = PositionConstants.BOTTOM;
+		}
+		currentDiff = Math.abs(r.preciseY() - p.preciseY());
+		if (currentDiff < diff) {
+			diff = currentDiff;
+			side = PositionConstants.TOP;
+		}
+		return side;
+	}
+	
 }

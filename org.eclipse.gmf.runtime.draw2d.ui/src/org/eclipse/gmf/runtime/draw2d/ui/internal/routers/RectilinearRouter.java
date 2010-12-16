@@ -38,6 +38,16 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 
 	private static int maxNestedRoutingDepth = 1;
 	
+	@Override
+	protected boolean checkSelfRelConnection(Connection conn, PointList newLine) {
+		boolean selfConn =  super.checkSelfRelConnection(conn, newLine);
+		if (selfConn) {
+			newLine.removePoint(0);
+			newLine.removePoint(newLine.size() - 1);
+		}
+		return selfConn;
+	}
+
 	/**
      * Overridden method from ObliqueRouter that will perform the conversion of the
      * polyline to a rectilinear version.
@@ -60,7 +70,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 		// Handle special routing: self connections and intersecting shapes connections
 		if (checkSelfRelConnection(conn, newLine)
 				|| checkShapesIntersect(conn, newLine)) {
-			super.resetEndPointsToEdge(conn, newLine);
+			resetEndPointsToEdge(conn, newLine);
 			OrthogonalRouterUtilities
 					.transformToOrthogonalPointList(newLine,
 							getOffShapeDirection(getAnchorOffRectangleDirection(
@@ -71,6 +81,10 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 									targetBoundsRelativeToConnection(conn))));
 			removeRedundantPoints(newLine);
 			return;
+		}
+		
+		if (conn.getSourceAnchor().getOwner() == conn.getTargetAnchor().getOwner()) {
+			nestedRoutingDepth = maxNestedRoutingDepth;
 		}
 		
 		/*
@@ -188,6 +202,11 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 	 */
 	private void removePointsInViews(Connection conn, PointList newLine,
 			Point start, Point end) {
+		
+		if (conn.getSourceAnchor().getOwner() == conn.getTargetAnchor().getOwner()) {
+			return;
+		}
+		
 		/*
 		 * Get the bounds of anchorable figure of the source and target and translate it to
 		 * connection relative coordinates.
