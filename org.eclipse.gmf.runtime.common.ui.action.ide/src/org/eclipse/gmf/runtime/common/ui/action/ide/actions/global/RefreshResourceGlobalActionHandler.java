@@ -33,7 +33,7 @@ public class RefreshResourceGlobalActionHandler
 	 * @see org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler#getCommand(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	public ICommand getCommand(IGlobalActionContext cntxt) {
-		RefreshAction refreshAction = new RefreshAction(getShell(cntxt.getActivePart()));
+		RefreshAction refreshAction = new RefreshAction(cntxt.getActivePart().getSite());
 		refreshAction.selectionChanged(getResourceSelection((IStructuredSelection)cntxt.getSelection()));
 		refreshAction.run();
 		return null;

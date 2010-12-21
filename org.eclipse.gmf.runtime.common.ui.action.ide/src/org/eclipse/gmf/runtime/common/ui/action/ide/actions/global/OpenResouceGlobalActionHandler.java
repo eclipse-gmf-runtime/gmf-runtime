@@ -37,7 +37,7 @@ public class OpenResouceGlobalActionHandler
 	 */
 	public ICommand getCommand(IGlobalActionContext cntxt) {
 		OpenResourceAction openAction =
-			new OpenResourceAction(getShell(cntxt.getActivePart()));
+			new OpenResourceAction(cntxt.getActivePart().getSite());
 		openAction.selectionChanged(getResourceSelection((IStructuredSelection)cntxt.getSelection()));
 		openAction.run();
 

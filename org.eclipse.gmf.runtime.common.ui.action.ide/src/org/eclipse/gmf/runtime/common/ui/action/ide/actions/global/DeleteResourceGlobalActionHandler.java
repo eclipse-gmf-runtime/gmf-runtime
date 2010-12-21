@@ -33,7 +33,7 @@ public class DeleteResourceGlobalActionHandler
 	 */
 	public ICommand getCommand(IGlobalActionContext cntxt) {
 		DeleteResourceAction deleteAction =
-			new DeleteResourceAction(getShell(cntxt.getActivePart()));
+			new DeleteResourceAction(cntxt.getActivePart().getSite());
 		deleteAction.selectionChanged(getResourceSelection((IStructuredSelection)cntxt.getSelection()));
 		deleteAction.run();
 		return null;
@@ -43,7 +43,7 @@ public class DeleteResourceGlobalActionHandler
 	 * @see org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler#canHandle(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	public boolean canHandle(IGlobalActionContext cntxt) {
-		DeleteResourceAction deleteAction = new DeleteResourceAction(getShell(cntxt.getActivePart()));
+		DeleteResourceAction deleteAction = new DeleteResourceAction(cntxt.getActivePart().getSite());
 		deleteAction.selectionChanged(getResourceSelection((IStructuredSelection)cntxt.getSelection()));
 		return super.canHandle(cntxt) && deleteAction.isEnabled();
 	}

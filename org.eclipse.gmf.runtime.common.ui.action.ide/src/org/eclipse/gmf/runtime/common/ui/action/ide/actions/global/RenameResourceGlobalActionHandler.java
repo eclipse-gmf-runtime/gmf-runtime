@@ -38,7 +38,7 @@ public class RenameResourceGlobalActionHandler
 	public ICommand getCommand(IGlobalActionContext cntxt) {
 		
 		RenameResourceAction renameAction =
-			new RenameResourceAction(getShell(cntxt.getActivePart()));
+			new RenameResourceAction(cntxt.getActivePart().getSite());
 
 		IInlineTextEditorPart part =
 			(IInlineTextEditorPart) cntxt.getActivePart().getAdapter(
@@ -51,7 +51,7 @@ public class RenameResourceGlobalActionHandler
 				if (treeViewer != null) {
 					renameAction =
 						new RenameResourceAction(
-							getShell(cntxt.getActivePart()),
+							cntxt.getActivePart().getSite(),
 							treeViewer.getTree());
 				}
 			}

@@ -34,7 +34,7 @@ public class MoveResourceGlobalActionHandler
 	 */
 	public ICommand getCommand(IGlobalActionContext cntxt) {
 		MoveResourceAction moveAction =
-			new MoveResourceAction(getShell(cntxt.getActivePart()));
+			new MoveResourceAction(cntxt.getActivePart().getSite());
 		moveAction.selectionChanged(getResourceSelection((IStructuredSelection)cntxt.getSelection()));
 		moveAction.run();
 		return null;

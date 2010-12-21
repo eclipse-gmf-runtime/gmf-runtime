@@ -36,7 +36,7 @@ public class CloseResourceGlobalActionHandler
 	 * @see org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler#getCommand(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	public ICommand getCommand(IGlobalActionContext cntxt) {
-		CloseResourceAction closeAction = new CloseResourceAction(getShell(cntxt.getActivePart()));
+		CloseResourceAction closeAction = new CloseResourceAction(cntxt.getActivePart().getSite());
 		closeAction.selectionChanged(getResourceSelection((IStructuredSelection)cntxt.getSelection()));
 		closeAction.run();
 		return null;
