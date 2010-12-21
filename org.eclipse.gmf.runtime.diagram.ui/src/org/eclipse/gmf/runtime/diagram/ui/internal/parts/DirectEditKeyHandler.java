@@ -81,7 +81,7 @@ public class DirectEditKeyHandler extends KeyHandler {
 		if (isAlphaNum(event)) {
 			// Create a Direct Edit Request and cache the character typed
 			Request request = new Request(RequestConstants.REQ_DIRECT_EDIT);
-			request.getExtendedData().put(RequestConstants.REQ_DIRECTEDIT_EXTENDEDDATA_INITIAL_CHAR, new Character(event.character));
+			request.getExtendedData().put(RequestConstants.REQ_DIRECTEDIT_EXTENDEDDATA_INITIAL_CHAR, Character.valueOf(event.character));
 			// Send the request to the current edit part in focus
 			getFocusPart().performRequest(request);
 			return true;

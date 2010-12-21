@@ -697,7 +697,7 @@ public class DiagramRootEditPart
 			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINECOLOR)) {
 				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINECOLOR, LIGHT_GRAY_RGB);			
 			} else {
-				setGridColor(new Integer(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINECOLOR)));
+				setGridColor(Integer.valueOf(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINECOLOR)));
 			}
 			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINESTYLE)) {
 				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINESTYLE, SWT.LINE_CUSTOM);			

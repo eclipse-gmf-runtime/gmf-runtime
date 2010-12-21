@@ -202,7 +202,7 @@ public class ComboFieldEditor
 			} else if (type == INT_TYPE_INDEXED) {
 				int storeValue = getPreferenceStore().getInt(
 					getPreferenceName());
-				int index = indexToValue.indexOf(new Integer(storeValue));
+				int index = indexToValue.indexOf(Integer.valueOf(storeValue));
 				combo.select(index);
 			}
 			//else, we have a problem because the
@@ -228,7 +228,7 @@ public class ComboFieldEditor
 			} else if (type == INT_TYPE_INDEXED) {
 				int storeValue = getPreferenceStore().getDefaultInt(
 					getPreferenceName());
-				int index = indexToValue.indexOf(new Integer(storeValue));
+				int index = indexToValue.indexOf(Integer.valueOf(storeValue));
 				combo.select(index);
 			}
 			//else, we have a problem because the
@@ -334,7 +334,7 @@ public class ComboFieldEditor
 		assert type == INT_TYPE_INDEXED : "type is not equal to INT_TYPE_INDEXED"; //$NON-NLS-1$
 		
 		combo.add(stringValue);
-		indexToValue.add(new Integer(storeValue));
+		indexToValue.add(Integer.valueOf(storeValue));
 
 	}
 

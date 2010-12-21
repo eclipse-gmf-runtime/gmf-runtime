@@ -248,7 +248,7 @@ public class ExtendedComboBoxCellEditor extends CellEditor {
     	    }
     	
     	    if (getStyle() == SWT.READ_ONLY && selection >= 0) 
-                return new Integer(selection);
+                return Integer.valueOf(selection);
     	    
             if(selection < 0)
                 return comboBox.getText();
@@ -265,7 +265,7 @@ public class ExtendedComboBoxCellEditor extends CellEditor {
             //
             int index = list.indexOf(value);
             if (index != -1) {
-                doSetValue1(new Integer(index));
+                doSetValue1(Integer.valueOf(index));
             }
         } else
             doSetValue1(value);

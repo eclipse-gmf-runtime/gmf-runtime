@@ -59,18 +59,18 @@ public final class IDETransferAdapterProvider
 		 * pre-defined ids
 		 */
 		getTransferDragSourceTable().put(
-			new Integer(IDETransferId.RESOURCE_TRANSFER.hashCode()),
+				Integer.valueOf(IDETransferId.RESOURCE_TRANSFER.hashCode()),
 			new TransferDragSourceAdapter(new TransferAgent(
 				IDETransferId.RESOURCE_TRANSFER, ResourceTransfer.getInstance(),
 				false)));
 
 		getTransferDragSourceTable().put(
-			new Integer(IDETransferId.MARKER_TRANSFER.hashCode()),
+				Integer.valueOf(IDETransferId.MARKER_TRANSFER.hashCode()),
 			new TransferDragSourceAdapter(
 				new TransferAgent(IDETransferId.MARKER_TRANSFER, MarkerTransfer
 					.getInstance(), false)));
 		getTransferDragSourceTable().put(
-			new Integer(IDETransferId.NAV_SELECTION_TRANSFER.hashCode()),
+				Integer.valueOf(IDETransferId.NAV_SELECTION_TRANSFER.hashCode()),
 			new SelectionDragAdapter(new TransferAgent(
 				IDETransferId.NAV_SELECTION_TRANSFER, LocalSelectionTransfer
 					.getTransfer(), true) {
@@ -99,19 +99,19 @@ public final class IDETransferAdapterProvider
 		 * pre-defined ids
 		 */
 		getTransferDropTargetTable().put(
-			new Integer(IDETransferId.RESOURCE_TRANSFER.hashCode()),
+				Integer.valueOf(IDETransferId.RESOURCE_TRANSFER.hashCode()),
 			new TransferDropTargetAdapter(new TransferAgent(
 				IDETransferId.RESOURCE_TRANSFER, ResourceTransfer.getInstance(),
 				false)));
 
 		getTransferDropTargetTable().put(
-			new Integer(IDETransferId.MARKER_TRANSFER.hashCode()),
+				Integer.valueOf(IDETransferId.MARKER_TRANSFER.hashCode()),
 			new TransferDropTargetAdapter(
 				new TransferAgent(IDETransferId.MARKER_TRANSFER, MarkerTransfer
 					.getInstance(), false)));
 
 		getTransferDropTargetTable().put(
-			new Integer(IDETransferId.NAV_SELECTION_TRANSFER.hashCode()),
+				Integer.valueOf(IDETransferId.NAV_SELECTION_TRANSFER.hashCode()),
 			new SelectionDropAdapter(new TransferAgent(
 				IDETransferId.NAV_SELECTION_TRANSFER, LocalSelectionTransfer
 					.getTransfer(), true) {
@@ -138,7 +138,7 @@ public final class IDETransferAdapterProvider
 
 		ITransferDragSourceListener listener = null;
 		listener = (ITransferDragSourceListener) getTransferDragSourceTable()
-			.get(new Integer(transferId.hashCode()));
+			.get(Integer.valueOf(transferId.hashCode()));
 		return listener;
 	}
 
@@ -153,7 +153,7 @@ public final class IDETransferAdapterProvider
 
 		ITransferDropTargetListener listener = null;
 		listener = (ITransferDropTargetListener) getTransferDropTargetTable()
-			.get(new Integer(transferId.hashCode()));
+			.get(Integer.valueOf(transferId.hashCode()));
 		return listener;
 	}
 

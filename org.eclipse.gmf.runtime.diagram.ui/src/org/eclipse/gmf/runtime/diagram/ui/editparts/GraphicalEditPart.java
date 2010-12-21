@@ -876,7 +876,7 @@ public abstract class GraphicalEditPart
     protected void refreshBackgroundColor() {
         FillStyle style = (FillStyle)getPrimaryView().getStyle(NotationPackage.Literals.FILL_STYLE);
         if ( style != null ) {
-            setBackgroundColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getFillColor())));
+            setBackgroundColor(DiagramColorRegistry.getInstance().getColor(Integer.valueOf(style.getFillColor())));
         }
     }
 
@@ -896,7 +896,7 @@ public abstract class GraphicalEditPart
     protected void refreshFontColor() {
         FontStyle style = (FontStyle)  getPrimaryView().getStyle(NotationPackage.Literals.FONT_STYLE);
         if ( style != null ) {
-            setFontColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getFontColor())));
+            setFontColor(DiagramColorRegistry.getInstance().getColor(Integer.valueOf(style.getFontColor())));
         }
     }
 
@@ -904,7 +904,7 @@ public abstract class GraphicalEditPart
     protected void refreshForegroundColor() {
         LineStyle style = (LineStyle)  getPrimaryView().getStyle(NotationPackage.Literals.LINE_STYLE);
         if ( style != null ) {
-            setForegroundColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getLineColor())));
+            setForegroundColor(DiagramColorRegistry.getInstance().getColor(Integer.valueOf(style.getLineColor())));
         }
     }
 

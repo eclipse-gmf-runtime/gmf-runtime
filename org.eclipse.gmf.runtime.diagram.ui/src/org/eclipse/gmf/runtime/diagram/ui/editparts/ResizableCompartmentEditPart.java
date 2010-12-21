@@ -315,9 +315,9 @@ public abstract class ResizableCompartmentEditPart
         if (style != null && scrollPane != null) {
     		Color color = null;
     		if (style.getGradient() == null) {
-    			color = DiagramColorRegistry.getInstance().getColor(new Integer(style.getFillColor()));
+    			color = DiagramColorRegistry.getInstance().getColor(Integer.valueOf(style.getFillColor()));
     		} else {
-    			color = DiagramColorRegistry.getInstance().getColor(new Integer(style.getGradient().getGradientColor2()));
+    			color = DiagramColorRegistry.getInstance().getColor(Integer.valueOf(style.getGradient().getGradientColor2()));
     		}
     		if (color != null) {
     			scrollPane.setBackgroundColor(color);

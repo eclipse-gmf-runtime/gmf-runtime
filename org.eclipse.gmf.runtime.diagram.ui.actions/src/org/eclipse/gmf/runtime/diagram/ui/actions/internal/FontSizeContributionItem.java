@@ -97,7 +97,7 @@ public class FontSizeContributionItem
 		Combo box = (Combo) getControl();
 		int selectedSize =
 			Integer.parseInt(box.getItem(box.getSelectionIndex()));
-		lastFontSize = new Integer(selectedSize);
+		lastFontSize = Integer.valueOf(selectedSize);
 		runWithEvent(event);
 	}
     

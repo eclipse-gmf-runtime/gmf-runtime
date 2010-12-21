@@ -961,7 +961,7 @@ abstract public class ConnectionEditPart
             NotationPackage.Literals.LINE_STYLE);
         if (style != null)
             setForegroundColor(DiagramColorRegistry.getInstance().getColor(
-                new Integer(style.getLineColor())));
+            		Integer.valueOf(style.getLineColor())));
     }
 
     /**

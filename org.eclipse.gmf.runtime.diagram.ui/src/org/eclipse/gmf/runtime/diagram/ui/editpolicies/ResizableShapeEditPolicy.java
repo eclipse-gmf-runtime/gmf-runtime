@@ -106,9 +106,9 @@ public class ResizableShapeEditPolicy
 				Point p = (Point) newValue
 					.getAdapter(IPropertyValueDeferred.class);
 				ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getLocation_X(),
-					new Integer(p.x));
+						Integer.valueOf(p.x));
 				ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getLocation_Y(),
-					new Integer(p.y));
+						Integer.valueOf(p.y));
 
 				// clear for garbage collection
 				viewAdapter = null;

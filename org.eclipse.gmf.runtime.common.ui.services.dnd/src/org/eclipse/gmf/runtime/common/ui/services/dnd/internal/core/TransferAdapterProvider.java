@@ -61,21 +61,21 @@ public final class TransferAdapterProvider
 		 * pre-defined ids
 		 */
 		getTransferDragSourceTable().put(
-			new Integer(TransferId.CUSTOM_DATA_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.CUSTOM_DATA_TRANSFER.hashCode()),
 			new TransferDragSourceAdapter(new TransferAgent(
 				TransferId.CUSTOM_DATA_TRANSFER, CustomDataTransfer
 					.getInstance(), false)));
 		getTransferDragSourceTable().put(
-			new Integer(TransferId.FILE_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.FILE_TRANSFER.hashCode()),
 			new TransferDragSourceAdapter(new TransferAgent(
 				TransferId.FILE_TRANSFER, FileTransfer.getInstance(), false)));
 		getTransferDragSourceTable().put(
-			new Integer(TransferId.PLUGIN_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.PLUGIN_TRANSFER.hashCode()),
 			new TransferDragSourceAdapter(
 				new TransferAgent(TransferId.PLUGIN_TRANSFER, PluginTransfer
 					.getInstance(), false)));
 		getTransferDragSourceTable().put(
-			new Integer(TransferId.SELECTION_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.SELECTION_TRANSFER.hashCode()),
 			new SelectionDragAdapter(new TransferAgent(
 				TransferId.SELECTION_TRANSFER, SelectionTransfer.getInstance(),
 				true) {
@@ -99,11 +99,11 @@ public final class TransferAdapterProvider
 				}
 			}));
 		getTransferDragSourceTable().put(
-			new Integer(TransferId.TEXT_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.TEXT_TRANSFER.hashCode()),
 			new TransferDragSourceAdapter(new TransferAgent(
 				TransferId.TEXT_TRANSFER, TextTransfer.getInstance(), false)));
 		getTransferDragSourceTable().put(
-			new Integer(TransferId.RTF_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.RTF_TRANSFER.hashCode()),
 			new TransferDragSourceAdapter(new TransferAgent(
 				TransferId.RTF_TRANSFER, RTFTransfer.getInstance(), false)));
 
@@ -112,21 +112,21 @@ public final class TransferAdapterProvider
 		 * pre-defined ids
 		 */
 		getTransferDropTargetTable().put(
-			new Integer(TransferId.CUSTOM_DATA_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.CUSTOM_DATA_TRANSFER.hashCode()),
 			new TransferDropTargetAdapter(new TransferAgent(
 				TransferId.CUSTOM_DATA_TRANSFER, CustomDataTransfer
 					.getInstance(), false)));
 		getTransferDropTargetTable().put(
-			new Integer(TransferId.FILE_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.FILE_TRANSFER.hashCode()),
 			new TransferDropTargetAdapter(new TransferAgent(
 				TransferId.FILE_TRANSFER, FileTransfer.getInstance(), false)));
 		getTransferDropTargetTable().put(
-			new Integer(TransferId.PLUGIN_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.PLUGIN_TRANSFER.hashCode()),
 			new TransferDropTargetAdapter(
 				new TransferAgent(TransferId.PLUGIN_TRANSFER, PluginTransfer
 					.getInstance(), false)));
 		getTransferDropTargetTable().put(
-			new Integer(TransferId.SELECTION_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.SELECTION_TRANSFER.hashCode()),
 			new SelectionDropAdapter(new TransferAgent(
 				TransferId.SELECTION_TRANSFER, SelectionTransfer.getInstance(),
 				true) {
@@ -141,11 +141,11 @@ public final class TransferAdapterProvider
 				}
 			}));
 		getTransferDropTargetTable().put(
-			new Integer(TransferId.TEXT_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.TEXT_TRANSFER.hashCode()),
 			new TransferDropTargetAdapter(new TransferAgent(
 				TransferId.TEXT_TRANSFER, TextTransfer.getInstance(), false)));
 		getTransferDropTargetTable().put(
-			new Integer(TransferId.RTF_TRANSFER.hashCode()),
+				Integer.valueOf(TransferId.RTF_TRANSFER.hashCode()),
 			new TransferDropTargetAdapter(new TransferAgent(
 				TransferId.RTF_TRANSFER, RTFTransfer.getInstance(), false)));
 	}
@@ -161,7 +161,7 @@ public final class TransferAdapterProvider
 		
 		ITransferDragSourceListener listener = null;
 		listener = (ITransferDragSourceListener) getTransferDragSourceTable()
-			.get(new Integer(transferId.hashCode()));
+			.get(Integer.valueOf(transferId.hashCode()));
 		return listener;
 	}
 
@@ -176,7 +176,7 @@ public final class TransferAdapterProvider
 		
 		ITransferDropTargetListener listener = null;
 		listener = (ITransferDropTargetListener) getTransferDropTargetTable()
-			.get(new Integer(transferId.hashCode()));
+			.get(Integer.valueOf(transferId.hashCode()));
 		return listener;
 	}
 

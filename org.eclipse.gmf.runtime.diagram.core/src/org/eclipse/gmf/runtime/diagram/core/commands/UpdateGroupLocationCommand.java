@@ -146,7 +146,7 @@ public class UpdateGroupLocationCommand
                 y = (Integer) ViewUtil.getStructuralFeatureValue(childView,
                     NotationPackage.eINSTANCE.getLocation_Y());
                 ViewUtil.setStructuralFeatureValue(childView,
-                    NotationPackage.eINSTANCE.getLocation_Y(), new Integer(y
+                    NotationPackage.eINSTANCE.getLocation_Y(), Integer.valueOf(y
                         .intValue()
                         - minChildY));
             }

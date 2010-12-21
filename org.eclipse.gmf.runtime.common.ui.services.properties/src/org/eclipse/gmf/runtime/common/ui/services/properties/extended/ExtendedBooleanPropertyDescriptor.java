@@ -59,7 +59,7 @@ public class ExtendedBooleanPropertyDescriptor
 	 * @return an instance of <code>Integer</code>
 	 */
 	static public Integer valueToIndex(Boolean b) {
-		return new Integer(b.booleanValue() ? 1 : 0);
+		return Integer.valueOf(b.booleanValue() ? 1 : 0);
 	}
 
 	/**

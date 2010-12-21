@@ -97,12 +97,12 @@ public class TransferAdapterService
 
 			/* Check if an id exists */
 			List transferIdList = (List) getAdapterInfo().get(
-				new Integer(operationType.hashCode()));
+					Integer.valueOf(operationType.hashCode()));
 			if (transferIdList == null) {
 				return false;
 			}
 
-			return transferIdList.contains(new Integer(transferId.hashCode()));
+			return transferIdList.contains(Integer.valueOf(transferId.hashCode()));
 		}
 
 		/**
@@ -198,11 +198,11 @@ public class TransferAdapterService
 				/* Get the transfer ids */
 
 				/* Add to the list */
-				listOftransferIds.addElement(new Integer(id.hashCode()));
+				listOftransferIds.addElement(Integer.valueOf(id.hashCode()));
 			}
 
 			/* Add a placeholder in the table */
-			providerInfo.put(new Integer(operationType.hashCode()),
+			providerInfo.put(Integer.valueOf(operationType.hashCode()),
 				listOftransferIds);
 		}
 

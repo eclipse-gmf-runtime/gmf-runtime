@@ -108,7 +108,7 @@ public class AbstractViewProvider
 
 		return (Edge) createNewView(getEdgeViewClass(semanticAdapter,
 			containerView, semanticHint), new Object[] {semanticAdapter,
-			containerView, semanticHint, new Integer(index),
+			containerView, semanticHint, Integer.valueOf(index),
 			Boolean.valueOf(persisted), preferencesHint});
 	}
 
@@ -118,7 +118,7 @@ public class AbstractViewProvider
 
 		return (Node) createNewView(getNodeViewClass(semanticAdapter,
 			containerView, semanticHint), new Object[] {semanticAdapter,
-			containerView, semanticHint, new Integer(index),
+			containerView, semanticHint, Integer.valueOf(index),
 			Boolean.valueOf(persisted), preferencesHint});
 	}
 

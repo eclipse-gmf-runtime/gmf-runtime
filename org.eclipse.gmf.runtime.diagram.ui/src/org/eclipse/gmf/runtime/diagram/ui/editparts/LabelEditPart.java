@@ -311,16 +311,16 @@ public class LabelEditPart extends TopGraphicEditPart {
 	 * @return String the string to be used as the accessible text
 	 */
 	protected String getAccessibleText() {
-		String accessibleString = ""; //$NON-NLS-1$
+		StringBuilder accessibleStringBuilder = new StringBuilder();
 		for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
             IGraphicalEditPart ep = (IGraphicalEditPart) iter.next();
             ILabelDelegate label = (ILabelDelegate) ep
                 .getAdapter(ILabelDelegate.class);
             if (label != null) {
-                accessibleString += label.getText() + " "; //$NON-NLS-1$
+                accessibleStringBuilder.append(label.getText() + " "); //$NON-NLS-1$
             }
         }
-		return accessibleString;
+		return accessibleStringBuilder.toString();
 	}
 
 	/**

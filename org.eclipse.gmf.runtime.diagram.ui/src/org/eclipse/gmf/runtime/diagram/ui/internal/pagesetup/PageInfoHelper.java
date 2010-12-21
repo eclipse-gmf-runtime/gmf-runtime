@@ -13,9 +13,10 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup;
 
 import java.awt.geom.Point2D;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -25,10 +26,10 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.figures.IExpandableFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.figures.IExpandableFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -222,14 +223,13 @@ public class PageInfoHelper {
     		Point2D.Double size = new Point2D.Double(physicalSize.width / dpi.x, physicalSize.height / dpi.y);
     		
     		Map pageTypes = getPaperSizesMap();
-    		Iterator iterator = pageTypes.keySet().iterator();
+    		Set<Entry<?,?>> pageTypeEntrySet = pageTypes.entrySet();
     		boolean first = true;
     		double bestFit = 0.0;
     		
-    		while(iterator.hasNext()) {
-    			
-    			String thisPageType = (String)iterator.next();
-    			Point2D.Double thisSize = (Point2D.Double)pageTypes.get(thisPageType);
+    		for (Entry<?, ?> pageTypeEntry : pageTypeEntrySet) {
+    			String thisPageType = (String)pageTypeEntry.getKey();
+    			Point2D.Double thisSize = (Point2D.Double)pageTypeEntry.getValue();
     			
     			if (first) {
     				bestFit = size.distance(thisSize);
@@ -243,8 +243,8 @@ public class PageInfoHelper {
     				bestFit = thisFit;
     				pageType = thisPageType;
     			}
-    			
-    		}
+			}
+
     		printer.dispose();	    		
     	}     	   	
     	

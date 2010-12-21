@@ -218,10 +218,10 @@ public class PasteCommand extends ClipboardCommand {
         		if ( isProcessOffset ) {
         			constraintRect = processNodeOffset(node, constraintRect);
         		}
-        		ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_X(), new Integer(constraintRect.x));
-                ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(constraintRect.y));
-                ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Width(), new Integer(constraintRect.width));
-                ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Height(), new Integer(constraintRect.height));
+        		ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_X(), Integer.valueOf(constraintRect.x));
+                ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_Y(), Integer.valueOf(constraintRect.y));
+                ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Width(), Integer.valueOf(constraintRect.width));
+                ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Height(), Integer.valueOf(constraintRect.height));
                 
                 edges.addAll(ViewUtil.getTargetConnections(nextView));
                 edges.addAll(ViewUtil.getSourceConnections(nextView));

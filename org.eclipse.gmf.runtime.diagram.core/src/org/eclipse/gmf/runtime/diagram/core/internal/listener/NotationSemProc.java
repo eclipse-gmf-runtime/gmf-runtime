@@ -207,54 +207,51 @@ public class NotationSemProc extends TriggerListener {
 
 		String name = null;
 
-		if (eObject instanceof Diagram)
+		if (eObject instanceof Diagram){
 			name = ((Diagram) eObject).getName();
 
-		else
-			return;
+			if (((name == null) || (name.equals(StringStatics.BLANK))
+					&& (canAutoName(eObject.eClass())))) {
 
-		if (((name == null) || (name.equals(StringStatics.BLANK))
-			&& (canAutoName(eObject.eClass())))) {
+				name = PackageUtil.getLocalizedName(eObject.eClass());
 
-			name = PackageUtil.getLocalizedName(eObject.eClass());
+				if (reference.isMany()) {
 
-			if (reference.isMany()) {
+					Set set = new HashSet();
 
-				Set set = new HashSet();
-
-				Iterator i = ((Collection) container.eGet(reference))
+					Iterator i = ((Collection) container.eGet(reference))
 					.iterator();
 
-				while (i.hasNext()) {
+					while (i.hasNext()) {
 
-					Object sibling = i.next();
+						Object sibling = i.next();
 
-					if (sibling != null) {
+						if (sibling != null) {
 
-						String n = null;
+							String n = null;
 
-						if (sibling instanceof Diagram)
-							n = ((Diagram) sibling).getName();
+							if (sibling instanceof Diagram)
+								n = ((Diagram) sibling).getName();
 
-						if (n != null)
-							set.add(n);
+							if (n != null)
+								set.add(n);
+						}
+					}
+
+					for (int j = 1; j <= Integer.MAX_VALUE; j++) {
+
+						String n = name + j;
+
+						if (!set.contains(n)) {
+
+							name = n;
+							break;
+						}
 					}
 				}
 
-				for (int j = 1; j <= Integer.MAX_VALUE; j++) {
-
-					String n = name + j;
-
-					if (!set.contains(n)) {
-
-						name = n;
-						break;
-					}
-				}
-			}
-
-			if (eObject instanceof Diagram)
 				((Diagram) eObject).setName(name);
+			}
 		}
 	}
 

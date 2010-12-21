@@ -339,7 +339,7 @@ public class SortFilterPage extends PropertyPage {
 		addAllTo.setText(ADD_ALL_LABEL);
 		addAllTo.setToolTipText(ADD_ALL);
 		addAllTo.setLayoutData(makeArrowButtonGridData(addAllTo));
-		addAllTo.setData(new Integer(ADD_ALL_TO_ID));
+		addAllTo.setData(Integer.valueOf(ADD_ALL_TO_ID));
 		addAllTo.addSelectionListener(buttonSelectionAdapter);
 
 		// Add the possible list of filter items

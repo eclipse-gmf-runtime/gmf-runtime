@@ -257,7 +257,7 @@ public abstract class ShapeNodeEditPart
         FillStyle style = (FillStyle)getPrimaryView().getStyle(NotationPackage.Literals.FILL_STYLE);
         if ( style != null ) {
         	if (style.getGradient() == null || !supportsGradient()) { 
-        		setBackgroundColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getFillColor())));
+        		setBackgroundColor(DiagramColorRegistry.getInstance().getColor(Integer.valueOf(style.getFillColor())));
         	} else {
         		setGradient(style.getGradient());
         	}        	

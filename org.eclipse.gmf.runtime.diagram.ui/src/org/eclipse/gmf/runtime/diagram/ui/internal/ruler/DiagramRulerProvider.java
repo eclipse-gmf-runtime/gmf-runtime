@@ -207,10 +207,10 @@ public class DiagramRulerProvider extends RulerProvider {
             
 			if( ((DiagramRuler)getRuler()).isHorizontal()) {
 				x += getMapMode().DPtoLP(pDelta);
-				spc = new SetPropertyCommand(editingDomain, new EObjectAdapter(part), Properties.ID_POSITIONX, Properties.ID_POSITIONX, new Integer(x));
+				spc = new SetPropertyCommand(editingDomain, new EObjectAdapter(part), Properties.ID_POSITIONX, Properties.ID_POSITIONX, Integer.valueOf(x));
 			} else {
 				y += getMapMode().DPtoLP(pDelta);
-				spc = new SetPropertyCommand(editingDomain, new EObjectAdapter(part), Properties.ID_POSITIONY, Properties.ID_POSITIONY, new Integer(y));
+				spc = new SetPropertyCommand(editingDomain, new EObjectAdapter(part), Properties.ID_POSITIONY, Properties.ID_POSITIONY, Integer.valueOf(y));
 			}
 
 			cmd.add( new ICommandProxy(spc) );

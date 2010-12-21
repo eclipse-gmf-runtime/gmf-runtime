@@ -406,7 +406,7 @@ public final class DelegatingDragSourceAdapter
 
 			/* Get the adapter */
 			ITransferDragSourceListener adapter = (ITransferDragSourceListener) getAllAdapters()
-				.get(new Integer(transferId.hashCode()));
+				.get(Integer.valueOf(transferId.hashCode()));
 			if (adapter != null) {
 				/* Initialize the adapter */
 				adapter.init(
@@ -502,7 +502,7 @@ public final class DelegatingDragSourceAdapter
 				.getInstance().getTransferDragSourceAdapter(transferIds[i]);
 
 			if (adapter != null) {
-				listOfSupportedAdapters.put(new Integer(transferIds[i]
+				listOfSupportedAdapters.put(Integer.valueOf(transferIds[i]
 					.hashCode()), adapter);
 			}
 		}

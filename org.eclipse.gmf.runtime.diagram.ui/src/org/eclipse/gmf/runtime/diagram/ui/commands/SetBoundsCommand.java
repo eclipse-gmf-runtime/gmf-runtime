@@ -100,12 +100,12 @@ public class SetBoundsCommand extends AbstractTransactionalCommand {
 		View view  = (View)adapter.getAdapter(View.class);
 		
 		if (location != null) {
-			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), new Integer(location.x));
-			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(location.y));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), Integer.valueOf(location.x));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), Integer.valueOf(location.y));
 		}
 		if (size != null) {
-			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getSize_Width(), new Integer(size.width));
-			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getSize_Height(), new Integer(size.height));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getSize_Width(), Integer.valueOf(size.width));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getSize_Height(), Integer.valueOf(size.height));
 		}
 		return CommandResult.newOKCommandResult();
 	}

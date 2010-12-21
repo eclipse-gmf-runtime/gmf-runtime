@@ -193,33 +193,34 @@ public class ShowRelatedElementsPresetHelper {
 			Object obj = it.next();
 			assert (obj instanceof ShowRelatedElementsPreset);
 			ShowRelatedElementsPreset preset = (ShowRelatedElementsPreset) obj;
-			String string = preset.name
-				+ ShowRelatedElementsPresetHelper.KEY_SEPARATOR;
+			StringBuilder stringBuilder = new StringBuilder(preset.name
+					+ ShowRelatedElementsPresetHelper.KEY_SEPARATOR);
+			//String string = ;
 
 			Iterator idsIt = preset.getIds().iterator();
 			while (idsIt.hasNext()) {
 				obj = idsIt.next();
 				assert (obj instanceof String);
 
-				string += (String) obj;
+				stringBuilder.append((String) obj);
 
 				if (idsIt.hasNext())
-					string += ShowRelatedElementsPresetHelper.VALUE_SEPARATOR;
+					stringBuilder.append(ShowRelatedElementsPresetHelper.VALUE_SEPARATOR);
 
 			}
 
-			string += ShowRelatedElementsPresetHelper.KEY_SEPARATOR;
+			stringBuilder.append(ShowRelatedElementsPresetHelper.KEY_SEPARATOR);
 
-			string += (conversionMethod != null) ? conversionMethod
+			stringBuilder.append((conversionMethod != null) ? conversionMethod
 				.convertCustomDataToSerializableString(preset.getCustom())
-				: StringStatics.BLANK;
+				: StringStatics.BLANK);
 
-			string += ShowRelatedElementsPresetHelper.KEY_SEPARATOR
+			stringBuilder.append(ShowRelatedElementsPresetHelper.KEY_SEPARATOR
 				+ preset.getExpansionType()
 				+ ShowRelatedElementsPresetHelper.KEY_SEPARATOR
-				+ preset.getLevels();
+				+ preset.getLevels());
 
-			array[i] = string;
+			array[i] = stringBuilder.toString();
 			i++;
 		}
 		return array;
