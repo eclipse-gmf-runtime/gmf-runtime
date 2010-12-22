@@ -25,12 +25,12 @@ public abstract class BooleanPropertyHelper {
 	/**
 	 * Integer constant representing the boolean 'false'
 	 */
-	private final static Integer INT_FALSE = new Integer(0);
+	private final static Integer INT_FALSE = Integer.valueOf(0);
 
 	/**
 	 * Integer constant representing the boolean 'true'
 	 */
-	private final static Integer INT_TRUE = new Integer(1);
+	private final static Integer INT_TRUE = Integer.valueOf(1);
 
 	/**
 	 * The element that owns the property

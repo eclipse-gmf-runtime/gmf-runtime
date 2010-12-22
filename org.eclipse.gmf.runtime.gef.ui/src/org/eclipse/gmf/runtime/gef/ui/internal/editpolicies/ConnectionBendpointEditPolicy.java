@@ -189,9 +189,7 @@ abstract public class ConnectionBendpointEditPolicy
 	 * of the Connection.
 	 */
 	protected List createSelectionHandles() {
-		List list = new ArrayList();
-		list = createManualHandles();
-		return list;
+		return createManualHandles();
 	}
 
 	/**

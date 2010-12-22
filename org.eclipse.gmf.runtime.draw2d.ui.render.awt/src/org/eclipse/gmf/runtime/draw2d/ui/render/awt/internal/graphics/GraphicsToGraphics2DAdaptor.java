@@ -1531,6 +1531,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 				break;
 			case SWT.JOIN_ROUND:
 				awt_join = BasicStroke.JOIN_ROUND;
+				break;
 			default:
 				awt_join = BasicStroke.JOIN_MITER;
 		}

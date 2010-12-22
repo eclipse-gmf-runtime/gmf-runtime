@@ -930,7 +930,7 @@ public final class DeviceContext
 		// Find the next unique key.  This appears to be what the WMF files expect.
 		int objId = 0;
 
-		while( m_curDeviceContext.m_gdiObjectMap.containsKey( new Integer( objId ) ) )
+		while( m_curDeviceContext.m_gdiObjectMap.containsKey( Integer.valueOf( objId ) ) )
 		{
 			objId++;
 		}
@@ -945,7 +945,7 @@ public final class DeviceContext
 	 */
 	public void addGDI( int id, Object gdiObject )
 	{
-		m_gdiObjectMap.put( new Integer( id ), gdiObject );
+		m_gdiObjectMap.put( Integer.valueOf( id ), gdiObject );
 	}
 
 	/**
@@ -955,7 +955,7 @@ public final class DeviceContext
 	 */
 	public Object getGDI( int id )
 	{
-		return m_gdiObjectMap.get( new Integer( id ) );
+		return m_gdiObjectMap.get( Integer.valueOf( id ) );
 	}
 	
 	/**
@@ -964,7 +964,7 @@ public final class DeviceContext
 	 */
 	public void deleteGDI( int id )
 	{
-		m_gdiObjectMap.remove( new Integer( id ) );
+		m_gdiObjectMap.remove( Integer.valueOf( id ) );
 	}
 
 	/**

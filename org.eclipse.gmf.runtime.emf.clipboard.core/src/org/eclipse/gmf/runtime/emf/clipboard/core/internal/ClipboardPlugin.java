@@ -198,7 +198,7 @@ public class ClipboardPlugin extends EMFPlugin {
     	
     				if (null == value) {
     					value =
-    						new Boolean(
+    						Boolean.valueOf(
     							Boolean.TRUE.toString().equalsIgnoreCase(
     								org.eclipse.core.runtime.Platform.getDebugOption(option)));
     	

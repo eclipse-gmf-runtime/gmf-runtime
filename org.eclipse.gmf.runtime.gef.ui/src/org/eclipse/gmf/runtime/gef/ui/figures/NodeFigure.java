@@ -428,8 +428,8 @@ public class NodeFigure
 	protected void fillGradient(Graphics g, Path path, int fillMode) {
 		if (path != null) {
 			g.pushState();
-			g.setForegroundColor(ColorRegistry.getInstance().getColor(new Integer(getGradientColor1())));
-			g.setBackgroundColor(ColorRegistry.getInstance().getColor(new Integer(getGradientColor2())));
+			g.setForegroundColor(ColorRegistry.getInstance().getColor(Integer.valueOf(getGradientColor1())));
+			g.setBackgroundColor(ColorRegistry.getInstance().getColor(Integer.valueOf(getGradientColor2())));
 			if (fillMode == SWT.FILL_EVEN_ODD || fillMode == SWT.FILL_WINDING) {
 				g.setFillRule(fillMode);
 			}

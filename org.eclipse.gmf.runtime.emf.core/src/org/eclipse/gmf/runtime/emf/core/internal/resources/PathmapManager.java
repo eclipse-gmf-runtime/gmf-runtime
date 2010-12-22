@@ -657,16 +657,16 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager, IPat
 
 		// save the URI Map.
 		Map savedURIMap = new HashMap();
-
-		for (Iterator i = uriMap.keySet().iterator(); i.hasNext();) {
-
-			URI key = (URI) i.next();
+		
+		Set<Entry<?,?>> uriMapEntrySet = uriMap.entrySet();
+		for (Entry<?, ?> uriMapEntry : uriMapEntrySet) {
+			URI key = (URI) uriMapEntry.getKey();
 
 			if ((key != null)
 				&& (!EMFCoreConstants.PATH_MAP_SCHEME.equals(key.scheme())))
-				savedURIMap.put(key, uriMap.get(key));
+				savedURIMap.put(key, uriMapEntry.getValue());
 		}
-
+		
 		// clear the map.
 		getURIMap().clear();
 
@@ -683,12 +683,12 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager, IPat
 		}
 		
 		// restore the map.
-		for (Iterator i = savedURIMap.keySet().iterator(); i.hasNext();) {
-
-			URI key = (URI) i.next();
-
-			if (key != null)
-				uriMap.put(key, savedURIMap.get(key));
+		Set<Entry<?, ?>> savedURIEntrySet = savedURIMap.entrySet();
+		for (Entry<?, ?> savedURIEntry : savedURIEntrySet) {
+			URI key = (URI) savedURIEntry.getKey();
+			if(key != null){
+				uriMap.put(key, savedURIEntry.getValue());
+			}
 		}
 
 		if (resync) {

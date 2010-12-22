@@ -179,7 +179,7 @@ public class SlidableImageAnchor
 				if (ptIntersect == null)
 					return null;
 				if (isDefaultAnchor) {
-					locationMap.put(new Integer(angle), ptIntersect);
+					locationMap.put(Integer.valueOf(angle), ptIntersect);
 				}
 			}
 			return ptIntersect.getTranslated(top.x, top.y);

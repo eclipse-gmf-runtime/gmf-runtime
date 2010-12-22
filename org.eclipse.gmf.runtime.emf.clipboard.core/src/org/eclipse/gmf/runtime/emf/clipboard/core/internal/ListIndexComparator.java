@@ -42,11 +42,11 @@ public class ListIndexComparator
 		Integer int_1 = (Integer) map.get(obj_1);
 		Integer int_2 = (Integer) map.get(obj_2);
 		if (int_1 == null) {
-			int_1 = new Integer(list.indexOf(obj_1));
+			int_1 = Integer.valueOf(list.indexOf(obj_1));
 			map.put(obj_1, int_1);
 		}
 		if (int_2 == null) {
-			int_2 = new Integer(list.indexOf(obj_2));
+			int_2 = Integer.valueOf(list.indexOf(obj_2));
 			map.put(obj_2, int_2);
 		}
 
