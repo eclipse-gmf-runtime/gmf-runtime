@@ -1,27 +1,38 @@
+#*******************************************************************************
+# Copyright (c) 2005, 2011 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     IBM Corporation - initial API and implementation
+#*******************************************************************************
 #!/bin/bash
 
-echo "[relengbuild] $0 started on: `date +%Y%m%d\ %H\:%M\:%S`";
+echo -n "[relengbuild] $0 started on: `date +%Y%m%d\ %H\:%M\:%S`";
 
 # environment variables
-PATH=.:/bin:/usr/bin:/usr/bin/X11:/usr/local/bin:/usr/X11R6/bin:`pwd`/../linux;export PATH
-
+export PATH=/usr/local/bin:/usr/bin:/usr/bin/X11:/usr/X11R6/bin:/bin:/opt/gnome/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:.:`pwd`/../linux:/tmp
 export USERNAME=`whoami`
-echo "[relengbuild] running as $USERNAME";
-echo "[relengbuild] currently in dir: `pwd`";
+echo " running as $USERNAME";
+echo " with PATH = $PATH";
+echo " in dir `pwd`";
 
 # fix for org.eclipse.swt.SWTError: No more handles [gtk_init_check() failed]
 # fix for Failed to invoke suite():org.eclipse.swt.SWTError: No more handles [gtk_init_check() failed]
 export CVS_RSH=ssh
 ulimit -c unlimited; # set corefile size to unlimited
-echo "[relengbuild] Set JAVA_HIGH_ZIPFDS=500 & LANG=C";
+
+echo "Set JAVA_HIGH_ZIPFDS=500 & LANG=C";
 export JAVA_HIGH_ZIPFDS=500
 export LANG=C
 
 # configure X server thread for tests; see http://wiki.eclipse.org/Modeling_Project_Releng/Building_Zips_And_Jars#UI_Testing
 xport=15; # should be a unique port number to avoid collisions
-echo "[relengbuild] Start Xvfb on :${xport}"
-Xvfb :${xport} -screen 0 1024x768x24 -ac &
-export DISPLAY=:${xport}.0
+echo "Start Xvfb on :${xport}"
+Xvfb :${xport} -ac & # -screen 0 1024x768x16 -ac &
+export DISPLAY=localhost:${xport}.0
 xhost +
 
 #startkde &
@@ -91,7 +102,7 @@ checkIfDefined ()
 
 execCmd ()
 {
-	echo "[relengbuild]"; echo "[relengbuild] [`date +%H\:%M\:%S`]"; 
+	echo ""; echo "[relengbuild] [`date +%H\:%M\:%S`]"; 
 	echo "  $1" | perl -pe "s/ -/\n  -/g";
 	if [ "x$2" != "x" ]; then
 		$1 | tee $2;
@@ -101,7 +112,8 @@ execCmd ()
 }
 
 getBuildID()
-{	# given $PWD: /home/www-data/build/modeling/$projectName/$subprojectName/downloads/drops/1.1.0/N200702112049/testing/N200702112049/testing, return N200702110400
+{	# given $PWD: /home/www-data/build/modeling/$projectName/$subprojectName/downloads/drops/1.1.0/N200702112049/testing/N200702112049/testing
+	# return N200702110400
 	buildID=$1; #echo "buildID=$buildID";
 	buildID=${buildID##*drops\/}; # trim up to drops/ (from start) (substring notation)
 	buildID=${buildID%%\/test*}; # trim off /test (to end) (substring notation)
@@ -110,7 +122,8 @@ getBuildID()
 buildID=""; getBuildID $PWD; #echo buildID=$buildID;
 
 getBranch()
-{	# given $PWD: /home/www-data/build/modeling/$projectName/$subprojectName/downloads/drops/1.1.0/N200702112049/testing/N200702112049/testing, return 1.1.0
+{	# given $PWD: /home/www-data/build/modeling/$projectName/$subprojectName/downloads/drops/1.1.0/N200702112049/testing/N200702112049/testing
+	# return 1.1.0
 	branch=$1; #echo "branch=$branch";
 	branch=${branch##*drops\/}; # trim up to drops/ (from start) (substring notation)
 	branch=${branch%%\/*}; # trim off / (to end) (substring notation)
@@ -124,7 +137,29 @@ branch=""; getBranch $PWD; #echo branch=$branch;
 Dflags=$Dflags" "-Dplatform=linux.gtk
 os=linux
 ws=gtk
-arch=x86_64
+arch=x86
+if uname -m > /dev/null 2>&1; then
+	arch=`uname -m`
+else
+	arch=`uname -p`
+fi
+# Massage arch for Eclipse-uname differences
+case $arch in
+	i[0-9]*86)
+		arch=x86 ;;
+	ia64)
+		arch=ia64 ;;
+	ppc)
+		arch=ppc ;;
+	ppc64)
+		arch=ppc ;;
+	x86_64)
+		# Always use x86 for x86_64 machines.
+		arch=x86 ;;
+	*)
+	echo "ERROR: Unrecognized architecture:  $arch"
+	exit 1 ;;
+esac
 
 # default value to determine if eclipse should be reinstalled between running of tests
 installmode="clean"
@@ -142,7 +177,7 @@ if [ -d $workspaceDir ] ; then
 	rm -rf $dir/workspace
 fi
 
-echo "[relengbuild] Currently in `pwd`:"
+echo "[runtests] Currently in `pwd`:"
 # need conditional processing here: M3.0.2 = zip, I3.1.0 = tar.gz
 sdks=`find $dir -name "eclipse-SDK-*"`
 # get extension from file(s)
@@ -164,7 +199,7 @@ for sdk in $sdks; do
 				#echo " tar.Z. Unpacking...";
 				tar -xZf $sdk
 			else
-				echo "[relengbuild] ERROR: Eclipse SDK $sdk is an UNKNOWN file type. Failure.";
+				echo "[runtests] ERROR: Eclipse SDK $sdk is an UNKNOWN file type. Failure.";
 				exit 2
 			fi
 		fi
@@ -172,16 +207,18 @@ for sdk in $sdks; do
 done
 
 J2SE16flags="";
-if [ ${JAVA_HOME##*1.6*}"" = "" -o ${JAVA_HOME##*16*}"" = "" -o ${JAVA_HOME##*6.0*}"" = "" -o ${JAVA_HOME##*60*}"" = "" ]; then
-	# set J2SE-1.6 properties (-Dflags)
-	bootclasspath="."`find $JAVA_HOME/jre/lib -name "*.jar" -printf ":%p"`;
-	J2SE16flags=$J2SE16flags" -DJ2SE-1.6=$bootclasspath"
-	J2SE16flags=$J2SE16flags" -DbundleBootClasspath=$bootclasspath"
-	J2SE16flags=$J2SE16flags" -DjavacSource=1.6"
-	J2SE16flags=$J2SE16flags" -DjavacTarget=1.6"
-	J2SE16flags=$J2SE16flags" -DbundleJavacSource=1.6"
-	J2SE16flags=$J2SE16flags" -DbundleJavacTarget=1.6"
-fi
+# TODO: if a 1.6 JDK and want source/target = 1.6, leave these in
+# TODO: if source/target = 1.6, remove these!
+#if [ ${JAVA_HOME##*1.6*}"" = "" -o ${JAVA_HOME##*16*}"" = "" -o ${JAVA_HOME##*6.0*}"" = "" -o ${JAVA_HOME##*60*}"" = "" ]; then
+#	# set JavaSE-1.6 properties (-Dflags)
+#	bootclasspath="."`find $JAVA_HOME/jre/lib -name "*.jar" -printf ":%p"`;
+#	J2SE16flags=$J2SE16flags" -DJavaSE-1.6=$bootclasspath"
+#	J2SE16flags=$J2SE16flags" -DbundleBootClasspath=$bootclasspath"
+#	J2SE16flags=$J2SE16flags" -DjavacSource=1.6"
+#	J2SE16flags=$J2SE16flags" -DjavacTarget=1.6"
+#	J2SE16flags=$J2SE16flags" -DbundleJavacSource=1.6"
+#	J2SE16flags=$J2SE16flags" -DbundleJavacTarget=1.6"
+#fi
 
 # different ways to get the launcher and Main class
 if [[ -f eclipse/startup.jar ]]; then 
@@ -193,16 +230,16 @@ else
 fi
 
 # add swt jars
-cpAndMain=`find eclipse/ -name "org.eclipse.swt_*.jar" | sort | head -1`":"$cpAndMain; 
-cpAndMain=`find eclipse/ -name "org.eclipse.swt.gtk.linux.${arch}_*.jar" | sort | head -1`":"$cpAndMain; 
+#cpAndMain=`find eclipse/ -name "org.eclipse.swt_*.jar" | sort | head -1`":"$cpAndMain; 
+#cpAndMain=`find eclipse/ -name "org.eclipse.swt.gtk.linux.${arch}_*.jar" | sort | head -1`":"$cpAndMain; 
 
 # run tests
-echo "[relengbuild] [`date +%H\:%M\:%S`] Launching Eclipse (installmode = $installmode with -enableassertions turned on) ..."
+echo "[runtests] [`date +%H\:%M\:%S`] Launching Eclipse (installmode = $installmode with -enableassertions turned on) ..."
 execCmd "$JAVA_HOME/bin/java $Xflags -enableassertions -cp $cpAndMain -ws $ws -os $os -arch $arch \
 -application org.eclipse.ant.core.antRunner -data $workspaceDir -file test.xml $antTestTarget \
-$Dflags -Dws=$ws -Dos=$os -Darch=$arch -D$installmode=true $J2SE1flags \
+$Dflags -Dws=$ws -Dos=$os -Darch=$arch -D$installmode=true $J2SE16flags \
 $properties -logger org.apache.tools.ant.DefaultLogger" $consolelog;
-echo "[relengbuild] [`date +%H\:%M\:%S`] Eclipse test run completed. "
+echo "[runtests] [`date +%H\:%M\:%S`] Eclipse test run completed. "
 
 # xwd -silent -display :${xport} -root -out /tmp/snap.xwd; # save a snapshot
 
