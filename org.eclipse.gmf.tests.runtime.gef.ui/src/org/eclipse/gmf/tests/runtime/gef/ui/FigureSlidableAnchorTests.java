@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,8 +69,9 @@ public class FigureSlidableAnchorTests
 		
 		// verify when reference point is on or close to border, the returned location
 		// is the same point.
+		Point p2 = new Point(200, 175); 
 		Point reference = anchor.getLocation(new Point(200, 175));
-		assertEquals(p1.preciseY(), reference.preciseY(), 0);
+		assertEquals(p2.preciseY(), reference.preciseY(), 0);
 	}
 	
 	public void testAnchorPosition() {
@@ -143,7 +144,7 @@ public class FigureSlidableAnchorTests
 		// Reference inside the figure
 		reference = new Point(-20,50);
 		location = anchor.getLocation(reference);
-		assertEquals(50, location.preciseX(), 0);
+		assertEquals(-50, location.preciseX(), 0);
 		assertEquals(50, location.preciseY(), 0);
 		
 		// Reference and anchor's position are equal
