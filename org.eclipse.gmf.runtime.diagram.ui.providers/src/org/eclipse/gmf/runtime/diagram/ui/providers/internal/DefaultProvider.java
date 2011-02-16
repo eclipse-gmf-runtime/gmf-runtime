@@ -488,8 +488,14 @@ public abstract class DefaultProvider
                         to = to.getParent();
                     else if (shouldHandleListItems && to instanceof ListItemEditPart)
                         to = getFirstAnscestorinNodesMap(to, editPartToNodeDict);
-                    Node fromNode = (Node) editPartToNodeDict.get(from);
-                    Node toNode = (Node) editPartToNodeDict.get(to);
+        			Node fromNode = null;
+        			if (from != null) {
+        				fromNode = (Node) editPartToNodeDict.get(from);
+        			}
+        			Node toNode = null;
+        			if (to != null) {
+        				toNode = (Node) editPartToNodeDict.get(to);
+        			}
                     
                     if (fromNode != null && toNode != null
                         && !checkSelfEdge(from, to, editPartToNodeDict)) {
@@ -515,8 +521,15 @@ public abstract class DefaultProvider
                 to = to.getParent();
             else if (shouldHandleListItems && to instanceof ListItemEditPart)
                 to = getFirstAnscestorinNodesMap(to, editPartToNodeDict);
-            Node fromNode = (Node) editPartToNodeDict.get(from);
-            Node toNode = (Node) editPartToNodeDict.get(to);
+            
+			Node fromNode = null;
+			if (from != null) {
+				fromNode = (Node) editPartToNodeDict.get(from);
+			}
+			Node toNode = null;
+			if (to != null) {
+				toNode = (Node) editPartToNodeDict.get(to);
+			}
             
             if (fromNode != null && toNode != null
                 && !checkSelfEdge(from, to, editPartToNodeDict)) {
