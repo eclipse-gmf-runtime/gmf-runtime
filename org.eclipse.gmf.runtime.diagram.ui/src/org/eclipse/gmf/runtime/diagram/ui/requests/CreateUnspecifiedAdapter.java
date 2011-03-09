@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * realizes this creation.
  * 
  * @author Mickael Istria, BonitaSoft S.A.
+ * @since 1.5
  */
 public class CreateUnspecifiedAdapter implements IAdaptable {
 
