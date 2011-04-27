@@ -1,3 +1,13 @@
+<!--
+    Copyright (c) 2010, 2011 IBM Corporation and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        IBM Corporation - initial API and implementation
+ -->
 <project name="Automated Testing" default="all"  basedir="." >
 
 	<!--properties file containing the plugin directory name including version number-->
@@ -19,6 +29,7 @@
  	<property name="results" value="${basedir}/results" />
 
 	<target name="setup" if="clean" description="Reinstall the test Eclipse installation if specified by user">
+		<property name="test.target" value="junits" />
 		<delete dir="${install}" /><mkdir dir="${install}" />
 		
 		<!-- TODO: if your project requires more dependencies, add them here; if it does not require all of these, remove those not required -->
@@ -77,9 +88,12 @@
 		</ant>
 		<property name="dir" location="."/>
 		<echo message="Unpack SDK + examples + JUnit Tests (${dir}/gmf-*.zip) ..."/>		
-		<unzip dest="${install}" overwrite="true">
+		<unzip dest="${install}/eclipse/dropins" overwrite="true">
 		    <fileset dir="${dir}"><include name="**/gmf-*.zip"/></fileset>
 		</unzip>
+		
+		<echo message="install: ${install}, dropins: ${install}/eclipse/dropins"/>
+		<echo message="eclipse-home: ${eclipse-home}, dropins-eclipse-home: ${eclipse-home}/dropins/eclipse"/>		
 	</target>
 
 	<target name="runtests" description="Runs ant on the test.xml for a specified plugin.  Requires a property value setting for testPlugin only if test.properties is not available.  The property testPlugin represents a directory name made up of the plugin id and plugin version.  This directory must contain a valid test.xml.">
@@ -153,7 +167,9 @@
 			<param name="testPlugin" value="${org.eclipse.gmf.tests.runtime.draw2d.ui.render}" />
 			<param name="report" value="org.eclipse.gmf.tests.runtime.draw2d.ui.render" />
 		</antcall>
+	</target>
 
+	<target name="chkpii" description="Runs CHKPII tests">
 		<!-- test if chkpii script exists before proceeding -->
 		<property name="common.releng.dir" value="${basedir}/../../../org.eclipse.modeling.common.releng"/>
 		<property name="chkpii.xml" value="${common.releng.dir}/scripts/chkpii.xml"/>

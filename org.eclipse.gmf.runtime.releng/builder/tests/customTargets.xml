@@ -1,3 +1,13 @@
+<!--
+    Copyright (c) 2010, 2011 IBM Corporation and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        IBM Corporation - initial API and implementation
+ -->
 <project name="Build specific targets and properties" default="noDefault" basedir=".">
 
 	<property name="archiveName" value="gmf-runtime-junit-tests-${buildAlias}.zip" />
@@ -39,8 +49,7 @@
 		<property name="mapVersionTag" value="HEAD" />
 		<property name="packagePath" value="org.eclipse.${projectName}/org.eclipse.${subprojectName2}.releng/maps"/>
 
-		<cvs cvsRsh="ssh" cvsRoot="${mapCvsRoot}" tag="${mapVersionTag}" 
-			package="${packagePath}" dest="${buildDirectory}/maps" />
+		<cvs cvsRsh="ssh" cvsRoot="${mapCvsRoot}" tag="${mapVersionTag}" package="${packagePath}" dest="${buildDirectory}/maps" />
 		<copy todir="${buildDirectory}/maps/CVS" overwrite="true">
 			<fileset dir="${buildDirectory}/maps/${packagePath}/CVS" />
 		</copy>
@@ -217,9 +226,12 @@
 		</antcall>
 
 		<unzip dest="${buildDirectory}/${buildLabel}/compilelogs" overwrite="true">
-			<fileset dir="${buildDirectory}/features/org.eclipse.gmf.tests.runtime">
-				<include name="*.log.zip" />
+			<fileset dir="${buildDirectory}/features">
+				<include name="**/org.eclipse.gmf.tests.runtime.*/*.log.zip" />
 			</fileset>
+			<patternset>
+				<exclude name="**/org.eclipse.test*/**"/>
+			</patternset>
 		</unzip>
 	</target>
 	<target name="clean" unless="noclean">
@@ -235,9 +247,11 @@
 		<echo message="workingDirectory:  ${workingDirectory}"/>
 
 		<!--unzip the junit tests-->
-	    <mkdir dir="${workingDirectory}/eclipse" />
-		<unzip dest="${workingDirectory}" overwrite="true">
-			<fileset dir="${buildDirectory}/${buildLabel}"><include name="**/gmf*junit*tests*.zip"/></fileset>
+		<mkdir dir="${workingDirectory}/eclipse/dropins/eclipse" />
+		<unzip dest="${workingDirectory}/eclipse/dropins/" overwrite="true">
+			<fileset dir="${buildDirectory}/${buildLabel}">
+				<include name="**/gmf-runtime-junit-tests*.zip"/>
+			</fileset>
 		</unzip>
 		
 		<!-- create top level testing directory-->    
@@ -263,16 +277,16 @@
 	   	     This is so that contributors of test.xml's do not have to update their paths to 
 	   	     library.xml in org.eclipse.test whenever its version is updated.
 	   	 -->
-	   	<move todir="${workingDirectory}/eclipse/plugins/org.eclipse.test">
-	    		<fileset dir="${workingDirectory}/eclipse/plugins/${org.eclipse.test}" />
+		<move todir="${workingDirectory}/eclipse/dropins/eclipse/plugins/org.eclipse.test">
+			<fileset dir="${workingDirectory}/eclipse/dropins/eclipse/plugins/${org.eclipse.test}" />
 	  	</move>
 	  	
 	  	<!--the Ant move task leaves behind an empty directory-->
-	  	<delete dir="${workingDirectory}/eclipse/plugins/${org.eclipse.test}" includeEmptyDirs="true" />
+		<delete dir="${workingDirectory}/eclipse/dropins/eclipse/plugins/${org.eclipse.test}" includeEmptyDirs="true" />
 		
 	 	<!-- rezip the JUnit plugin tests -->
 		<zip destfile="${workingDirectory}/testing/gmf-runtime-junit-tests-${buildAlias}.zip">
-			 <zipfileset dir="${workingDirectory}/eclipse" prefix="eclipse"/>
+			<zipfileset dir="${workingDirectory}/eclipse/dropins/eclipse" prefix="eclipse" />
 		</zip>
 	 	
 	 	<!--Copy scripts and doc used in the automated testing to the testing directory-->
