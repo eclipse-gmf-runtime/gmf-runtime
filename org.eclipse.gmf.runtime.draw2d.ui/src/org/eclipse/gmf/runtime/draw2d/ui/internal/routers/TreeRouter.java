@@ -21,6 +21,7 @@ import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
@@ -112,7 +113,12 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 			Connection connNext = (Connection)li.next();
 			
 			if (!trunkVertexEqual(connNext, conn)) {
-				updateConstraint(connNext);
+				final ConnectionAnchor connExtSourceAnchor = connNext.getSourceAnchor();
+				final ConnectionAnchor connExtTargetAnchor = connNext.getTargetAnchor();
+				if (connExtSourceAnchor != null && connExtSourceAnchor.getOwner() != null &&
+						connExtTargetAnchor != null && connExtTargetAnchor.getOwner() != null){
+					updateConstraint(connNext);
+				}
 			}
 		}
 	}
