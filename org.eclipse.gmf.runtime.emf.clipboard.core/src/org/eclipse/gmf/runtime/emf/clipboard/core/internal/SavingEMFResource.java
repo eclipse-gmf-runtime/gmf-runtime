@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EcoreEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -302,8 +303,19 @@ public class SavingEMFResource
 	private String getOriginalID(EObject eObject) {
 		Resource res = eObject.eResource();
 		
-		if ((res != this) && (res != null)) {
-			return ((XMLResource) res).getID(eObject);
+		if (res != this) {
+			if (res instanceof XMLResource) {
+				return ((XMLResource) res).getID(eObject);
+			} else if (res instanceof ResourceImpl) {
+				Map<String, EObject> map = ((ResourceImpl)res).getIntrinsicIDToEObjectMap();
+				if (map != null) {
+					for (Map.Entry<String, EObject> mapEntry : map.entrySet()) {
+						if (eObject.equals(mapEntry.getValue())) {
+							return mapEntry.getKey();
+						}
+					}
+				}
+			}
 		}
 		return null;
 	}
