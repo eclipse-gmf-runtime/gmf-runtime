@@ -156,6 +156,10 @@
                <GlobalActionId actionId="save">
                </GlobalActionId>
             </ElementType>
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+	            <GlobalActionId actionId="save">
+	            </GlobalActionId>
+	         </ElementType>
          </ViewId>
       </GlobalActionHandlerProvider>
       

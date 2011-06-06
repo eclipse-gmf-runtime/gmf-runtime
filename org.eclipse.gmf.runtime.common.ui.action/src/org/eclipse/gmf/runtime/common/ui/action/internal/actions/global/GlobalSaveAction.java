@@ -99,4 +99,16 @@ public final class GlobalSaveAction extends GlobalAction {
 	protected boolean isSelectionListener() {
 		return true;
 	}
+	
+	/**
+	 * Property change event handler; does nothing by default. Subclasses should
+	 * override if they are interested in handling property change events.
+	 */
+	public void propertyChanged(Object source, int propId) {
+		refresh();
+	}
+
+	protected boolean isPropertyListener() {
+		return true;
+	}
 }
