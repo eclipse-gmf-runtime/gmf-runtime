@@ -12,4 +12,20 @@
   <artifactId>org.eclipse.gmf.tests.runtime.emf.type.core</artifactId>
   <version>1.5.0.qualifier</version>
   <packaging>eclipse-test-plugin</packaging>
+   <build>
+  <plugins>
+   <plugin>
+    <groupId>org.eclipse.tycho</groupId>
+    <artifactId>tycho-surefire-plugin</artifactId>
+    <version>${tycho-version}</version>
+    <configuration>
+     <testSuite>org.eclipse.gmf.tests.runtime.emf.type.core</testSuite>
+     <testClass>org.eclipse.gmf.tests.runtime.emf.type.core.AllTests</testClass>
+     <useUIHarness>true</useUIHarness>
+     <useUIThread>true</useUIThread>
+     <argLine>-ea</argLine>
+    </configuration>
+    </plugin>
+    </plugins>      
+  </build>
 </project>

@@ -38,14 +38,15 @@ public class TestingConfigurationElement implements IConfigurationElement {
     public TestingConfigurationElement(Map attributeMap, Map childrenMap) {
         setAttributeMap(attributeMap);
         setChildrenMap(childrenMap);
-    }  
+    } 
     
 
     /**
      * Constructor for TestingConfigurationElement.
      */
     public TestingConfigurationElement() {
-        this(new HashMap(), new HashMap());
+    	setAttributeMap(new HashMap());
+        setChildrenMap(new HashMap());
     }
 
     public void addAttribute(String name, String value) {
