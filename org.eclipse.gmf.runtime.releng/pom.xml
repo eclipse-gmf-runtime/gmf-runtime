@@ -12,7 +12,6 @@
 		<tycho-version>0.13.0</tycho-version>
 	</properties>
 	
-	
 	<modules>
 		<module>plugins</module>
 		<module>examples</module>
@@ -22,82 +21,6 @@
 		<!--module>repository</module-->
 	</modules>
 	
-	<!-- modules-->
-		<!-- plugins -->
-		<!--module>../../plugins/org.eclipse.gmf.runtime.common.core</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui.action</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui.action.ide</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui.printing</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui.printing.win32</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui.services</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui.services.action</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui.services.dnd</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui.services.dnd.ide</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.common.ui.services.properties</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.draw2d.ui</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.draw2d.ui.render</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.draw2d.ui.render.awt</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.emf.clipboard.core</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.emf.commands.core</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.emf.core</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.emf.type.core</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.emf.type.ui</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.emf.ui</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.emf.ui.properties</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.gef.ui</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.notation.providers</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.core</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.actions</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.dnd</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.geoshapes</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.printing</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.printing.render</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.properties</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.providers</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.providers.ide</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.render</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.resources.editor</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide</module>
-		<module>../../plugins/org.eclipse.gmf.runtime.sdk</module-->
-		
-		<!-- Features -->
-		<!--module>../../features/org.eclipse.gmf.runtime-feature</module-->
-		
-		<!-- Examples -->
-		<!--module>../../examples/org.eclipse.gmf.examples.runtime</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.common.service</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.diagram.decorator</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.diagram.geoshapes</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.diagram.layout</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.diagram.logic</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.diagram.logic.model</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.diagram.logic.model.edit</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.diagram.logic.model.editor</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.emf.clipboard</module>
-		<module>../../examples/org.eclipse.gmf.examples.runtime.ui.pde</module-->
-		
-		<!-- Tests -->
-		<!-- module>../../tests/org.eclipse.gmf.tests.runtime.common.core</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.common.ui</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.common.ui.services</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.common.ui.services.action</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.common.ui.services.provider</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.diagram.ui</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.draw2d.ui</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.draw2d.ui.render</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.emf.clipboard.core</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.emf.commands.core</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.emf.core</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.emf.type.core</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.emf.type.ui</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.emf.ui</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.emf.ui.properties</module>
-		<module>../../tests/org.eclipse.gmf.tests.runtime.gef.ui</module>
-		
-	</modules-->
-
 	<build>
 		<plugins>
 			<plugin>
@@ -180,7 +103,7 @@
 	</licenses>
 	
 	<profiles>
-		<!--profile>
+		<profile>
 			<id>helios</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
@@ -192,7 +115,7 @@
 					<url>http://download.eclipse.org/releases/helios</url>
 				</repository>				
 			</repositories>
-		</profile-->
+		</profile>
 		<profile>
 			<id>indigo</id>
 			<activation>
@@ -204,6 +127,19 @@
 					<layout>p2</layout>
 					<url>http://download.eclipse.org/releases/indigo</url>
 				</repository>				
+			</repositories>
+		</profile>
+		<profile>
+			<id>juno-staging</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<repositories>
+				<repository>
+					<id>staging</id>
+					<layout>p2</layout>
+					<url>http://download.eclipse.org/releases/staging/</url>
+				</repository>
 			</repositories>
 		</profile>
 	</profiles>
