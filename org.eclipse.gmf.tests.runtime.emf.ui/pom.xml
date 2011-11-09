@@ -24,6 +24,14 @@
      <useUIHarness>true</useUIHarness>
      <useUIThread>true</useUIThread>
      <argLine>-ea</argLine>
+     <dependencies>
+   	      <!-- Need to add this dependency to have platform-specific fragment -->
+            <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.gmf.tests.runtime.feature.group</artifactId><!-- maybe best to use org.eclipse.gmf.runtime.rcp-feature -->
+              <version>0.0.0</version>
+            </dependency>
+    	</dependencies>
     </configuration>
     </plugin>
     </plugins>      
