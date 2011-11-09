@@ -8,6 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.gmf-runtime</groupId>
 	<artifactId>parent</artifactId>
+	<version>1.6.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Parent project for GMF Runtime build</name>
 	<description>Parent project for GMF Runtime build</description>
