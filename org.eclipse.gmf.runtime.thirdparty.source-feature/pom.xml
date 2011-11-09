@@ -6,7 +6,7 @@
 	author: Aurelien Pupier, BonitaSoft S.A. -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.gmf-runtime</groupId>
-  <artifactId>org.eclipse.gmf</artifactId>
+  <artifactId>org.eclipse.gmf.runtime.thirdparty.source</artifactId>
   <version>1.5.0.qualifier</version>
   <packaging>eclipse-feature</packaging>
   
