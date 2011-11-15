@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalUndoAction;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public class GlobalUndoActionTest
@@ -50,8 +51,12 @@ public class GlobalUndoActionTest
 
     protected void setUp()
         throws Exception {
-        part = (IViewPart) PlatformUI.getWorkbench()
-            .getActiveWorkbenchWindow().getActivePage().getActivePart();
+    	if(part == null){
+            part = (IViewPart) PlatformUI.getWorkbench()
+                .getActiveWorkbenchWindow().getActivePage().getActivePart();
+        	} else {
+        		part.setFocus();
+        	}
 
         IOperationHistory history = OperationHistoryFactory
             .getOperationHistory();
@@ -92,7 +97,7 @@ public class GlobalUndoActionTest
     /**
      * Tests that the action is not enabled when it's part is closed.
      */
-    public void test_dispose_131781() {
+    public void test_dispose_131781()  throws PartInitException{
         
         // Enables testing that closing the view doesn't cause exceptions to be
         // reported to the user
@@ -121,6 +126,10 @@ public class GlobalUndoActionTest
         assertFalse(undoAction.isEnabled());
         
         SafeRunnable.setIgnoreErrors(true);
+        
+        // Close the view
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+            .showView(part.getViewSite().getId());
     }
 
     /**
