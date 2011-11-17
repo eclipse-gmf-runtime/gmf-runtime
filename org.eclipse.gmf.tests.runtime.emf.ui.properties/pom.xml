@@ -23,7 +23,7 @@
      <testClass>org.eclipse.gmf.tests.runtime.emf.ui.properties.AllTests</testClass>
      <useUIHarness>true</useUIHarness>
      <useUIThread>true</useUIThread>
-     <argLine>-ea</argLine>
+     <argLine>${tycho.testArgLine} -ea</argLine>
     </configuration>
     </plugin>
     </plugins>      

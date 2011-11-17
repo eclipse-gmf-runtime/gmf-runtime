@@ -23,6 +23,7 @@
      <testClass>org.eclipse.gmf.tests.runtime.diagram.ui.AllTests</testClass>
      <useUIHarness>true</useUIHarness>
      <useUIThread>true</useUIThread>
+     <!--argLine>${tycho.testArgLine} -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xnoagent -Djava.compiler=NONE</argLine-->
     </configuration>
     </plugin>
     </plugins>      
