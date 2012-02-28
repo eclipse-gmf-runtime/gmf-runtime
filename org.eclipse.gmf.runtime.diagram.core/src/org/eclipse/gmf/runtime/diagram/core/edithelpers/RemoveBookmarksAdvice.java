@@ -70,32 +70,36 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 		if (resource == null)
 			return null;
 		
-		String elementID = ((XMLResource)eResource).getID(bookmarkedObject);
-		
-		IMarker[] bookmarks = new IMarker[0];
-		
-		try {
-			bookmarks = resource.findMarkers(IBookmark.TYPE, true,
-				IResource.DEPTH_INFINITE);
-		} catch (CoreException e) {
-			Trace.catching(DiagramPlugin.getInstance(), DiagramDebugOptions.EXCEPTIONS_CATCHING, 
-					getClass(), "gatherSingleBookmark", e); //$NON-NLS-1$
-			Log.error(DiagramPlugin.getInstance(), IStatus.ERROR, "gatherSingleBookmark"); //$NON-NLS-1$
-		}
-		
-		Set retSet = new HashSet();
+		if(eResource instanceof XMLResource){
+			String elementID = ((XMLResource)eResource).getID(bookmarkedObject);
 
-		for (int i = 0; i < bookmarks.length; i++) {
-			
-			IMarker bookmark = bookmarks[i];
-			
-			String bookmarkElementID = bookmark.getAttribute(IBookmark.ELEMENT_ID,StringStatics.BLANK);
-			
-			if (elementID.equals(bookmarkElementID))				
-				retSet.add(bookmark);
+			IMarker[] bookmarks = new IMarker[0];
+
+			try {
+				bookmarks = resource.findMarkers(IBookmark.TYPE, true,
+						IResource.DEPTH_INFINITE);
+			} catch (CoreException e) {
+				Trace.catching(DiagramPlugin.getInstance(), DiagramDebugOptions.EXCEPTIONS_CATCHING, 
+						getClass(), "gatherSingleBookmark", e); //$NON-NLS-1$
+				Log.error(DiagramPlugin.getInstance(), IStatus.ERROR, "gatherSingleBookmark"); //$NON-NLS-1$
+			}
+
+			Set retSet = new HashSet();
+
+			for (int i = 0; i < bookmarks.length; i++) {
+
+				IMarker bookmark = bookmarks[i];
+
+				String bookmarkElementID = bookmark.getAttribute(IBookmark.ELEMENT_ID,StringStatics.BLANK);
+
+				if (elementID.equals(bookmarkElementID))				
+					retSet.add(bookmark);
+			}
+
+			return retSet;
+		} else {
+			return new HashSet();
 		}
-		
-		return retSet;
 	}
 	
 	/**
