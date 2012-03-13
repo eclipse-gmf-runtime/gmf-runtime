@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2010 IBM Corporation and others.
+ * Copyright (c) 2002, 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -225,10 +226,13 @@ public class XYLayoutEditPolicy
 		GraphicalEditPart child) {
 		Rectangle rect = (Rectangle) super.getConstraintFor(request, child);
 		Rectangle cons = getCurrentConstraintFor(child);
-		if (request.getSizeDelta().width == 0)
+		Dimension requestSizeDelta = request.getSizeDelta();
+		if (requestSizeDelta.width == 0 && cons != null){
 			rect.width = cons.width;
-		if (request.getSizeDelta().height == 0)
+		}
+		if (requestSizeDelta.height == 0 && cons != null){
 			rect.height = cons.height;
+		}
 		return rect;
 	}
 
