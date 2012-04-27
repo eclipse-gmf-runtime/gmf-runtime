@@ -86,12 +86,12 @@ public final class PartPositionInfoGenerator {
 		List<IGraphicalEditPart> children = (List<IGraphicalEditPart>) diagramEditPart.getPrimaryEditParts();
 		IMapMode mm = MapModeUtil.getMapMode(diagramEditPart.getFigure());
 		
-		double connectionMargin = options.get(PartPositionInfoGenerator.CONNECTION_MARGIN) != null ?
-				((Double)options.get(PartPositionInfoGenerator.CONNECTION_MARGIN)).doubleValue() : 0;
-		Point origin = options.get(PartPositionInfoGenerator.DIAGRAM_ORIGIN) != null ?
-				(Point)options.get(PartPositionInfoGenerator.DIAGRAM_ORIGIN) : new Point();
-		double scale = options.get(PartPositionInfoGenerator.SCALE_FACTOR) != null ?
-				((Double)options.get(PartPositionInfoGenerator.CONNECTION_MARGIN)).doubleValue() : 1.0;
+		Object optionConnectionMargin = options.get(PartPositionInfoGenerator.CONNECTION_MARGIN);
+		double connectionMargin = optionConnectionMargin != null ? ((Double)optionConnectionMargin).doubleValue() : 0;
+		Object optionDiagramOrigin = options.get(PartPositionInfoGenerator.DIAGRAM_ORIGIN);
+		Point origin = optionDiagramOrigin != null ? (Point)optionDiagramOrigin : new Point();
+		Object optionScaleFactor = options.get(PartPositionInfoGenerator.SCALE_FACTOR);
+		double scale = optionScaleFactor != null ? ((Double)optionScaleFactor).doubleValue() : 1.0;
 		if (scale <= 0) {
 			throw new IllegalArgumentException();
 		}
