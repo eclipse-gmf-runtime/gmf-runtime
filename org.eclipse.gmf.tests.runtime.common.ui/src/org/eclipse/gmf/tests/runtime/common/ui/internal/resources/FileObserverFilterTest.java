@@ -594,6 +594,12 @@ public class FileObserverFilterTest
 		public boolean isFiltered() {
 			return false;
 		}
+
+		public void accept(IResourceProxyVisitor visitor, int depth,
+				int memberFlags) throws CoreException {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 	protected class Folder
@@ -1410,6 +1416,12 @@ public class FileObserverFilterTest
 		 */
 		public boolean isFiltered() {
 			return false;
+		}
+
+		public void accept(IResourceProxyVisitor visitor, int depth,
+				int memberFlags) throws CoreException {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

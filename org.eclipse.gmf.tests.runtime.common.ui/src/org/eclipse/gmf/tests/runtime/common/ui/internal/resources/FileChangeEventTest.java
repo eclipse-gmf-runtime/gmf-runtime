@@ -627,6 +627,12 @@ public class FileChangeEventTest extends TestCase {
 		public boolean isFiltered() {
 			return false;
 		}
+
+		public void accept(IResourceProxyVisitor visitor, int depth,
+				int memberFlags) throws CoreException {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 	
 	public static void main(String[] args) {
