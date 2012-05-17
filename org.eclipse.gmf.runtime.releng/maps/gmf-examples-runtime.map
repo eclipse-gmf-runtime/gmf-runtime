@@ -1,8 +1,8 @@
 !*** Graphical Modeling Framework (GMF) examples map *****************************************
 
 !*** GMF examples features *******************************************************************
-feature@org.eclipse.gmf.examples.runtime=v20120514-1615,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.examples.runtime-feature
-feature@org.eclipse.gmf.examples.runtime.ui.pde=v20120514-1615,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.examples.runtime.ui.pde-feature
+feature@org.eclipse.gmf.examples.runtime=v20120517-1809,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.examples.runtime-feature
+feature@org.eclipse.gmf.examples.runtime.ui.pde=v20120517-1809,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/features/org.eclipse.gmf.examples.runtime.ui.pde-feature
 
 !*** GMF examples plug-ins *******************************************************************
 plugin@org.eclipse.gmf.examples.runtime=v20120514-1615,:pserver:anonymous@dev.eclipse.org:/cvsroot/modeling,,org.eclipse.gmp/org.eclipse.gmf.runtime/examples/org.eclipse.gmf.examples.runtime
