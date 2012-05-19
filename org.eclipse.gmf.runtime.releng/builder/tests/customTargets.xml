@@ -213,7 +213,7 @@
    		</zip>
 		<!-- Unpacking jars to produce downloadable zips -->
 		<ant target="unpackUpdateJarsAndRepack" antfile="${helper}"/>
-		<antcall target="packageTestFramework" />
+		<!--antcall target="packageTestFramework" Z-->
 	</target>
 
 	<!-- ===================================================================== -->
