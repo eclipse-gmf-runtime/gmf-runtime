@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -91,7 +91,7 @@ public final class PartPositionInfoGenerator {
 		Point origin = options.get(PartPositionInfoGenerator.DIAGRAM_ORIGIN) != null ?
 				(Point)options.get(PartPositionInfoGenerator.DIAGRAM_ORIGIN) : new Point();
 		double scale = options.get(PartPositionInfoGenerator.SCALE_FACTOR) != null ?
-				((Double)options.get(PartPositionInfoGenerator.CONNECTION_MARGIN)).doubleValue() : 1.0;
+				((Double)options.get(PartPositionInfoGenerator.SCALE_FACTOR)).doubleValue() : 1.0;
 		if (scale <= 0) {
 			throw new IllegalArgumentException();
 		}
