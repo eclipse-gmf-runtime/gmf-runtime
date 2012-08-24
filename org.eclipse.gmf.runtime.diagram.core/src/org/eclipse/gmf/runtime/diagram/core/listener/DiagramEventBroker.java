@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright 2002, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -232,8 +232,12 @@ public class DiagramEventBroker
 
 	private static DiagramEventBroker initializeDiagramEventBroker(TransactionalEditingDomain editingDomain) {
         WeakReference reference = (WeakReference) instanceMap.get(editingDomain);
-        if (reference == null) {
-            DiagramEventBroker diagramEventBroker = DiagramEventBrokerService.getInstance().createDiagramEventBroker(editingDomain);
+        DiagramEventBroker diagramEventBroker = null;
+        if (reference != null) {
+        	diagramEventBroker = (DiagramEventBroker) reference.get();
+        }
+        if (reference == null || diagramEventBroker == null) {
+            diagramEventBroker = DiagramEventBrokerService.getInstance().createDiagramEventBroker(editingDomain);
             if (null == diagramEventBroker)
                 diagramEventBroker = debFactory.createDiagramEventBroker(editingDomain);
             if (diagramEventBroker.editingDomainRef == null) {
