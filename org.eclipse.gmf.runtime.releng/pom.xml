@@ -14,7 +14,7 @@
 	<description>Parent project for GMF Runtime build</description>
 
 	<properties>
-		<tycho-version>0.13.0</tycho-version>
+		<tycho-version>0.15.0</tycho-version>
 	</properties>
 	
 	<modules>
@@ -124,7 +124,7 @@
 		<profile>
 			<id>indigo</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<repositories>
 				<repository>
@@ -140,15 +140,20 @@
 			</repositories>
 		</profile>
 		<profile>
-			<id>juno-staging</id>
+			<id>juno</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<repositories>
 				<repository>
 					<id>staging</id>
 					<layout>p2</layout>
-					<url>http://download.eclipse.org/releases/staging/</url>
+					<url>http://download.eclipse.org/releases/juno/</url>
+				</repository>
+				<repository>
+					<id>orbit for Juno</id>
+					<layout>p2</layout>
+					<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</url>
 				</repository>
 			</repositories>
 		</profile>
