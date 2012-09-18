@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2006, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,13 +16,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.DirectEditRequest;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
+import org.eclipse.gmf.runtime.gef.ui.internal.parts.CellEditorEx;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -65,9 +64,11 @@ public class LabelDirectEditPolicy
 	 * @see DirectEditPolicy#getDirectEditCommand(DirectEditRequest)
 	 */
 	protected Command getDirectEditCommand(DirectEditRequest edit) {
-		if (edit.getCellEditor() instanceof TextCellEditorEx)
-			if (!((TextCellEditorEx) edit.getCellEditor()).hasValueChanged())
+		if (edit.getCellEditor() instanceof CellEditorEx){
+			if (!((CellEditorEx) edit.getCellEditor()).hasValueChanged()){
 				return null;
+			}
+		}
 			
 		String labelText = (String) edit.getCellEditor().getValue();
 		
