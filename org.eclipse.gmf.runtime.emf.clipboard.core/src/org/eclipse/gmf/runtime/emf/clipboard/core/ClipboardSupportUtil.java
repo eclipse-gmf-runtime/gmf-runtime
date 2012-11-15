@@ -126,7 +126,10 @@ public final class ClipboardSupportUtil {
 			if (reference.isContainment()) {
                 for (Iterator referenced = referencedObjects.iterator();referenced.hasNext();) {
                     EObject referencedObject = (EObject)referenced.next();
-                    ((InternalEObject)referencedObject).eSetResource(null,null);
+                    Resource eResourceOfReferencedObject = referencedObject.eResource();
+					if(eResourceOfReferencedObject != null){
+                    	eResourceOfReferencedObject.getContents().remove(referencedObject);
+                    }
                 }
 				sendCreateEvent(referencedObjects);
 			}
@@ -227,7 +230,10 @@ public final class ClipboardSupportUtil {
 			return null;
 		}
 		if (reference.isContainment()) {
-            ((InternalEObject)referencedObject).eSetResource(null,null);
+			Resource eResourceOfReferencedObject = referencedObject.eResource();
+			if(eResourceOfReferencedObject != null){
+				eResourceOfReferencedObject.getContents().remove(referencedObject);
+		    }
 			sendCreateEvent(referencedObject);
 		}
 		((Collection) eObject.eGet(reference)).add(referencedObject);
@@ -245,7 +251,10 @@ public final class ClipboardSupportUtil {
 	 * 
 	 */
 	public static EObject appendEObject(Resource resource, EObject referencedObject) {
-        ((InternalEObject)referencedObject).eSetResource(null,null);
+		 Resource eResourceOfReferencedObject = referencedObject.eResource();
+		if(eResourceOfReferencedObject != null){
+          	eResourceOfReferencedObject.getContents().remove(referencedObject);
+         }
 		sendCreateEvent(referencedObject);
 		resource.getContents().add(referencedObject);
 		return referencedObject;
@@ -270,7 +279,10 @@ public final class ClipboardSupportUtil {
 			return null;
 		}
 		if (reference.isContainment()) {
-            ((InternalEObject)referencedObject).eSetResource(null,null);
+			Resource eResourceOfReferencedObject = referencedObject.eResource();
+			if(eResourceOfReferencedObject != null){
+				eResourceOfReferencedObject.getContents().remove(referencedObject);
+		    }
 			sendCreateEvent(referencedObject);
 		}
 		eObject.eSet(reference, referencedObject);
