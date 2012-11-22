@@ -104,17 +104,6 @@ public class AutoSizeAction extends DiagramAction {
 			}
 		}
 		return command.isEmpty() || command.size() != operationSet.size() || !foundNonAutosizedPart ? UnexecutableCommand.INSTANCE
-			: (Command) command;
-    	
-    	
+			: (Command) command;   	
     }
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#refresh()
-	 */
-	public void refresh() {
-		super.refresh();
-		setEnabled(calculateEnabled());
-	}
-
 }
