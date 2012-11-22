@@ -239,7 +239,7 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 
 	/**
 	 * Overridden so that the current tool will remain active (locked) if the
-	 * user is pressing the ctrl key.
+	 * user is pressing the ctrl key on windows/linux or the cmd key on mac.
 	 */
 	protected void handleFinished() {
 		if (!getCurrentInput().isModKeyDown(SWT.MOD1)) {
