@@ -242,7 +242,7 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	 * user is pressing the ctrl key.
 	 */
 	protected void handleFinished() {
-		if (!getCurrentInput().isControlKeyDown()) {
+		if (!getCurrentInput().isModKeyDown(SWT.MOD1)) {
 			super.handleFinished();
 		} else {
 			reactivate();
