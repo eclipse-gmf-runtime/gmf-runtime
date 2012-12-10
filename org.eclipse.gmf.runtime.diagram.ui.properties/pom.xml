@@ -10,6 +10,6 @@
   </parent>
   <groupId>org.eclipse.gmf.runtime.diagram.ui.properties</groupId>
   <artifactId>org.eclipse.gmf.runtime.diagram.ui.properties</artifactId>
-  <version>1.4.2.qualifier</version>
+  <version>1.7.0.qualifier</version>
   <packaging>eclipse-plugin</packaging>
 </project>

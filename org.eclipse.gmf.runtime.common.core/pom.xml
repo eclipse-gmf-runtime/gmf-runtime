@@ -9,6 +9,6 @@
   </parent>
   <groupId>org.eclipse.gmf.runtime.common.core</groupId>
   <artifactId>org.eclipse.gmf.runtime.common.core</artifactId>
-  <version>1.4.1.qualifier</version>
+  <version>1.7.0.qualifier</version>
   <packaging>eclipse-plugin</packaging>
 </project>
