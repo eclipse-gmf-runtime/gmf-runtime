@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.gmf.runtime</groupId>
 	<artifactId>org.eclipse.gmf.runtime.releng</artifactId>
-	<version>1.6.0-SNAPSHOT</version>
+	<version>1.7.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
@@ -157,32 +157,42 @@
 	<repositories>
 		<repository>
 			<id>eclipse-sdk</id>
-			<url>http://download.eclipse.org/eclipse/updates/4.2/R-4.2.1-201209141800</url>
+			<url>http://download.eclipse.org/eclipse/updates/4.3-I-builds/I20121204-1600</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>orbit</id>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</url>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/S20121207152029/repository/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>gef</id>
-			<url>http://download.eclipse.org/tools/gef/updates/releases</url>
+			<url>http://download.eclipse.org/tools/gef/updates/interim</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
-			<id>emf core</id>
-			<url>http://download.eclipse.org/modeling/emf/emf/updates/2.8</url>
+			<id>emf base</id>
+			<url>http://download.eclipse.org/modeling/emf/emf/updates/2.9milestones/base/S201212110524</url>
+			<layout>p2</layout>
+		</repository>
+                <repository>
+                        <id>emf core</id>
+                        <url>http://download.eclipse.org/modeling/emf/emf/updates/2.9milestones/core/S201211090549</url>
+                        <layout>p2</layout>
+                </repository>
+		<repository>
+			<id>emf validation</id>
+			<url>http://download.eclipse.org/modeling/emf/validation/updates/interim</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
-			<id>emf validation and emf transaction</id>
-			<url>http://download.eclipse.org/modeling/emf/updates/releases</url>
+			<id>emf transaction</id>
+			<url>http://download.eclipse.org/modeling/emf/transaction/updates/interim</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>gmf notation</id>
-			<url>http://download.eclipse.org/modeling/gmp/updates/releases/gmf-notation-1.6.0</url>
+			<url>http://download.eclipse.org/modeling/gmp/gmf-notation/updates/interim</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
