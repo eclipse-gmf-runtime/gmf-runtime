@@ -15,7 +15,7 @@ package org.eclipse.gmf.runtime.gef.ui.internal.parts;
 import org.eclipse.jface.viewers.CellEditor;
 
 /**
- * @since 1.6
+ * @since 1.7
  */
 public class CellEditorExDelegate {
 

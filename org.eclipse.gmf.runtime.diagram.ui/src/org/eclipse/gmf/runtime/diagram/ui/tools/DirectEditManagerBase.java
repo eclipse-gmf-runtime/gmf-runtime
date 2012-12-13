@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2010, 2012 IBM Corporation and others.
+ * Copyright (c) 2002, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Table;
 
 /**
  * @author melaasar
- * @since 1.6
+ * @since 1.7
  */
 public abstract class DirectEditManagerBase extends DirectEditManager {
 
