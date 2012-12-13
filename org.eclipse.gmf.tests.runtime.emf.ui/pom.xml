@@ -3,14 +3,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.eclipse.gmf-runtime</groupId>
-    <artifactId>tests</artifactId>
+    <groupId>org.eclipse.gmf.runtime</groupId>
+    <artifactId>org.eclipse.gmf.runtime.releng</artifactId>
     <version>1.6.0-SNAPSHOT</version>
-    <relativePath>../</relativePath>
+    <relativePath>../org.eclipse.gmf.runtime.releng/pom.xml</relativePath>
   </parent>
   <groupId>org.eclipse.gmf.tests.runtime.emf.ui</groupId>
   <artifactId>org.eclipse.gmf.tests.runtime.emf.ui</artifactId>
-  <version>1.7.0.qualifier</version>
+  <version>1.5.0.qualifier</version>
   <packaging>eclipse-test-plugin</packaging>
  <build>
   <plugins>
@@ -23,15 +23,7 @@
      <testClass>org.eclipse.gmf.tests.runtime.emf.ui.AllTests</testClass>
      <useUIHarness>true</useUIHarness>
      <useUIThread>true</useUIThread>
-     <argLine>${tycho.testArgLine} -ea</argLine>
-     <dependencies>
-   	      <!-- Need to add this dependency to have platform-specific fragment -->
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.gmf.tests.runtime.feature.group</artifactId><!-- maybe best to use org.eclipse.gmf.runtime.rcp-feature -->
-              <version>0.0.0</version>
-            </dependency>
-    	</dependencies>
+     <argLine>-ea -XX:MaxPermSize=128m -Xmx1024m</argLine>
     </configuration>
     </plugin>
     </plugins>      
