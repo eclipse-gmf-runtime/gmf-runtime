@@ -157,7 +157,7 @@
 	<repositories>
 		<repository>
 			<id>eclipse-sdk</id>
-			<url>http://download.eclipse.org/eclipse/updates/4.3-I-builds/I20121204-1600</url>
+			<url>http://download.eclipse.org/eclipse/updates/4.3milestones/S-4.3M4-201212140730</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
@@ -167,32 +167,32 @@
 		</repository>
 		<repository>
 			<id>gef</id>
-			<url>http://download.eclipse.org/tools/gef/updates/interim</url>
+			<url>http://download.eclipse.org/tools/gef/updates/milestones</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>emf base</id>
-			<url>http://download.eclipse.org/modeling/emf/emf/updates/2.9milestones/base/S201212110524</url>
 			<layout>p2</layout>
+			<url>http://download.eclipse.org/modeling/emf/emf/updates/2.9milestones/base/S201212130932</url>
 		</repository>
-                <repository>
-                        <id>emf core</id>
-                        <url>http://download.eclipse.org/modeling/emf/emf/updates/2.9milestones/core/S201211090549</url>
-                        <layout>p2</layout>
-                </repository>
+		<repository>
+			<id>emf core</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/modeling/emf/emf/updates/2.9milestones/core/S201212170429</url>
+		</repository>
 		<repository>
 			<id>emf validation</id>
-			<url>http://download.eclipse.org/modeling/emf/validation/updates/interim</url>
+			<url>http://download.eclipse.org/modeling/emf/validation/updates/milestones</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>emf transaction</id>
-			<url>http://download.eclipse.org/modeling/emf/transaction/updates/interim</url>
+			<url>http://download.eclipse.org/modeling/emf/transaction/updates/milestones</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>gmf notation</id>
-			<url>http://download.eclipse.org/modeling/gmp/gmf-notation/updates/interim</url>
+			<url>http://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
