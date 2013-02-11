@@ -157,7 +157,7 @@
 	<repositories>
 		<repository>
 			<id>eclipse-sdk</id>
-			<url>http://download.eclipse.org/eclipse/updates/4.2/R-4.2.1-201209141800</url>
+			<url>http://download.eclipse.org/eclipse/updates/3.8-M-builds</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
@@ -172,7 +172,7 @@
 		</repository>
 		<repository>
 			<id>emf core</id>
-			<url>http://download.eclipse.org/modeling/emf/emf/updates/2.8</url>
+			<url>http://download.eclipse.org/modeling/emf/emf/updates/2.8.x/core/R201301250826</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
