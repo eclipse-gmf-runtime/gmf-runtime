@@ -156,29 +156,24 @@
 
 	<repositories>
 		<repository>
-			<id>eclipse-sdk</id>
-			<url>http://download.eclipse.org/eclipse/updates/4.3milestones/S-4.3M4-201212140730</url>
+			<id>orbit</id>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/S20130201140822/repository/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
-			<id>orbit</id>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/S20121207152029/repository/</url>
+			<id>emf nightly</id>
 			<layout>p2</layout>
+			<url>http://download.eclipse.org/modeling/emf/emf/updates/nightly</url>
 		</repository>
+		<repository>
+			<id>eclipse-sdk</id>
+			<url>http://download.eclipse.org/eclipse/updates/4.3-I-builds</url>
+			<layout>p2</layout>
+        </repository>
 		<repository>
 			<id>gef</id>
 			<url>http://download.eclipse.org/tools/gef/updates/milestones</url>
 			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>emf base</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/emf/emf/updates/2.9milestones/base/S201212130932</url>
-		</repository>
-		<repository>
-			<id>emf core</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/emf/emf/updates/2.9milestones/core/S201212170429</url>
 		</repository>
 		<repository>
 			<id>emf validation</id>
