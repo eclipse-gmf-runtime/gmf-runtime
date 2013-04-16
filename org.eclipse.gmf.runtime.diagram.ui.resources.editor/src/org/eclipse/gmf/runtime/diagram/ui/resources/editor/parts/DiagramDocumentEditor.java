@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -206,11 +206,15 @@ public class DiagramDocumentEditor
 			IDocumentProvider provider = getDocumentProvider();
 			IStatus status = provider.getStatus(getEditorInput());
 
-			disposeDocumentProvider();
-		
+			// bug 388843 
+			// first stop listening, dispose the operation history and 
+			// update all actions as a result
 			if(status != null && status.isOK()) {
 				super.dispose();
 			}
+			// secondly dispose the document provider, 
+			// that disposes the editing domain attached to it
+			disposeDocumentProvider();
 		}
 	}
 	
