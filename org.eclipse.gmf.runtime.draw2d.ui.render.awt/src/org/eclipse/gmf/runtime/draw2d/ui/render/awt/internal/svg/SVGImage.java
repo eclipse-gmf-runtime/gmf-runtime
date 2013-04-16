@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,21 +60,23 @@ public final class SVGImage extends AbstractRenderedImage {
 	 */
 	protected Image renderImage() {
 		// otherwise render the image.
+		Document doc = getDocument();
+		Document clone = (Document) doc.cloneNode(true);
 		try {
 			if (GCUtilities.supportsAdvancedGraphics()) {
 				SVGImageConverter converter = new SVGImageConverter();
-				return converter.renderSVGtoSWTImage(getDocument(), getRenderInfo());
+				return converter.renderSVGtoSWTImage(clone, getRenderInfo());
 			}
 			else {
 				SVGImageConverter converter = new SVGImageConverter();
-				BufferedImage img = converter.renderSVGToAWTImage(getDocument(), getRenderInfo());
+				BufferedImage img = converter.renderSVGToAWTImage(clone, getRenderInfo());
 				return ImageConverter.convert(img);
 			}
 		} catch (Exception e) {
 			try {
 				// try rendering to awt since the SWT renderered may not support the SVG image capabilities
 				SVGImageConverter converter = new SVGImageConverter();
-				BufferedImage img = converter.renderSVGToAWTImage(getDocument(), getRenderInfo());
+				BufferedImage img = converter.renderSVGToAWTImage(clone, getRenderInfo());
 				return ImageConverter.convert(img);
 			} catch (Exception e1) {
 				Trace.catching(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, getClass(), "getSWTImage()", //$NON-NLS-1$
