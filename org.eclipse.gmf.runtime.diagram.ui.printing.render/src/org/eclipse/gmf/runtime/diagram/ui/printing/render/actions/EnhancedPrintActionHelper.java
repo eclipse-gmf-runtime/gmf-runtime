@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -88,9 +88,10 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 		//get actual map mode, default is MapModeUtil.getMapMode()
 		IMapMode mapMode = (rootEP instanceof DiagramRootEditPart) ? ((DiagramRootEditPart) rootEP)
 				.getMapMode()
-				: MapModeUtil.getMapMode();
-		
-		if (Platform.getOS().startsWith(Platform.OS_WIN32)) {
+				: MapModeUtil.getMapMode();				
+							
+		if (Platform.getOS().startsWith(Platform.OS_WIN32) 
+				&& Platform.getOSArch().equals(Platform.ARCH_X86)) {
 			DiagramPrinterUtil.printWithSettings(diagramEditor,
 					createDiagramMap(), new RenderedDiagramPrinter(
 							preferencesHint, mapMode));
