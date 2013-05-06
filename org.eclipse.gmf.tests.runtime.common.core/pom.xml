@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.eclipse.gmf.runtime</groupId>
-    <artifactId>org.eclipse.gmf.runtime.releng</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
-    <relativePath>../org.eclipse.gmf.runtime.releng/pom.xml</relativePath>
-  </parent>
-  <groupId>org.eclipse.gmf.tests.runtime.common.core</groupId>
-  <artifactId>org.eclipse.gmf.tests.runtime.common.core</artifactId>
-  <version>1.5.0.qualifier</version>
-  <packaging>eclipse-test-plugin</packaging>
-  <build>
-  <plugins>
-   <plugin>
-    <groupId>org.eclipse.tycho</groupId>
-    <artifactId>tycho-surefire-plugin</artifactId>
-    <version>${tycho-version}</version>
-    <configuration>
-     <testSuite>org.eclipse.gmf.tests.runtime.common.core</testSuite>
-     <testClass>org.eclipse.gmf.tests.runtime.common.core.AllTests</testClass>
-     <useUIHarness>true</useUIHarness>
-     <useUIThread>true</useUIThread>
-     <argLine>-ea -XX:MaxPermSize=128m -Xmx1024m</argLine>
-    </configuration>
-    </plugin>
-    </plugins>      
-  </build>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.eclipse.gmf.runtime</groupId>
+		<artifactId>org.eclipse.gmf.runtime.releng</artifactId>
+		<version>1.7.0-SNAPSHOT</version>
+		<relativePath>../org.eclipse.gmf.runtime.releng/pom.xml</relativePath>
+	</parent>
+	<groupId>org.eclipse.gmf.tests.runtime.common.core</groupId>
+	<artifactId>org.eclipse.gmf.tests.runtime.common.core</artifactId>
+	<version>1.7.0.qualifier</version>
+	<packaging>eclipse-test-plugin</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<testSuite>org.eclipse.gmf.tests.runtime.common.core</testSuite>
+					<testClass>org.eclipse.gmf.tests.runtime.common.core.AllTests</testClass>
+					<product>org.eclipse.sdk.ide</product>
+					<useUIHarness>true</useUIHarness>
+					<useUIThread>true</useUIThread>
+					<argLine>-ea -XX:MaxPermSize=128m -Xmx1024m</argLine>
+					<dependencies>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.platform.feature.group</artifactId>
+						</dependency>
+					</dependencies>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
