@@ -23,7 +23,7 @@
 					<testSuite>org.eclipse.gmf.tests.runtime.emf.type.core</testSuite>
 					<testClass>org.eclipse.gmf.tests.runtime.emf.type.core.AllTests</testClass>
 					<product>org.eclipse.sdk.ide</product>
-					<useUIHarness>true</useUIHarness>
+					<useUIHarness>false</useUIHarness>
 					<useUIThread>true</useUIThread>
 					<argLine>-ea -XX:MaxPermSize=128m -Xmx1024m</argLine>
 					<dependencies>
