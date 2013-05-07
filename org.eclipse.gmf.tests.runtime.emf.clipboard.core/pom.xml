@@ -23,13 +23,17 @@
 					<testSuite>org.eclipse.gmf.tests.runtime.emf.clipboard.core</testSuite>
 					<testClass>org.eclipse.gmf.tests.runtime.emf.clipboard.core.AllTests</testClass>
 					<product>org.eclipse.sdk.ide</product>
-					<useUIHarness>true</useUIHarness>
+					<useUIHarness>false</useUIHarness>
 					<useUIThread>true</useUIThread>
 					<argLine>-ea -XX:MaxPermSize=128m -Xmx1024m</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>
-							<artifactId>org.eclipse.platform.feature.group</artifactId>
+							<artifactId>org.eclipse.gmf.feature.group</artifactId>
+						</dependency>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.pde.feature.group</artifactId>
 						</dependency>
 					</dependencies>
 				</configuration>
