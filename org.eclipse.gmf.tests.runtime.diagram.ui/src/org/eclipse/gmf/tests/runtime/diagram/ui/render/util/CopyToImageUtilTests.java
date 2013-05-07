@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -149,7 +149,7 @@ public class CopyToImageUtilTests
         copyToImageOffscreenTestForFormat(".png", ImageFileFormat.PNG);//$NON-NLS-1$ 
     }
     
-    public void testCopyToImageUtilTest_SVG() throws Exception {
+    public void ignore_testCopyToImageUtilTest_SVG() throws Exception {
        copyToImageTestForFormat(".svg", ImageFileFormat.SVG);//$NON-NLS-1$
     }
 
