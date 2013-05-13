@@ -18,7 +18,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<!-- enable tycho build extension -->
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
 				<version>${tycho-version}</version>
@@ -89,7 +88,8 @@
 										<echo
 											message="Replacing @build@ token within about.mappings with build id" />
 										<replace file="about.mappings">
-											<replacefilter token="@build@" value="${unqualifiedVersion}.${buildQualifier}" />
+											<replacefilter token="@build@"
+												value="${unqualifiedVersion}.${buildQualifier}" />
 										</replace>
 									</then>
 								</if>
@@ -99,7 +99,8 @@
 										<echo
 											message="Replacing @build@ token within javadocOptions.txt with build id" />
 										<replace file="javadocOptions.txt">
-											<replacefilter token="@build@" value="${unqualifiedVersion}.${buildQualifier}" />
+											<replacefilter token="@build@"
+												value="${unqualifiedVersion}.${buildQualifier}" />
 										</replace>
 									</then>
 								</if>
@@ -122,7 +123,8 @@
 										<echo
 											message="Replacing back build id within about.mappings with @build@ token" />
 										<replace file="about.mappings">
-											<replacefilter token="${unqualifiedVersion}.${buildQualifier}" value="@build@" />
+											<replacefilter token="${unqualifiedVersion}.${buildQualifier}"
+												value="@build@" />
 										</replace>
 									</then>
 								</if>
@@ -132,7 +134,8 @@
 										<echo
 											message="Replacing back build id within javadocOptions.txt with @build@ token" />
 										<replace file="javadocOptions.txt">
-											<replacefilter token="${unqualifiedVersion}.${buildQualifier}" value="@build@" />
+											<replacefilter token="${unqualifiedVersion}.${buildQualifier}"
+												value="@build@" />
 										</replace>
 									</then>
 								</if>
@@ -169,7 +172,7 @@
 			<id>eclipse-sdk</id>
 			<url>http://download.eclipse.org/eclipse/updates/4.3-I-builds</url>
 			<layout>p2</layout>
-        </repository>
+		</repository>
 		<repository>
 			<id>gef</id>
 			<url>http://download.eclipse.org/tools/gef/updates/milestones</url>
@@ -191,13 +194,6 @@
 			<layout>p2</layout>
 		</repository>
 	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>maven.eclipse.org</id>
-			<url>http://maven.eclipse.org/nexus/content/groups/public/</url>
-		</pluginRepository>
-	</pluginRepositories>
 
 	<modules>
 		<module>../org.eclipse.gmf</module>

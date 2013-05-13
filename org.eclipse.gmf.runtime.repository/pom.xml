@@ -13,11 +13,6 @@
 	<version>1.7.0-SNAPSHOT</version>
 	<packaging>eclipse-repository</packaging>
 
-	<properties>
-		<signer-version>1.0.5</signer-version>
-		<signer-input-directory>/home/data/httpd/download-staging.priv/modeling/gmp/gmf-runtime</signer-input-directory>
-	</properties>
-
 	<profiles>
 		<profile>
 			<id>hudson.eclipse.org</id>
@@ -26,12 +21,12 @@
 					<plugin>
 						<groupId>org.eclipse.dash.maven</groupId>
 						<artifactId>eclipse-signing-maven-plugin</artifactId>
-						<version>${signer-version}</version>
+						<version>1.0.5</version>
 						<executions>
 							<execution>
 								<id>pack</id>
 								<configuration>
-									<inputFile>${project.build.directory}/org.eclipse.gmf.runtime.repository.zip</inputFile>
+									<inputFile>${project.build.directory}/org.eclipse.gmf.runtime.repository-1.7.0-SNAPSHOT.zip</inputFile>
 								</configuration>
 								<phase>package</phase>
 								<goals>
@@ -41,8 +36,8 @@
 							<execution>
 								<id>sign</id>
 								<configuration>
-									<inputFile>${project.build.directory}/org.eclipse.gmf.runtime.repository.zip</inputFile>
-									<signerInputDirectory>${signer-input-directory}</signerInputDirectory>
+									<inputFile>${project.build.directory}/org.eclipse.gmf.runtime.repository-1.7.0-SNAPSHOT.zip</inputFile>
+									<signerInputDirectory>/home/data/httpd/download-staging.priv/modeling/gmp/gmf-runtime</signerInputDirectory>
 								</configuration>
 								<phase>package</phase>
 								<goals>
@@ -70,6 +65,12 @@
 					</plugin>
 				</plugins>
 			</build>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>eclipse-nexus</id>
+					<url>http://maven.eclipse.org/nexus/content/groups/public/</url>
+				</pluginRepository>
+			</pluginRepositories>
 		</profile>
 	</profiles>
 	<groupId>org.eclipse.gmf.runtime</groupId>
