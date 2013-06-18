@@ -165,8 +165,10 @@ if [ "$dropFiles" = y ]; then
 	if [ -n "$dropFilesLabel" ]; then
 		version=$version$dropFilesLabel
 		echo "version is now $version"
-	else
+	elif [ "$buildType" != r -a "$buildType" != R ]; then
 		version="$(echo $buildType | tr '[:lower:]' '[:upper:]')$qualifier"
+		echo "version is now $version"
+	else
 		echo "version is now $version"
 	fi
 				
