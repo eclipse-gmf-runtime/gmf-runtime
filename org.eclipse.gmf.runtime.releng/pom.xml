@@ -166,47 +166,47 @@
 		<repository>
 			<id>emf-nightly</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/emf/emf/updates/nightly</url>
+			<url>http://download.eclipse.org/modeling/emf/emf/updates/releases</url>
 		</repository>
 		<repository>
 			<id>eclipse-sdk</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/eclipse/updates/4.3-I-builds</url>
+			<url>http://download.eclipse.org/eclipse/updates/4.3</url>
 		</repository>
 		<repository>
 			<id>gef</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/tools/gef/updates/milestones</url>
+			<url>http://download.eclipse.org/tools/gef/updates/releases</url>
 		</repository>
 		<repository>
 			<id>emf-validation</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/emf/validation/updates/milestones</url>
+			<url>http://download.eclipse.org/modeling/emf/validation/updates/releases</url>
 		</repository>
 		<repository>
 			<id>emf-transaction</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/emf/transaction/updates/milestones</url>
+			<url>http://download.eclipse.org/modeling/emf/transaction/updates/releases</url>
 		</repository>
 		<repository>
 			<id>gmf-notation</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones</url>
+			<url>http://download.eclipse.org/modeling/gmp/gmf-notation/updates/releases</url>
 		</repository>
 		<repository>
 			<id>emf-query</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/emf/query/updates/milestones</url>
+			<url>http://download.eclipse.org/modeling/emf/query/updates/releases</url>
 		</repository>
 		<repository>
 			<id>mdt-ocl</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/mdt/ocl/updates/milestones</url>
+			<url>http://download.eclipse.org/modeling/mdt/ocl/updates/releases</url>
 		</repository>
 		<repository>
 			<id>mdt-uml2</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/mdt/uml2/updates/milestones</url>
+			<url>http://download.eclipse.org/modeling/mdt/uml2/updates/releases</url>
 		</repository>
 	</repositories>
 
