@@ -776,8 +776,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		float ypos = y + transY;
 		int lineWidth;
 
-		if (paintNotCompatibleStringsAsBitmaps && 
-			( (getGraphics2D().getFont().canDisplayUpTo(s) != -1) || ( Math.abs(swtStringSize.width - stringLength) > 2) ) ) {
+		if (paintNotCompatibleStringsAsBitmaps && (getGraphics2D().getFont().canDisplayUpTo(s) != -1)) {
 			// create SWT bitmap of the string then
 			Image image = new Image(DisplayUtils.getDisplay(),
 					swtStringSize.width, swtStringSize.height);
