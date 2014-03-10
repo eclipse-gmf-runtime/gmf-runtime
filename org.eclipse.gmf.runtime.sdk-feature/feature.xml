@@ -47,7 +47,7 @@ http://www.eclipse.org/legal/epl-v10.html
          name="%thirdPartySourceFeatureName"/>
 
    <requires>
-      <import feature="org.eclipse.gef.sdk" version="3.10.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.gef.sdk" version="3.9.2" match="greaterOrEqual"/>
       <import feature="org.eclipse.gmf.runtime.notation.sdk" version="1.8.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.emf.transaction.sdk" version="1.8.0" match="greaterOrEqual"/>
    </requires>
