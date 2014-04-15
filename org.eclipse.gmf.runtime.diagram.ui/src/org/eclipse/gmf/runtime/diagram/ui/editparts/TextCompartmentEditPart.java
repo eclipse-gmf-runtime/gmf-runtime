@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  * 	  Dmitry Stadnik (Borland) - contribution for bugzilla 135694
  *	  Dmitry Stadnik (Borland) - contribution for bugzilla 136582
  ****************************************************************************/
-
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import java.beans.PropertyChangeEvent;
@@ -760,12 +759,21 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 		TextStyle style = (TextStyle) getPrimaryView().getStyle(NotationPackage.eINSTANCE.getTextStyle());
 		if (style != null) {
 			if (style.getTextAlignment() == TextAlignment.RIGHT_LITERAL) {
-				getLabelDelegate().setTextJustification(PositionConstants.RIGHT);
+				if((getLabelDelegate().getIcon(0)==null) )
+					getLabelDelegate().setAlignment(PositionConstants.RIGHT);
+				else 
+					getLabelDelegate().setTextJustification(PositionConstants.RIGHT);
 			} else if (style.getTextAlignment() == TextAlignment.CENTER_LITERAL) {
-				getLabelDelegate().setTextJustification(PositionConstants.CENTER);
+				if((getLabelDelegate().getIcon(0)==null) )
+					getLabelDelegate().setAlignment(PositionConstants.CENTER);
+				else 
+					getLabelDelegate().setTextJustification(PositionConstants.CENTER);
 			} else {
 				// default to TextAlignment.LEFT_LITERAL
-				getLabelDelegate().setTextJustification(PositionConstants.LEFT);
+				if((getLabelDelegate().getIcon(0)==null) )
+					getLabelDelegate().setAlignment(PositionConstants.LEFT);
+				else 
+					getLabelDelegate().setTextJustification(PositionConstants.LEFT);
 			}
 		}
 	}
