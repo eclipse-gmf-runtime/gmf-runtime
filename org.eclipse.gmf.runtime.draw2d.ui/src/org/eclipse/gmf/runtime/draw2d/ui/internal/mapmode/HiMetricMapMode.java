@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,6 +89,25 @@ public class HiMetricMapMode
 	public Translatable LPtoDP(Translatable t) {
 		t.performScale( scale );
 		return t;
+	}
+	
+	/**
+	 * Indicates whether some other MapMode is "equal to" this MapMode.
+	 * 
+	 * @return <code>true</code> if this MapMode is the same as the MapMode
+	 *         argument; <code>false</code> otherwise.
+	 * @param mapMode
+	 *            The reference MapMode with which to compare.
+	 */
+	public boolean equals(Object mapMode){
+		// if the mapModeect is of type MapModeHolder, get the underlying MapMode
+		if (mapMode instanceof IMapModeHolder){
+			return this.equals(((IMapModeHolder)mapMode).getMapMode());	
+		}
+		if (mapMode instanceof HiMetricMapMode){
+			return super.equals(mapMode);
+		}
+		return false;
 	}
 
 }
