@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.junit.Ignore;
 
 public class GlobalUndoActionTest
     extends TestCase {
@@ -97,6 +98,7 @@ public class GlobalUndoActionTest
     /**
      * Tests that the action is not enabled when it's part is closed.
      */
+    @Ignore
     public void test_dispose_131781()  throws PartInitException{
         
         // Enables testing that closing the view doesn't cause exceptions to be
@@ -135,6 +137,7 @@ public class GlobalUndoActionTest
     /**
      * Tests that the delegate is disposed when the undo context is set to null.
      */
+    @Ignore
     public void test_nullUndoContext() {
         assertTrue(undoAction.isEnabled());
         undoAction.setUndoContext(null);

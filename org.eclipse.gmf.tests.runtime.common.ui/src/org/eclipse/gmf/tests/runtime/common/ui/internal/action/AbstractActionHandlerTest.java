@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.junit.Ignore;
 
 
 public class AbstractActionHandlerTest extends TestCase {
@@ -45,6 +46,7 @@ public class AbstractActionHandlerTest extends TestCase {
      * Tests that an error dialog can be successfully shown when
      * the action handler runs on a non-UI thread.
      */
+	@Ignore
     public void test_errorDialogOnNonUIThread_132143() {
         
         // This line must be enabled to really perform the test. Otherwise, the
