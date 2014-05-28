@@ -74,7 +74,7 @@ public class ElementSelectionFilterTest
     }
 
     @Ignore
-    public void testBlueElementsFilter() {
+    public void offBlueElementsFilter() {
         input.setFilter(new IFilter() {
 
             public boolean select(Object element) {

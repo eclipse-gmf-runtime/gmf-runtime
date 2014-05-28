@@ -47,7 +47,7 @@ public class AbstractActionHandlerTest extends TestCase {
      * the action handler runs on a non-UI thread.
      */
 	@Ignore
-    public void test_errorDialogOnNonUIThread_132143() {
+    public void off_errorDialogOnNonUIThread_132143() {
         
         // This line must be enabled to really perform the test. Otherwise, the
         // error dialog is not displayed and the SWTException would NEVER occur.

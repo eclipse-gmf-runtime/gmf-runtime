@@ -95,7 +95,7 @@ public class GlobalRedoActionTest
      * Tests that the action is not enabled when it's part is closed.
      */
     @Ignore
-    public void test_dispose_131781() {
+    public void off_dispose_131781() {
 
         // Enables testing that closing the view doesn't cause exceptions to be
         // reported to the user
@@ -130,7 +130,7 @@ public class GlobalRedoActionTest
      * Tests that the delegate is disposed when the undo context is set to null.
      */
     @Ignore
-    public void test_nullUndoContext() {
+    public void off_nullUndoContext() {
         assertTrue(redoAction.isEnabled());
         redoAction.setUndoContext(null);
         assertFalse(redoAction.isEnabled());

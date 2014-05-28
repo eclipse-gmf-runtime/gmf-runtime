@@ -152,7 +152,7 @@ public class ActionFilterServiceTest extends TestCase {
 	}
 
 	@Ignore
-	public void test_testAttribute() {
+	public void off_testAttribute() {
         
 		String prefix = "@"; //$NON-NLS-1$
 
