@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2014 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,6 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalRedoAction;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
-import org.junit.Ignore;
 
 public class GlobalRedoActionTest
     extends TestCase {
@@ -94,8 +93,7 @@ public class GlobalRedoActionTest
     /**
      * Tests that the action is not enabled when it's part is closed.
      */
-    @Ignore
-    public void off_dispose_131781() {
+    public void test_dispose_131781() {
 
         // Enables testing that closing the view doesn't cause exceptions to be
         // reported to the user
@@ -129,8 +127,7 @@ public class GlobalRedoActionTest
     /**
      * Tests that the delegate is disposed when the undo context is set to null.
      */
-    @Ignore
-    public void off_nullUndoContext() {
+    public void test_nullUndoContext() {
         assertTrue(redoAction.isEnabled());
         redoAction.setUndoContext(null);
         assertFalse(redoAction.isEnabled());

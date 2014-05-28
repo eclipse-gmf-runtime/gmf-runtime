@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2014 IBM Corporation and others.
+ * Copyright (c) 2006, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelect
 import org.eclipse.gmf.tests.runtime.common.ui.services.dialogs.TestElementSelectionProviderContext;
 import org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.TestMatchingObject;
 import org.eclipse.jface.viewers.IFilter;
-import org.junit.Ignore;
 
 /**
  * Test cases for the filter for the element selection service, the filter being
@@ -73,8 +72,7 @@ public class ElementSelectionFilterTest
         assertTrue(matches.size() == 6);
     }
 
-    @Ignore
-    public void offBlueElementsFilter() {
+    public void testBlueElementsFilter() {
         input.setFilter(new IFilter() {
 
             public boolean select(Object element) {
