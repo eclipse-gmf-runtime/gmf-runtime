@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><?pde version="3.8"?><target name="luna" sequenceNumber="31">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.4.0.I20140522-1330"/>
-<unit id="org.eclipse.test.feature.group" version="3.6.100.v20140518-1929"/>
-<unit id="org.eclipse.sdk.tests.feature.group" version="4.4.0.v20140522-1832"/>
-<unit id="org.eclipse.platform.ide" version="4.4.0.I20140522-1330"/>
+<unit id="org.eclipse.sdk.ide" version="4.4.0.I20140606-1215"/>
+<unit id="org.eclipse.test.feature.group" version="3.6.100.v20140528-1640"/>
+<unit id="org.eclipse.sdk.tests.feature.group" version="4.4.0.v20140606-1726"/>
+<unit id="org.eclipse.platform.ide" version="4.4.0.I20140606-1215"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.4milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
