@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -235,10 +235,26 @@ public abstract class MultiButtonCellEditor
 	 */
 	protected void addButton(String buttonLabel,
 			final IPropertyAction buttonAction) {
+		addButton(buttonLabel, null, buttonAction);
+	}
+	
+	/**
+	 * Creates and adds the button to the cell editor
+	 * 
+	 * @param buttonLabel
+	 *            Button label
+	 * @param buttonToolTip
+	 * 			  Button buttonToolTip
+	 * @param buttonAction
+	 *            The action to be executed when the button is invoked
+	 */
+	protected void addButton(String buttonLabel,String buttonToolTip,
+			final IPropertyAction buttonAction) {
 
 		// create button
 		Button button = new Button(editor, SWT.DOWN);
 		button.setText(buttonLabel);
+		button.setToolTipText(buttonToolTip);
 		button.setFont(font);
 
 		// selection listener
