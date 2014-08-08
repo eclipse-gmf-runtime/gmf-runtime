@@ -3,7 +3,7 @@
    <feature url="features/org.eclipse.gmf_1.8.0.qualifier.jar" id="org.eclipse.gmf" version="1.8.0.qualifier">
       <category name="gmf-runtime"/>
    </feature>
-   <feature url="features/org.eclipse.gmf.examples.runtime_1.8.0.qualifier.jar" id="org.eclipse.gmf.examples.runtime" version="1.8.0.qualifier">
+   <feature url="features/org.eclipse.gmf.examples.runtime_1.8.1.qualifier.jar" id="org.eclipse.gmf.examples.runtime" version="1.8.1.qualifier">
       <category name="gmf-runtime"/>
    </feature>
    <feature url="features/org.eclipse.gmf.examples.runtime.ui.pde_1.8.0.qualifier.jar" id="org.eclipse.gmf.examples.runtime.ui.pde" version="1.8.0.qualifier">
