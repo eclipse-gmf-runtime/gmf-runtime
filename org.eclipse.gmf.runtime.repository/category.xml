@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.gmf_1.8.0.qualifier.jar" id="org.eclipse.gmf" version="1.8.0.qualifier">
+   <feature url="features/org.eclipse.gmf_1.9.0.qualifier.jar" id="org.eclipse.gmf" version="1.9.0.qualifier">
       <category name="gmf-runtime"/>
    </feature>
-   <feature url="features/org.eclipse.gmf.examples.runtime_1.8.0.qualifier.jar" id="org.eclipse.gmf.examples.runtime" version="1.8.0.qualifier">
+   <feature url="features/org.eclipse.gmf.examples.runtime_1.9.0.qualifier.jar" id="org.eclipse.gmf.examples.runtime" version="1.9.0.qualifier">
       <category name="gmf-runtime"/>
    </feature>
-   <feature url="features/org.eclipse.gmf.examples.runtime.ui.pde_1.8.0.qualifier.jar" id="org.eclipse.gmf.examples.runtime.ui.pde" version="1.8.0.qualifier">
+   <feature url="features/org.eclipse.gmf.examples.runtime.ui.pde_1.9.0.qualifier.jar" id="org.eclipse.gmf.examples.runtime.ui.pde" version="1.9.0.qualifier">
       <category name="gmf-runtime"/>
    </feature>
-   <feature url="features/org.eclipse.gmf.runtime.sdk_1.8.0.qualifier.jar" id="org.eclipse.gmf.runtime.sdk" version="1.8.0.qualifier">
+   <feature url="features/org.eclipse.gmf.runtime.sdk_1.9.0.qualifier.jar" id="org.eclipse.gmf.runtime.sdk" version="1.9.0.qualifier">
       <category name="gmf-runtime"/>
    </feature>
-   <feature url="features/org.eclipse.gmf.runtime.thirdparty_1.8.0.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty" version="1.8.0.qualifier">
+   <feature url="features/org.eclipse.gmf.runtime.thirdparty_1.9.0.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty" version="1.9.0.qualifier">
       <category name="gmf-runtime"/>
    </feature>
-   <feature url="features/org.eclipse.gmf.runtime.thirdparty.source_1.8.0.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty.source" version="1.8.0.qualifier">
+   <feature url="features/org.eclipse.gmf.runtime.thirdparty.source_1.9.0.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty.source" version="1.9.0.qualifier">
       <category name="gmf-runtime"/>
    </feature>
-   <feature url="features/org.eclipse.gmf.source_1.8.0.qualifier.jar" id="org.eclipse.gmf.source" version="1.8.0.qualifier">
+   <feature url="features/org.eclipse.gmf.source_1.9.0.qualifier.jar" id="org.eclipse.gmf.source" version="1.9.0.qualifier">
       <category name="gmf-runtime"/>
    </feature>
-   <feature url="features/org.eclipse.gmf.tests.runtime_1.8.0.qualifier.jar" id="org.eclipse.gmf.tests.runtime" version="1.8.0.qualifier">
+   <feature url="features/org.eclipse.gmf.tests.runtime_1.9.0.qualifier.jar" id="org.eclipse.gmf.tests.runtime" version="1.9.0.qualifier">
       <category name="gmf-runtime"/>
    </feature>
    <category-def name="gmf-runtime" label="GMF Runtime">
