@@ -126,7 +126,7 @@
 
 	<profiles>
 		<profile>
-			<id>luna.target</id>
+			<id>gmf-runtime.target</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -143,7 +143,7 @@
 									<groupId>org.eclipse.gmf.runtime</groupId>
 									<artifactId>org.eclipse.gmf.runtime.target</artifactId>
 									<version>1.9.0-SNAPSHOT</version>
-									<classifier>luna</classifier>
+									<classifier>gmf-runtime</classifier>
 								</artifact>
 							</target>
 							<environments>
