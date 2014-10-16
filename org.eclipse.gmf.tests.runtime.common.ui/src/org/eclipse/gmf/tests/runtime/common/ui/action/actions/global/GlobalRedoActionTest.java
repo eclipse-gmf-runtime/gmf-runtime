@@ -32,7 +32,6 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalRedoAction;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
-import org.junit.Ignore;
 
 public class GlobalRedoActionTest
     extends TestCase {
@@ -94,8 +93,7 @@ public class GlobalRedoActionTest
     /**
      * Tests that the action is not enabled when it's part is closed.
      */
-    @Ignore
-    public void test_dispose_131781() {
+    public void ignore_dispose_131781() {
 
         // Enables testing that closing the view doesn't cause exceptions to be
         // reported to the user
@@ -129,8 +127,7 @@ public class GlobalRedoActionTest
     /**
      * Tests that the delegate is disposed when the undo context is set to null.
      */
-    @Ignore
-    public void test_nullUndoContext() {
+    public void ignore_nullUndoContext() {
         assertTrue(redoAction.isEnabled());
         redoAction.setUndoContext(null);
         assertFalse(redoAction.isEnabled());

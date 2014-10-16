@@ -33,7 +33,6 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.junit.Ignore;
 
 public class GlobalUndoActionTest
     extends TestCase {
@@ -98,8 +97,7 @@ public class GlobalUndoActionTest
     /**
      * Tests that the action is not enabled when it's part is closed.
      */
-    @Ignore
-    public void test_dispose_131781()  throws PartInitException{
+    public void ignore_dispose_131781()  throws PartInitException{
         
         // Enables testing that closing the view doesn't cause exceptions to be
         // reported to the user
@@ -137,8 +135,7 @@ public class GlobalUndoActionTest
     /**
      * Tests that the delegate is disposed when the undo context is set to null.
      */
-    @Ignore
-    public void test_nullUndoContext() {
+    public void ignore_nullUndoContext() {
         assertTrue(undoAction.isEnabled());
         undoAction.setUndoContext(null);
         assertFalse(undoAction.isEnabled());

@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelect
 import org.eclipse.gmf.tests.runtime.common.ui.services.dialogs.TestElementSelectionProviderContext;
 import org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.TestMatchingObject;
 import org.eclipse.jface.viewers.IFilter;
-import org.junit.Ignore;
 
 /**
  * Test cases for the filter for the element selection service, the filter being
@@ -73,8 +72,7 @@ public class ElementSelectionFilterTest
         assertTrue(matches.size() == 6);
     }
 
-    @Ignore
-    public void testBlueElementsFilter() {
+    public void ignoreBlueElementsFilter() {
         input.setFilter(new IFilter() {
 
             public boolean select(Object element) {

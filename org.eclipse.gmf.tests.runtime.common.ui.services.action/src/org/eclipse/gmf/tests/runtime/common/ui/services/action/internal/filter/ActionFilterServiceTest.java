@@ -34,7 +34,6 @@ import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFilterProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.TestAttributeOperation;
-import org.junit.Ignore;
 
 /**
  * @author khussey
@@ -151,8 +150,7 @@ public class ActionFilterServiceTest extends TestCase {
 		setFixture(new Fixture());
 	}
 
-	@Ignore
-	public void test_testAttribute() {
+	public void ignore_testAttribute() {
         
 		String prefix = "@"; //$NON-NLS-1$
 

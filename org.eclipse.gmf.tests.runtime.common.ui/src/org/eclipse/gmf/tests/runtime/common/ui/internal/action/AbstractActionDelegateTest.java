@@ -27,8 +27,6 @@ import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.junit.Ignore;
-
 
 public class AbstractActionDelegateTest extends TestCase {
 
@@ -48,8 +46,7 @@ public class AbstractActionDelegateTest extends TestCase {
      * Tests that an error dialog can be successfully shown when
      * the action delegate runs on a non-UI thread.
      */
-	@Ignore
-    public void test_errorDialogOnNonUIThread_125482() {
+    public void ignore_errorDialogOnNonUIThread_125482() {
         
         // This line must be enabled to really perform the test. Otherwise, the
         // error dialog is not displayed and the SWTException would NEVER occur.
