@@ -73,9 +73,11 @@ public class ElementSelectionList {
             }
             if (PlatformUI.getWorkbench().getDisplay().getThread().equals(
                 Thread.currentThread())) {
-                while (PlatformUI.getWorkbench().getDisplay().readAndDispatch()) {
-                    // nothing, just dispatch events so the UI is not hung.
-                }
+            	if (PlatformUI.getWorkbench().getDisplay() != null) {
+                    while (PlatformUI.getWorkbench().getDisplay().readAndDispatch()) {
+                        // nothing, just dispatch events so the UI is not hung.
+                    }
+            	}
             }
             try {
                 Thread.sleep(50);
