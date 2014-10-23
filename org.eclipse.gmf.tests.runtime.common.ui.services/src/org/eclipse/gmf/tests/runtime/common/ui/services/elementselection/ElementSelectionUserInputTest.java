@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2012 IBM Corporation and others.
+ * Copyright (c) 2006, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,49 +65,45 @@ public class ElementSelectionUserInputTest
         return new TestSuite(ElementSelectionUserInputTest.class);
     }
 
-    public void ignoreBlankUserInput() {
+    public void testBlankUserInput() {
         input.setInput(StringStatics.BLANK);
         List matches = ElementSelectionService.getInstance()
             .getMatchingObjects(input);
         assertTrue(matches.size() == 0);
     }
 
-    public void ignoreFullNameUserInput() {
+    public void testFullNameUserInput() {
         input.setInput("one");//$NON-NLS-1$
         List matches = ElementSelectionService.getInstance()
             .getMatchingObjects(input);
         assertTrue(matches.size() == 3);
     }
 
-    public void ignoreNamePrefixUserInput() {
+    public void testNamePrefixUserInput() {
         input.setInput("t");//$NON-NLS-1$
         List matches = ElementSelectionService.getInstance()
             .getMatchingObjects(input);
         assertTrue(matches.size() == 6);
     }
 
-    public void ignoreAnotherNamePrefixUserInput() {
+    public void testAnotherNamePrefixUserInput() {
         input.setInput("th");//$NON-NLS-1$
         List matches = ElementSelectionService.getInstance()
             .getMatchingObjects(input);
         assertTrue(matches.size() == 3);
     }
 
-    public void ignoreAnyStringUserInput() {
+    public void testAnyStringUserInput() {
         input.setInput("t*ee");//$NON-NLS-1$
         List matches = ElementSelectionService.getInstance()
             .getMatchingObjects(input);
         assertTrue(matches.size() == 3);
     }
 
-    public void ignoreOnCharacterUserInput() {
+    public void testOnCharacterUserInput() {
         input.setInput("t?ree");//$NON-NLS-1$
         List matches = ElementSelectionService.getInstance()
             .getMatchingObjects(input);
         assertTrue(matches.size() == 3);
     }
-    
-	public void test_testNothing() {
-		// There is an issue when running the tests, run no tests for now.
-	}
 }
