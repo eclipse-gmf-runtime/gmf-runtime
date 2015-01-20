@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * Copyright (c) 2000, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1042,8 +1042,8 @@ public class ScaledGraphics
 			targetCache.height = metric.getHeight() - metric.getDescent();
 		}
 		return new Point(((int)(Math.floor((x * zoom) + fractionalX))),
-							(int)(Math.floor((y + localCache.height - 1) * zoom 
-												- targetCache.height + 1 + fractionalY)));
+				(int)(Math.floor((y /*+ localCache.height - 1 */) * zoom 
+						/*- targetCache.height + 1 */ + fractionalY)));
 	}
 	
 	protected Graphics getGraphics() {
