@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.type.core;
@@ -15,9 +16,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.IEditHelperAdviceDescriptor;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * The implementation of the client context interface.
@@ -33,11 +37,13 @@ public class ClientContext implements IClientContext {
 	private final IElementMatcher matcher;
 
 	// set of String type and advice IDs that are bound to me
-	private final Set typeIdBindings = new java.util.HashSet();
+	private final Set<String> typeIdBindings = new java.util.HashSet<String>();
 
 	// set of regex patterns that are bound to me
-	private final Set patternBindings = new java.util.HashSet();
+	private final Set<Pattern> patternBindings = new java.util.HashSet<Pattern>();
 
+	private Boolean dynamic;
+	
 	/**
 	 * Initializes me with my ID and my element matcher.
 	 * 
@@ -120,6 +126,47 @@ public class ClientContext implements IClientContext {
 	}
 
 	/**
+	 * Removes a specific element-type/advice binding by ID. Note that patterns
+	 * may still match element types and/or advices and implictly re-bind them.
+	 * 
+	 * @param typeId
+	 *            the element-type or advice ID to remove from the context
+	 * 
+	 * @see #unbindPattern(Pattern)
+	 * 
+	 * @since 1.9
+	 */
+	public void unbindId(String typeId) {
+		typeIdBindings.remove(typeId);
+	}
+
+	/**
+	 * Removes a specific element-type/advice binding by regular expression
+	 * {@code pattern}. This also implicitly unbinds any specific IDs that match
+	 * the pattern.
+	 * 
+	 * @param pattern
+	 *            the element-type or advice ID pattern to remove from the
+	 *            context
+	 * 
+	 * @see #unbindId(String)
+	 * 
+	 * @since 1.9
+	 */
+	public void unbindPattern(Pattern pattern) {
+		if (patternBindings.remove(pattern)) {
+			// Remove all matching IDs
+			Matcher m = pattern.matcher(""); //$NON-NLS-1$
+			for (Iterator<String> iter = typeIdBindings.iterator(); iter.hasNext();) {
+				m.reset(iter.next());
+				if (m.matches()) {
+					iter.remove();
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Has no children.
 	 */
 	public Collection getChildren() {
@@ -133,6 +180,45 @@ public class ClientContext implements IClientContext {
 		return false;
 	}
 
+	/**
+	 * Queries whether I am defined dynamically, not statically. In practice,
+	 * this means that I was
+	 * {@linkplain ClientContextManager#registerClientContext(IClientContext)
+	 * added} to the system at run-time, not via the extension point.
+	 * 
+	 * @return whether I am a dynamically-defined client context
+	 * 
+	 * @since 1.9
+	 */
+	public final boolean isDynamic() {
+		if (dynamic == null) {
+			if (FrameworkUtil.getBundle(getClass()) != EMFTypePlugin.getPlugin().getBundle()) {
+				// The computeDynamic() method must not be overridden outside of
+				// the core framework, so don't even call it
+				dynamic = Boolean.TRUE;
+			} else {
+				dynamic = Boolean.valueOf(computeDynamic());
+			}
+		}
+
+		return dynamic.booleanValue();
+	}
+
+	/**
+	 * Overridden in subclasses to compute whether I am a dynamic contribution.
+	 * May not be overridden outside of the core framework.
+	 * 
+	 * @return whether I am a dynamic contribution
+	 * 
+	 * @since 1.9
+	 * 
+	 * @nooverride This method is not intended to be re-implemented or extended
+	 *             by clients.
+	 */
+	protected boolean computeDynamic() {
+		return true;
+	}
+	
 	/**
 	 * The context ID fully determines equality.
 	 */

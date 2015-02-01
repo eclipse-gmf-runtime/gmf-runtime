@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,16 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -29,15 +33,25 @@ import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.emf.transaction.TransactionalCommandStack;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.emf.type.core.AbstractAdviceBindingDescriptor;
+import org.eclipse.gmf.runtime.emf.type.core.AdviceBindingAddedEvent;
+import org.eclipse.gmf.runtime.emf.type.core.AdviceBindingInheritance;
+import org.eclipse.gmf.runtime.emf.type.core.AdviceBindingRemovedEvent;
 import org.eclipse.gmf.runtime.emf.type.core.ClientContextManager;
 import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeAddedEvent;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistryAdapter;
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRemovedEvent;
+import org.eclipse.gmf.runtime.emf.type.core.IAdviceBindingDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
+import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IEditHelperContext;
+import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementTypeFactory;
 import org.eclipse.gmf.runtime.emf.type.core.IElementTypeRegistryListener;
+import org.eclipse.gmf.runtime.emf.type.core.IElementTypeRegistryListener2;
 import org.eclipse.gmf.runtime.emf.type.core.IMetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.ISpecializationType;
 import org.eclipse.gmf.runtime.emf.type.core.MetamodelType;
@@ -72,6 +86,31 @@ public class ElementTypeRegistryTest
 		}
 		protected ICommand getBeforeCreateCommand(CreateElementRequest request) {
 			return super.getBeforeCreateCommand(request);
+		}
+	}
+	
+	private class MyAdvice extends AbstractEditHelperAdvice {
+		public MyAdvice() {
+			super();
+		}
+		protected ICommand getBeforeCreateCommand(CreateElementRequest request) {
+			return super.getBeforeCreateCommand(request);
+		}
+	}
+	
+	private class MyAdviceBindingDescriptor extends AbstractAdviceBindingDescriptor {
+		public MyAdviceBindingDescriptor(String id, String typeID) {
+			super(id, typeID, AdviceBindingInheritance.ALL, new MyAdvice());
+		}
+
+		@Override
+		public IElementMatcher getMatcher() {
+			return null;
+		}
+
+		@Override
+		public IContainerDescriptor getContainerDescriptor() {
+			return null;
 		}
 	}
 
@@ -1161,11 +1200,15 @@ public class ElementTypeRegistryTest
 					.getElementTypeId());
 			}
 		};
-		
+
+		boolean result;
 		ElementTypeRegistry.getInstance().addElementTypeRegistryListener(listener);
-		 
-		boolean result = ElementTypeRegistry.getInstance().register(dynamicSpecializationType);
-		
+		try {
+			result = ElementTypeRegistry.getInstance().register(dynamicSpecializationType);
+		} finally {
+			ElementTypeRegistry.getInstance().removeElementTypeRegistryListener(listener);
+		}
+
 		// Check that the element type was registered
 		assertTrue(result);
 		assertTrue(listenerNotified[0]);
@@ -1175,8 +1218,6 @@ public class ElementTypeRegistryTest
 		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(
 			dynamicSpecializationType);
 		assertTrue(Arrays.asList(advice).contains(specialAdvice));
-		
-		ElementTypeRegistry.getInstance().removeElementTypeRegistryListener(listener);
 	}
 	
 
@@ -1197,15 +1238,18 @@ public class ElementTypeRegistryTest
 			}
 		};
 		
+		boolean result;
 		ElementTypeRegistry.getInstance().addElementTypeRegistryListener(listener);
 		
-		boolean result = ElementTypeRegistry.getInstance().register(dynamicMetamodelType);
-		
+		try {
+			result = ElementTypeRegistry.getInstance().register(dynamicMetamodelType);
+		} finally {
+			ElementTypeRegistry.getInstance().removeElementTypeRegistryListener(listener);
+		}
+
 		assertTrue(result);
 		assertTrue(listenerNotified[0]);
 		assertSame(dynamicMetamodelType, ElementTypeRegistry.getInstance().getType(id));
-		
-		ElementTypeRegistry.getInstance().removeElementTypeRegistryListener(listener);
 	}
 	
 	public void test_nullElementType_specialization() {
@@ -1324,5 +1368,367 @@ public class ElementTypeRegistryTest
 		assertNotNull(type);
 		assertEquals(
 				"org.eclipse.gmf.tests.runtime.emf.type.core.157788.employee", type.getId()); //$NON-NLS-1$
+	}
+	
+	/**
+	 * Tests that dynamically-added metamodel types can be removed from the
+	 * registry.
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=457888
+	 */
+	public void test_deregister_metamodelType_457888() {
+		String id = "dynamic.metamodel.typeToBeRemoved"; //$NON-NLS-1$
+		final IMetamodelType dynamicMetamodelType = new MetamodelType(id, null, id,
+				EmployeePackage.eINSTANCE.getLocation(), null);
+
+		// Register the type now
+		getFixture().register(dynamicMetamodelType);
+
+		final boolean[] listenerNotified = new boolean[] { false };
+		IElementTypeRegistryListener2 listener = new ElementTypeRegistryAdapter() {
+
+			@Override
+			public void elementTypeRemoved(ElementTypeRemovedEvent event) {
+				listenerNotified[0] = true;
+				assertEquals(dynamicMetamodelType.getId(), event.getElementTypeId());
+				assertSame(dynamicMetamodelType, event.getElementType());
+			}
+		};
+
+		boolean result;
+		getFixture().addElementTypeRegistryListener(listener);
+		try {
+			result = getFixture().deregister(dynamicMetamodelType);
+		} finally {
+			getFixture().removeElementTypeRegistryListener(listener);
+		}
+
+		assertTrue(result);
+		assertTrue(listenerNotified[0]);
+		assertNull(getFixture().getType(id));
+	}
+
+	/**
+	 * Tests that dynamically-added specialization types can be removed from the
+	 * registry.
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=457888
+	 */
+	public void test_deregister_specializationType_457888() {
+		IEditHelperAdvice specialAdvice = new MySpecializationAdvice();
+
+		String id = "dynamic.specialization.typeToBeRemoved"; //$NON-NLS-1$
+		final ISpecializationType dynamicSpecializationType = new SpecializationType(id, null, id,
+				new IElementType[] { EmployeeType.EMPLOYEE }, null, null, specialAdvice);
+
+		// Register the type now
+		getFixture().register(dynamicSpecializationType);
+
+		final boolean[] listenerNotified = new boolean[] { false };
+		IElementTypeRegistryListener2 listener = new ElementTypeRegistryAdapter() {
+
+			@Override
+			public void elementTypeRemoved(ElementTypeRemovedEvent event) {
+				listenerNotified[0] = true;
+				assertEquals(dynamicSpecializationType.getId(), event.getElementTypeId());
+				assertSame(dynamicSpecializationType, event.getElementType());
+			}
+		};
+
+		boolean result;
+		getFixture().addElementTypeRegistryListener(listener);
+		try {
+			result = getFixture().deregister(dynamicSpecializationType);
+		} finally {
+			getFixture().removeElementTypeRegistryListener(listener);
+		}
+
+		// Check that the element type was deregistered
+		assertTrue(result);
+		assertTrue(listenerNotified[0]);
+		assertNull(getFixture().getType(id));
+
+		// Check that the advice can no longer be retrieved
+		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(dynamicSpecializationType);
+		assertFalse(Arrays.asList(advice).contains(advice));
+
+		// And the removed type's supertype has forgotten the subtype
+		assertFalse(Arrays.asList(getFixture().getSpecializationsOf(EmployeeType.EMPLOYEE.getId())).contains(
+				dynamicSpecializationType));
+	}
+
+	/**
+	 * Tests that statically-registered metamodel types from the extension point
+	 * cannot be removed from the registry (except by unloading the contributing
+	 * plug-in, which is not tested here).
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=457888
+	 */
+	public void test_deregister_static_metamodelType_457888() {
+		String id = "org.eclipse.gmf.tests.runtime.emf.type.core.department"; //$NON-NLS-1$
+		final IMetamodelType staticMetamodelType = (IMetamodelType) getFixture().getType(id);
+
+		final boolean[] listenerNotified = new boolean[] { false };
+		IElementTypeRegistryListener2 listener = new ElementTypeRegistryAdapter() {
+
+			@Override
+			public void elementTypeRemoved(ElementTypeRemovedEvent event) {
+				listenerNotified[0] = true;
+			}
+		};
+
+		boolean result;
+		getFixture().addElementTypeRegistryListener(listener);
+		try {
+			result = getFixture().deregister(staticMetamodelType);
+		} finally {
+			getFixture().removeElementTypeRegistryListener(listener);
+		}
+
+		assertFalse(result);
+		assertFalse(listenerNotified[0]);
+		assertSame(staticMetamodelType, getFixture().getType(id));
+	}
+
+	/**
+	 * Tests that statically-registered specialization types from the extension
+	 * point cannot be removed from the registry (except by unloading the
+	 * contributing plug-in, which is not tested here).
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=457888
+	 */
+	public void test_deregister_static_specializationType_457888() {
+		String id = "org.eclipse.gmf.tests.runtime.emf.type.core.secretDepartment"; //$NON-NLS-1$
+		final ISpecializationType staticSpecializationType = (ISpecializationType) getFixture().getType(id);
+
+		final boolean[] listenerNotified = new boolean[] { false };
+		IElementTypeRegistryListener2 listener = new ElementTypeRegistryAdapter() {
+
+			@Override
+			public void elementTypeRemoved(ElementTypeRemovedEvent event) {
+				listenerNotified[0] = true;
+			}
+		};
+
+		boolean result;
+		getFixture().addElementTypeRegistryListener(listener);
+		try {
+			result = getFixture().deregister(staticSpecializationType);
+		} finally {
+			getFixture().removeElementTypeRegistryListener(listener);
+		}
+
+		assertFalse(result);
+		assertFalse(listenerNotified[0]);
+		assertSame(staticSpecializationType, getFixture().getType(id));
+	}
+
+	/**
+	 * Tests that when a metamodel type is removed that has specializations
+	 * (sub-types) extant, it cannot be removed because the subtypes depend on
+	 * it, but it can be removed after its subtypes are removed.
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=457888
+	 */
+	public void test_deregister_metamodelType_extantSpecializations_457888() {
+		String id = "dynamic.metamodel.typeToBeRemoved"; //$NON-NLS-1$
+		final IMetamodelType dynamicMetamodelType = new MetamodelType(id, null, id,
+				EmployeePackage.eINSTANCE.getLocation(), null);
+
+		String subID = "dynamic.specialization.typeToBeRemoved"; //$NON-NLS-1$
+		final ISpecializationType dynamicSpecializationType = new SpecializationType(subID, null, subID,
+				new IElementType[] { dynamicMetamodelType }, null, null, new MySpecializationAdvice());
+		final Set<IElementType> bothTypes = new HashSet<IElementType>(Arrays.asList(dynamicMetamodelType,
+				dynamicSpecializationType));
+
+		// Register the types now
+		getFixture().register(dynamicMetamodelType);
+		getFixture().register(dynamicSpecializationType);
+
+		final int[] listenerNotified = new int[] { 0 };
+		final Set<IElementType> removed = new HashSet<IElementType>();
+		IElementTypeRegistryListener2 listener = new ElementTypeRegistryAdapter() {
+
+			@Override
+			public void elementTypeRemoved(ElementTypeRemovedEvent event) {
+				listenerNotified[0]++;
+				removed.add(event.getElementType());
+			}
+		};
+
+		boolean result;
+		getFixture().addElementTypeRegistryListener(listener);
+		try {
+			result = getFixture().deregister(dynamicMetamodelType);
+
+			// Assert that nothing was removed
+			assertFalse(result);
+			assertEquals(0, listenerNotified[0]);
+			assertEquals(Collections.EMPTY_SET, removed);
+
+			// Now try removing the subtype and then the supertype
+			result = getFixture().deregister(dynamicSpecializationType);
+			result = result && getFixture().deregister(dynamicMetamodelType);
+
+			// Check both element types were deregistered
+			assertTrue(result);
+			assertEquals(2, listenerNotified[0]);
+			assertEquals(bothTypes, removed);
+			assertNull(getFixture().getType(id));
+			assertNull(getFixture().getType(subID));
+
+			// And the removed type's supertype has forgotten the subtype
+			assertFalse(Arrays.asList(getFixture().getSpecializationsOf(id)).contains(dynamicSpecializationType));
+		} finally {
+			getFixture().removeElementTypeRegistryListener(listener);
+		}
+	}
+
+	/**
+	 * Tests that when a specialization type is removed that has specializations
+	 * (sub-types) of its own, it cannot be removed because the subtypes depend
+	 * on it, but it can be removed after its subtypes are removed.
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=457888
+	 */
+	public void test_deregister_specializationType_extantSubtypes_457888() {
+		String id = "dynamic.specialization.typeToBeRemoved"; //$NON-NLS-1$
+		final ISpecializationType dynamicSpecializationType = new SpecializationType(id, null, id,
+				new IElementType[] { EmployeeType.EMPLOYEE }, null, null, new MySpecializationAdvice());
+
+		String subID = "dynamic.specialization.typeToBeRemoved.sub"; //$NON-NLS-1$
+		final ISpecializationType dynamicSpecializationTypeSubtype = new SpecializationType(subID, null, subID,
+				new IElementType[] { dynamicSpecializationType, EmployeeType.CLIENT }, null, null,
+				new MySpecializationAdvice());
+		final Set<IElementType> bothTypes = new HashSet<IElementType>(Arrays.asList(dynamicSpecializationType,
+				dynamicSpecializationTypeSubtype));
+
+		// Register the types now
+		getFixture().register(dynamicSpecializationType);
+		getFixture().register(dynamicSpecializationTypeSubtype);
+
+		final int[] listenerNotified = new int[] { 0 };
+		final Set<IElementType> removed = new HashSet<IElementType>();
+		IElementTypeRegistryListener2 listener = new ElementTypeRegistryAdapter() {
+
+			@Override
+			public void elementTypeRemoved(ElementTypeRemovedEvent event) {
+				listenerNotified[0]++;
+				removed.add(event.getElementType());
+			}
+		};
+
+		boolean result;
+		getFixture().addElementTypeRegistryListener(listener);
+		try {
+			result = getFixture().deregister(dynamicSpecializationType);
+
+			// Assert that nothing was removed
+			assertFalse(result);
+			assertEquals(0, listenerNotified[0]);
+			assertEquals(Collections.EMPTY_SET, removed);
+
+			// Now try removing the subtype and then the supertype
+			result = getFixture().deregister(dynamicSpecializationTypeSubtype);
+			result = result && getFixture().deregister(dynamicSpecializationType);
+
+			// Check both element types were deregistered
+			assertTrue(result);
+			assertEquals(2, listenerNotified[0]);
+			assertEquals(bothTypes, removed);
+			assertNull(getFixture().getType(id));
+			assertNull(getFixture().getType(subID));
+
+			// And the removed type's supertype has forgotten the subtype
+			assertFalse(Arrays.asList(getFixture().getSpecializationsOf(id)).contains(dynamicSpecializationTypeSubtype));
+		} finally {
+			getFixture().removeElementTypeRegistryListener(listener);
+		}
+	}
+
+	/**
+	 * Tests that advice bindings can be dynamically added and removed from the
+	 * registry.
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=457888
+	 */
+	public void test_register_deregister_adviceBinding_457888() {
+		String id = "dynamic.advice.toBeRemoved"; //$NON-NLS-1$
+		final IAdviceBindingDescriptor advice = new MyAdviceBindingDescriptor(id, EmployeeType.EMPLOYEE.getId());
+
+		final boolean[] listenerNotifiedAdd = new boolean[] { false };
+		final boolean[] listenerNotifiedRemove = new boolean[] { false };
+		IElementTypeRegistryListener2 listener = new ElementTypeRegistryAdapter() {
+
+			public void adviceBindingAdded(AdviceBindingAddedEvent event) {
+				listenerNotifiedAdd[0] = true;
+				assertSame(advice, event.getAdviceBinding());
+			}
+
+			@Override
+			public void adviceBindingRemoved(AdviceBindingRemovedEvent event) {
+				listenerNotifiedRemove[0] = true;
+				assertSame(advice, event.getAdviceBinding());
+			}
+		};
+
+		boolean result;
+		getFixture().addElementTypeRegistryListener(listener);
+		try {
+			result = getFixture().registerAdvice(advice);
+			result = result && getFixture().deregisterAdvice(advice);
+		} finally {
+			getFixture().removeElementTypeRegistryListener(listener);
+		}
+
+		// Check that the element type was deregistered
+		assertTrue(result);
+		assertTrue(listenerNotifiedAdd[0]);
+		assertTrue(listenerNotifiedRemove[0]);
+
+		// Check that the advice can no longer be retrieved
+		IEditHelperAdvice boundAdvice = null;
+		for (IEditHelperAdvice next : Arrays.asList(getFixture().getEditHelperAdvice(EmployeeType.EMPLOYEE))) {
+			if (next instanceof MyAdvice) {
+				boundAdvice = next;
+				break;
+			}
+		}
+		assertNull(boundAdvice);
+	}
+
+	/**
+	 * Tests that statically-registered advice bindings from the extension point
+	 * cannot be removed from the registry (except by unloading the contributing
+	 * plug-in, which is not tested here).
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=457888
+	 */
+	public void test_deregister_static_adviceBinding_457888() {
+		String id = "org.eclipse.gmf.tests.runtime.emf.type.core.financeEmployee"; //$NON-NLS-1$
+
+		// Fake up a descriptor to try to remove the static advice
+		final IAdviceBindingDescriptor advice = new MyAdviceBindingDescriptor(id, EmployeeType.EMPLOYEE.getId());
+
+		final boolean[] listenerNotifiedRemove = new boolean[] { false };
+		IElementTypeRegistryListener2 listener = new ElementTypeRegistryAdapter() {
+
+			@Override
+			public void adviceBindingRemoved(AdviceBindingRemovedEvent event) {
+				listenerNotifiedRemove[0] = true;
+				assertSame(advice, event.getAdviceBinding());
+			}
+		};
+
+		boolean result;
+		getFixture().addElementTypeRegistryListener(listener);
+		try {
+			result = getFixture().deregisterAdvice(advice);
+		} finally {
+			getFixture().removeElementTypeRegistryListener(listener);
+		}
+
+		assertFalse(result);
+		assertFalse(listenerNotifiedRemove[0]);
 	}
 }

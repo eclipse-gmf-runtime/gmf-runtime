@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.type.core.internal.descriptors;
@@ -20,8 +21,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
-
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
@@ -226,6 +227,20 @@ public abstract class ElementTypeDescriptor implements IElementTypeDescriptor {
 	 */
 	public IConfigurationElement getConfigElement() {
 		return configElement;
+	}
+	
+	/**
+	 * Queries whether the element type is defined dynamically, not statically.
+	 * In practice, this means that it was
+	 * {@linkplain ElementTypeRegistry#register(org.eclipse.gmf.runtime.emf.type.core.IMetamodelType)
+	 * added} to the registry at run-time, not via the extension point.
+	 * 
+	 * @return whether the described element type is a dynamic definition
+	 * 
+	 * @since 1.9
+	 */
+	public boolean isDynamic() {
+		return getConfigElement() == null;
 	}
 
 	/**

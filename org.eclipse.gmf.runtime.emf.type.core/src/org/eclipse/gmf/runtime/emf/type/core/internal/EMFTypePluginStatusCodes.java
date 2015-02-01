@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.type.core.internal;
@@ -82,6 +83,14 @@ public class EMFTypePluginStatusCodes {
 	
 	public static final int CLIENT_NO_MATCHER = 71;
 
+	public static final int WRONG_TYPE = 80;
+	
+	public static final int WRONG_CLIENT_CONTEXT = 81;
+	
+	public static final int DEPENDENCY_CONSTRAINT = 82;
+	
+	public static final int LISTENER_EXCEPTION = 90;
+	
 
 	/**
 	 * Cannot be instantiated by clients.

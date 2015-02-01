@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,8 @@
 package org.eclipse.gmf.runtime.emf.type.core.internal.descriptors;
 
 import org.eclipse.core.runtime.CoreException;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.emf.type.core.AdviceBindingInheritance;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;

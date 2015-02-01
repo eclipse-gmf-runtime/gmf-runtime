@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.type.core;
@@ -39,9 +40,11 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
+import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.AdviceBindingDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.ElementTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.ElementTypeFactoryDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.ElementTypeXmlConfig;
+import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.IEditHelperAdviceDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.SpecializationTypeDescriptor;
@@ -98,9 +101,14 @@ public class ElementTypeRegistry {
 	private final Map elementTypeFactoryMap;
 
 	/**
-	 * Listeners for changes to this registry.
+	 * Listeners for additions to this registry.
 	 */
 	private final List elementTypeRegistryListeners;
+
+	/**
+	 * Listeners for removals from this registry.
+	 */
+	private final List elementTypeRegistryListener2s;
 
 	/**
 	 * Singleton instance.
@@ -117,11 +125,12 @@ public class ElementTypeRegistry {
 	private ElementTypeRegistry(IConfigurationElement[] configs) {
 		super();
 
-		specializationTypeRegistry = new SpecializationTypeRegistry();
+		specializationTypeRegistry = new SpecializationTypeRegistry(this);
 		metamodelTypeDescriptorsByNsURI = new HashMap();
 		metamodelTypeDescriptorsById = new HashMap();
 		elementTypeFactoryMap = new HashMap();
 		elementTypeRegistryListeners = new ArrayList();
+		elementTypeRegistryListener2s = new ArrayList();
 
 		registerNullElementType();
 
@@ -170,6 +179,10 @@ public class ElementTypeRegistry {
 			INSTANCE = new ElementTypeRegistry(configs);
 		}
 		return INSTANCE;
+	}
+	
+	final SpecializationTypeRegistry getSpecializationTypeRegistry() {
+		return specializationTypeRegistry;
 	}
 
 	/**
@@ -948,6 +961,211 @@ public class ElementTypeRegistry {
 	}
 
 	/**
+	 * Queries whether an {@code elementType} was dynamically registered (that
+	 * is, not statically registered on the extension point).
+	 * 
+	 * @param elementType
+	 *            an element type
+	 * @return whether it was dynamically registered
+	 * 
+	 * @since 1.9
+	 */
+	public boolean isDynamic(IElementType elementType) {
+		boolean result = false;
+
+		if (elementType != null) {
+			ElementTypeDescriptor descriptor = getTypeDescriptor(elementType.getId());
+			result = (descriptor != null) && descriptor.isDynamic();
+		}
+
+		return result;
+	}
+	
+	/**
+	 * <p>
+	 * Removes an {@code elementType} from this registry, if its ID is known to
+	 * the registry and it is {@linkplain #isDynamic(IElementType) dynamically
+	 * registered}.
+	 * </p>
+	 * <p>
+	 * Notifies clients if the element type was removed from the registry.
+	 * </p>
+	 * 
+	 * @param elementType
+	 *            the element type to deregister
+	 * @return {@code true} if the type was successfully removed, {@code false}
+	 *         otherwise
+	 * 
+	 * @see #register(IMetamodelType)
+	 * @see #register(ISpecializationType)
+	 * @see #isDynamic(IElementType)
+	 * 
+	 * @throws ClassCastException
+	 *             if the {@code elementType} is neither an
+	 *             {@link IMetamodelType} nor an {@link ISpecializationType}
+	 * 
+	 * @since 1.9
+	 */
+	public boolean deregister(IElementType elementType) {
+		boolean result = (elementType != null) && (getType(elementType.getId()) != null);
+
+		if (result) {
+			if (elementType instanceof IMetamodelType) {
+				result = deregisterMetamodelType((IMetamodelType) elementType);
+			} else {
+				result = specializationTypeRegistry.deregisterSpecializationType((ISpecializationType) elementType);
+			}
+		}
+
+		if (result) {
+			fireElementTypeRemoved(elementType);
+		}
+
+		return result;
+	}
+	
+	private boolean deregisterMetamodelType(IMetamodelType metamodelType) {
+		boolean result = false;
+
+		ElementTypeDescriptor descriptor = getTypeDescriptor(metamodelType.getId());
+
+		if (!(descriptor instanceof MetamodelTypeDescriptor)) {
+			Log.warning(
+					EMFTypePlugin.getPlugin(),
+					EMFTypePluginStatusCodes.WRONG_TYPE,
+					EMFTypeCoreMessages.bind(EMFTypeCoreMessages.wrong_type_WARN_, new Object[] {
+							metamodelType.getId(), EMFTypeCoreMessages.invalid_action_remove_WARN_,
+							EMFTypeCoreMessages.wrong_type_kind_metamodel_WARN_,
+							EMFTypeCoreMessages.wrong_type_kind_specialization_WARN_ }));
+		} else if (!descriptor.isDynamic()) {
+			Log.warning(
+					EMFTypePlugin.getPlugin(),
+					EMFTypePluginStatusCodes.DEPENDENCY_CONSTRAINT,
+					EMFTypeCoreMessages.bind(EMFTypeCoreMessages.dependency_constraint_WARN_, new Object[] {
+							metamodelType.getId(), EMFTypeCoreMessages.invalid_action_remove_WARN_,
+							EMFTypeCoreMessages.dependency_reason_static_WARN_ }));
+		} else {
+			if (specializationTypeRegistry.hasSpecializations(metamodelType)) {
+				Log.warning(
+						EMFTypePlugin.getPlugin(),
+						EMFTypePluginStatusCodes.DEPENDENCY_CONSTRAINT,
+						EMFTypeCoreMessages.bind(EMFTypeCoreMessages.dependency_constraint_WARN_, new Object[] {
+								metamodelType.getId(), EMFTypeCoreMessages.invalid_action_remove_WARN_,
+								EMFTypeCoreMessages.dependency_reason_specializations_WARN_ }));
+			} else {
+				MetamodelTypeDescriptor mmDescriptor = (MetamodelTypeDescriptor) descriptor;
+				result = deregister(mmDescriptor);
+
+				// No not remove advice bindings; they will remain dormant
+				// until a new element type with this ID is added.
+				// The ElementTypeUtil can be used to remove an element type
+				// and its bindings when necessary
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Removes a metamodel {@code typeDescriptor} from this registry.
+	 * 
+	 * @param typeDescriptor
+	 *            the descriptor of the type to be removed
+	 * @return {@code true} if the type was added, {@code false} otherwise
+	 */
+	private boolean deregister(MetamodelTypeDescriptor typeDescriptor) {
+		String nsURI = typeDescriptor.getNsURI();
+		String eClassName = typeDescriptor.getEClassName();
+
+		Map metamodelTypeDescriptorsByEClass = (Map) metamodelTypeDescriptorsByNsURI.get(nsURI);
+		if (metamodelTypeDescriptorsByEClass != null) {
+			Collection descriptors = (Collection) metamodelTypeDescriptorsByEClass.get(eClassName);
+
+			if (descriptors != null) {
+				descriptors.remove(typeDescriptor);
+			}
+		}
+
+		return metamodelTypeDescriptorsById.remove(typeDescriptor.getId()) != null;
+	}
+
+	/**
+	 * <p>
+	 * Registers an {@code adviceBindingDescriptor} under an ID that is unique
+	 * per target element type.
+	 * </p>
+	 * <p>
+	 * Notifies clients if the advice binding was added to the registry.
+	 * </p>
+	 * 
+	 * @param adviceBindingDescriptor
+	 *            the advice binding descriptor to register
+	 * @return {@code true} on successful registration of the advice,
+	 *         {@code false} otherwise (usually because an advice already is
+	 *         registered with the same ID for the same target element type)
+	 * 
+	 * @since 1.9
+	 */
+	public boolean registerAdvice(IAdviceBindingDescriptor adviceBindingDescriptor) {
+		IEditHelperAdviceDescriptor legacy = IEditHelperAdviceDescriptor.Shim.cast(adviceBindingDescriptor);
+
+		boolean result = specializationTypeRegistry.register(legacy);
+
+		if (result) {
+			fireAdviceBindingAdded(adviceBindingDescriptor);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Queries whether an {@code adviceBinding} was dynamically registered (that
+	 * is, not statically registered on the extension point).
+	 * 
+	 * @param adviceBinding
+	 *            an advice binding descriptor
+	 * @return whether it was dynamically registered
+	 * 
+	 * @since 1.9
+	 */
+	public boolean isDynamic(IAdviceBindingDescriptor adviceBinding) {
+		// These descriptors are initialized with IConfigurationElements from
+		// the extension point
+		return !(adviceBinding instanceof AdviceBindingDescriptor);
+	}
+
+	/**
+	 * <p>
+	 * Removes an existing {@code adviceBindingDescriptor} from the registry, if
+	 * it was dynamically added via the
+	 * {@link #registerAdvice(IAdviceBindingDescriptor)} API.
+	 * </p>
+	 * <p>
+	 * Notifies clients if the advice binding was removed from the registry.
+	 * </p>
+	 * 
+	 * @param adviceBindingDescriptor
+	 *            the advice binding descriptor to remove
+	 * @return {@code true} on successful removal of the advice, {@code false}
+	 *         otherwise (usually because the advice was not registered or
+	 *         because it was statically registered on the extension point)
+	 * 
+	 * @since 1.9
+	 * 
+	 * @see #isDynamic(IAdviceBindingDescriptor)
+	 */
+	public boolean deregisterAdvice(IAdviceBindingDescriptor adviceBindingDescriptor) {
+		boolean result = specializationTypeRegistry.deregisterAdviceBinding(adviceBindingDescriptor.getTypeId(),
+				adviceBindingDescriptor.getId());
+
+		if (result) {
+			fireAdviceBindingRemoved(adviceBindingDescriptor);
+		}
+
+		return result;
+	}
+	
+	/**
 	 * Removes specialization types from the registry that specialize more than
 	 * one metamodel type, or do not specialize any metamodel type.
 	 * <P>
@@ -1328,6 +1546,10 @@ public class ElementTypeRegistry {
 
 		if (!elementTypeRegistryListeners.contains(l)) {
 			elementTypeRegistryListeners.add(l);
+			
+			if (l instanceof IElementTypeRegistryListener2) {
+				elementTypeRegistryListener2s.add(l);
+			}
 		}
 	}
 
@@ -1340,9 +1562,8 @@ public class ElementTypeRegistry {
 	 */
 	public void removeElementTypeRegistryListener(IElementTypeRegistryListener l) {
 
-		if (elementTypeRegistryListeners.contains(l)) {
-			elementTypeRegistryListeners.remove(l);
-		}
+		elementTypeRegistryListeners.remove(l);
+		elementTypeRegistryListener2s.remove(l);
 	}
 
 	/**
@@ -1357,6 +1578,48 @@ public class ElementTypeRegistry {
 			IElementTypeRegistryListener nextListener = (IElementTypeRegistryListener) i
 				.next();
 			nextListener.elementTypeAdded(e);
+		}
+	}
+
+	private void fireElementTypeRemoved(IElementType elementType) {
+		if (!elementTypeRegistryListener2s.isEmpty()) {
+			ElementTypeRemovedEvent event = new ElementTypeRemovedEvent(elementType);
+			for (Iterator iter = elementTypeRegistryListener2s.iterator(); iter.hasNext();) {
+				try {
+					((IElementTypeRegistryListener2) iter.next()).elementTypeRemoved(event);
+				} catch (Exception e) {
+					Log.warning(EMFTypePlugin.getPlugin(), EMFTypePluginStatusCodes.LISTENER_EXCEPTION,
+							EMFTypeCoreMessages.registry_listener_exception_WARN_, e);
+				}
+			}
+		}
+	}
+
+	private void fireAdviceBindingAdded(IAdviceBindingDescriptor adviceBinding) {
+		if (!elementTypeRegistryListener2s.isEmpty()) {
+			AdviceBindingAddedEvent event = new AdviceBindingAddedEvent(IEditHelperAdviceDescriptor.Shim.uncast(adviceBinding));
+			for (Iterator iter = elementTypeRegistryListener2s.iterator(); iter.hasNext();) {
+				try {
+					((IElementTypeRegistryListener2) iter.next()).adviceBindingAdded(event);
+				} catch (Exception e) {
+					Log.warning(EMFTypePlugin.getPlugin(), EMFTypePluginStatusCodes.LISTENER_EXCEPTION,
+							EMFTypeCoreMessages.registry_listener_exception_WARN_, e);
+				}
+			}
+		}
+	}
+
+	private void fireAdviceBindingRemoved(IAdviceBindingDescriptor adviceBinding) {
+		if (!elementTypeRegistryListener2s.isEmpty()) {
+			AdviceBindingRemovedEvent event = new AdviceBindingRemovedEvent(IEditHelperAdviceDescriptor.Shim.uncast(adviceBinding));
+			for (Iterator iter = elementTypeRegistryListener2s.iterator(); iter.hasNext();) {
+				try {
+					((IElementTypeRegistryListener2) iter.next()).adviceBindingRemoved(event);
+				} catch (Exception e) {
+					Log.warning(EMFTypePlugin.getPlugin(), EMFTypePluginStatusCodes.LISTENER_EXCEPTION,
+							EMFTypeCoreMessages.registry_listener_exception_WARN_, e);
+				}
+			}
 		}
 	}
 	

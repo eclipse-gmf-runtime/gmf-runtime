@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.emf.type.core.internal.descriptors;
+package org.eclipse.gmf.runtime.emf.type.core;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +23,8 @@ import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
  * extension point.
  * 
  * @author ldamus
+ * 
+ * @since 1.9
  */
 public class AdviceBindingInheritance extends EnumeratedType {
 

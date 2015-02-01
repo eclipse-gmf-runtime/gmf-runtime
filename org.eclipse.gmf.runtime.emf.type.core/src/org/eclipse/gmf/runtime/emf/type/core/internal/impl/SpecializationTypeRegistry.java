@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.type.core.internal.impl;
@@ -30,6 +31,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.emf.type.core.AdviceBindingInheritance;
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.IAdviceBindingDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
@@ -42,7 +46,6 @@ import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.AdviceBindingDescriptor;
-import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.AdviceBindingInheritance;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.ElementTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.IEditHelperAdviceDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelDescriptor;
@@ -77,6 +80,12 @@ public class SpecializationTypeRegistry {
 							AdviceBindingInheritance.ALL }));
 
 	/**
+	 * The element-type registry that owns me, in which {@link IMetamodelType}s
+	 * are registered.
+	 */
+	private final ElementTypeRegistry owner;
+	
+	/**
 	 * Specialization type descriptors stored by ID. Each value is a
 	 * <code>SpecializationTypeDescriptor</code>.
 	 */
@@ -90,20 +99,37 @@ public class SpecializationTypeRegistry {
 	private final Map specializationsForTypeId;
 
 	/**
-	 * Edit helper advice stored by target element type ID. Each value is a set
-	 * of IEditHelperAdviceDescriptors.
+	 * Edit helper advice stored by target element type ID. Each value is a map
+	 * of IEditHelperAdviceDescriptors by advice ID.
 	 */
-	private final Map adviceBindings;
+	private final Map<String, Map<String, IEditHelperAdviceDescriptor>> adviceBindings;
 
 	/**
 	 * Constructs a new specialization type registry.
+	 * 
+	 * @param owner
+	 *            the element-type registry that owns me and registers the
+	 *            {@link IMetamodelType}s
 	 */
-	public SpecializationTypeRegistry() {
+	public SpecializationTypeRegistry(ElementTypeRegistry owner) {
 		super();
 
+		this.owner = owner;
 		specializationTypeDescriptors = new HashMap();
 		specializationsForTypeId = new HashMap();
-		adviceBindings = new HashMap();
+		adviceBindings = new HashMap<String, Map<String,IEditHelperAdviceDescriptor>>();
+	}
+	
+	/**
+	 * Obtains the element-type registry that owns me and manages the
+	 * {@link IMetamodelType}s.
+	 * 
+	 * @return my owner
+	 * 
+	 * @since 1.8
+	 */
+	public final ElementTypeRegistry getElementTypeRegistry() {
+		return owner;
 	}
 	
 	/**
@@ -224,17 +250,155 @@ public class SpecializationTypeRegistry {
 	 * 
 	 * @param descriptor
 	 *            the edit helper advice descriptor
+	 * 
+	 * @since 1.8
 	 */
-	private void register(IEditHelperAdviceDescriptor descriptor) {
+	public boolean register(IEditHelperAdviceDescriptor descriptor) {
+
+		if (descriptor == null) {
+			return false;
+		}
 
 		String targetId = descriptor.getTypeId();
-		Set bindings = (Set) adviceBindings.get(targetId);
+		Map<String, IEditHelperAdviceDescriptor> bindings = adviceBindings.get(targetId);
 
+		String adviceID = descriptor.getId();
 		if (bindings == null) {
-			bindings = new HashSet();
+			bindings = new HashMap<String, IEditHelperAdviceDescriptor>();
 			adviceBindings.put(targetId, bindings);
+		} else if (bindings.containsKey(adviceID)) {
+			return false;
 		}
-		bindings.add(descriptor);
+
+		bindings.put(adviceID, descriptor);
+
+		return true;
+	}
+
+	/**
+	 * Removes an advice binding from this registry, if its ID is
+	 * known to the registry and it is
+	 * {@linkplain ElementTypeRegistry#isDynamic(IAdviceBindingDescriptor) dynamically
+	 * registered}.
+	 * 
+	 * @param elementTypeID the ID of the binding's target element type
+	 * @param adviceID the ID of the advice to remove
+	 * 
+	 * @return {@code true} if the advice was successfully removed, {@code false}
+	 *         otherwise
+	 * 
+	 * @see ElementTypeRegistry#registerAdvice(IAdviceBindingDescriptor)
+	 * @see ElementTypeRegistry#isDynamic(IAdviceBindingDescriptor)
+	 * 
+	 * @since 1.9
+	 */
+	public boolean deregisterAdviceBinding(String elementTypeID, String adviceID) {
+		boolean result = false;
+
+		Map<String, IEditHelperAdviceDescriptor> bindings = adviceBindings.get(elementTypeID);
+		if (bindings != null) {
+			IEditHelperAdviceDescriptor descriptor = bindings.get(adviceID);
+			if (descriptor != null) {
+				if (!getElementTypeRegistry().isDynamic(descriptor)) {
+					Log.warning(
+							EMFTypePlugin.getPlugin(),
+							EMFTypePluginStatusCodes.DEPENDENCY_CONSTRAINT,
+							EMFTypeCoreMessages.bind(EMFTypeCoreMessages.dependency_constraint_WARN_, new Object[] {
+									adviceID, EMFTypeCoreMessages.invalid_action_remove_advice_WARN_,
+									EMFTypeCoreMessages.dependency_reason_static_WARN_ }));
+				} else {
+					bindings.remove(adviceID);
+					result = true;
+
+					if (bindings.isEmpty()) {
+						adviceBindings.remove(elementTypeID);
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Removes a {@code specializationType} from this registry, if its ID is
+	 * known to the registry and it is
+	 * {@linkplain ElementTypeRegistry#isDynamic(IElementType) dynamically
+	 * registered}.
+	 * 
+	 * @param specializationType
+	 *            the element type to deregister. It must not be {@code null}
+	 *            and must currently be registered
+	 * @return {@code true} if the type was successfully removed, {@code false}
+	 *         otherwise
+	 * 
+	 * @see ElementTypeRegistry#register(ISpecializationType)
+	 * @see ElementTypeRegistry#isDynamic(IElementType)
+	 * 
+	 * @since 1.9
+	 */
+	public boolean deregisterSpecializationType(ISpecializationType specializationType) {
+		boolean result = false;
+
+		SpecializationTypeDescriptor descriptor = getSpecializationTypeDescriptor(specializationType.getId());
+
+		if (descriptor == null) {
+			Log.warning(
+					EMFTypePlugin.getPlugin(),
+					EMFTypePluginStatusCodes.WRONG_TYPE,
+					EMFTypeCoreMessages.bind(EMFTypeCoreMessages.wrong_type_WARN_,
+							new Object[] { specializationType.getId(), EMFTypeCoreMessages.invalid_action_remove_WARN_,
+									EMFTypeCoreMessages.wrong_type_kind_specialization_WARN_,
+									EMFTypeCoreMessages.wrong_type_kind_metamodel_WARN_ }));
+		} else if (!descriptor.isDynamic()) {
+			Log.warning(
+					EMFTypePlugin.getPlugin(),
+					EMFTypePluginStatusCodes.DEPENDENCY_CONSTRAINT,
+					EMFTypeCoreMessages.bind(EMFTypeCoreMessages.dependency_constraint_WARN_, new Object[] {
+							specializationType.getId(), EMFTypeCoreMessages.invalid_action_remove_WARN_,
+							EMFTypeCoreMessages.dependency_reason_static_WARN_ }));
+		} else {
+			if (hasSpecializations(specializationType)) {
+				Log.warning(
+						EMFTypePlugin.getPlugin(),
+						EMFTypePluginStatusCodes.DEPENDENCY_CONSTRAINT,
+						EMFTypeCoreMessages.bind(EMFTypeCoreMessages.dependency_constraint_WARN_, new Object[] {
+								specializationType.getId(), EMFTypeCoreMessages.invalid_action_remove_WARN_,
+								EMFTypeCoreMessages.dependency_reason_specializations_WARN_ }));
+			} else {
+				removeSpecializationType(descriptor);
+				
+				// No not remove advice bindings, except for the special
+				// edit-helper // advice that makes the element type; otherws
+				// will remain dormant until a new element type with this ID is
+				// added.
+				// The ElementTypeUtil can be used to remove an element type and
+				// its bindings when necessary
+				IEditHelperAdviceDescriptor advice = descriptor.getEditHelperAdviceDescriptor();
+				if (advice != null) {
+					getElementTypeRegistry().deregisterAdvice(advice);
+				}
+				
+				result = true;
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Queries whether an {@code elementType} has any specializations at all
+	 * currently registered.
+	 * 
+	 * @param elementType
+	 *            an element type
+	 * @return whether it has any specializations (in any context)
+	 * 
+	 * @since 1.9
+	 */
+	public boolean hasSpecializations(IElementType elementType) {
+		Collection specializations = (Collection) specializationsForTypeId.get(elementType.getId());
+		return (specializations != null) && !specializations.isEmpty();
 	}
 
 	/**
@@ -802,14 +966,16 @@ public class SpecializationTypeRegistry {
 	 * 
 	 * @return an immutable iterator of the advice bindings (cannot
 	 *     {@linkplain Iterator#remove() remove} from it)
+	 * 
+	 * @since 1.9
 	 */
-	private Iterator getAdviceBindings(String elementTypeId) {
-		class MultiIterator implements Iterator {
-			private Iterator current;
-			private Collection[] collections;
+	public Iterator<IEditHelperAdviceDescriptor> getAdviceBindings(String elementTypeId) {
+		class MultiIterator implements Iterator<IEditHelperAdviceDescriptor> {
+			private Iterator<IEditHelperAdviceDescriptor> current;
+			private Map[] collections;
 			private int index = 0;
 			
-			MultiIterator(Collection[] collections) {
+			MultiIterator(Map[] collections) {
 				this.collections = collections;
 				current = nextIterator();
 			}
@@ -826,7 +992,7 @@ public class SpecializationTypeRegistry {
 				return false;
 			}
 
-			public Object next() {
+			public IEditHelperAdviceDescriptor next() {
 				if (!hasNext()) {
 					throw new NoSuchElementException();
 				}
@@ -838,12 +1004,12 @@ public class SpecializationTypeRegistry {
 				throw new UnsupportedOperationException();
 			}
 			
-			private Iterator nextIterator() {
-				Iterator result = null;
+			private Iterator<IEditHelperAdviceDescriptor> nextIterator() {
+				Iterator<IEditHelperAdviceDescriptor> result = null;
 				
 				while ((result == null) && (index < collections.length)) {
 					if (collections[index] != null) {
-						result = collections[index].iterator();
+						result = collections[index].values().iterator();
 						collections[index] = null; // free memory
 					}
 					
@@ -854,9 +1020,15 @@ public class SpecializationTypeRegistry {
 			}
 		}
 		
-		return new MultiIterator(new Collection[] {
-				(Collection) adviceBindings.get(elementTypeId),
-				(Collection) adviceBindings.get("*") //$NON-NLS-1$
+		if (getElementTypeRegistry().getType(elementTypeId) == null) {
+			// If the type doesn't actually exist, then of course it has no
+			// advice
+			return Collections.EMPTY_LIST.iterator();
+		}
+		
+		return new MultiIterator(new Map[] {
+				adviceBindings.get(elementTypeId),
+				adviceBindings.get("*") //$NON-NLS-1$
 		});
 	}
 

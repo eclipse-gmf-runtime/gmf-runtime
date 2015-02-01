@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.type.core;
@@ -16,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -74,6 +76,8 @@ public final class ClientContextManager {
 	private final Set clientContexts = new java.util.HashSet();
 
 	private final Map clientContextMap = new java.util.HashMap();
+	
+	private final CopyOnWriteArrayList<IClientContextManagerListener> listeners = new CopyOnWriteArrayList<IClientContextManagerListener>();
 	
 	private ExtensionTracker extensionTracker;
 	
@@ -342,9 +346,85 @@ public final class ClientContextManager {
 		// prevent duplicates
 		if (clientContexts.add(clientContext)) {
 			clientContextMap.put(clientContext.getId(), clientContext);
+			
+			fireClientContextAdded(clientContext);
 		}
 	}
 
+	/**
+	 * Queries whether a {@code clientContext} was dynamically registered (that
+	 * is, not statically registered on the extension point).
+	 * 
+	 * @param clientContext
+	 *            a clientContext
+	 * @return whether it was dynamically registered
+	 * 
+	 * @since 1.9
+	 */
+	public boolean isDynamic(IClientContext clientContext) {
+		boolean result = true;
+
+		// If it's some other kind of client-context, then it cannot be one that
+		// we registered from the extension point, because all of those are of
+		// some subtype of ClientContext
+		if (clientContext instanceof ClientContext) {
+			result = ((ClientContext) clientContext).isDynamic();
+		}
+
+		return result;
+	}
+
+	/**
+	 * Removes a {@linkplain #isDynamic(IClientContext) dynamically-added} {@code clientContext} from the system.
+	 * 
+	 * @param clientContext
+	 *            a client-context to remove
+	 * @return {@code true} if it was successfully removed, {@code false}
+	 *         otherwise, for example if it was not currently registered or a
+	 *         different context instance is registered under the same ID, or
+	 *         it was not {@linkplain #isDynamic(IClientContext) dynamically added}
+	 * 
+	 * @since 1.9
+	 * 
+	 * @see #isDynamic(IClientContext)
+	 */
+	public boolean deregisterClientContext(IClientContext clientContext) {
+		boolean result = false;
+
+		IClientContext existing = (IClientContext) clientContextMap.get(clientContext.getId());
+		if (existing != null) {
+			if (existing != clientContext) {
+				// An impostor
+				Log.warning(
+						EMFTypePlugin.getPlugin(),
+						EMFTypePluginStatusCodes.WRONG_CLIENT_CONTEXT,
+						EMFTypeCoreMessages.bind(
+								EMFTypeCoreMessages.wrong_type_WARN_,
+								new Object[] { clientContext.getId(),
+										EMFTypeCoreMessages.invalid_action_remove_context_WARN_,
+										clientContext.toString(), existing.toString() }));
+			} else if (!isDynamic(clientContext)) {
+				Log.warning(
+						EMFTypePlugin.getPlugin(),
+						EMFTypePluginStatusCodes.DEPENDENCY_CONSTRAINT,
+						EMFTypeCoreMessages.bind(EMFTypeCoreMessages.dependency_constraint_WARN_, new Object[] {
+								clientContext.getId(), EMFTypeCoreMessages.invalid_action_remove_context_WARN_,
+								EMFTypeCoreMessages.dependency_reason_static_WARN_ }));
+			} else {
+				clientContextMap.remove(clientContext.getId());
+				clientContexts.remove(clientContext);
+
+				result = true;
+			}
+		}
+
+		if (result) {
+			fireClientContextRemoved(clientContext);
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * Helper method to configure the <code>&lt;clientContext&gt;</code>
 	 * occurrences amongst the <code>elements</code>.
@@ -554,6 +634,64 @@ public final class ClientContextManager {
 															.bind(
 																	EMFTypeCoreMessages.pattern_invalid_syntax_ERROR_,
 																	patternString)), pse);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Adds a {@code listener} for additions and removals of client contexts.
+	 * Has no effect if the {@code listener} is already attached.
+	 * 
+	 * @param listener
+	 *            the listener to add
+	 * 
+	 * @see #removeClientContextManagerListener(IClientContextManagerListener)
+	 * 
+	 * @since 1.9
+	 */
+	public void addClientContextManagerListener(IClientContextManagerListener listener) {
+		listeners.addIfAbsent(listener);
+	}
+
+	/**
+	 * Removes a {@code listener} from me. Has no effect if the {@code listener}
+	 * is not currently attached.
+	 * 
+	 * @param listener
+	 *            the listener to remove
+	 * 
+	 * @see #addClientContextManagerListener(IClientContextManagerListener)
+	 * 
+	 * @since 1.8
+	 */
+	public void removeClientContextManagerListener(IClientContextManagerListener listener) {
+		listeners.remove(listener);
+	}
+
+	private void fireClientContextAdded(IClientContext context) {
+		if (!listeners.isEmpty()) {
+			ClientContextAddedEvent event = new ClientContextAddedEvent(context);
+			for (IClientContextManagerListener next : listeners) {
+				try {
+					next.clientContextAdded(event);
+				} catch (Exception e) {
+					Log.warning(EMFTypePlugin.getPlugin(), EMFTypePluginStatusCodes.LISTENER_EXCEPTION,
+							EMFTypeCoreMessages.contextManager_listener_exception_WARN_, e);
+				}
+			}
+		}
+	}
+
+	private void fireClientContextRemoved(IClientContext context) {
+		if (!listeners.isEmpty()) {
+			ClientContextRemovedEvent event = new ClientContextRemovedEvent(context);
+			for (IClientContextManagerListener next : listeners) {
+				try {
+					next.clientContextRemoved(event);
+				} catch (Exception e) {
+					Log.warning(EMFTypePlugin.getPlugin(), EMFTypePluginStatusCodes.LISTENER_EXCEPTION,
+							EMFTypeCoreMessages.contextManager_listener_exception_WARN_, e);
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Christian W. Damus - bug 457888
  *******************************************************************************/
 package org.eclipse.gmf.runtime.emf.type.core.internal.l10n;
 
@@ -38,6 +39,15 @@ public final class EMFTypeCoreMessages extends NLS {
 	public static String type_reason_no_specialized_id_WARN_;
 	public static String type_reason_no_param_name_WARN_;
 	public static String type_reason_no_param_value_WARN_;
+	public static String wrong_type_WARN_;
+	public static String invalid_action_remove_WARN_;
+	public static String invalid_action_remove_advice_WARN_;
+	public static String invalid_action_remove_context_WARN_;
+	public static String wrong_type_kind_metamodel_WARN_;
+	public static String wrong_type_kind_specialization_WARN_;
+	public static String dependency_constraint_WARN_;
+	public static String dependency_reason_static_WARN_;
+	public static String dependency_reason_specializations_WARN_;
 	public static String adviceBinding_not_init_WARN_;
 	public static String adviceBinding_reason_no_id_WARN_;
 	public static String adviceBinding_reason_no_type_id_WARN_;
@@ -77,6 +87,8 @@ public final class EMFTypeCoreMessages extends NLS {
 	public static String moveElementsCommand_noTargetFeature;
 	public static String destroyCommandFailed;
 	public static String createElementCommand_noElementCreated;
+	public static String registry_listener_exception_WARN_;
+	public static String contextManager_listener_exception_WARN_;
 	
 	public static String defaultEditHelper_name;
 

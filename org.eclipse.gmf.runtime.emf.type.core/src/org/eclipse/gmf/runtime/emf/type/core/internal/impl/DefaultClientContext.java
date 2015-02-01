@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.type.core.internal.impl;
@@ -100,6 +101,11 @@ public final class DefaultClientContext extends ClientContext {
 			result = ClientContextManager.getInstance().getBinding(elementType) == _instance;
 		}
 		return result;
+	}
+	
+	@Override
+	protected boolean computeDynamic() {
+		return false;
 	}
 
 }

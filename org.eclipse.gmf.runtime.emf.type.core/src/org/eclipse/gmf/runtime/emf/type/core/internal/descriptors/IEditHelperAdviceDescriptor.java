@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,12 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.internal.descriptors;
 
+import org.eclipse.gmf.runtime.emf.type.core.AdviceBindingInheritance;
+import org.eclipse.gmf.runtime.emf.type.core.IAdviceBindingDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
+
 
 /**
  * Descriptor for edit helper advice. Used to prevent premature loading 
@@ -22,52 +25,77 @@ import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
  * 
  * @author ldamus
  */
-public interface IEditHelperAdviceDescriptor {
-
-	/**
-	 * Gets the ID of this advice.
-	 * 
-	 * @return the advice ID
-	 */
-	public abstract String getId();
+public interface IEditHelperAdviceDescriptor extends IAdviceBindingDescriptor {
 	
 	/**
-	 * Gets the identifier of the element type that this advice is bound to.
-	 * 
-	 * @return the element type identifier.
+	 * A compatibility shim that wraps public-API binding descriptors in the
+	 * legacy internal API. This is necessary because several public API classes
+	 * publish API in terms of the internal {@link IEditHelperAdviceDescriptor}
+	 * interface.
 	 */
-	public abstract String getTypeId();
+	class Shim implements IEditHelperAdviceDescriptor {
+		private final IAdviceBindingDescriptor delegate;
 
-	/**
-	 * Gets the element matcher.
-	 * <P>
-	 * May cause the plugin defining the matcher class to be loaded.
-	 * 
-	 * @return the element matcher
-	 */
-	public abstract IElementMatcher getMatcher();
-	
-	/**
-	 * Gets the container descriptor. May be <code>null</code>.
-	 * 
-	 * @return the container descriptor
-	 */
-	public IContainerDescriptor getContainerDescriptor();
+		private Shim(IAdviceBindingDescriptor delegate) {
+			super();
 
-	/**
-	 * Gets my edit helper advice. The advice can return 'before' or 'after'
-	 * editing commands for editing elements of the types that I specialize.
-	 * <P>
-	 * May cause the plugin defining the matcher class to be loaded.
-	 * 
-	 * @return the edit helper advice.
-	 */
-	public abstract IEditHelperAdvice getEditHelperAdvice();
+			this.delegate = delegate;
+		}
+		
+		/**
+		 * Obtains the legacy {@link IEditHelperAdviceDescriptor} view of an
+		 * advice-binding {@code descriptor}, shimming it if necessary.
+		 * 
+		 * @param descriptor
+		 *            an advice-binding descriptor of the public API
+		 * 
+		 * @return the {@code descriptor} if it implements the legacy API or
+		 *         else a shim that does
+		 */
+		public static IEditHelperAdviceDescriptor cast(IAdviceBindingDescriptor descriptor) {
+			return (descriptor == null) ? null
+					: (descriptor instanceof IEditHelperAdviceDescriptor) ? (IEditHelperAdviceDescriptor) descriptor
+							: new Shim(descriptor);
+		}
+		
+		/**
+		 * Obtains the public API {@link IAdviceBindingDescriptor} view of an
+		 * advice-binding {@code descriptor}, un-shimming it if is is a shim to
+		 * restore the client's original instance.
+		 * 
+		 * @param descriptor
+		 *            an advice-binding descriptor of the public or legacy API
+		 * 
+		 * @return the {@code descriptor} if it not a shim, otherwise the
+		 *         descriptor that it shims
+		 */
+		public static IAdviceBindingDescriptor uncast(IAdviceBindingDescriptor descriptor) {
+			return (descriptor == null) ? null : (descriptor instanceof Shim) ? ((Shim) descriptor).delegate
+					: descriptor;
+		}
 
-	/**
-	 * Indicates the related element types that should inherit this advice.
-	 * 
-	 * @return the kind of inheritance
-	 */
-	public abstract AdviceBindingInheritance getInheritance();
+		public String getId() {
+			return delegate.getId();
+		}
+
+		public String getTypeId() {
+			return delegate.getTypeId();
+		}
+
+		public IElementMatcher getMatcher() {
+			return delegate.getMatcher();
+		}
+
+		public IContainerDescriptor getContainerDescriptor() {
+			return delegate.getContainerDescriptor();
+		}
+
+		public IEditHelperAdvice getEditHelperAdvice() {
+			return delegate.getEditHelperAdvice();
+		}
+
+		public AdviceBindingInheritance getInheritance() {
+			return delegate.getInheritance();
+		}
+	}
 }

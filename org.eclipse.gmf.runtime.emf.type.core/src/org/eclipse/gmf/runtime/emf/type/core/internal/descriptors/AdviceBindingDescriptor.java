@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,10 @@ package org.eclipse.gmf.runtime.emf.type.core.internal.descriptors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.emf.type.core.AbstractAdviceBindingDescriptor;
+import org.eclipse.gmf.runtime.emf.type.core.AdviceBindingInheritance;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
@@ -29,23 +30,8 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
  * 
  * @author ldamus
  */
-public class AdviceBindingDescriptor
+public class AdviceBindingDescriptor extends AbstractAdviceBindingDescriptor
 	implements IEditHelperAdviceDescriptor {
-
-	/**
-	 * The advice binding ID.
-	 */
-	private final String id;
-	
-	/**
-	 * The identifier of this element type.
-	 */
-	private final String typeId;
-
-	/**
-	 * Indicates the related element types that should inherite this advice.
-	 */
-	private final AdviceBindingInheritance inheritance;
 
 	/**
 	 * The matcher class name. May be <code>null</code>.
@@ -65,18 +51,13 @@ public class AdviceBindingDescriptor
 	/**
 	 * The binding configuration element.
 	 */
-	private final IConfigurationElement bindingConfig;
+	final IConfigurationElement bindingConfig;
 
 	/**
 	 * The class name of the edit helper advice.
 	 */
-	private String editHelperAdviceName;
+	String editHelperAdviceName;
 	
-	/**
-	 * The edit helper advice.
-	 */
-	private IEditHelperAdvice editHelperAdvice;
-
 	/**
 	 * The container descriptor.
 	 */
@@ -100,11 +81,12 @@ public class AdviceBindingDescriptor
 			MetamodelDescriptor metamodelDescriptor)
 		throws CoreException {
 
+		super(config.getAttribute(ElementTypeXmlConfig.A_ID), config.getAttribute(ElementTypeXmlConfig.A_TYPE_ID), getInheritance(config));
+		
 		this.bindingConfig = config;
 		this.metamodelDescriptor = metamodelDescriptor;
 	
 		// ID
-		this.id = config.getAttribute(ElementTypeXmlConfig.A_ID);
 		if (id == null) {
 			throw EMFTypePluginStatusCodes.getAdviceBindingInitException(
 					StringStatics.BLANK,
@@ -122,7 +104,6 @@ public class AdviceBindingDescriptor
 		}
 
 		// TYPE ID
-		this.typeId = config.getAttribute(ElementTypeXmlConfig.A_TYPE_ID);
 		if (typeId == null) {
 			throw EMFTypePluginStatusCodes.getAdviceBindingInitException(id,
 					EMFTypeCoreMessages.adviceBinding_reason_no_type_id_WARN_);
@@ -136,24 +117,6 @@ public class AdviceBindingDescriptor
 			containerDescriptor = new ContainerDescriptor(containerConfigs[0],
 				metamodelDescriptor, getId());
 		}
-
-		// APPLY TO RELATED ELEMENT TYPES
-		String inheritanceString = config
-				.getAttribute(ElementTypeXmlConfig.A_INHERITANCE);
-		AdviceBindingInheritance declaredInheritance = AdviceBindingInheritance
-				.getAdviceBindingInheritance(inheritanceString);
-
-		if (declaredInheritance == null) {
-			if (inheritanceString != null) {
-				// Invalid inheritance value
-				throw EMFTypePluginStatusCodes.getAdviceBindingInitException(id,
-						EMFTypeCoreMessages.adviceBinding_reason_invalid_inheritance_WARN_);
-			}
-			// Default inheritance is NONE
-			declaredInheritance = AdviceBindingInheritance.NONE;
-		}
-		
-		this.inheritance = declaredInheritance;
 
 		// XML MATCHER EXPRESSION
 		IConfigurationElement[] enablementConfigs = config
@@ -286,5 +249,23 @@ public class AdviceBindingDescriptor
 	
 	public String toString() {
 		return "AdviceBindingDescriptor[" + getId()+ "]";  //$NON-NLS-1$//$NON-NLS-2$
+	}
+	
+	private static AdviceBindingInheritance getInheritance(IConfigurationElement config) throws CoreException {
+		String inheritanceString = config.getAttribute(ElementTypeXmlConfig.A_INHERITANCE);
+		AdviceBindingInheritance result = AdviceBindingInheritance.getAdviceBindingInheritance(inheritanceString);
+
+		if (result == null) {
+			if (inheritanceString != null) {
+				// Invalid inheritance value
+				throw EMFTypePluginStatusCodes.getAdviceBindingInitException(
+						config.getAttribute(ElementTypeXmlConfig.A_ID),
+						EMFTypeCoreMessages.adviceBinding_reason_invalid_inheritance_WARN_);
+			}
+			// Default inheritance is NONE
+			result = AdviceBindingInheritance.NONE;
+		}
+
+		return result;
 	}
 }

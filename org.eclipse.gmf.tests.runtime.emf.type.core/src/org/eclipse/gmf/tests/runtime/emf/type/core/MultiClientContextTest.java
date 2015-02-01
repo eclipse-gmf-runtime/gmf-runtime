@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core;
 
@@ -27,16 +28,25 @@ import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.MultiClientContext;
+import org.eclipse.gmf.runtime.emf.type.core.NullElementMatcher;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 
 public class MultiClientContextTest extends AbstractEMFTypeTest {
 
+	private static final String EXAMPLE1_EMPLOYEE_TYPE_ID = "org.eclipse.gmf.tests.runtime.emf.type.example1.employee"; //$NON-NLS-1$
+
+	private static final String EXAMPLE2_EMPLOYEE_TYPE_ID = "org.eclipse.gmf.tests.runtime.emf.type.example2.employee"; //$NON-NLS-1$
+
+	private static final Pattern EXAMPLE2_PATTERN = Pattern.compile("\\Qorg.eclipse.gmf.tests.runtime.emf.type.example2.\\E.*"); //$NON-NLS-1$
+	
 	private MultiClientContext multiContext;
 
 	private IClientContext childContext1;
 
 	private IClientContext childContext2;
+	
+	private IClientContext childContext3;
 
 	private IClientContext clientContext1;
 
@@ -60,7 +70,7 @@ public class MultiClientContextTest extends AbstractEMFTypeTest {
 
 	public static Test suite() {
 		return new TestSuite(MultiClientContextTest.class,
-				"MultiClientContext Test Suit"); //$NON-NLS-1$
+				"MultiClientContext Test Suite"); //$NON-NLS-1$
 	}
 
 	protected void doModelSetupWithContext(Resource resource) {
@@ -97,6 +107,10 @@ public class MultiClientContextTest extends AbstractEMFTypeTest {
 								&& ((Employee) eObject).getNumber() == 101;
 					};
 				});
+		
+		childContext3 = new ClientContext("childContext3", new NullElementMatcher()); //$NON-NLS-1$
+		childContext3.bindId(EXAMPLE1_EMPLOYEE_TYPE_ID);
+		childContext3.bindPattern(EXAMPLE2_PATTERN);
 
 		multiContext = new MultiClientContext(Collections.singletonList(childContext1));
 	}
@@ -141,6 +155,7 @@ public class MultiClientContextTest extends AbstractEMFTypeTest {
 		multiContext.bindId(typeID);
 
 		assertTrue(multiContext.includes(type));
+		assertTrue(childContext1.includes(type));
 	}
 
 	public void test_bindPattern() {

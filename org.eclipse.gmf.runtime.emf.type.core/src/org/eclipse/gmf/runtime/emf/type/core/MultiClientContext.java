@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2015 IBM Corporation, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.type.core;
@@ -143,6 +144,55 @@ public class MultiClientContext implements IClientContext {
 		for (Iterator i = getChildren().iterator(); i.hasNext();) {
 			IClientContext next = (IClientContext) i.next();
 			next.bindPattern(pattern);
+		}
+	}
+
+	/**
+	 * Removes a specific element-type/advice binding by ID from each of my
+	 * children that are {@link ClientContext}s or {@link MultiClientContext}s.
+	 * Note that patterns may still match element types and/or advices and
+	 * implictly re-bind them.
+	 * 
+	 * @param typeId
+	 *            the element-type or advice ID to remove from the context
+	 * 
+	 * @see #unbindPattern(Pattern)
+	 * 
+	 * @since 1.9
+	 */
+	public void unbindId(String typeId) {
+		for (Iterator i = getChildren().iterator(); i.hasNext();) {
+			Object next = i.next();
+			if (next instanceof ClientContext) {
+				((ClientContext) next).unbindId(typeId);
+			} else if (next instanceof MultiClientContext) {
+				((MultiClientContext) next).unbindId(typeId);
+			}
+		}
+	}
+
+	/**
+	 * Removes a specific element-type/advice binding by regular expression
+	 * {@code pattern} from each of my children that are {@link ClientContext}s
+	 * or {@link MultiClientContext}s. This also implicitly unbinds any specific
+	 * IDs that match the pattern.
+	 * 
+	 * @param pattern
+	 *            the element-type or advice ID pattern to remove from the
+	 *            context
+	 * 
+	 * @see #unbindId(String)
+	 * 
+	 * @since 1.9
+	 */
+	public void unbindPattern(Pattern pattern) {
+		for (Iterator i = getChildren().iterator(); i.hasNext();) {
+			Object next = i.next();
+			if (next instanceof ClientContext) {
+				((ClientContext) next).unbindPattern(pattern);
+			} else if (next instanceof MultiClientContext) {
+				((MultiClientContext) next).unbindPattern(pattern);
+			}
 		}
 	}
 
