@@ -196,7 +196,7 @@ public class ElementTypeUtil {
 
 	private static Comparator<IElementType> bySpecialization() {
 		return new Comparator<IElementType>() {
-			@Override
+			
 			public int compare(IElementType o1, IElementType o2) {
 				int result = 0;
 
