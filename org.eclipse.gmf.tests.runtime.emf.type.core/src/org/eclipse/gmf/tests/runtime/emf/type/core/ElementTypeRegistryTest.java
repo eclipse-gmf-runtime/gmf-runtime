@@ -103,12 +103,10 @@ public class ElementTypeRegistryTest
 			super(id, typeID, AdviceBindingInheritance.ALL, new MyAdvice());
 		}
 
-		@Override
 		public IElementMatcher getMatcher() {
 			return null;
 		}
 
-		@Override
 		public IContainerDescriptor getContainerDescriptor() {
 			return null;
 		}

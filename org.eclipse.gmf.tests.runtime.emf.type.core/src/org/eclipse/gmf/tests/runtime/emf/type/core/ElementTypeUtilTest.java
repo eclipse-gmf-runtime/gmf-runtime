@@ -439,12 +439,10 @@ public class ElementTypeUtilTest extends TestCase {
 			super(id, typeID, AdviceBindingInheritance.ALL, new MyAdvice());
 		}
 
-		@Override
 		public IElementMatcher getMatcher() {
 			return null;
 		}
 
-		@Override
 		public IContainerDescriptor getContainerDescriptor() {
 			return null;
 		}
@@ -458,22 +456,18 @@ public class ElementTypeUtilTest extends TestCase {
 		List<IAdviceBindingDescriptor> addedAdvices = new ArrayList<IAdviceBindingDescriptor>();
 		List<IAdviceBindingDescriptor> removedAdvices = new ArrayList<IAdviceBindingDescriptor>();
 
-		@Override
 		public void elementTypeAdded(ElementTypeAddedEvent event) {
 			addedTypes.add(getFixture().getType(event.getElementTypeId()));
 		}
 
-		@Override
 		public void elementTypeRemoved(ElementTypeRemovedEvent event) {
 			removedTypes.add(event.getElementType());
 		}
 
-		@Override
 		public void adviceBindingAdded(AdviceBindingAddedEvent event) {
 			addedAdvices.add(event.getAdviceBinding());
 		}
 
-		@Override
 		public void adviceBindingRemoved(AdviceBindingRemovedEvent event) {
 			removedAdvices.add(event.getAdviceBinding());
 		}
