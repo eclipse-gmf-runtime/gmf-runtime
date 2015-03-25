@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?><?pde version="3.8"?><target name="gmf-runtime" sequenceNumber="58">
+<?xml version="1.0" encoding="UTF-8"?><?pde version="3.8"?><target name="gmf-runtime" sequenceNumber="60">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.5.0.I20150203-1300"/>
-<unit id="org.eclipse.test.feature.group" version="3.6.100.v20141110-2032"/>
-<unit id="org.eclipse.sdk.tests.feature.group" version="4.4.1.v20150203-1909"/>
-<unit id="org.eclipse.platform.ide" version="4.5.0.I20150203-1300"/>
+<unit id="org.eclipse.sdk.ide" version="4.5.0.I20150320-0800"/>
+<unit id="org.eclipse.test.feature.group" version="3.6.100.v20150223-0658"/>
+<unit id="org.eclipse.sdk.tests.feature.group" version="4.4.1.v20150320-1303"/>
+<unit id="org.eclipse.platform.ide" version="4.5.0.I20150320-0800"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.5milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.edit.feature.group" version="2.11.0.v20150123-0357"/>
-<unit id="org.eclipse.emf.examples.feature.group" version="2.11.0.v20150123-0357"/>
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.11.0.v20150123-0357"/>
-<unit id="org.eclipse.emf.ecore.edit.feature.group" version="2.9.0.v20150123-0357"/>
+<unit id="org.eclipse.emf.edit.feature.group" version="2.11.0.v20150323-0420"/>
+<unit id="org.eclipse.emf.examples.feature.group" version="2.11.0.v20150323-0420"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.11.0.v20150323-0420"/>
+<unit id="org.eclipse.emf.ecore.edit.feature.group" version="2.9.0.v20150323-0420"/>
 <repository location="http://download.eclipse.org/modeling/emf/emf/updates/2.11milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -61,31 +61,31 @@
 <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.text.source" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20150202203538/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20150316021154/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.ocl.feature.group" version="3.5.0.v20150120-1323"/>
+<unit id="org.eclipse.ocl.feature.group" version="3.5.0.v20150321-0925"/>
 <repository location="http://download.eclipse.org/modeling/mdt/ocl/updates/milestones/6.0.0"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.uml2.sdk.feature.group" version="5.1.0.v20150202-1006"/>
-<unit id="org.eclipse.uml2.common.feature.group" version="2.1.0.v20150202-1006"/>
+<unit id="org.eclipse.uml2.sdk.feature.group" version="5.1.0.v20150323-0944"/>
+<unit id="org.eclipse.uml2.common.feature.group" version="2.1.0.v20150323-0944"/>
 <repository location="http://download.eclipse.org/modeling/mdt/uml2/updates/5.1milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.9.0.201502040400"/>
+<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.9.0.201503250423"/>
 <repository location="http://download.eclipse.org/modeling/emf/query/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.9.0.201502040400"/>
+<unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.9.0.201503250348"/>
 <repository location="http://download.eclipse.org/modeling/emf/validation/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.9.0.201502040339"/>
+<unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.9.0.201503250354"/>
 <repository location="http://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.9.0.201502040445"/>
+<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.9.0.201503250534"/>
 <repository location="http://download.eclipse.org/modeling/emf/transaction/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
