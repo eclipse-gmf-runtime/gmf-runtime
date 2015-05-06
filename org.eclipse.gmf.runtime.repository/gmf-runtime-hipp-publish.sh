@@ -410,22 +410,8 @@ if [ ! -e "$stagedUpdateSite/p2.index" ]; then
 	echo "artifact.repository.factory.order = artifacts.xml,\!" >> $stagedUpdateSite/p2.index
 fi
 
-# Backup then clean remote update site
-if [ -d "$remoteUpdateSite" ]; then
-	echo "`date +%Y-%m-%d-%H:%M:%S` Creating backup of remote update site $remoteUpdateSite to $tmpDir/BACKUP."
-	if [ -d $tmpDir/BACKUP ]; then
-		rm -fr $tmpDir/BACKUP
-	fi
-	mkdir $tmpDir/BACKUP
-	cp -R $remoteUpdateSite $tmpDir/BACKUP
-	rm -fr $remoteUpdateSite
-fi
-
-echo "`date +%Y-%m-%d-%H:%M:%S` Publishing local $stagedUpdateSite directory to remote update site $remoteUpdateSite/$dropDir"
-mkdir -p $remoteUpdateSite
-cp -R $stagedUpdateSite $remoteUpdateSite
-
 # Create the composite update site
+echo "`date +%Y-%m-%d-%H:%M:%S` Create the composite update site repository file and add ${dropDir}."
 cat > p2.composite.repository.xml <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="p2 composite repository">
@@ -439,6 +425,22 @@ cat > p2.composite.repository.xml <<EOF
 </target>
 </project>
 EOF
+
+# Backup then clean remote update site
+if [ -d "$remoteUpdateSite" ]; then
+	echo "`date +%Y-%m-%d-%H:%M:%S` Add existing update sites to the composite update site repository file."
+	for existingDropDir in `find ${remoteUpdateSite}/ -mindepth 1 -maxdepth 1 -type d` ; do
+		addExistingDropDir=$(basename $existingDropDir)
+		echo "`date +%Y-%m-%d-%H:%M:%S` Add ${addExistingDropDir}."
+		addRepositoryLocation="<repository location=\"${addExistingDropDir}\"/>"
+		sed -i "/<add>/a\
+${addRepositoryLocation}" p2.composite.repository.xml
+	done
+fi
+
+echo "`date +%Y-%m-%d-%H:%M:%S` Publishing local $stagedUpdateSite directory to remote update site $remoteUpdateSite/$dropDir"
+mkdir -p $remoteUpdateSite
+cp -R $stagedUpdateSite $remoteUpdateSite
 
 echo "`date +%Y-%m-%d-%H:%M:%S` Update the composite update site"
 ./eclipse/eclipse -nosplash --launcher.suppressErrors -clean -debug -application org.eclipse.ant.core.antRunner -buildfile p2.composite.repository.xml default
