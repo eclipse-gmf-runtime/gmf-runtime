@@ -46,7 +46,7 @@ http://www.eclipse.org/legal/epl-v10.html
          id="org.apache.batik.dom.source"
          download-size="0"
          install-size="0"
-         version="1.6.0.v201011041432"
+         version="1.6.1.v201505192100"
          unpack="false"/>
 
    <plugin
