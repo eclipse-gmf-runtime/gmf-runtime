@@ -45,7 +45,7 @@
 <unit id="org.apache.batik.util.gui" version="1.6.0.v201011041432"/>
 <unit id="org.apache.batik.dom.svg.source" version="1.6.0.v201011041432"/>
 <unit id="org.apache.batik.bridge.source" version="1.6.0.v201011041432"/>
-<unit id="org.apache.batik.dom.source" version="1.6.0.v201011041432"/>
+<unit id="org.apache.batik.dom.source" version="1.6.1.v201505192100"/>
 <unit id="org.apache.batik.ext.awt.source" version="1.6.0.v201011041432"/>
 <unit id="org.apache.batik.transcoder.source" version="1.6.0.v201011041432"/>
 <unit id="org.apache.batik.svggen.source" version="1.6.0.v201011041432"/>
