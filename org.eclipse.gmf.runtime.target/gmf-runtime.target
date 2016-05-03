@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="gmf-runtime" sequenceNumber="87">
+<?pde version="3.8"?><target name="gmf-runtime" sequenceNumber="92">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="4.6.0.I20160428-0800"/>
@@ -85,7 +85,7 @@
 <repository location="http://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.10.0.201512152038"/>
+<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.10.0.201605031913"/>
 <repository location="http://download.eclipse.org/modeling/emf/transaction/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
