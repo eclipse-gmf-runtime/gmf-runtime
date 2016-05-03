@@ -61,7 +61,7 @@
 <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.text.source" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20160308060251/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20160501200945/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.ocl.feature.group" version="3.6.0.v20160224-1849"/>
@@ -73,11 +73,11 @@
 <repository location="http://download.eclipse.org/modeling/mdt/uml2/updates/5.2milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.10.0.201512142117"/>
+<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.10.0.201605030032"/>
 <repository location="http://download.eclipse.org/modeling/emf/query/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.10.0.201512142118"/>
+<unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.10.0.201605030103"/>
 <repository location="http://download.eclipse.org/modeling/emf/validation/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
