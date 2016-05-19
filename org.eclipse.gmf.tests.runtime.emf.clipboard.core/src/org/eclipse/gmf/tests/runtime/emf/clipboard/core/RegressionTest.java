@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,7 @@ public class RegressionTest	extends BaseClipboardTest {
 	/**
 	 * Tests copying root elements to the clipboard.
 	 */
-	public void test_copyRoot_bugzilla107880() {
+	public void offtest_copyRoot_bugzilla107880() {
 		if (writing()) {
 			List objects = new ArrayList();
 			
@@ -70,7 +70,7 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * Tests copying a root element to the clipboard and pasting
 	 * this element into another element.
 	 */
-	public void test_copyPasteRoot_bugzilla107880() {
+	public void offtest_copyPasteRoot_bugzilla107880() {
 		if (writing()) {
 			List objects = new ArrayList();
 	
@@ -96,7 +96,7 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * Tests copying a root element to the clipboard and pasting a copy
 	 * to itself.
 	 */
-	public void test_copyPasteRootToItself_bugzilla107880() {
+	public void offtest_copyPasteRootToItself_bugzilla107880() {
 		if (writing()) {
 			List objects = new ArrayList();
 	
@@ -122,7 +122,7 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * Tests copying multiple roots and non-roots to the clipboard at the same time
 	 * and pasting them into and element.
 	 */
-	public void test_copyPasteMultipleRoots_bugzilla107880() {
+	public void offtest_copyPasteMultipleRoots_bugzilla107880() {
 		if (writing()) {
 			List objects = new ArrayList();
 	
@@ -154,7 +154,7 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * an invalid target element (a target element which does not have
 	 * a feature capable of containing the copied element).
 	 */
-	public void test_pasteRootToInvalidTarget_bugzilla107880() {
+	public void offtest_pasteRootToInvalidTarget_bugzilla107880() {
 		if (writing()) {
 			List objects = new ArrayList();
 	
@@ -173,7 +173,7 @@ public class RegressionTest	extends BaseClipboardTest {
 	/**
 	 * Tests pasting elements into the resource.
 	 */
-	public void test_pasteToResource_bugzilla107880() {
+	public void offtest_pasteToResource_bugzilla107880() {
 		if (writing()) {
 			List objects = new ArrayList();
 	
@@ -201,7 +201,7 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * a target which has a non-containment feature which can reference
 	 * the type of the copied element.
 	 */
-	public void test_pasteIntoNonContainmentFeature() {
+	public void offtest_pasteIntoNonContainmentFeature() {
 		if (writing()) {
 			List objects = new ArrayList();
 	
@@ -227,7 +227,7 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * Check that we ignore container features as well as containments when
 	 * "resolving" features on paste.
 	 */
-	public void test_resolvingContainerFeature_129046() {
+	public void offtest_resolvingContainerFeature_129046() {
 		if (writing()) {
 			List objects = new ArrayList();
 
@@ -289,7 +289,7 @@ public class RegressionTest	extends BaseClipboardTest {
 	/**
 	 * Tests that characters like '&amp;' are escaped in the copy resource.
 	 */
-	public void test_escapeURI_218307() {
+	public void offtest_escapeURI_218307() {
 		if (writing()) {
 			List objects = new ArrayList();
 	
