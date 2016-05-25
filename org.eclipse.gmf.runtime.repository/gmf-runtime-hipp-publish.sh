@@ -130,13 +130,10 @@ else
 	echo "`date +%Y-%m-%d-%H:%M:%S` version is now $version"
 fi
 				
-cp eclipse/epl-v10.html drops/eclipse
-cp eclipse/notice.html drops/eclipse
 cd drops
 
 # gmf-runtime runtime
 zip -r ../$localDropDir/gmf-runtime-$version.zip \
-	eclipse/epl-v10.html eclipse/notice.html \
 	eclipse/features/org.eclipse.gmf_* \
 	eclipse/plugins/org.eclipse.gmf.runtime.common.core_* \
 	eclipse/plugins/org.eclipse.gmf.runtime.common.ui_* \
@@ -204,7 +201,6 @@ echo "`date +%Y-%m-%d-%H:%M:%S` Created gmf-runtime-$version.zip"
 			
 # gmf-runtime SDK
 zip -r ../$localDropDir/gmf-sdk-runtime-$version.zip \
-	eclipse/epl-v10.html eclipse/notice.html \
 	eclipse/features/org.eclipse.gmf_* \
 	eclipse/plugins/org.eclipse.gmf.runtime.common.core_* \
 	eclipse/plugins/org.eclipse.gmf.runtime.common.ui_* \
@@ -340,7 +336,6 @@ echo "`date +%Y-%m-%d-%H:%M:%S` Created gmf-sdk-runtime-$version.zip"
 			
 # gmf-runtime examples
 zip -r ../$localDropDir/gmf-examples-runtime-$version.zip \
-	eclipse/epl-v10.html eclipse/notice.html \
 	eclipse/features/org.eclipse.gmf.examples.runtime_* \
 	eclipse/plugins/org.eclipse.gmf.examples.runtime_* \
 	eclipse/plugins/org.eclipse.gmf.examples.runtime.common.service_* \
@@ -357,7 +352,6 @@ echo "`date +%Y-%m-%d-%H:%M:%S` Created gmf-examples-runtime-$version.zip"
 			
 # gmf-runtime automated-tests
 zip -r ../$localDropDir/gmf-tests-runtime-$version.zip \
-	eclipse/epl-v10.html eclipse/notice.html \
 	eclipse/features/org.eclipse.gmf.tests.runtime_* \
 	eclipse/plugins/org.eclipse.gmf.tests.runtime.common.core_* \
 	eclipse/plugins/org.eclipse.gmf.tests.runtime.common.ui_* \
