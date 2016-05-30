@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2012, 2014 IBM Corporation and others.
+# Copyright (c) 2012, 2016 IBM Corporation and others.
 # All rights reserved.   This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License v1.0
 # which accompanies this distribution, and is available at
@@ -8,29 +8,14 @@
 # Contributors:
 #   IBM - Initial API and implementation
 
-# Script may take 5-6 command line parameters:
+# Script needs 4-5 environment parameters:
 # Hudson job name: ${JOB_NAME}
 # Hudson build id: ${BUILD_ID}
 # Hudson workspace: ${WORKSPACE}
-# $1: Build type: n(ightly), m(aintenance), s(table), r(elease)
-# $2: An optional label to append to the version string when creating drop files, e.g. M5 or RC1
+# ${BUILD_TYPE}: n(ightly), m(aintenance), s(table), r(elease)
+# ${BUILD_LABEL}: An optional label to append to the version string when creating drop files, e.g. M5 or RC1
 # 
 set -e
-
-if [ $# -eq 1 -o $# -eq 2 ]; then
-	buildType=$1
-	if [ -n "$2" ]; then
-		dropFilesLabel=$2
-	fi
-else
-	echo "Usage: $0 [i | s | r | m] [qualifier]"
-	echo "Example: $0 i"
-	echo "Example: $0 s M7"
-	exit 1
-	if [ $# -ne 0 ]; then
-		exit 1
-	fi
-fi
 
 if [ -z "$JOB_NAME" ]; then
 	echo "Error there is no Hudson JOB_NAME defined"; 
@@ -45,6 +30,22 @@ fi
 if [ -z "$WORKSPACE" ]; then
 	echo "Error there is no Hudson WORKSPACE defined"; 
 	exit 0
+fi
+
+if [ -z "$BUILD_TYPE" ]; then
+	echo "Error there is no BUILD_TYPE defined"; 
+	exit 0
+else
+	buildType=$BUILD_TYPE
+fi
+
+if [ -z "$BUILD_LABEL" ]; then
+	echo "Error there is no BUILD_LABEL defined"; 
+	exit 0
+else
+	if [ "$BUILD_LABEL" != "NONE" ]; then
+		dropFilesLabel=$BUILD_LABEL
+	fi
 fi
 
 # Determine the local update site we want to publish from
@@ -65,7 +66,7 @@ remoteUpdateSiteBase="modeling/gmp/gmf-runtime/updates/$remoteSite"
 remoteUpdateSite="/home/data/httpd/download.eclipse.org/$remoteUpdateSiteBase"
 echo "`date +%Y-%m-%d-%H:%M:%S` Publishing to remote update-site: $remoteUpdateSite"
 
-if [ -z "$dropFilesLabel" -a "$buildType" != i ]; then
+if [ -z "$dropFilesLabel" -a "$buildType" != i  -a "$buildType" != I ]; then
 	echo "Please provide a drop files label to append to the version (e.g. M5, RC1) if this is not an I build."
 	exit 0
 fi
