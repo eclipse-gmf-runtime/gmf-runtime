@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="gmf-runtime" sequenceNumber="92">
+<?pde version="3.8"?><target name="gmf-runtime" sequenceNumber="98">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="4.6.0.I20160525-2000"/>
@@ -73,11 +73,11 @@
 <repository location="http://download.eclipse.org/modeling/mdt/uml2/updates/5.2milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.10.0.201605030032"/>
+<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.10.0.201605311520"/>
 <repository location="http://download.eclipse.org/modeling/emf/query/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.10.0.201605030103"/>
+<unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.10.0.201605311555"/>
 <repository location="http://download.eclipse.org/modeling/emf/validation/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
