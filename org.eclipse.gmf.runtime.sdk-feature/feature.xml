@@ -44,6 +44,11 @@ http://www.eclipse.org/legal/epl-v10.html
          name="%examplesFeatureName"/>
 
    <includes
+         id="org.eclipse.gmf.examples.runtime"
+         version="0.0.0"
+         name="%examplesFeatureName"/>
+
+   <includes
          id="org.eclipse.gmf.runtime.thirdparty.source"
          version="0.0.0"
          name="%thirdPartySourceFeatureName"/>
