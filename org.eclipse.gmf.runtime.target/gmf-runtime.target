@@ -2,10 +2,10 @@
 <?pde version="3.8"?><target name="gmf-runtime" sequenceNumber="98">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.6.0.I20160525-2000"/>
+<unit id="org.eclipse.sdk.ide" version="4.6.0.I20160606-1100"/>
 <unit id="org.eclipse.test.feature.group" version="3.7.100.v20160503-1715"/>
-<unit id="org.eclipse.sdk.tests.feature.group" version="4.6.0.v20160525-2000"/>
-<unit id="org.eclipse.platform.ide" version="4.6.0.I20160525-2000"/>
+<unit id="org.eclipse.sdk.tests.feature.group" version="4.6.0.v20160606-1100"/>
+<unit id="org.eclipse.platform.ide" version="4.6.0.I20160606-1100"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.6milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -73,20 +73,20 @@
 <repository location="http://download.eclipse.org/modeling/mdt/uml2/updates/5.2milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.10.0.201605311520"/>
-<repository location="http://download.eclipse.org/modeling/emf/query/updates/milestones"/>
+<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.10.0.201606071631"/>
+<repository location="http://download.eclipse.org/modeling/emf/query/updates/releases"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.10.0.201605311555"/>
-<repository location="http://download.eclipse.org/modeling/emf/validation/updates/milestones"/>
+<unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.10.0.201606071713"/>
+<repository location="http://download.eclipse.org/modeling/emf/validation/updates/releases"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.10.0.201512142135"/>
 <repository location="http://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.10.0.201605031913"/>
-<repository location="http://download.eclipse.org/modeling/emf/transaction/updates/milestones"/>
+<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.10.0.201606071900"/>
+<repository location="http://download.eclipse.org/modeling/emf/transaction/updates/releases"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.gef.sdk.feature.group" version="3.11.0.201605020204"/>
