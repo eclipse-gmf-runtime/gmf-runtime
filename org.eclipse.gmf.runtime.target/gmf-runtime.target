@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="gmf-runtime" sequenceNumber="108">
+<?pde version="3.8"?><target name="gmf-runtime" sequenceNumber="104">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.6.0.I20160606-1100"/>
-<unit id="org.eclipse.test.feature.group" version="3.7.100.v20160503-1715"/>
-<unit id="org.eclipse.sdk.tests.feature.group" version="4.6.0.v20160606-1100"/>
-<unit id="org.eclipse.platform.ide" version="4.6.0.I20160606-1100"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.6"/>
+<unit id="org.eclipse.sdk.ide" version="4.7.0.I20160915-0230"/>
+<unit id="org.eclipse.test.feature.group" version="3.7.100.v20160912-1145"/>
+<unit id="org.eclipse.sdk.tests.feature.group" version="4.7.0.v20160915-0230"/>
+<unit id="org.eclipse.platform.ide" version="4.7.0.I20160915-0230"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.7milestones/S-4.7M2-201609150230/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.edit.feature.group" version="2.12.0.v20160526-0356"/>
@@ -61,7 +61,7 @@
 <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.text.source" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20160916162009/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.ocl.feature.group" version="3.6.0.v20160523-1914"/>
