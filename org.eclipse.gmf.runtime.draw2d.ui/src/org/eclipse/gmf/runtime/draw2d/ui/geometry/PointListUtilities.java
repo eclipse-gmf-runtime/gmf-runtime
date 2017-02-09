@@ -1971,7 +1971,7 @@ public class PointListUtilities {
     		r = rDefault;
     		int distance = Math.min(points.getPoint(i-1).getDistanceOrthogonal(points.getPoint(i)),
     				points.getPoint(i).getDistanceOrthogonal(points.getPoint(i+1)));
-    		if (r > distance / 2) {
+    		if (r >= distance / 2) {
     			r = distance / 2 - 1;
     			rForBendpoint.put(new Integer(i), new Integer(r));
     		}
