@@ -17,6 +17,7 @@ import java.util.Map;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.swt.graphics.Image;
@@ -132,7 +133,8 @@ public class RenderHelper {
 		if (shouldScaleTargetCoordinates())
 			targetRect.performScale(getScale());
 		
-		if (g instanceof DrawableRenderedImage) {
+		// delegate directly in case of an GMF graphics
+		if (g instanceof DrawableRenderedImage && g instanceof ScaledGraphics) {
 			return ((DrawableRenderedImage) g).drawRenderedImage(srcImage, targetRect,
 				listener);
 		} else {
