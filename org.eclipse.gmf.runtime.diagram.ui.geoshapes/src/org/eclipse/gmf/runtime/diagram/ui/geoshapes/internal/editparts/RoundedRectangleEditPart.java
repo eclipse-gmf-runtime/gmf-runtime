@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.RoundedRectangleBorder;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.RoundedCornersStyle;
-import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**

@@ -137,10 +137,6 @@ public abstract class ReferenceVisitor {
 			}
 		}
 
-		if (newMap != null) {
-			return Collections.unmodifiableMap(newMap);
-		} else {
-			return Collections.EMPTY_MAP;
-		}
+		return Collections.unmodifiableMap(newMap);
 	}
 }

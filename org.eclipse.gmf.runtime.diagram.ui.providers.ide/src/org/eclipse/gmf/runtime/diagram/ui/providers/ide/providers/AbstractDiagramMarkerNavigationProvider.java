@@ -99,7 +99,6 @@ public abstract class AbstractDiagramMarkerNavigationProvider
     			view = getViewByIdStr(elementId,ViewUtil.getTargetConnections(tmpView));
     		if(view !=null) return view;
     	    tmpList.addAll(tmpView.getChildren());
-    		if(view !=null) return view;	
     	}		
     	
     	if(tmpList.size() == 0) return null;

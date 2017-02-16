@@ -100,12 +100,7 @@ public class EditPartUtil {
         
 		if (Display.getCurrent() == null && editingDomain != null && editingDomain.getActiveTransaction() != null) {
 			Display display = PlatformUI.isWorkbenchRunning() ? PlatformUI.getWorkbench().getDisplay() : Display.getDefault();
-			if (editingDomain != null) {
-	        	display.syncExec(editingDomain.createPrivilegedRunnable(runThreadSafe));
-	        }
-	        else {
-	        	display.asyncExec(runThreadSafe);
-			}
+        	display.syncExec(editingDomain.createPrivilegedRunnable(runThreadSafe));
 		}
 		else {
 			runThreadSafe.run();

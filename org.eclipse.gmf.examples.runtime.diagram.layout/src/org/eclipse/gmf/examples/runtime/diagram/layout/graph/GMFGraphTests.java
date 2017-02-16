@@ -26,7 +26,6 @@ public class GMFGraphTests {
 	
 	public static DirectedGraph test1() {
 		ConstantSizeNode hub, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10;
-		ConstrainedEdge e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, temp;
 		NodeList nodes = new NodeList();
 		EdgeList edges = new EdgeList();
 		
@@ -64,16 +63,16 @@ public class GMFGraphTests {
 		
 //		edges.add(new Edge(n10, n5));
 		
-		edges.add(e1 = new ConstrainedEdge(hub, n1));
-		edges.add(e2 = new ConstrainedEdge(hub, n2));
-		edges.add(e3 = new ConstrainedEdge(hub, n3));
-		edges.add(e4 = new ConstrainedEdge(hub, n4));
-		edges.add(e5 = new ConstrainedEdge(hub, n5));
-		edges.add(e6 = new ConstrainedEdge(n6, hub));
-		edges.add(e7 = new ConstrainedEdge(n7, hub));
-		edges.add(e8 = new ConstrainedEdge(n8, hub));
-		edges.add(e9 = new ConstrainedEdge(n9, hub));
-		edges.add(e10 = new ConstrainedEdge(n10, hub));
+		edges.add(new ConstrainedEdge(hub, n1));
+		edges.add(new ConstrainedEdge(hub, n2));
+		edges.add(new ConstrainedEdge(hub, n3));
+		edges.add(new ConstrainedEdge(hub, n4));
+		edges.add(new ConstrainedEdge(hub, n5));
+		edges.add(new ConstrainedEdge(n6, hub));
+		edges.add(new ConstrainedEdge(n7, hub));
+		edges.add(new ConstrainedEdge(n8, hub));
+		edges.add(new ConstrainedEdge(n9, hub));
+		edges.add(new ConstrainedEdge(n10, hub));
 				
 		DirectedGraph g = new DirectedGraph();
 		g.nodes = nodes;
@@ -147,7 +146,6 @@ public class GMFGraphTests {
 		NodeList nodes = new NodeList();
 		EdgeList edges = new EdgeList();
 		ConstantSizeNode hub, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10;
-		ConstrainedEdge e1, e2, e3, e4, e5, e6, e7, e8, e9, e10;
 		
 		nodes.add(n1 = new ConstantSizeNode("n1")); //$NON-NLS-1$
 		nodes.add(n2 = new ConstantSizeNode("n2")); //$NON-NLS-1$
@@ -182,16 +180,16 @@ public class GMFGraphTests {
 		bn7.setMinOutgoingPadding(5);
 		bn6.setMinIncomingPadding(5);
 		
-		edges.add(e1 = new ConstrainedEdge(hub, n1));
-		edges.add(e2 = new ConstrainedEdge(bn7, n2));
-		edges.add(e3 = new ConstrainedEdge(hub, n3));
-		edges.add(e4 = new ConstrainedEdge(hub, n4));
-		edges.add(e5 = new ConstrainedEdge(bn7, n5));
-		edges.add(e6 = new ConstrainedEdge(n6, bn6));
-		edges.add(e7 = new ConstrainedEdge(n7, bn6));
-		edges.add(e8 = new ConstrainedEdge(n8, hub));
-		edges.add(e9 = new ConstrainedEdge(n9, hub));
-		edges.add(e10 = new ConstrainedEdge(n10, bn6));
+		edges.add(new ConstrainedEdge(hub, n1));
+		edges.add(new ConstrainedEdge(bn7, n2));
+		edges.add(new ConstrainedEdge(hub, n3));
+		edges.add(new ConstrainedEdge(hub, n4));
+		edges.add(new ConstrainedEdge(bn7, n5));
+		edges.add(new ConstrainedEdge(n6, bn6));
+		edges.add(new ConstrainedEdge(n7, bn6));
+		edges.add(new ConstrainedEdge(n8, hub));
+		edges.add(new ConstrainedEdge(n9, hub));
+		edges.add(new ConstrainedEdge(n10, bn6));
 		
 		DirectedGraph graph = new DirectedGraph();
 		graph.nodes = nodes;

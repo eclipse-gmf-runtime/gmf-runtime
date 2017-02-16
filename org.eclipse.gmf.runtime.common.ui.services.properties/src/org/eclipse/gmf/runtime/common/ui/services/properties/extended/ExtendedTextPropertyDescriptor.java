@@ -63,8 +63,6 @@ public class ExtendedTextPropertyDescriptor
 				Object typedValue = value;
 				boolean oldValidState = isValueValid();
 				boolean newValidState = isCorrect(typedValue);
-				if (typedValue == null && newValidState)
-					assert (false) : "Validator isn't limiting the cell editor's type range"; //$NON-NLS-1$
 				if (!newValidState) {
 					// try to insert the current value into the error message.
 					setErrorMessage(
@@ -97,8 +95,6 @@ public class ExtendedTextPropertyDescriptor
 						value = ""; //$NON-NLS-1$
 					}
 					boolean newValidState = isCorrect(value);
-					if (value == null && newValidState)
-						assert (false) : "Validator isn't limiting the cell editor's type range"; //$NON-NLS-1$
 					if (!newValidState) {
 						MessageDialog.openError(
 							Display.getCurrent().getActiveShell(),
