@@ -15,13 +15,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.util.ListenerList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
@@ -56,7 +56,7 @@ public class MenuManagerEx
 	/**
 	 * List of registered menu listeners (element type: <code>IMenuListener</code>).
 	 */
-	private ListenerList listeners = new ListenerList(1);
+	private ListenerList listeners = new ListenerList();
 
 	/**
 	 * The menu id.
