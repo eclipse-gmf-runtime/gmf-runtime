@@ -424,7 +424,7 @@ EOF
 # Backup then clean remote update site
 if [ -d "$remoteUpdateSite" ]; then
 	echo "`date +%Y-%m-%d-%H:%M:%S` Add existing update sites to the composite update site repository file."
-	for existingDropDir in `find ${remoteUpdateSite}/ -mindepth 1 -maxdepth 1 -type d` ; do
+	for existingDropDir in `find ${remoteUpdateSite}/ -mindepth 1 -maxdepth 1 -type d | sort | tail -n 10` ; do
 		addExistingDropDir=$(basename $existingDropDir)
 		echo "`date +%Y-%m-%d-%H:%M:%S` Add ${addExistingDropDir}."
 		addRepositoryLocation="<repository location=\"${addExistingDropDir}\"/>"
