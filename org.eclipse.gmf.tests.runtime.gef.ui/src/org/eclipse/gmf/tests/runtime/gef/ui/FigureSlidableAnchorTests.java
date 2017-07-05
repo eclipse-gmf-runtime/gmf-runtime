@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2017 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -18,6 +18,9 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.RectangularDropShadowLineBorder;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.internal.figures.DiamondFigure;
 
@@ -25,6 +28,7 @@ import org.eclipse.gmf.runtime.gef.ui.internal.figures.DiamondFigure;
  * @author oboyko
  *
  */
+@SuppressWarnings("restriction")
 public class FigureSlidableAnchorTests
 	extends TestCase {
 	
@@ -162,4 +166,58 @@ public class FigureSlidableAnchorTests
 		assertEquals(0, location.preciseX(), 0);
 		assertEquals(0, location.preciseY(), 0);
 	}
+
+    public void testAnchorPositionForFigureWithTransparentBorder() {
+        // Create a node figure
+        NodeFigure fig = new NodeFigure();
+        fig.setBounds(new Rectangle(-10, -10, 20, 20));
+        // Add a transparent border figure with mock methods to avoid a full
+        // transparent border figure implementation
+        RectangularDropShadowLineBorder border = new RectangularDropShadowLineBorder(2) {
+            @Override
+            protected int getShadowHeight() {
+                return 2;
+            }
+
+            @Override
+            protected int getShadowWidth() {
+                return 2;
+            }
+        };
+        border.setShouldDrawDropShadow(false);
+        fig.setBorder(border);
+        // Add the node figure to another figure (IMapModeHolder) to have an
+        // Identity coordinate mapping (used during computation of anchor).
+        ScalableFreeformLayeredPane scalableFreeformLayeredPane = new ScalableFreeformLayeredPane(MapModeTypes.IDENTITY_MM);
+        scalableFreeformLayeredPane.add(fig);
+
+        // Do the same tests as testAnchorPosition()
+        // default anchor test (center of box)
+        Point p = new Point(3, 3);
+        ConnectionAnchor anchor = fig.getSourceConnectionAnchorAt(p);
+        Point reference = anchor.getReferencePoint();
+        assertEquals(-1, reference.preciseX(), 0);
+        assertEquals(-1, reference.preciseY(), 0);
+
+        // Sliding anchor test inside figure's bounds (the most important is
+        // this case, the other tests use constant values as expected value)
+        p = new Point(8, 8);
+        anchor = fig.getSourceConnectionAnchorAt(p);
+        reference = anchor.getReferencePoint();
+        assertEquals(p.preciseX(), reference.preciseX(), 0);
+        assertEquals(p.preciseY(), reference.preciseY(), 0);
+
+        // Sliding anchor test outside figure's bounds
+        p = new Point(12, 12);
+        anchor = fig.getSourceConnectionAnchorAt(p);
+        reference = anchor.getReferencePoint();
+        assertEquals(8, reference.preciseX(), 0);
+        assertEquals(8, reference.preciseY(), 0);
+
+        p = new Point(15, 0);
+        anchor = fig.getSourceConnectionAnchorAt(p);
+        reference = anchor.getReferencePoint();
+        assertEquals(8, reference.preciseX(), 0);
+        assertEquals(0, reference.preciseY(), 0);
+    }
 }
