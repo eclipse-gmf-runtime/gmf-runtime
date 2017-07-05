@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2010 IBM Corporation and others.
+ * Copyright (c) 2002, 2017 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -172,7 +172,7 @@ public class NodeFigure
 		else {
 			Point temp = p.getCopy();
 			translateToRelative(temp);
-			PrecisionPoint pt = BaseSlidableAnchor.getAnchorRelativeLocation(temp, getBounds());
+			PrecisionPoint pt = BaseSlidableAnchor.getAnchorRelativeLocation(temp, getHandleBounds());
 			if (isDefaultAnchorArea(pt))
 				return getConnectionAnchor(szAnchor);
 			return createAnchor(pt);
