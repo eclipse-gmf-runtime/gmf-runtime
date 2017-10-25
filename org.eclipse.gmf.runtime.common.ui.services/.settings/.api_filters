@@ -16,4 +16,20 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/gmf/runtime/common/ui/services/statusline/AbstractStatusLineContributionItemProvider.java" type="org.eclipse.gmf.runtime.common.ui.services.statusline.AbstractStatusLineContributionItemProvider">
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="IStatusLineContributionItemProvider"/>
+                <message_argument value="AbstractStatusLineContributionItemProvider"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/common/ui/services/statusline/StatusLineService.java" type="org.eclipse.gmf.runtime.common.ui.services.statusline.StatusLineService">
+        <filter id="576725006">
+            <message_arguments>
+                <message_argument value="IStatusLineContributionItemProvider"/>
+                <message_argument value="StatusLineService"/>
+            </message_arguments>
+        </filter>
+    </resource>
 </component>
