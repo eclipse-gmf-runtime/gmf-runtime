@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg;
 
 import java.awt.Color;
 
-import org.apache.batik.dom.svg.SVGOMDocument;
+import org.apache.batik.anim.dom.SVGOMDocument;
 import org.apache.batik.svggen.SVGColor;
 import org.apache.batik.svggen.SVGGeneratorContext;
 import org.apache.batik.svggen.SVGPaintDescriptor;
