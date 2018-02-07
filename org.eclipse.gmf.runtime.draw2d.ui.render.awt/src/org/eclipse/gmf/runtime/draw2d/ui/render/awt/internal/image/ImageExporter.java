@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image;
 
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -20,11 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.batik.transcoder.TranscoderException;
-import org.apache.batik.transcoder.TranscoderOutput;
-import org.apache.batik.transcoder.image.ImageTranscoder;
-import org.apache.batik.transcoder.image.JPEGTranscoder;
-import org.apache.batik.transcoder.image.PNGTranscoder;
+import javax.imageio.ImageIO;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -124,35 +120,16 @@ public class ImageExporter {
     public static void exportToOutputStream(OutputStream stream, BufferedImage image,
 			String imageFormat, IProgressMonitor monitor, float quality) throws CoreException {
 		monitor.worked(1);
-		ImageTranscoder imageTranscoder = null;
-		BufferedImage newImg = image;
-
-		if (imageFormat == JPEG_FILE) {
-			imageTranscoder = new JPEGTranscoder();
-			if (image.getType() != BufferedImage.TYPE_INT_RGB) {
-				newImg = new BufferedImage(image.getWidth(), image.getHeight(),
-						BufferedImage.TYPE_INT_RGB);
-				Graphics g = newImg.getGraphics();
-				g.drawImage(image, 0, 0, null);
-				g.dispose();
-			}
-			imageTranscoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY,
-					quality);
-		} else if (imageFormat == PNG_FILE) {
-			imageTranscoder = new PNGTranscoder();
-		} else {
-			throw new IllegalArgumentException();
-		}
-
-		TranscoderOutput to = new TranscoderOutput(stream);
-
+		
 		try {
-			imageTranscoder.writeImage(newImg, to);
-		} catch (TranscoderException e) {
-			Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e
-					.getMessage(), e);
-			IStatus status = new Status(IStatus.ERROR,
-					"exportToStream", IStatus.OK, //$NON-NLS-1$
+			if (imageFormat == PNG_FILE) {
+				ImageIO.write(image, PNG_FILE, stream);
+			} else {
+				throw new IllegalArgumentException();
+			}
+		} catch (IOException e) {
+			Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e.getMessage(), e);
+			IStatus status = new Status(IStatus.ERROR, "exportToStream", IStatus.OK, //$NON-NLS-1$
 					e.getMessage(), null);
 			throw new CoreException(status);
 		}

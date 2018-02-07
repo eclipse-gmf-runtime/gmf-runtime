@@ -257,13 +257,8 @@ public class CopyToImageUtil {
 			monitor.worked(1);
 			saveToFile(destination, (DiagramSVGGenerator) gen, format, monitor);
 			found = true;
-		} else if (format.equals(ImageFileFormat.JPEG)
-				|| format.equals(ImageFileFormat.PNG)) {
-
-			String exportFormat = ImageExporter.JPEG_FILE;
-			if (format.equals(ImageFileFormat.PNG))
-				exportFormat = ImageExporter.PNG_FILE;
-
+		} else if (format.equals(ImageFileFormat.PNG)) {
+			String exportFormat = ImageExporter.PNG_FILE;
 			java.awt.Image image = gen.createConstrainedAWTImageForParts(editParts, maxWidth, maxHeight, useMargins);
 			monitor.worked(1);
 			if (image instanceof BufferedImage) {
@@ -377,13 +372,8 @@ public class CopyToImageUtil {
 			monitor.worked(1);
 			saveToFile(destination, (DiagramSVGGenerator) gen, format, monitor);
 			found = true;
-		} else if (format.equals(ImageFileFormat.JPEG)
-				|| format.equals(ImageFileFormat.PNG)) {
-
-			String exportFormat = ImageExporter.JPEG_FILE;
-			if (format.equals(ImageFileFormat.PNG))
-				exportFormat = ImageExporter.PNG_FILE;
-
+		} else if (format.equals(ImageFileFormat.PNG)) {
+			String exportFormat = ImageExporter.PNG_FILE;
 			java.awt.Image image = gen.createAWTImageForParts(editParts,
 					imageRect);
 			monitor.worked(1);
