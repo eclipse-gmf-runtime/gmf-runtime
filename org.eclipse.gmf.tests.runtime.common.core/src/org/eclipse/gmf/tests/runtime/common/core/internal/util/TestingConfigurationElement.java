@@ -207,4 +207,9 @@ public class TestingConfigurationElement implements IConfigurationElement {
 		return null;
 	}
 
+
+    public int getHandleId() {
+        return 0;
+    }
+
 }
