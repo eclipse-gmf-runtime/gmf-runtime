@@ -1151,10 +1151,7 @@ public abstract class GraphicalEditPart
                 EObject semanticElement = resolveSemanticElement();
             
                 if( semanticElement != null ) {
-                    String name = semanticElement.getClass().getName();
-                    int startIndex = name.lastIndexOf('.') + 1;
-                    int endIndex = name.lastIndexOf( "Impl" ); //$NON-NLS-1$
-                    return name.substring(startIndex, endIndex);
+                    return semanticElement.eClass().getName();
                 }
             
                 return null;
