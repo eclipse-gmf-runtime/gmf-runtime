@@ -19,11 +19,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
+import org.apache.fop.svg.PDFTranscoder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRenderPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.w3c.dom.Document;
 
@@ -271,7 +277,6 @@ public class SVGImageConverter {
     public static void exportToPDF(SVGImage svgImage,
 			OutputStream fileOutputStream)
 			throws CoreException {
-    	/*
 		try {
 			TranscoderOutput transcoderOutput = new TranscoderOutput(fileOutputStream);
 			TranscoderInput transcoderInput = new TranscoderInput(svgImage
@@ -288,6 +293,5 @@ public class SVGImageConverter {
 					e.getMessage(), null);
 			throw new CoreException(status);
 		}
-		*/ 
 	}
 }
