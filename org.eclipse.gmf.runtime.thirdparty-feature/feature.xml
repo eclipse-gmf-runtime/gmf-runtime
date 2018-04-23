@@ -110,13 +110,6 @@ http://www.eclipse.org/legal/epl-v10.html
          unpack="false"/>
 
    <plugin
-         id="org.apache.batik.css"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.batik.util.gui"
          download-size="0"
          install-size="0"
@@ -195,6 +188,13 @@ http://www.eclipse.org/legal/epl-v10.html
 
    <plugin
          id="org.w3c.dom.events"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.batik.ext"
          download-size="0"
          install-size="0"
          version="0.0.0"
