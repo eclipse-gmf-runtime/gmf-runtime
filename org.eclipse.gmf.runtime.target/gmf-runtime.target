@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="gmf-runtime" sequenceNumber="1524205077">
+<target name="gmf-runtime" sequenceNumber="1526310505">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -82,7 +82,7 @@
       <unit id="org.w3c.dom.events.source" version="3.0.0.draft20060413_v201105210656"/>
       <unit id="org.w3c.dom.smil.source" version="1.0.1.v200903091627"/>
       <unit id="org.w3c.dom.svg.source" version="1.1.0.v201011041433"/>
-      <repository id="Orbit-Photon" location="http://download.eclipse.org/tools/orbit/downloads/drops/I20180417184143/repository"/>
+      <repository id="Orbit-Photon" location="http://download.eclipse.org/tools/orbit/downloads/drops/S20180504181223/repository"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.query.sdk.feature.group" version="1.11.0.201706061326"/>

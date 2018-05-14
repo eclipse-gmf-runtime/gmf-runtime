@@ -27,7 +27,7 @@ location UML2-5.3 "http://download.eclipse.org/modeling/mdt/uml2/updates/5.3" {
     org.eclipse.uml2.common.feature.group [2.1.0,3.0.0)
 }
 
-location Orbit-Photon "http://download.eclipse.org/tools/orbit/downloads/drops/I20180417184143/repository" {
+location Orbit-Photon "http://download.eclipse.org/tools/orbit/downloads/drops/S20180504181223/repository" {
     org.apache.batik.anim 1.9.1
     org.apache.batik.anim.source 1.9.1
     org.apache.batik.bridge 1.9.1
@@ -81,7 +81,7 @@ location Orbit-Photon "http://download.eclipse.org/tools/orbit/downloads/drops/I
     org.w3c.dom.svg.source [1.1.0.v201011041433,1.1.0.v201011041433]
 }
 
-// Still needed by EMF Transaction 1.11
+// Still needed by EMF Transaction
 location EMF-Query-1.11 "http://download.eclipse.org/modeling/emf/query/updates/releases" {
     org.eclipse.emf.query.sdk.feature.group [1.11.0.201706061326,1.11.0.201706061326]
 }
