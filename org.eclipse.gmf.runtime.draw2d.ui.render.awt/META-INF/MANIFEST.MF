@@ -37,6 +37,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.5.0,4.0.0)",
  org.apache.batik.ext;bundle-version="[1.9.1,1.10.0)",
  org.apache.batik.codec;bundle-version="1.9.1",
  org.apache.batik.pdf;bundle-version="1.9.1",
- org.apache.batik.extension.source;bundle-version="1.9.1"
+ org.apache.batik.extension.source;bundle-version="1.9.1",
+ org.apache.xmlgraphics.source;bundle-version="2.2.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
