@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="gmf-runtime" sequenceNumber="1526310505">
+<target name="gmf-runtime" sequenceNumber="1526386156">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -58,6 +58,8 @@
       <unit id="org.apache.batik.parser" version="1.9.1.v20180313-1559"/>
       <unit id="org.apache.batik.parser.source" version="1.9.1.v20180313-1559"/>
       <unit id="org.apache.batik.pdf" version="1.9.1.v20180417-1407"/>
+      <unit id="org.apache.batik.script" version="1.9.1.v20180313-1559"/>
+      <unit id="org.apache.batik.script.source" version="1.9.1.v20180313-1559"/>
       <unit id="org.apache.batik.svggen" version="1.9.1.v20180313-1559"/>
       <unit id="org.apache.batik.svggen.source" version="1.9.1.v20180313-1559"/>
       <unit id="org.apache.batik.swing" version="1.9.1.v20180313-1559"/>

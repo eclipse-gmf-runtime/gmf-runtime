@@ -55,6 +55,8 @@ location Orbit-Photon "http://download.eclipse.org/tools/orbit/downloads/drops/S
     org.apache.batik.parser 1.9.1
     org.apache.batik.parser.source 1.9.1
     org.apache.batik.pdf 1.9.1
+    org.apache.batik.script 1.9.1
+    org.apache.batik.script.source 1.9.1
     org.apache.batik.svggen 1.9.1
     org.apache.batik.svggen.source 1.9.1
     org.apache.batik.swing 1.9.1
