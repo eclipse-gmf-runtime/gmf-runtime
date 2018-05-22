@@ -419,7 +419,7 @@ public class CopyToImageUtil {
         
         try {
         	FileOutputStream stream = new FileOutputStream(destination.toOSString());
-            saveToOutputStream(stream, image, imageFormat, monitor);
+            saveToOutputStream(stream, image, imageFormat == ImageFileFormat.JPEG ? ImageFileFormat.JPG : imageFormat, monitor);
             stream.close();
         } catch (Exception e) {
             Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e
