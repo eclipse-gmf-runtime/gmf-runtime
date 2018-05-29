@@ -27,7 +27,7 @@ location UML2-5.3 "http://download.eclipse.org/modeling/mdt/uml2/updates/5.3" {
     org.eclipse.uml2.common.feature.group [2.1.0,3.0.0)
 }
 
-location Orbit-Photon "http://download.eclipse.org/tools/orbit/downloads/drops/S20180504181223/repository" {
+location Orbit-Photon "http://download.eclipse.org/tools/orbit/downloads/drops/I20180528174014/repository/" {
     org.apache.batik.anim 1.9.1
     org.apache.batik.anim.source 1.9.1
     org.apache.batik.bridge 1.9.1
@@ -42,10 +42,8 @@ location Orbit-Photon "http://download.eclipse.org/tools/orbit/downloads/drops/S
     org.apache.batik.dom.source 1.9.1
     org.apache.batik.dom.svg 1.9.1
     org.apache.batik.dom.svg.source 1.9.1
-    org.apache.batik.ext 1.9.1
     org.apache.batik.ext.awt 1.9.1
     org.apache.batik.ext.awt.source 1.9.1
-    org.apache.batik.ext.source 1.9.1
     org.apache.batik.extension 1.9.1
     org.apache.batik.extension.source 1.9.1
     org.apache.batik.gvt 1.9.1
