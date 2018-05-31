@@ -7,11 +7,7 @@ Bundle-Activator: org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRe
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render",
- org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics;
-  x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,
-   org.eclipse.gmf.runtime.diagram.ui,
-   org.eclipse.gmf.runtime.diagram.ui.render,
-   org.eclipse.gmf.runtime.diagram.ui.printing.render",
+ org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.printing.render",
  org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render",
  org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render",
  org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.export;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render",
@@ -23,20 +19,15 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.gmf.runtime.common.ui;bundle-version="[1.2.0,2.0.0)",
  org.eclipse.gmf.runtime.draw2d.ui;bundle-version="[1.2.0,2.0.0)",
  org.eclipse.gmf.runtime.draw2d.ui.render;bundle-version="[1.2.0,2.0.0)",
- org.apache.batik.anim;bundle-version="[1.9.1,1.10.0)",
- org.apache.batik.bridge;bundle-version="[1.9.1,1.10.0)",
- org.apache.batik.css;bundle-version="[1.9.1,1.10.0)",
- org.apache.batik.dom;bundle-version="[1.9.1,1.10.0)",
- org.apache.batik.dom.svg;bundle-version="[1.9.1,1.10.0)",
- org.apache.batik.ext.awt;bundle-version="[1.9.1,1.10.0)",
- org.apache.batik.gvt;bundle-version="[1.9.1,1.10.0)",
- org.apache.batik.svggen;bundle-version="[1.9.1,1.10.0)",
- org.apache.batik.transcoder;bundle-version="[1.9.1,1.10.0)";visibility:=reexport,
- org.apache.batik.util;bundle-version="[1.9.1,1.10.0)",
- org.w3c.dom.svg;bundle-version="[1.1.0,2.0.0)",
- org.apache.batik.codec;bundle-version="1.9.1",
- org.apache.batik.pdf;bundle-version="1.9.1",
- org.apache.batik.extension;bundle-version="1.9.1",
- org.apache.xmlgraphics;bundle-version="2.2.0"
+ org.apache.batik.ext.awt;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.transcoder;bundle-version="[1.6.0,1.7.0)";visibility:=reexport,
+ org.apache.batik.bridge;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.dom;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.dom.svg;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.svggen;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.util;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.xml;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.pdf;bundle-version="[1.6.0,1.7.0)",
+ org.w3c.dom.svg;bundle-version="[1.1.0,2.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

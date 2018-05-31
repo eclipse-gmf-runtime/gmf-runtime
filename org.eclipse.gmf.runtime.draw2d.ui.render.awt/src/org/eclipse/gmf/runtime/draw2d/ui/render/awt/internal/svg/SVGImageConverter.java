@@ -277,6 +277,7 @@ public class SVGImageConverter {
     public static void exportToPDF(SVGImage svgImage,
 			OutputStream fileOutputStream)
 			throws CoreException {
+    	
 		try {
 			TranscoderOutput transcoderOutput = new TranscoderOutput(fileOutputStream);
 			TranscoderInput transcoderInput = new TranscoderInput(svgImage
@@ -292,6 +293,6 @@ public class SVGImageConverter {
 					"exportToPDF", IStatus.OK, //$NON-NLS-1$
 					e.getMessage(), null);
 			throw new CoreException(status);
-		}
+		} 
 	}
 }
