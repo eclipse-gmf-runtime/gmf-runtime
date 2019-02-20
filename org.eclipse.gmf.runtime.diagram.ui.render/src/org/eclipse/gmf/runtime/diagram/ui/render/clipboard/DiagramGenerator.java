@@ -201,7 +201,7 @@ abstract public class DiagramGenerator {
 	 *            the list of <code>IGraphicalEditParts</code> that will be
 	 *            rendered to the graphics object
 	 */
-	final protected void renderToGraphics(Graphics graphics,
+	protected void renderToGraphics(Graphics graphics,
 			Point translateOffset, List editparts) {
 
 //		List sortedEditparts = sortSelection(editparts);
@@ -245,7 +245,7 @@ abstract public class DiagramGenerator {
 	 * @param editPart the container editpart
 	 * @return connections within it
 	 */
-	private Collection<ConnectionEditPart> findConnectionsToPaint(IGraphicalEditPart editPart) {
+	protected Collection<ConnectionEditPart> findConnectionsToPaint(IGraphicalEditPart editPart) {
 		/*
 		 * Set of node editparts contained within the given editpart
 		 */
@@ -347,7 +347,7 @@ abstract public class DiagramGenerator {
 	 * @param figure
 	 *            the figure to be rendered
 	 */
-	private void paintFigure(Graphics graphics, IFigure figure) {
+	protected void paintFigure(Graphics graphics, IFigure figure) {
 
 		if (!figure.isVisible() || figure.getBounds().isEmpty())
 			return;
@@ -384,7 +384,7 @@ abstract public class DiagramGenerator {
 	 * @return a mapping of {@link IFigure}to ({@link Decoration}or
 	 *         {@link Collection}of decorations})
 	 */
-	private Map findDecorations(Collection editparts) {
+	protected Map findDecorations(Collection editparts) {
 		// create inverse mapping of figures to edit parts (need this to map
 		// decorations to edit parts)
 		Map figureMap = mapFiguresToEditParts(editparts);
@@ -471,7 +471,7 @@ abstract public class DiagramGenerator {
 	 *            mapping of figures to decorations, in which we will find the
 	 *            <code>figure</code>'s decorations
 	 */
-	private void paintDecorations(Graphics graphics, IFigure figure,
+	protected void paintDecorations(Graphics graphics, IFigure figure,
 			Map decorations) {
 		Object decoration = decorations.get(figure);
 
@@ -683,7 +683,7 @@ abstract public class DiagramGenerator {
 		return null;
 	}
 
-	final public ImageDescriptor createSWTImageDescriptorForParts(
+	public ImageDescriptor createSWTImageDescriptorForParts(
 			List editparts, org.eclipse.swt.graphics.Rectangle sourceRect) {
 
 		// initialize imageDesc to the error icon
