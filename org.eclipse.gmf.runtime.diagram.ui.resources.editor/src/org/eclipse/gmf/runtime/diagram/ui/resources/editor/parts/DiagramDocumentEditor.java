@@ -38,6 +38,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProviderRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProviderRegistry.IDocumentProviderSelector;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocumentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument;
@@ -45,7 +46,6 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocumentEdi
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocumentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IElementStateListener;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.MEditingDomainElement;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProviderRegistry.IDocumentProviderSelector;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette.EditorInputPaletteContent;
@@ -78,6 +78,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IReusableEditor;
 import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -495,13 +496,27 @@ public class DiagramDocumentEditor
 
 		enableSanityChecking(false);
 
-		Display display= getSite().getShell().getDisplay();
-		display.asyncExec(new Runnable() {
-			public void run() {
-				if (getGraphicalViewer() != null)
-					getSite().getPage().closeEditor(DiagramDocumentEditor.this, save);
-			}
-		});
+		Display display = Display.getCurrent();
+		if (display == null) {
+			display = PlatformUI.getWorkbench().getDisplay();
+		}
+		if (!display.isDisposed()) {
+			display.asyncExec(new Runnable() {
+				public void run() {
+					if (getGraphicalViewer() != null) {
+						if (!PlatformUI.getWorkbench().isClosing()) {
+							IWorkbenchPartSite site = getSite();
+							if (site != null) {
+								IWorkbenchPage page = site.getPage();
+								if (page != null) {
+									page.closeEditor(DiagramDocumentEditor.this, save);
+								}
+							}
+						}
+					}
+				}
+			});
+		}
 	}
 
 	/**
