@@ -302,7 +302,7 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
      * 
      * @return <code>Object</code> for which this class is a property source 
      */
-    protected Object getObject() {
+    public Object getObject() {
         return object;
     }
 

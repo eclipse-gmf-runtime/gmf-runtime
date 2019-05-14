@@ -214,9 +214,9 @@ public class EMFCompositePropertySource
 	}
 
 	/**
-	 * @return - the object for wich the source is provideing properties
+	 * @return - the object for which the source is providing properties
 	 */
-	protected Object getObject() {
+	public Object getObject() {
 		return object;
 	}
 
