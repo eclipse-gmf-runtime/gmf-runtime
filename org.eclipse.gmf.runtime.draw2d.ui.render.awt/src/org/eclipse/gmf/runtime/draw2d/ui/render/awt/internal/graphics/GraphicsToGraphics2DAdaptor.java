@@ -1074,9 +1074,9 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			int height = fontInfo[0].getHeight();
 			
 			float fsize = (float) height
-					* (float) DisplayUtils.getDisplay().getDPI().x
-					/ 72.0f;
-			height = Math.round(fsize);
+					* 96.0f	/ 72.0f;		// default display DPI / default DPI of AWT
+			
+			height = (int) fsize;
 			
 			int style = fontInfo[0].getStyle();
 			boolean bItalic = (style & SWT.ITALIC) == SWT.ITALIC;
