@@ -122,16 +122,10 @@ abstract public class AbstractRenderedImage implements RenderedImage {
      * 
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage#getSWTImage()
 	 */
-	 final public Image getSWTImage() {
-		if (img != null)
-			return img;
-
-		Image image = renderImage();
-		if (img != null && !img.isDisposed()) {
-			img.dispose();
+	final public synchronized Image getSWTImage() {
+		if (img == null) {
+			img = renderImage();
 		}
-		img = image;
-
 		return img;
 	}
 	
