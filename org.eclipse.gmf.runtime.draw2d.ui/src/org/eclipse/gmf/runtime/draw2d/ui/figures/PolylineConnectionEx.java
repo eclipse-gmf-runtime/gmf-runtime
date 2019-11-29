@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2010 IBM Corporation and others.
+ * Copyright (c) 2002, 2020 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -35,6 +35,7 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg.KeyPoint;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DelegatingLayout;
@@ -118,6 +119,8 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
     private static final int JUMPLINK_FLAG_ANGLEIN = 0x1000;
     // indicates whether the link is angled inwards
     private static final int JUMPLINK_FLAG_ONBOTTOM = 0x2000;
+    // indicates whether the link should be drawn with a tunnel effect
+    private static final int JUMPLINK_FLAG_HAS_TUNNEL_EFFECT = 0x10000;
 
     private static final int JUMPLINK_DEFAULT_SMOOTHNESS = 30;
     
@@ -227,7 +230,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
             
             boolean isFeedbackLayer = isFeedbackLayer();
             int calculatedTolerance = calculateTolerance(isFeedbackLayer);
-            Dimension jumpLinkSize = calculateJumpLinkSize(isFeedbackLayer);
+            Dimension jumpLinkSize = calculateJumpLinkSize(isFeedbackLayer, hasTunnelAspect());
             
             // extend the boundary slightly by the jumplinks height value
             bounds.expand(jumpLinkSize.height + calculatedTolerance, jumpLinkSize.height + calculatedTolerance);
@@ -387,19 +390,24 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
      */
     protected void outlineShape(Graphics g) {
 
-        PointList displayPoints = getSmoothPoints(false);        
+        PointList displayPointsWithoutJumpLinks = getSmoothPoints(false);        
+        List<PointList> displayPointsWithoutJumpLinksList = new ArrayList<PointList>();
+        displayPointsWithoutJumpLinksList.add(displayPointsWithoutJumpLinks);
         
         Hashtable<Point, Integer> originalDisplayPoints = null;
         if (isRoundingBendpoints()) {
             // If rounded bendpoints feature is turned on, remember the original points, will be 
             // needed later.        	
-        	originalDisplayPoints = new Hashtable<Point, Integer>();   
-        	for (int i = 0; i < displayPoints.size(); i++) {
-        		originalDisplayPoints.put(displayPoints.getPoint(i), new Integer(i));        
+        	originalDisplayPoints = new Hashtable<Point, Integer>();
+        	int index = 0;
+        	for (int i = 0; i < displayPointsWithoutJumpLinksList.size(); i++) {
+        	    for (int j = 0; j < displayPointsWithoutJumpLinksList.get(i).size(); j++) {
+        	        originalDisplayPoints.put(displayPointsWithoutJumpLinksList.get(i).getPoint(j), new Integer(index++));
+                }
         	}
         }
         
-        int incline = calculateJumpLinkIncline(isFeedbackLayer());
+        int incline = calculateJumpLinkIncline(isFeedbackLayer(), hasTunnelAspect());
         
         if (shouldJumpLinks()) {
        	            
@@ -418,21 +426,37 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
                 while (linkIter.hasNext()) {
                     JumpLink pJumpLink = (JumpLink) linkIter.next();
 
-                    PointList jumpLinkPoints = PointListUtilities.routeAroundPoint(
-                        displayPoints,
-                        pJumpLink.m_ptIntersect,
-                        pJumpLink.m_nHeight,
-                        pJumpLink.m_nWidth,
-                        nSmoothNess,
-                        incline,
-                        !bOnBottom);
-                    if (jumpLinkPoints != null)
-                    	displayPoints = jumpLinkPoints;
+                    if (hasTunnelAspect()) {
+                        List<PointList> jumpLinkPoints = PointListUtilities.routeAroundPoint(displayPointsWithoutJumpLinksList.get(displayPointsWithoutJumpLinksList.size() - 1), pJumpLink.m_ptIntersect, pJumpLink.m_nWidth, nSmoothNess);
+                        if (jumpLinkPoints != null) {
+                            if (displayPointsWithoutJumpLinksList.isEmpty()) {
+                                displayPointsWithoutJumpLinksList = jumpLinkPoints;
+                            } else {
+                                displayPointsWithoutJumpLinksList.remove(displayPointsWithoutJumpLinksList.size() - 1);
+                                displayPointsWithoutJumpLinksList.addAll(jumpLinkPoints);
+                            }
+                        }
+                    } else {
+                        PointList jumpLinkPoints = PointListUtilities.routeAroundPoint(
+                                displayPointsWithoutJumpLinksList.get(displayPointsWithoutJumpLinksList.size() - 1),
+                                pJumpLink.m_ptIntersect,
+                                pJumpLink.m_nHeight,
+                                pJumpLink.m_nWidth,
+                                nSmoothNess,
+                                incline,
+                                !bOnBottom);
+                        if (jumpLinkPoints != null) {
+                            displayPointsWithoutJumpLinksList.remove(displayPointsWithoutJumpLinksList.size() - 1);
+                            displayPointsWithoutJumpLinksList.add(jumpLinkPoints);
+                        }
+                    }
                 }
             }
         }
         if (!isRoundingBendpoints()) {
-        	g.drawPolyline(displayPoints);
+            for (PointList pointList : displayPointsWithoutJumpLinksList) {
+                g.drawPolyline(pointList);
+            }
         	if (origRoundedBendpointsRad > 0) {
         		// we unsuccessfully tried to do rounding, allow the next routing to try again.
         		roundedBendpointsRadius = origRoundedBendpointsRad;
@@ -441,174 +465,179 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
         } else {
         	// In originalDisplayPoints, each bendpoint will be replaced with two points: start and end point of the arc.
         	// If jump links is on, then displayPoints will also contain points identifying jump links, if any.
-        	int i = 1;
-        	int rDefault = getRoundedBendpointsRadius();
-        	while (i < displayPoints.size() - 1) {
-        		// Consider points at indexes i-1, i, i+1.
-        		int x0 = 0, y0 = 0;
-        		boolean firstPointAssigned = false;
-        		if (shouldJumpLinks()) {
-        			boolean containsPoint2;
-        			boolean containsPoint3;
-        			PointList jumpLinkPoints = new PointList();
-        			do {
-        	       		// First, check if point at index i or i+1 is start point of a jump link (if the point is not in original points).
-                		// If so, draw a polyline ending at the last point of the jump link.           				
-        				containsPoint2 = true;
-        				containsPoint3 = true;
-        				if (i < displayPoints.size()) {
-        					containsPoint2 = originalDisplayPoints.containsKey(displayPoints.getPoint(i));
-        					if (i < displayPoints.size() - 1) {
-        						containsPoint3 = originalDisplayPoints.containsKey(displayPoints.getPoint(i+1));
-        					}
-        				}
-        				if (!containsPoint2 || !containsPoint3) {
-        					// start adding jump link points
-        					jumpLinkPoints.addPoint(displayPoints.getPoint(i-1));
-        					Point p; // next point to be added to jump link points
-        					int j; // index of the next point in jump link
-        					if (!containsPoint2) {
-        						// jump link starts somewhere on the segment before the arc begins
-        						j = i;
-        						p = displayPoints.getPoint(i);        			
-        					} else {
-        						// jump link starts within an arc; it means that one part of the arc will be replaced with 
-        						// a segment between points at i and i-1, and another part is replaced with the jump link,
-        						j = i + 1; 
-        						p = displayPoints.getPoint(i+1);        			
-        						jumpLinkPoints.addPoint(displayPoints.getPoint(i));
-        					}
-        					do {
-        						jumpLinkPoints.addPoint(p);
-        						j++;
-        						p = displayPoints.getPoint(j);
-        					} while (!originalDisplayPoints.containsKey(p) && j < displayPoints.size() - 1);
-        					// Now, check if p is start point of a line segment or an arc. In first case, index of p in 
-        					// the original list is even, in second it's odd.
-        					int origIndex = ((Integer)originalDisplayPoints.get(p)).intValue();
-        					firstPointAssigned = false;
-        					if (origIndex % 2 == 0) {
-        						// p is start point of a segment, it means that the jump link finished somewhere within the arc,
-        						// so one part of the arc is replaced with the jump link, and another will be replaced with a segment.
-        						jumpLinkPoints.addPoint(p);
-        						i = j + 1; 
-        					} else {
-        						// p is start point of an arc, the last point in jump link polyline becomes the first point for 
-        						// the drawing that follows (p could be the last point too)
-        						x0 = jumpLinkPoints.getLastPoint().x;
-        						y0 = jumpLinkPoints.getLastPoint().y;
-        						i = j;             			
-        						firstPointAssigned = true;        				
-        					}
-        					// Reason for the loop: we cannot be sure that points at newly founded i=j+1, or i+1 (when i == j) are
-        					// not starting points of a new jump link;
-        					// in most of the cases, though, the loop will execute just one step 
-        					// Jump link algorithm sometimes inserts duplicate points, we need to get rid of those.
-        					while (i < displayPoints.size() - 1 && 
-        							displayPoints.getPoint(i).equals(displayPoints.getPoint(i+1))) {
-        						i++;
-        					}
-        				}
-        			} while (!containsPoint2 || !containsPoint3);
-        			if (jumpLinkPoints != null) {
-        				// draw jump link
-        				g.drawPolyline(jumpLinkPoints);
-        			}
-        		}
-        		if (i < displayPoints.size() - 1) { // if we still didn't reach the end after drawing jump link polyline
-        			// Draw a segment starting at index i-1 and ending at index i, 
-        			// and arc with starting point at index i and ending point at index i+1.
-        			// But first, find points at i-1, i and i+1.
-        			if (!firstPointAssigned) {
-        				x0 = displayPoints.getPoint(i-1).x; 
-        				y0 = displayPoints.getPoint(i-1).y;
-        			}
-        			int x1;; 
-        			int y1;
-        			// If points at i-1 and i are equal (could happen if jump link algorithm 
-        			// inserts a point that already exists), just skip the point i        		
-        			while (i < displayPoints.size() - 1 && 
-        					x0 == displayPoints.getPoint(i).x && y0 == displayPoints.getPoint(i).y) {
-        				i++;
-        			}
-        			if (i < displayPoints.size() - 1) {
-        				x1 = displayPoints.getPoint(i).x; 
-        				y1 = displayPoints.getPoint(i).y;
-        			} else {
-        				break;
-        			}
-        			// The same goes for point at i and i+1         		
-        			int x2;
-        			int y2;        		
-        			while (i + 1 < displayPoints.size() - 1 && 
-        					x1 == displayPoints.getPoint(i+1).x && y1 == displayPoints.getPoint(i+1).y) {
-        				i++;
-        			}
-        			if (i < displayPoints.size() - 1) {
-        				x2 = displayPoints.getPoint(i+1).x; 
-        				y2 = displayPoints.getPoint(i+1).y;
-        			} else {
-        				break;
-        			}
-        			// Draw the segment
-        			g.drawLine(x0, y0, x1, y1);
-
-        			// Find out if arc size is default, or if it had to be decreased because of lack of space
-        			int r = rDefault;         			
-        			Point p = displayPoints.getPoint(i);
-        			int origIndex = ((Integer)originalDisplayPoints.get(p)).intValue();       	
-        			Object o = rForBendpointArc.get(new Integer((origIndex+1)/2));
-        			if (o != null) {
-        				r = ((Integer)o).intValue();
-        			}
-
-        			// Find out the location of enclosing rectangle (x, y), as well as staring angle of the arc.
-        			int x, y;
-        			int startAngle;        		
-        			if (x0 == x1 && x1 < x2) {
-        				x = x1;
-        				y = y1 - r;
-        				if (y1 > y2) {
-        					startAngle = 90;
-        				} else {
-        					startAngle = 180;
-        				}
-        			} else if (x0 > x1 && x1 > x2) {
-        				x = x2; 
-        				y = y2 - r;
-        				if (y1 > y2) {
-        					startAngle = 180;
-        				} else {
-        					startAngle = 90;
-        				}        		
-        			} else  if (x0 == x1  && x1 > x2) {
-        				if (y1 > y2) {
-        					x = x2 - r;
-        					y = y2;
-        					startAngle = 0;
-        				} else {
-        					x = x1 - 2*r;
-        					y = y1 - r;
-        					startAngle = 270;
-        				}        		        		
-        			} else { // x0 < x1 && x1 < x2
-        				if (y1 > y2) {
-        					x = x2 - 2*r;
-        					y = y2 - r;
-        					startAngle = 270;
-        				} else {
-        					x = x1 - r;
-        					y = y1;
-        					startAngle = 0;
-        				}        		        		         		
-        			}
-        			// Draw the arc.
-        			g.drawArc(x, y, 2*r, 2*r, startAngle, 90);
-        			i+=2;
-        		}
+            int i = 0;
+            while (i < displayPointsWithoutJumpLinksList.size()) {
+                PointList displayPoints = displayPointsWithoutJumpLinksList.get(i);
+            	int j = 1;
+            	int rDefault = getRoundedBendpointsRadius();
+            	while (j < displayPoints.size() - 1) {
+            		// Consider points at indexes j-1, j, j+1.
+            		int x0 = 0, y0 = 0;
+            		boolean firstPointAssigned = false;
+            		if (shouldJumpLinks() && !hasTunnelAspect()) {
+            			boolean containsPoint2;
+            			boolean containsPoint3;
+            			PointList jumpLinkPoints = new PointList();
+            			do {
+            	       		// First, check if point at index j or j+1 is start point of a jump link (if the point is not in original points).
+                    		// If so, draw a polyline ending at the last point of the jump link.           				
+            				containsPoint2 = true;
+            				containsPoint3 = true;
+            				if (j < displayPoints.size()) {
+            					containsPoint2 = originalDisplayPoints.containsKey(displayPoints.getPoint(j));
+            					if (j < displayPoints.size() - 1) {
+            						containsPoint3 = originalDisplayPoints.containsKey(displayPoints.getPoint(j+1));
+            					}
+            				}
+            				if (!containsPoint2 || !containsPoint3) {
+            					// start adding jump link points
+            					jumpLinkPoints.addPoint(displayPoints.getPoint(j-1));
+            					Point p; // next point to be added to jump link points
+            					int k; // index of the next point in jump link
+            					if (!containsPoint2) {
+            						// jump link starts somewhere on the segment before the arc begins
+            						k = j;
+            						p = displayPoints.getPoint(j);        			
+            					} else {
+            						// jump link starts within an arc; it means that one part of the arc will be replaced with 
+            						// a segment between points at i and i-1, and another part is replaced with the jump link,
+            						k = j + 1; 
+            						p = displayPoints.getPoint(j+1);        			
+            						jumpLinkPoints.addPoint(displayPoints.getPoint(j));
+            					}
+            					do {
+            						jumpLinkPoints.addPoint(p);
+            						k++;
+            						p = displayPoints.getPoint(k);
+            					} while (!originalDisplayPoints.containsKey(p) && k < displayPoints.size() - 1);
+            					// Now, check if p is start point of a line segment or an arc. In first case, index of p in 
+            					// the original list is even, in second it's odd.
+            					int origIndex = ((Integer)originalDisplayPoints.get(p)).intValue();
+            					firstPointAssigned = false;
+            					if (origIndex % 2 == 0) {
+            						// p is start point of a segment, it means that the jump link finished somewhere within the arc,
+            						// so one part of the arc is replaced with the jump link, and another will be replaced with a segment.
+            						jumpLinkPoints.addPoint(p);
+            						j = k + 1; 
+            					} else {
+            						// p is start point of an arc, the last point in jump link polyline becomes the first point for 
+            						// the drawing that follows (p could be the last point too)
+            						x0 = jumpLinkPoints.getLastPoint().x;
+            						y0 = jumpLinkPoints.getLastPoint().y;
+            						j = k;             			
+            						firstPointAssigned = true;        				
+            					}
+            					// Reason for the loop: we cannot be sure that points at newly founded i=j+1, or i+1 (when i == j) are
+            					// not starting points of a new jump link;
+            					// in most of the cases, though, the loop will execute just one step 
+            					// Jump link algorithm sometimes inserts duplicate points, we need to get rid of those.
+            					while (j < displayPoints.size() - 1 && 
+            							displayPoints.getPoint(j).equals(displayPoints.getPoint(j+1))) {
+            						j++;
+            					}
+            				}
+            			} while (!containsPoint2 || !containsPoint3);
+            			if (jumpLinkPoints != null) {
+            				// draw jump link
+            				g.drawPolyline(jumpLinkPoints);
+            			}
+            		}
+            		if (j < displayPoints.size() - 1) { // if we still didn't reach the end after drawing jump link polyline
+            			// Draw a segment starting at index i-1 and ending at index i, 
+            			// and arc with starting point at index i and ending point at index i+1.
+            			// But first, find points at i-1, i and i+1.
+            			if (!firstPointAssigned) {
+            				x0 = displayPoints.getPoint(j-1).x; 
+            				y0 = displayPoints.getPoint(j-1).y;
+            			}
+            			int x1;; 
+            			int y1;
+            			// If points at i-1 and i are equal (could happen if jump link algorithm 
+            			// inserts a point that already exists), just skip the point i        		
+            			while (j < displayPoints.size() - 1 && 
+            					x0 == displayPoints.getPoint(j).x && y0 == displayPoints.getPoint(j).y) {
+            				j++;
+            			}
+            			if (j < displayPoints.size() - 1) {
+            				x1 = displayPoints.getPoint(j).x; 
+            				y1 = displayPoints.getPoint(j).y;
+            			} else {
+            				break;
+            			}
+            			// The same goes for point at i and i+1         		
+            			int x2;
+            			int y2;        		
+            			while (j + 1 < displayPoints.size() - 1 && 
+            					x1 == displayPoints.getPoint(j+1).x && y1 == displayPoints.getPoint(j+1).y) {
+            				j++;
+            			}
+            			if (j < displayPoints.size() - 1) {
+            				x2 = displayPoints.getPoint(j+1).x; 
+            				y2 = displayPoints.getPoint(j+1).y;
+            			} else {
+            				break;
+            			}
+            			// Draw the segment
+            			g.drawLine(x0, y0, x1, y1);
+    
+            			// Find out if arc size is default, or if it had to be decreased because of lack of space
+            			int r = rDefault;         			
+            			Point p = displayPoints.getPoint(j);
+            			int origIndex = ((Integer)originalDisplayPoints.get(p)).intValue();       	
+            			Object o = rForBendpointArc.get(new Integer((origIndex+1)/2));
+            			if (o != null) {
+            				r = ((Integer)o).intValue();
+            			}
+    
+            			// Find out the location of enclosing rectangle (x, y), as well as staring angle of the arc.
+            			int x, y;
+            			int startAngle;        		
+            			if (x0 == x1 && x1 < x2) {
+            				x = x1;
+            				y = y1 - r;
+            				if (y1 > y2) {
+            					startAngle = 90;
+            				} else {
+            					startAngle = 180;
+            				}
+            			} else if (x0 > x1 && x1 > x2) {
+            				x = x2; 
+            				y = y2 - r;
+            				if (y1 > y2) {
+            					startAngle = 180;
+            				} else {
+            					startAngle = 90;
+            				}        		
+            			} else  if (x0 == x1  && x1 > x2) {
+            				if (y1 > y2) {
+            					x = x2 - r;
+            					y = y2;
+            					startAngle = 0;
+            				} else {
+            					x = x1 - 2*r;
+            					y = y1 - r;
+            					startAngle = 270;
+            				}        		        		
+            			} else { // x0 < x1 && x1 < x2
+            				if (y1 > y2) {
+            					x = x2 - 2*r;
+            					y = y2 - r;
+            					startAngle = 270;
+            				} else {
+            					x = x1 - r;
+            					y = y1;
+            					startAngle = 0;
+            				}        		        		         		
+            			}
+            			// Draw the arc.
+            			g.drawArc(x, y, 2*r, 2*r, startAngle, 90);
+            			j+=2;
+            		}
+            	}
+            	i++;
+            	// Draw the last segment.
+            	g.drawLine(displayPoints.getPoint(displayPoints.size()-2), displayPoints.getLastPoint());
         	}
-        	// Draw the last segment.
-        	g.drawLine(displayPoints.getPoint(displayPoints.size()-2), displayPoints.getLastPoint());
         }
     }
     
@@ -638,17 +667,24 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
      */
     private static final int JUMPLINK_DEFAULT_WIDTH = 25;
     private static final int JUMPLINK_DEFAULT_HEIGHT = 10;
+    private static final int JUMPLINK_TUNNEL_DEFAULT_WIDTH = 10;
    
     /**
      * Calculate the size of the jump link.
      * 
      * @param isFeedbackLayer the <code>boolean</code> that determines if mapping of the coordinates will occur.  
      * This is necessary since the feedback layer doesn't not go through the zooming or mapmode scaling.
+     * @param hasTunnelAspect the <code>boolean</code> that determines if the jump link has a tunnel aspect or not.
      * 
      * @return <code>Dimension</code> that is the jump link size
      */
-    private Dimension calculateJumpLinkSize(boolean isFeedbackLayer) {
-    	Dimension jumpDim = new Dimension(JUMPLINK_DEFAULT_WIDTH, JUMPLINK_DEFAULT_HEIGHT);
+    private Dimension calculateJumpLinkSize(boolean isFeedbackLayer, boolean hasTunnelAspect) {
+    	Dimension jumpDim;
+    	if (hasTunnelAspect) {
+    	    jumpDim = new Dimension(JUMPLINK_TUNNEL_DEFAULT_WIDTH, 0);
+    	} else {
+    	    jumpDim = new Dimension(JUMPLINK_DEFAULT_WIDTH, JUMPLINK_DEFAULT_HEIGHT);
+    	}
     	
     	if (!isFeedbackLayer) {
     		MapModeUtil.getMapMode(this).DPtoLP(jumpDim);
@@ -662,10 +698,11 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
      * 
      * @param isFeedbackLayer the <code>boolean</code> that determines if mapping of the coordinates will occur.  
      * This is necessary since the feedback layer doesn't not go through the zooming or mapmode scaling.
+     * @param hasTunnelAspect the <code>boolean</code> that determines if the jump link has a tunnel aspect or not.
      */
-    private int calculateJumpLinkIncline(boolean isFeedbackLayer) {
+    private int calculateJumpLinkIncline(boolean isFeedbackLayer, boolean hasTunnelAspect) {
     	if (isJumpLinksAngledIn())
-        	return calculateJumpLinkSize(isFeedbackLayer).width / 5;
+        	return calculateJumpLinkSize(isFeedbackLayer, hasTunnelAspect).width / 5;
     	
     	return 0;
     }
@@ -836,7 +873,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
             }
             
             boolean isFeedbackLayer = isFeedbackLayer();
-            Dimension jumpLinkSize = calculateJumpLinkSize(isFeedbackLayer);
+            Dimension jumpLinkSize = calculateJumpLinkSize(isFeedbackLayer, hasTunnelAspect());
             
             while (bForwards ? childIter.hasNext() : childIter.hasPrevious()) {
                 IFigure figure =
@@ -865,7 +902,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
                                 double dist4 = intersections.getPoint(i).getDistance(checkLine.getLastPoint());
                                 double minDist = Math.min(Math.min(dist1,dist2), Math.min(dist3,dist4));
                                 if (minDist > jumpLinkSize.width/2){
-                                    addJumpLink(intersections.getPoint(i), distances.getPoint(i).x, isFeedbackLayer);
+                                    addJumpLink(intersections.getPoint(i), distances.getPoint(i).x, isFeedbackLayer, hasTunnelAspect());
                                 }
                             }
                         }
@@ -883,12 +920,13 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
          * @param ptIntersect
          * @param nDistance
          * @param isFeedbackLayer see the isFeedbackLayer() method
+         * @param hasTunnelAspect the <code>boolean</code> that determines if the jump link has a tunnel aspect or not.
          */
-        private void addJumpLink(Point ptIntersect, int nDistance, boolean isFeedbackLayer) {
+        private void addJumpLink(Point ptIntersect, int nDistance, boolean isFeedbackLayer, boolean hasTunnelAspect) {
             JumpLink pNewJumpLink = new JumpLink();
             pNewJumpLink.m_ptIntersect = new Point(ptIntersect);
             
-            Dimension jumpLinkSize = calculateJumpLinkSize(isFeedbackLayer);
+            Dimension jumpLinkSize = calculateJumpLinkSize(isFeedbackLayer, hasTunnelAspect);
             
             pNewJumpLink.m_nWidth = jumpLinkSize.width;
             pNewJumpLink.m_nHeight = jumpLinkSize.height;
@@ -908,7 +946,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
             if (m_pJumpLinks == null || m_pJumpLinks.size() < 2)
                 return;
 
-            Dimension jumpLinkSize = calculateJumpLinkSize(isFeedbackLayer());
+            Dimension jumpLinkSize = calculateJumpLinkSize(isFeedbackLayer(), hasTunnelAspect());
             int nCurrentWidth = jumpLinkSize.width;
             ArrayList jumpLinks = new ArrayList(m_pJumpLinks.size());
 
@@ -1049,6 +1087,16 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
     }
 
     /**
+     * Determines if this polyline connection should be drawn with a tunnel effect or not.
+     * 
+     * @return <code>boolean</code> <code>true</code> if it should be drawn with a tunnel effect, 
+     * <code>false</code otherwise.
+     */
+    public final boolean hasTunnelAspect() {
+        return ((styleBits & JUMPLINK_FLAG_HAS_TUNNEL_EFFECT) != 0);
+    }
+
+    /**
      * Set the overall routing styles for this polyline connection.
      *
      * @param closestDistance <code>boolean</code> <code>true</code> if it should be using closest distance routing, 
@@ -1150,18 +1198,42 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
      *
      * @param jumpType value can be one of <code>PolylineConnectionEx.JUMPLINK_FLAG_BELOW</code>, 
      * <code>PolylineConnectionEx.JUMPLINK_FLAG_ABOVE</code> or <code>PolylineConnectionEx.JUMPLINK_FLAG_ALL</code>
-     * @param curved the <code>boolean</code> indicating if <code>true</code> the jump link should be curved (semi-circle) 
-     * or if <code>false</code> it should be straight (rectangular).
-     * @param angleIn the <code>boolean</code> if <code>true</code> indicating the sides of the jump link are angled or 
-     * if <code>false</code> then the sides of the jump link are straight.
-     * @param onBottom the <code>boolean</code> <code>true</code> it will be oriented on the bottom of the connection,
-     * <code>false</code> it will oriented on top.
+     * @param curved the <code>boolean</code> indicating if <code>true</code> that the jump link should be curved 
+     * (semi-circle) or if <code>false</code> that it should be straight (rectangular).
+     * @param angleIn the <code>boolean</code> if <code>true</code> indicating that the sides of the jump link are
+     * angled or if <code>false</code> that the sides of the jump link are straight.
+     * @param onBottom the <code>boolean</code> if <code>true</code> indicating that it will be oriented on the
+     * bottom of the connection, of if <code>false</code> that it will oriented on top.
      */
     public void setJumpLinksStyles(
         int jumpType,
         boolean curved,
         boolean angleIn,
         boolean onBottom) {
+
+        setJumpLinksStyles(jumpType, curved, angleIn, onBottom, false);
+    }
+    
+    /**
+     * Set the jump links styles associated with the jump links functionality.
+     *
+     * @param jumpType value can be one of <code>PolylineConnectionEx.JUMPLINK_FLAG_BELOW</code>, 
+     * <code>PolylineConnectionEx.JUMPLINK_FLAG_ABOVE</code> or <code>PolylineConnectionEx.JUMPLINK_FLAG_ALL</code>
+     * @param curved the <code>boolean</code> indicating if <code>true</code> that the jump link should be curved 
+     * (semi-circle) or if <code>false</code> that it should be straight (rectangular).
+     * @param angleIn the <code>boolean</code> if <code>true</code> indicating that the sides of the jump link are
+     * angled or if <code>false</code> that the sides of the jump link are straight.
+     * @param onBottom the <code>boolean</code> if <code>true</code> indicating that it will be oriented on the
+     * bottom of the connection, of if <code>false</code> that it will oriented on top.
+     * @param hasTunnelAspect the <code>boolean</code> if <code>true</code> indicating that it will be drawn with a
+     * tunnel aspect, or if <code>false</code> that it will be drawn with a full line.
+     */
+    public void setJumpLinksStyles(
+        int jumpType,
+        boolean curved,
+        boolean angleIn,
+        boolean onBottom,
+        boolean hasTunnelAspect) {
 
         styleBits &= ~JUMPLINK_FLAG_ALL;
         styleBits |= jumpType;
@@ -1180,7 +1252,12 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
             styleBits |= JUMPLINK_FLAG_ONBOTTOM;
         else
             styleBits &= ~JUMPLINK_FLAG_ONBOTTOM;
-            
+
+        if (hasTunnelAspect)
+            styleBits |= JUMPLINK_FLAG_HAS_TUNNEL_EFFECT;
+        else
+            styleBits &= ~JUMPLINK_FLAG_HAS_TUNNEL_EFFECT;
+
         dirtyJumpLinks();
     }
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -314,6 +314,8 @@ public class ConnectionAppearancePropertySection
 			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksType_Square;
 		} else if (JumpLinkType.CHAMFERED_LITERAL.equals(literal)) {
 			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksType_Chamfered;
+		}  else if (JumpLinkType.TUNNEL_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksType_Tunnel;
 		} else if (JumpLinkStatus.NONE_LITERAL.equals(literal)) {
 			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksStatus_None;
 		} else if (JumpLinkStatus.ALL_LITERAL.equals(literal)) {

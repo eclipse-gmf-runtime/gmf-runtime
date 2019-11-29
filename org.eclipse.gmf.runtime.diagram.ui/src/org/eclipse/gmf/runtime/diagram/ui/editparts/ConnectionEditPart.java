@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2010 IBM Corporation and others.
+ * Copyright (c) 2002, 2020 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -1345,10 +1345,11 @@ abstract public class ConnectionEditPart
 
         boolean bCurved = type.equals(JumpLinkType.SEMICIRCLE_LITERAL);
         boolean bAngleIn = !type.equals(JumpLinkType.SQUARE_LITERAL);
+        boolean bTunnel = type.equals(JumpLinkType.TUNNEL_LITERAL);
         boolean bOnBottom = reverse;
 
         poly.setJumpLinks(jumpType != 0);
-        poly.setJumpLinksStyles(jumpType, bCurved, bAngleIn, bOnBottom);
+        poly.setJumpLinksStyles(jumpType, bCurved, bAngleIn, bOnBottom, bTunnel);
     }
 
     /**

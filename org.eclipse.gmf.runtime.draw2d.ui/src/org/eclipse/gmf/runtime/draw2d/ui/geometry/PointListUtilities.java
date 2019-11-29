@@ -1182,10 +1182,10 @@ public class PointListUtilities {
 		ListIterator lineIter = mySegments.listIterator();
 		while (lineIter.hasNext()) {
 			LineSeg aSegment = (LineSeg) lineIter.next();
-			theLength += Math.round(aSegment.length());
+			theLength += aSegment.length();
 		}
 
-		return theLength;
+		return Math.round(theLength);
 	}
 
 	private final static int BIGDISTANCE = 32766;
@@ -1203,8 +1203,8 @@ public class PointListUtilities {
 		List mySegments,
 		final int xCoord,
 		final int yCoord) {
-		long minDistance = BIGDISTANCE;
-		long nextDistance = 0;
+		double minDistance = BIGDISTANCE;
+		double nextDistance = 0;
 
 		LineSeg closeSegment = null;
 		LineSeg firstSegment =
@@ -1213,7 +1213,7 @@ public class PointListUtilities {
 		ListIterator lineIter = mySegments.listIterator();
 		while (lineIter.hasNext()) {
 			LineSeg aSegment = (LineSeg) lineIter.next();
-			nextDistance = aSegment.distanceToPoint(xCoord, yCoord);
+			nextDistance = aSegment.preciseDistanceToPoint(xCoord, yCoord);
 
 			if (nextDistance < minDistance) {
 				closeSegment = aSegment;
@@ -1232,7 +1232,7 @@ public class PointListUtilities {
 	 * Method pointOn.
 	 * Static utility function used by <code>pointOn</code>.
 	 * @param mySegments
-	 * @param theDistance the <code>long</code> x coordinate of the point
+	 * @param theDistance the <code>double</code> x coordinate of the point
 	 * @param fromKeyPoint the <code>int</code> constant value indicating the key point
 	 *      Origin, Terminus, Midpoint
 	 * @param ptResult the <code>Point</code> where the resulting point value is set.
@@ -1240,11 +1240,11 @@ public class PointListUtilities {
 	 */
 	protected static Point pointOn(
 		List mySegments,
-		final long theDistance,
+		final double theDistance,
 		final LineSeg.KeyPoint fromKeyPoint,
 		Point ptResult) {
-		long thisLength = length(mySegments);
-		long halfLength = thisLength / 2;
+		double thisLength = length(mySegments);
+		double halfLength = thisLength / 2;
 
 		if (theDistance >= thisLength) {
 			if (fromKeyPoint == LineSeg.KeyPoint.ORIGIN) {
@@ -1521,7 +1521,7 @@ public class PointListUtilities {
 	 * @param nInclineOffset the <code>int</code> amount to incline the routed points.
 	 * @param bTop the <code>boolean</code> route above or below the point on the line.
 	 * @return <code>PointList</code> that is the newly routed version of <code>points</code>
-	 * of <code>null</code> if operation was not successful or if the calculation is not possible.
+	 * or <code>null</code> if operation was not successful or if the calculation is not possible.
 	 */
 	static public PointList routeAroundPoint(
 		PointList points,
@@ -1604,7 +1604,7 @@ public class PointListUtilities {
 		while (lineIter.hasNext()) {
 			LineSeg pSegment = (LineSeg) lineIter.next();
 
-			if (pSegment.equals(pStartSeg)) {
+			if (pSegment == pStartSeg) {
 				rPolyPoints.addPoint(new Point(pSegment.getOrigin()));
 				bFoundStart = true;
 			}
@@ -1658,6 +1658,102 @@ public class PointListUtilities {
 		return null;
 	}
 
+	 /**
+     * Method routeAroundPoint for egde with "tunnel" jump links. This method has the 
+     * same goal as the other routeAroundPoint, ie calculate a new routed version of 
+     * this polyline that will route itself around a  given point, but  with 2 
+     * <code>PointList</code> to add a "blank" space around the point.
+     * 
+     * @param points PointList to modify
+     * @param ptCenter the <code>Point</code> around which the routing will occur.
+     * @param nWidth the <code>int</code> width to route around the point.
+     * @return List of <code>PointList</code> that is the newly routed version of 
+     * <code>points</code> or <code>null</code> if operation was not successful or if 
+     * the calculation is not possible.
+     */
+    static public List<PointList> routeAroundPoint(
+        PointList points,
+        final Point ptCenter,
+        int nWidth,
+        int nSmoothFactor) {
+        List mySegments = getLineSegments(points);
+
+        long nPolyLength = length(mySegments);
+        long nCenterDistance =
+            Math.round(
+                distanceAlong(mySegments, ptCenter)
+                    * nPolyLength);
+
+        Point ptMidStart = new Point();
+        pointOn(
+            mySegments,
+            nCenterDistance - (nWidth / 2),
+            LineSeg.KeyPoint.ORIGIN,
+            ptMidStart);
+        Point ptMidEnd = new Point();
+        pointOn(
+            mySegments,
+            nCenterDistance + (nWidth / 2),
+            LineSeg.KeyPoint.ORIGIN,
+            ptMidEnd);
+        LineSeg lineNew = new LineSeg(ptMidStart, ptMidEnd);
+
+        LocateInfo locateInfo = new LocateInfo();
+        if (!locateSegment(mySegments,
+            (nCenterDistance - ((long) nWidth / 2)) / (double) nPolyLength,
+            LineSeg.KeyPoint.ORIGIN,
+            locateInfo))
+            return null;
+        LineSeg pStartSeg = locateInfo.theSegment;
+
+        if (!locateSegment(mySegments,
+            (nCenterDistance + ((long) nWidth / 2)) / (double) nPolyLength,
+            LineSeg.KeyPoint.ORIGIN,
+            locateInfo))
+            return null;
+        LineSeg pEndSeg = locateInfo.theSegment;
+        
+        PointList firstPolyPoints = new PointList();
+        PointList secondPolyPoints = new PointList();
+        
+        boolean bFoundStart = false;
+        boolean bFoundEnd = false;
+        ListIterator lineIter = mySegments.listIterator();
+        while (lineIter.hasNext()) {
+            LineSeg pSegment = (LineSeg) lineIter.next();
+
+            if (pSegment == pStartSeg) {
+                firstPolyPoints.addPoint(new Point(pSegment.getOrigin()));
+                firstPolyPoints.addPoint(ptMidStart);
+                bFoundStart = true;
+            }
+
+            if (pSegment == pEndSeg) {
+                secondPolyPoints.addPoint(ptMidEnd);
+                bFoundEnd = true;
+            } else {
+                if (!bFoundStart) {
+                    firstPolyPoints.addPoint(new Point(pSegment.getOrigin()));
+                } else if (bFoundEnd) {
+                    secondPolyPoints.addPoint(new Point(pSegment.getOrigin()));
+                }
+            }
+            if (!lineIter.hasNext()) {
+                 secondPolyPoints.addPoint(new Point(pSegment.getTerminus()));
+            }
+
+        }
+
+        if (bFoundEnd) {
+            List<PointList> result = new ArrayList<PointList>();
+            result.add(firstPolyPoints);
+            result.add(secondPolyPoints);
+            return result;
+        }
+
+        return null;
+    }
+
 	/**
 	 * Method findNearestLineSegIndexOfPoint.
 	 * Calculate the nearest line segment index distance wise to the given point.
@@ -1674,14 +1770,14 @@ public class PointListUtilities {
 		ListIterator lineIter = mySegments.listIterator();
 		int nNextIndex = 0;
 		int nMinIndex = 0;
-		long minDistance = BIGDISTANCE;
-		long nextDistance = 0;
+		double minDistance = BIGDISTANCE;
+		double nextDistance = 0;
 
 		while (lineIter.hasNext()) {
 			LineSeg aSegment = (LineSeg) lineIter.next();
 			nNextIndex++;
 
-			nextDistance = aSegment.distanceToPoint(ptCoord.x, ptCoord.y);
+			nextDistance = aSegment.preciseDistanceToPoint(ptCoord.x, ptCoord.y);
 
 			if (nextDistance < minDistance) {
 				minDistance = nextDistance;

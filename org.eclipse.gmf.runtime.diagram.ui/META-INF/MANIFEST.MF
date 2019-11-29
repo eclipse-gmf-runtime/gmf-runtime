@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui; singleton:=true
-Bundle-Version: 1.8.0.qualifier
+Bundle-Version: 1.9.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
@@ -298,7 +298,7 @@ Require-Bundle: org.eclipse.ui.views;bundle-version="[3.3.0,4.0.0)",
  org.eclipse.gmf.runtime.common.ui;bundle-version="[1.2.0,2.0.0)";visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui.action;bundle-version="[1.2.0,2.0.0)";visibility:=reexport,
  org.eclipse.ui.views.properties.tabbed;bundle-version="[3.5.0,4.0.0)";visibility:=reexport,
- org.eclipse.gmf.runtime.notation;bundle-version="[1.2.0,2.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.notation;bundle-version="[1.10.0,2.0.0)";visibility:=reexport,
  org.eclipse.emf.common;bundle-version="[2.5.0,3.0.0)",
  org.eclipse.emf.ecore;bundle-version="[2.5.0,3.0.0)",
  org.eclipse.gmf.runtime.diagram.core;bundle-version="[1.2.0,2.0.0)";visibility:=reexport,

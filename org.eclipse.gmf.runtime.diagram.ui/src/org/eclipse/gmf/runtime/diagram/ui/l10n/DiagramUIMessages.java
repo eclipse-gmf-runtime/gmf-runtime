@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2020 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -74,6 +74,7 @@ public final class DiagramUIMessages extends NLS {
 	public static String PropertyDescriptorFactory_JumplinksType_Square;
 	public static String PropertyDescriptorFactory_JumplinksType_SemiCircle;
 	public static String PropertyDescriptorFactory_JumplinksType_Chamfered;
+	public static String PropertyDescriptorFactory_JumplinksType_Tunnel;
 	public static String PropertyDescriptorFactory_JumplinksReverse;
 	public static String PropertyDescriptorFactory_Smoothness_SmoothNone;
 	public static String PropertyDescriptorFactory_Smoothness_SmoothLess;

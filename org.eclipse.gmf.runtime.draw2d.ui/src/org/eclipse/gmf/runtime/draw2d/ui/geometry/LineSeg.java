@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2020 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -448,6 +448,42 @@ public class LineSeg
 		*/
 	}
 
+	   /**
+     * Finds the perpendicular distance from a point coordinates to this line segment.
+     * If point is "inside" line segment, then use distance from point to the line, 
+     * otherwise use distance to nearest endpoint of segment
+     * 
+     * @param xCoord the x coordinate of the point.
+     * @param yCoord the y coordinate of the point.
+     * @return <code>long</code> the distance from the line segment to the given point.
+     */
+    public final double preciseDistanceToPoint(final int xCoord, final int yCoord) {
+        
+        double proj = projection(xCoord, yCoord);
+
+        if (proj > 0 && proj < 1) {
+            Point pt = perpIntersect(xCoord, yCoord);
+            return pt.getDistance(new Point(xCoord, yCoord));
+        }
+
+        double d1 = getOrigin().getDistance(new Point(xCoord, yCoord));
+        double d2 = getTerminus().getDistance(new Point(xCoord, yCoord));
+        
+        return (d1 < d2 ? d1 : d2);
+
+        /* There are 2 general forms to equations of a line:
+          1. y = mx + c, where c = y1 - m(x1), and
+          2. ax + by + c = 0
+           We know m and c, so putting first version in the form of
+           the second version, we get:
+          mx - y + c = 0
+           So, for form 2, a = m, b = -1, and c = y1 - m(x1).
+           Distance from point (x, y) to line (using form 2) is:
+          |ax + by + c| / sqrt(a^2 + b^2)
+           or
+          |mx - y + y1 - m(x1)| / sqrt(m^2 + 1)
+        */
+    }
 	/**
 	 * Calculates the perpendicular intersection point on 
 	 * the line segment from the given point.
@@ -598,14 +634,14 @@ public class LineSeg
 	 * Gets the point on the line segment at the given distance away from the 
 	 * key point.
 	 * 
-	 * @param theDistance <code>long</code> distance along the line
+	 * @param theDistance <code>double</code> distance along the line
 	 * @param fromKeyPoint <code>KeyPoint</code> to calculate the distance from
 	 * @param ptResult <code>Point</code> where the resulting calculating value is stored.
 	 * @return <code>boolean</code> <code>true</code> if point can be calculated, 
 	 * <code>false</code> otherwise.
 	 */
 	public final boolean pointOn(
-		final long theDistance,
+		final double theDistance,
 		final KeyPoint fromKeyPoint,
 		Point ptResult) {
 		float m, dx_float;
