@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2020 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -1317,7 +1317,7 @@ public class PointListUtilities {
 	static private class LocateInfo {
 		
 		/**
-		 * remainin distance
+		 * remaining distance
 		 */
 		public long remainingDist;
 
@@ -1359,8 +1359,8 @@ public class PointListUtilities {
 		}
 
 		final long theLength = length(mySegments);
-		long remainingLength = Math.round(thePctDist * theLength);
-		long nextLength = 0;
+		double remainingLength = thePctDist * theLength;
+		double nextLength = 0;
 
 		locateInfo.theSegment = null;
 
@@ -1381,7 +1381,7 @@ public class PointListUtilities {
 			while (lineIter.hasNext()) {
 				LineSeg aSegment = (LineSeg) lineIter.next();
 
-				nextLength = Math.round(aSegment.length());
+				nextLength = aSegment.length();
 				if (nextLength >= remainingLength) {
 					locateInfo.theSegment = aSegment;
 					break;
@@ -1394,7 +1394,7 @@ public class PointListUtilities {
 			while (lineIter.hasPrevious()) {
 				LineSeg aSegment = (LineSeg) lineIter.previous();
 
-				nextLength = Math.round(aSegment.length());
+				nextLength = aSegment.length();
 				if (nextLength >= remainingLength) {
 					locateInfo.theSegment = aSegment;
 					break;
@@ -1409,8 +1409,18 @@ public class PointListUtilities {
 			throw iae;
 		}
 
-		locateInfo.remainingDist = remainingLength;
-
+        // Reduce the rounding made on each segment to have a more precise remaining distance on the current line
+        // segment.
+        double lengthToPointDistance = thePctDist * theLength;
+        double distanceToTheCorrespondingSegment;
+        if (fromKeyPoint == LineSeg.KeyPoint.MIDPOINT) {
+            lengthToPointDistance = lengthToPointDistance + (theLength / 2);
+            distanceToTheCorrespondingSegment = segmentDistance(mySegments, locateInfo.theSegment, LineSeg.KeyPoint.ORIGIN);
+        } else {
+            distanceToTheCorrespondingSegment = segmentDistance(mySegments, locateInfo.theSegment, fromKeyPoint);
+        }
+        long realRemainingLength = Math.round(lengthToPointDistance - (theLength * distanceToTheCorrespondingSegment));
+        locateInfo.remainingDist = realRemainingLength;
 		return true;
 	}
 
@@ -1461,7 +1471,7 @@ public class PointListUtilities {
 		List mySegments,
 		LineSeg theSegment,
 		final LineSeg.KeyPoint uptoKeyPoint) {
-		long accumulatedLength = 0;
+		double accumulatedLength = 0;
 
 		ListIterator lineIter = mySegments.listIterator();
 		while (lineIter.hasNext()) {
