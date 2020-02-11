@@ -54,7 +54,14 @@ import org.eclipse.swt.widgets.Display;
  * @author sshaw
  */
 public class PolylineConnectionEx extends PolylineConnection implements IPolygonAnchorableFigure {
-	
+    /**
+    * The default value for the field <code>isPartialJumpLinksDisabled</code>. It can be changed globally by changing
+    * this default value or individually by using method {@link #disablePartialJumpLinks(boolean)}.
+    * 
+    * @since 1.13.0
+    */
+   public static boolean DISABLE_PARTIAL_JUMP_LINKS = false;
+
 	private RotatableDecoration startDecoration, endDecoration;
 
     private static Rectangle LINEBOUNDS = Rectangle.SINGLETON;
@@ -139,7 +146,19 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
      * When rounded bendpoints is turned on, keeping track of arcs that have smaller size than the default 
      */
     private Hashtable<Integer, Integer> rForBendpointArc;
-	
+    
+    /**
+     * Since GMF 1.13.0, some jump links can be disabled, this kind of jump links does not improve the readability of
+     * the diagram, on the contrary it makes the diagram less readable. The criterion is that the "jump" is only partial
+     * as the two lines actually merge on one side of their intersection.<BR>
+     * By default, to avoid to break compatibility with previous version, the partial jump links is enabled. To disable
+     * it, you have to change the default value for all edges (by changing the static field
+     * {@link #DISABLE_PARTIAL_JUMP_LINKS}) or to call individually {@link #disablePartialJumpLinks(boolean)}.
+     * 
+     * @since 1.1.13
+     */
+    private boolean isPartialJumpLinksDisabled = DISABLE_PARTIAL_JUMP_LINKS;
+    
     static private final String szAnchor = ""; //$NON-NLS-1$
     
     /**
@@ -901,7 +920,8 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
                                 double dist3 = intersections.getPoint(i).getDistance(checkLine.getFirstPoint());
                                 double dist4 = intersections.getPoint(i).getDistance(checkLine.getLastPoint());
                                 double minDist = Math.min(Math.min(dist1,dist2), Math.min(dist3,dist4));
-                                if (minDist > jumpLinkSize.width/2){
+                                if (minDist > jumpLinkSize.width / 2
+                                        && (!isPartialJumpLinksDisabled() || !hasCommonSourceOrEnd(intersections.getPoint(i), tmpLine, checkLine, jumpLinkSize.width / 2))) {
                                     addJumpLink(intersections.getPoint(i), distances.getPoint(i).x, isFeedbackLayer, hasTunnelAspect());
                                 }
                             }
@@ -1028,6 +1048,41 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
                     return SMOOTH_FACTOR_MORE;
 
         return 0;
+    }
+
+    /**
+     * Search if the staring point or the ending point of the future jump link will 
+     * be the same on both lines that intersect. A tolerance of 1 pixel of distance
+     * is accepted.
+     * 
+     * @param point The point where the intersection is.
+     * @param firstLine The first line that intersects.
+     * @param secondLine The second line that intersects.
+     * @param jumpLinkDelta An half of the jumk link size, to allow the calculation 
+     * of the starting and ending points of the future jump link.
+     * @return <code>boolean</code> <code>true</code> if the source or the end of the 
+     * jump link is the same on both lines, <code>false</code otherwise.
+     */
+    protected boolean hasCommonSourceOrEnd(Point point, PointList firstLine, PointList secondLine, int jumpLinkDelta) {
+        boolean result = false;
+        Point startPointOnFirstLine = new Point();
+        Point startPointOnSecondLine = new Point();
+        PointListUtilities.pointOn(firstLine, point, jumpLinkDelta, startPointOnFirstLine);
+        PointListUtilities.pointOn(secondLine, point, jumpLinkDelta, startPointOnSecondLine);
+        if (startPointOnFirstLine.getDistance(startPointOnSecondLine) <= 1) {
+            result = true;
+        } else {
+            Point endPointOnFirstLine = new Point();
+            Point endPointOnSecondLine = new Point();
+            PointListUtilities.pointOn(firstLine, point, -jumpLinkDelta, endPointOnFirstLine);
+            PointListUtilities.pointOn(secondLine, point, -jumpLinkDelta, endPointOnSecondLine);
+            if (endPointOnFirstLine.getDistance(endPointOnSecondLine) <= 1 || 
+                    endPointOnFirstLine.getDistance(startPointOnSecondLine) <= 1 || 
+                    startPointOnFirstLine.getDistance(endPointOnSecondLine) <= 1) {
+                result = true;
+            }
+        }
+        return result;
     }
 
     /**
@@ -1193,6 +1248,27 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
             styleBits &= ~ROUTE_JUMP_LINKS;
     }
 
+    /**
+     * Determines if the partial jump links should be drawn or not.
+     * 
+     * @return <code>boolean</code> <code>false</code> if the partial jump links should be drawn, <code>true</code>
+     *         otherwise.
+     */
+    public boolean isPartialJumpLinksDisabled() {
+        return isPartialJumpLinksDisabled;
+    }
+
+    /**
+     * Disable partial jump links.
+     * 
+     * @param disablePartialJumpLinks
+     *            the <code>boolean</code> <code>true</code> if this jump links should be disabled (not drawn),
+     *            <code>false</code> otherwise.
+     */
+    public void disablePartialJumpLinks(boolean disablePartialJumpLinks) {
+        isPartialJumpLinksDisabled = disablePartialJumpLinks;
+    }
+    
     /**
      * Set the jump links styles associated with the jump links functionality.
      *

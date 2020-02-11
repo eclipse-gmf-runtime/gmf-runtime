@@ -22,6 +22,7 @@ import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transform;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg.KeyPoint;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
 
@@ -1155,6 +1156,24 @@ public class PointListUtilities {
 		List mySegments = getLineSegments(points);
 		return pointOn(mySegments, theDistance, fromKeyPoint, ptResult);
 	}
+
+   /**
+     * Calculate the point on the polyline given a distance from an existing point on this polyline.
+     * 
+     * @param points the <code>PointList</code> to calculate the point on the polyline.
+     * @param fromPoint a <code>Point</code> on the line from where we start
+     * @param theDistance the <code>long</code> distance to add, or remove, from the <code>fromPoint</code> on the line
+     * @param ptResult the <code>Point</code> where the resulting point value is set.
+     * @return Point the calculated point residing on the polyline.
+     */
+    static public Point pointOn(PointList points, Point fromPoint, long theDistance, Point ptResult) {
+        List mySegments = getLineSegments(points);
+        long polylineLength = length(mySegments);
+        long fromPointDistance = Math.round(distanceAlong(mySegments, fromPoint) * polylineLength);
+        long newPointDistance = fromPointDistance + theDistance;
+        pointOn(mySegments, newPointDistance, KeyPoint.ORIGIN, ptResult);
+        return ptResult;
+    }
 
 	/**
 	 * Method getPointsLength.
