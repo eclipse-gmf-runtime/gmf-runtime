@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.gmf.runtime.common.ui.services.action" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.gmf.runtime.common.ui.services.action" id="contributionItemProviders" name="Contribution Item Providers Extension Point"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          &lt;P&gt;
 This extension point is used to register providers that contribute to different workbench part&apos;s contribution managers. The contributions described in this extension point could be for a workbench part&apos;s action bars (referred to as part contributions) or for a workbench part&apos;s popup menu (referred to as popup contributions). This extension point provides an XML description of those contributions to be read by the described providers. The extension point provides an alternative to the following Eclipse extension points:
@@ -27,9 +27,9 @@ However, this extension point focuses on distinguishing the contribution criteri
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -78,9 +78,9 @@ However, this extension point focuses on distinguishing the contribution criteri
                <documentation>
                   the name of a fully qualified class that extends the the &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider&lt;/tt&gt; and &lt;tt&gt;org.eclipse.gmf.runtime.common.core.service.IProvider&lt;/tt&gt; interfaces
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="checkPluginLoaded" type="boolean" use="default" value="true">
@@ -151,9 +151,9 @@ However, this extension point focuses on distinguishing the contribution criteri
                <documentation>
                   an optional name of a fully qualified class or interface. Contributions will be made to all workbench parts that subclass or implement this type.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -545,9 +545,9 @@ If the last token was a group, the contribution will be appended to the end of t
                <documentation>
                   The fully qualified name of a contribution policy class (that usually resides in a different plugin/fragment that is assumed to be loaded) to be used to determine wether this contributon should be considered or not. The class has to implement the &lt;code&gt;IPopupMenuContributionPolicy&lt;/code&gt; interface.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IPopupMenuContributionPolicy"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -616,9 +616,9 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
                <documentation>
                   The fully qualified name of a contribution policy class (that usually resides in a different plugin/fragment that is assumed to be loaded) to be used to determine wether this contributon should be considered or not. The class has to implement the &lt;code&gt;IPopupMenuContributionPolicy&lt;/code&gt; interface.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IPopupMenuContributionPolicy"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -647,9 +647,9 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
                <documentation>
                   The fully qualified name of a contribution policy class (that usually resides in a different plugin/fragment that is assumed to be loaded) to be used to determine wether this contributon should be considered or not. The class has to implement the &lt;code&gt;IPopupMenuContributionPolicy&lt;/code&gt; interface.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IPopupMenuContributionPolicy"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -877,9 +877,9 @@ It has to start with a &apos;/&apos; indicating the root of the contribution man
 
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          The following is an example of a provider extension 
 &lt;PRE&gt;
@@ -994,9 +994,9 @@ It has to start with a &apos;/&apos; indicating the root of the contribution man
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiInfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          &lt;P&gt;
 The value of the contribution item provider &lt;tt&gt;class&lt;/tt&gt; attribute must be a fully qualified name of a Java class that implements the &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider&lt;/tt&gt;. For convenience, this can be a subclass of &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider&lt;/tt&gt;.
@@ -1016,15 +1016,15 @@ Therefore, a contribution path has to fully exist prior to being used as a path 
 
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="copyright"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          Copyright (c) 2003, 2009  IBM Corporation and others.&lt;br&gt;
- All rights reserved. This program and the accompanying materials 
- are made available under the terms of the Eclipse Public License v1.0 
- which accompanies this distribution, and is available at 
- &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+ This program and the accompanying materials are made
+ available under the terms of the Eclipse Public License 2.0
+ which is available at
+ &lt;a href=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;&gt;https://www.eclipse.org/legal/epl-2.0/&lt;/a&gt;
       </documentation>
    </annotation>
 

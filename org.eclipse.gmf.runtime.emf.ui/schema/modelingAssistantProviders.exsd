@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.gmf.runtime.emf.ui">
+<schema targetNamespace="org.eclipse.gmf.runtime.emf.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.gmf.runtime.emf.ui" id="modelingAssistantProviders" name="Modeling Assistant Providers"/>
@@ -11,6 +11,11 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="modelingAssistantProvider" minOccurs="1" maxOccurs="unbounded"/>
@@ -104,9 +109,9 @@
       </annotation>
       <complexType>
          <sequence>
-	     	<element ref="method" minOccurs="0" maxOccurs="unbounded"/>
-         	<element ref="staticMethod" minOccurs="0" maxOccurs="unbounded"/>
-      	 </sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="staticMethod" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -168,7 +173,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
          </attribute>
       </complexType>
    </element>
-   
+
    <element name="staticMethod">
       <annotation>
          <documentation>
@@ -212,7 +217,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
          </attribute>
       </complexType>
    </element>
-   
+
    <element name="value">
       <annotation>
          <documentation>
@@ -302,13 +307,13 @@ className&lt;(plugin id)&gt;?
       &lt;modelingAssistantProvider class=&quot;org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicModelingAssistantProvider&quot;&gt;
          &lt;Priority name=&quot;Low&quot;/&gt;
          &lt;object class=&quot;org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ConnectionPointEditPart(org.eclipse.gmf.examples.runtime.diagram.logic)&quot; 
-         	id=&quot;CONNECTIONPOINT&quot;&gt;                        
+          id=&quot;CONNECTIONPOINT&quot;&gt;                        
          &lt;/object&gt;
          &lt;object class=&quot;org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicFlowCompartmentEditPart(org.eclipse.gmf.examples.runtime.diagram.logic)&quot; 
-         	id=&quot;LOGIC_FLOW_COMPARTMENT&quot;&gt;               
+          id=&quot;LOGIC_FLOW_COMPARTMENT&quot;&gt;               
          &lt;/object&gt;
          &lt;object class=&quot;org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicShapeCompartmentEditPart(org.eclipse.gmf.examples.runtime.diagram.logic)&quot; 
-         	id=&quot;LOGIC_SHAPE_COMPARTMENT&quot;&gt;               
+          id=&quot;LOGIC_SHAPE_COMPARTMENT&quot;&gt;               
          &lt;/object&gt;
          &lt;context elements=&quot;CONNECTIONPOINT,LOGIC_FLOW_COMPARTMENT,LOGIC_SHAPE_COMPARTMENT&quot;/&gt;
       &lt;/modelingAssistantProvider&gt;
@@ -341,10 +346,10 @@ className&lt;(plugin id)&gt;?
       </appInfo>
       <documentation>
          Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
- All rights reserved. This program and the accompanying materials 
- are made available under the terms of the Eclipse Public License v1.0 
- which accompanies this distribution, and is available at 
- &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+ This program and the accompanying materials are made
+ available under the terms of the Eclipse Public License 2.0
+ which is available at
+ &lt;a href=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;&gt;https://www.eclipse.org/legal/epl-2.0/&lt;/a&gt;
       </documentation>
    </annotation>
 

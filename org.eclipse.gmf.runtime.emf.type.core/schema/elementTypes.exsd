@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.gmf.runtime.emf.type.core">
+<schema targetNamespace="org.eclipse.gmf.runtime.emf.type.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.gmf.runtime.emf.type.core" id="elementTypes" name="Element Types"/>
@@ -24,6 +24,11 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
    <include schemaLocation="schema://org.eclipse.core.expressions/schema/expressionLanguage.exsd"/>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="metamodel" minOccurs="0" maxOccurs="unbounded"/>
@@ -495,14 +500,6 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
@@ -510,10 +507,10 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
       </appInfo>
       <documentation>
          Copyright (c) 2005  IBM Corporation and others.&lt;br&gt;
- All rights reserved. This program and the accompanying materials 
- are made available under the terms of the Eclipse Public License v1.0 
- which accompanies this distribution, and is available at 
- &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+ This program and the accompanying materials are made
+ available under the terms of the Eclipse Public License 2.0
+ which is available at
+ &lt;a href=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;&gt;https://www.eclipse.org/legal/epl-2.0/&lt;/a&gt;
       </documentation>
    </annotation>
 

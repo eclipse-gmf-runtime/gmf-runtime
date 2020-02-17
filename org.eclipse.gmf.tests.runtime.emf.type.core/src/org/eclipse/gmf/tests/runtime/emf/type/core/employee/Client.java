@@ -1,9 +1,14 @@
-/**
- * <copyright>
- * </copyright>
+/******************************************************************************
+ * Copyright (c) 2006 IBM Corporation and others.
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
- * $Id: Client.java,v 1.1 2006/03/07 02:40:36 ldamus Exp $
- */
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee;
 
 import org.eclipse.emf.ecore.EModelElement;

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.gmf.runtime.diagram.ui">
+<schema targetNamespace="org.eclipse.gmf.runtime.diagram.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.gmf.runtime.diagram.ui" id="decoratorProviders" name="Presentation Decorator Providers"/>
@@ -31,6 +31,9 @@ More specifically, the provider service allows implementors to do the following:
 
    <element name="extension">
       <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
          <documentation>
             Describes the extension point.
          </documentation>
@@ -313,6 +316,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
       </complexType>
    </element>
 
+
    <annotation>
       <appInfo>
          <meta.section type="examples"/>
@@ -367,14 +371,6 @@ that implement the following interfaces:
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
@@ -382,10 +378,10 @@ that implement the following interfaces:
       </appInfo>
       <documentation>
          Copyright (c) 2003, 2004  IBM Corporation and others.&lt;br&gt;
- All rights reserved. This program and the accompanying materials 
- are made available under the terms of the Eclipse Public License v1.0 
- which accompanies this distribution, and is available at 
- &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+ This program and the accompanying materials are made
+ available under the terms of the Eclipse Public License 2.0
+ which is available at
+ &lt;a href=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;&gt;https://www.eclipse.org/legal/epl-2.0/&lt;/a&gt;
       </documentation>
    </annotation>
 
