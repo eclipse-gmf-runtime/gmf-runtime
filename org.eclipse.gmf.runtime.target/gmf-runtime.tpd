@@ -68,20 +68,20 @@ location Orbit-Oxygen.1a "http://download.eclipse.org/tools/orbit/downloads/drop
 }
 
 // Still needed by EMF Transaction 1.11
-location EMF-Query-1.11 "http://download.eclipse.org/modeling/emf/query/updates/releases" {
+location EMF-Query-1.11 "http://download.eclipse.org/modeling/emf/query/updates/releases/R201706061326/" {
     org.eclipse.emf.query.sdk.feature.group [1.11.0.201706061326,1.11.0.201706061326]
 }
 
-location EMF-Validation-1.11 "http://download.eclipse.org/modeling/emf/validation/updates/releases" {
+location EMF-Validation-1.11 "http://download.eclipse.org/modeling/emf/validation/updates/releases/R201706061352/" {
     org.eclipse.emf.validation.sdk.feature.group [1.11.0.201706061352,1.11.0.201706061352]
 }
 
-location EMF-Transaction-1.11 "http://download.eclipse.org/modeling/emf/transaction/updates/releases" {
+location EMF-Transaction-1.11 "http://download.eclipse.org/modeling/emf/transaction/updates/releases/R201706061339/" {
     org.eclipse.emf.transaction.sdk.feature.group [1.11.0.201706061339,1.11.0.201706061339]
 }
 
-location GMF-Notation-1.11 "http://download.eclipse.org/modeling/gmp/gmf-notation/updates/releases" {
-    org.eclipse.gmf.runtime.notation.sdk.feature.group [1.11.0.201706061354,1.11.0.201706061354]
+location GMF-Notation-1.13M1 "http://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones/S202002250905" {
+    org.eclipse.gmf.runtime.notation.sdk.feature.group [1.13.0,1.13.1)
 }
 
 location GEF-Legacy "http://download.eclipse.org/tools/gef/updates/legacy/releases" {
