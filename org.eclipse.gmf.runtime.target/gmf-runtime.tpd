@@ -18,7 +18,7 @@ location EMF-2.13 "http://download.eclipse.org/modeling/emf/emf/updates/2.13" {
     org.eclipse.emf.ecore.edit.feature.group [2.9.0.v20170609-0928,2.9.0.v20170609-0928]
 }
 
-location OCL-6.3 "http://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.3.0" {
+location OCL-6.3 "https://archive.eclipse.org/modeling/mdt/ocl/updates/releases/6.3.0/" {
     org.eclipse.ocl.feature.group [3.7.0.v20170522-1736,3.7.0.v20170522-1736]
 }
 

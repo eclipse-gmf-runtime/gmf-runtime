@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="gmf-runtime" sequenceNumber="1583830473">
+<target name="gmf-runtime" sequenceNumber="1583834772">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
@@ -23,7 +23,7 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.ocl.feature.group" version="3.7.0.v20170522-1736"/>
-      <repository id="OCL-6.3" location="http://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.3.0"/>
+      <repository id="OCL-6.3" location="https://archive.eclipse.org/modeling/mdt/ocl/updates/releases/6.3.0/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.uml2.sdk.feature.group" version="5.3.0.v20170605-1616"/>
