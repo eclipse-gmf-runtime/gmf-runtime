@@ -80,7 +80,7 @@ location EMF-Transaction-1.11 "http://download.eclipse.org/modeling/emf/transact
     org.eclipse.emf.transaction.sdk.feature.group [1.11.0.201706061339,1.11.0.201706061339]
 }
 
-location GMF-Notation-1.13M1 "http://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones/S202002250905" {
+location GMF-Notation-1.13M2 "https://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones/S202003100829/" {
     org.eclipse.gmf.runtime.notation.sdk.feature.group [1.13.0,1.13.1)
 }
 
