@@ -1338,7 +1338,7 @@ public class PointListUtilities {
 		/**
 		 * remaining distance
 		 */
-		public long remainingDist;
+		public double remainingDist;
 
 		/**
 		 * the line segment.
@@ -1438,8 +1438,7 @@ public class PointListUtilities {
         } else {
             distanceToTheCorrespondingSegment = segmentDistance(mySegments, locateInfo.theSegment, fromKeyPoint);
         }
-        long realRemainingLength = Math.round(lengthToPointDistance - (theLength * distanceToTheCorrespondingSegment));
-        locateInfo.remainingDist = realRemainingLength;
+        locateInfo.remainingDist = lengthToPointDistance - (theLength * distanceToTheCorrespondingSegment);
 		return true;
 	}
 
