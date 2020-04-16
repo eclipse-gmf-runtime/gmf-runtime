@@ -81,7 +81,7 @@ echo "`date +%Y-%m-%d-%H:%M:%S` Working in `pwd`"
 
 # Download and prepare Eclipse SDK, which is needed to process the update site
 echo "`date +%Y-%m-%d-%H:%M:%S` Downloading eclipse to $PWD"
-cp /home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.12-201906051800/eclipse-SDK-4.12-linux-gtk-x86_64.tar.gz .
+cp /home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.12-201906051800/eclipse-SDK-4.12-linux-gtk-x86_64.tar.gz .
 tar -xzf eclipse-SDK-4.12-linux-gtk-x86_64.tar.gz
 cd eclipse
 chmod 700 eclipse
