@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -18,6 +18,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.util.CustomData;
@@ -26,23 +27,26 @@ import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.clipboard.AWTViewImageTransferable;
 
 /**
- * Used for image transfer to the clipboard. This is only supported when on
- * Windows systems.
+ * Used for image transfer to the clipboard. This is only supported when on Windows systems and running on Java before
+ * Java 11, but can be overridden (forced enabled or disabled) by explicitly setting the
+ * <code>org.eclipse.gmf.runtime.image.copy.supported</code> system property (see
+ * https://bugs.eclipse.org/bugs/show_bug.cgi?id=566315).
  * <p>
- * SWT does not currently support image transfer to the Clipboard. This utility
- * class is provided in order to transfer an SWT Image to the system clipboard
- * using AWT image transfer APIs.
+ * SWT does not currently support image transfer to the Clipboard. This utility class is provided in order to transfer
+ * an SWT Image to the system clipboard using AWT image transfer APIs.
  * </p>
  */
 public class AWTClipboardHelper {
-
+    
+	private static final String OVERRIDE_PROPERTY = "org.eclipse.gmf.runtime.image.copy.supported"; //$NON-NLS-1$
+    
 	/**
-	 * Are we running on Windows?
+	 * Are we running on Windows and system property 
+	 * org.eclipse.gmf.runtime.image.copy.support is set to <code>true</code>?
 	 */
-	private static final boolean IMAGE_COPY_SUPPORTED = System.getProperty(
-		"os.name").toUpperCase().startsWith("WIN"); //$NON-NLS-1$ //$NON-NLS-2$
+	private static final boolean IMAGE_COPY_SUPPORTED = computeImageCopySupported();
 
-	static private AWTClipboardHelper INSTANCE = new AWTClipboardHelper();
+	private static final AWTClipboardHelper INSTANCE = new AWTClipboardHelper();
 
 	/**
 	 * Retrieves the singleton instance of <code>AWTClipboardHelper</code>.
@@ -60,18 +64,36 @@ public class AWTClipboardHelper {
 			awtClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 	}
 
-	/**
-	 * Return true if image copy is supported, that is, when running under Windows.
-	 * 
-	 * Workaround for RATLC00526604, ClipboardHelper's hasCustomData invoking
-	 * SunClipboard's getContents which waits indefinitely
-	 * 
-	 * @return true when running under Windows 
-	 */
-	final public boolean isImageCopySupported() {
+    /**
+     * Return true if image copy is supported.
+     * 
+     * By default this is only supported when on Windows systems and running on Java before Java 11, but can be
+     * overridden (forced enabled or disabled) by explicitly setting the
+     * <code>org.eclipse.gmf.runtime.image.copy.supported</code> system property. See
+     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=566315 for details.
+     * 
+     * Workaround for RATLC00526604, ClipboardHelper's hasCustomData invoking SunClipboard's getContents which waits
+     * indefinitely
+     * 
+     * @return true if copying images to the clipboard is supported.
+     */
+	public final boolean isImageCopySupported() {
 		return IMAGE_COPY_SUPPORTED;
 	}
 
+	private static final boolean computeImageCopySupported() {
+		String imageCopySupported = System.getProperty(OVERRIDE_PROPERTY);
+		if (imageCopySupported == null) {
+		    boolean onWindows = System.getProperty("os.name").toUpperCase().startsWith("WIN"); //$NON-NLS-1$ //$NON-NLS-2$
+		    String javaVersion = System.getProperty("java.specification.version"); //$NON-NLS-1$
+		    boolean beforeJava11 = Arrays.asList("1.8", "9", "10").stream().anyMatch(javaVersion::equals); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		    return onWindows && beforeJava11; 
+		} else {
+		    // If the property is explicitly set, trust it.
+		    return Boolean.parseBoolean(imageCopySupported);
+		}
+	}
+	
 	/**
 	 * Query method to determine if a <code>CustomData</code> object is on the
 	 * clipboard.
