@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2020 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -110,10 +110,28 @@ public abstract class DiagramAction
 	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#refresh()
 	 */
 	public void refresh() {
-		_operationSet = null; // invalidate the cached set
-		updateTargetRequest();
-		setEnabled(calculateEnabled());
-	}
+        if (Display.getCurrent() == null) {
+            /*
+             * We are not in a UI thread, so we call the refresh later to avoid potential
+             * ConcurrentModificationException or worse.
+             */
+            Display.getDefault().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    internalRefresh();
+                }
+            });
+        } else {
+            /* Here we are in UI Thread */
+            internalRefresh();
+        }
+    }
+
+    private void internalRefresh() {
+        _operationSet = null; // invalidate the cached set
+        updateTargetRequest();
+        setEnabled(calculateEnabled());
+    }
 
 	/**
 	 * Calculates the enblement state of the action
