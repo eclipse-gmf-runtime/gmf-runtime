@@ -35,7 +35,6 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
-import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg.KeyPoint;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DelegatingLayout;
@@ -1016,7 +1015,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
                 } else {
                     if (pPrevJumpLink == null)
                         pPrevJumpLink = pLastJumpLink;
-                    nCurrentWidth += jumpLinkSize.width - (nDeltaMin - nDelta);
+                    nCurrentWidth += nDelta;
                 }
 
                 pLastJumpLink = pJumpLink;
