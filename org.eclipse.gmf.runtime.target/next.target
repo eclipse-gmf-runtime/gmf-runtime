@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="gmf-runtime" sequenceNumber="1583834772">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<target name="gmf-runtime-2020-09" sequenceNumber="1604399782">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
       <repository id="Eclipse-Shared-License" location="http://download.eclipse.org/cbi/updates/license"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.sdk.ide" version="4.7.1.M20171009-0410"/>
-      <unit id="org.eclipse.test.feature.group" version="3.7.200.v20170511-1043"/>
-      <unit id="org.eclipse.sdk.tests.feature.group" version="4.7.1.v20171009-0410"/>
-      <unit id="org.eclipse.platform.ide" version="4.7.1.M20171009-0410"/>
-      <repository id="Eclipse-Oxygen.1a" location="http://download.eclipse.org/eclipse/updates/4.7/R-4.7.1a-201710090410/"/>
+      <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+      <unit id="org.eclipse.test.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.sdk.tests.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.platform.ide" version="0.0.0"/>
+      <repository id="Eclipse-I" location="https://download.eclipse.org/eclipse/updates/I-builds/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.emf.edit.feature.group" version="2.12.0.v20170609-0928"/>
-      <unit id="org.eclipse.emf.examples.feature.group" version="2.12.0.v20170609-0928"/>
-      <unit id="org.eclipse.emf.sdk.feature.group" version="2.13.0.v20170609-0928"/>
-      <unit id="org.eclipse.emf.ecore.edit.feature.group" version="2.9.0.v20170609-0928"/>
-      <repository id="EMF-2.13" location="http://download.eclipse.org/modeling/emf/emf/updates/2.13"/>
+      <unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.emf.examples.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.emf.ecore.edit.feature.group" version="0.0.0"/>
+      <repository id="EMF-M" location="http://download.eclipse.org/modeling/emf/emf/builds/milestone/latest"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.ocl.feature.group" version="3.7.0.v20170522-1736"/>
-      <repository id="OCL-6.3" location="https://archive.eclipse.org/modeling/mdt/ocl/updates/releases/6.3.0/"/>
+      <unit id="org.eclipse.ocl.feature.group" version="0.0.0"/>
+      <repository id="OCL-M" location="https://download.eclipse.org/modeling/mdt/ocl/updates/milestones/latest/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.uml2.sdk.feature.group" version="5.3.0.v20170605-1616"/>
-      <unit id="org.eclipse.uml2.common.feature.group" version="2.1.0.v20170605-1616"/>
-      <repository id="UML2-5.3" location="http://download.eclipse.org/modeling/mdt/uml2/updates/5.3"/>
+      <unit id="org.eclipse.uml2.sdk.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.uml2.common.feature.group" version="0.0.0"/>
+      <repository id="UML2-M" location="https://download.eclipse.org/modeling/mdt/uml2/updates/milestones/latest/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.apache.batik.bridge" version="1.6.0.v201011041432"/>
