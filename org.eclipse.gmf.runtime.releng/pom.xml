@@ -14,7 +14,7 @@
 		<tycho-version>1.7.0</tycho-version>
 		<cbi-plugins.version>1.1.7</cbi-plugins.version>
 		<antrun-version>1.8</antrun-version>
-		<!-- <maven.test.failure.ignore>true</maven.test.failure.ignore> -->
+		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<platform>oxygen</platform>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
