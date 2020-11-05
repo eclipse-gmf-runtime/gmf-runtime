@@ -92,7 +92,7 @@ cd $tmpDir
 message "Working in $(pwd)"
 
 # Compute dropDir
-qualifiedVersion=$(find "$localUpdateSite"/features/ -maxdepth 1 | grep "org.eclipse.gmf.runtime_" | sed 's/.jar$//')
+qualifiedVersion=$(find "$localUpdateSite"/features/ -maxdepth 1 | grep "org.eclipse.gmf_" | sed 's/.jar$//')
 qualifiedVersion=${qualifiedVersion#*_}
 qualifier=${qualifiedVersion##*.}
 qualifier=${qualifier#v}
