@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2015 IBM Corporation and others.
+ * Copyright (c) 2004, 2015, 2021 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -7,7 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Ansgar Radermacher - bug 312723, revert parts of initial changes for this issue
  ****************************************************************************/
 
 
@@ -1074,9 +1075,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 			int height = fontInfo[0].getHeight();
 			
-			float fsize = (float) height
-					* 96.0f	/ 72.0f;		// default display DPI / default DPI of AWT
-			
+			int dpi = Integer.getInteger("org.eclipse.gmf.runtime.draw2d.ui.render.dpi", DisplayUtils.getDisplay().getDPI().x);
+			float fsize = (float) height * (float) dpi / 72.0f;        // display DPI / AWT DPI
 			height = (int) fsize;
 			
 			int style = fontInfo[0].getStyle();
