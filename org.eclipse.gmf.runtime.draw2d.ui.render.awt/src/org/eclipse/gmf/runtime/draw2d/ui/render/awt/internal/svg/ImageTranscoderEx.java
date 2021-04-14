@@ -14,22 +14,25 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.batik.anim.dom.SVGDOMImplementation;
+import org.apache.batik.anim.dom.SVGOMDocument;
 import org.apache.batik.bridge.BaseScriptingEnvironment;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.bridge.BridgeException;
 import org.apache.batik.bridge.GVTBuilder;
 import org.apache.batik.bridge.ViewBox;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.svg.SVGOMDocument;
 import org.apache.batik.dom.util.DOMUtilities;
+import org.apache.batik.ext.awt.RenderingHintsKeyExt;
 import org.apache.batik.ext.awt.image.GraphicsUtil;
 import org.apache.batik.gvt.CanvasGraphicsNode;
 import org.apache.batik.gvt.GraphicsNode;
@@ -195,7 +198,7 @@ public class ImageTranscoderEx extends ImageTranscoder {
 		
 		if (maintainAspectRatio) {
 			try {
-				Px = ViewBox.getViewTransform(ref, svgRoot, newWidth, newHeight);
+				Px = ViewBox.getViewTransform(ref, svgRoot, newWidth, newHeight, ctx);
 			} catch (BridgeException ex) {
 				throw new TranscoderException(ex);
 			}
