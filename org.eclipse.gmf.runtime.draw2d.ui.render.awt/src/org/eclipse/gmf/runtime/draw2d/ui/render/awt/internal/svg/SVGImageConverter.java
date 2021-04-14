@@ -24,7 +24,6 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
-import org.apache.fop.svg.PDFTranscoder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -278,14 +277,14 @@ public class SVGImageConverter {
     public static void exportToPDF(SVGImage svgImage,
 			OutputStream fileOutputStream)
 			throws CoreException {
-    	
 		try {
 			TranscoderOutput transcoderOutput = new TranscoderOutput(fileOutputStream);
 			TranscoderInput transcoderInput = new TranscoderInput(svgImage
 					.getDocument());
 
-			PDFTranscoder pdfTranscoder = new PDFTranscoder();
-			pdfTranscoder.transcode(transcoderInput, transcoderOutput);
+			//PDFTranscoder pdfTranscoder = new PDFTranscoder();
+			//pdfTranscoder.transcode(transcoderInput, transcoderOutput);
+			throw new TranscoderException("PDF export is not supported in this version"); //$NON-NLS-1$
 
 		} catch (TranscoderException e) {
 			Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e
