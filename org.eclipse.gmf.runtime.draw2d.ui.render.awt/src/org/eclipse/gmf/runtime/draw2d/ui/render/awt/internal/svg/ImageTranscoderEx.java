@@ -29,7 +29,10 @@ import org.apache.batik.anim.dom.SVGOMDocument;
 import org.apache.batik.bridge.BaseScriptingEnvironment;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.bridge.BridgeException;
+import org.apache.batik.bridge.ExternalResourceSecurity;
 import org.apache.batik.bridge.GVTBuilder;
+import org.apache.batik.bridge.UserAgent;
+import org.apache.batik.bridge.UserAgentAdapter;
 import org.apache.batik.bridge.ViewBox;
 import org.apache.batik.dom.util.DOMUtilities;
 import org.apache.batik.ext.awt.RenderingHintsKeyExt;
@@ -41,6 +44,7 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.TranscodingHints;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.keys.BooleanKey;
+import org.apache.batik.util.ParsedURL;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.svg.SVGSVGElement;
@@ -139,6 +143,16 @@ public class ImageTranscoderEx extends ImageTranscoder {
 		
 		SVGColorConverter.getInstance().replaceDocumentColors(svgDoc, fillColor, outlineColor);
 	}
+	
+    @Override
+    protected UserAgent createUserAgent() {
+        return new UserAgentAdapter() {
+            @Override
+            public ExternalResourceSecurity getExternalResourceSecurity(ParsedURL resourceURL, ParsedURL docURL) {
+                throw new SecurityException("External resources access from SVG images disabled"); //$NON-NLS-1$
+            }
+        };
+    }
 	
 	/**
 	 * buildGVTTree
