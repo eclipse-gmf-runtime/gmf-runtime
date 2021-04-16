@@ -520,6 +520,7 @@ public abstract class GraphicalEditPart
         }
         catch( RuntimeException t ) {
             GETCOMMAND_RECURSIVE_COUNT = 0;
+            _disableCanonicalEditPolicyList.clear();
             throw t;
         }
         return cmd;
