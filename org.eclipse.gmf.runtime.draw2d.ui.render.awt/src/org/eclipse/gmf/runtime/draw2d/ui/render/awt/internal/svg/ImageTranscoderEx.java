@@ -14,13 +14,11 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -35,7 +33,6 @@ import org.apache.batik.bridge.UserAgent;
 import org.apache.batik.bridge.UserAgentAdapter;
 import org.apache.batik.bridge.ViewBox;
 import org.apache.batik.dom.util.DOMUtilities;
-import org.apache.batik.ext.awt.RenderingHintsKeyExt;
 import org.apache.batik.ext.awt.image.GraphicsUtil;
 import org.apache.batik.gvt.CanvasGraphicsNode;
 import org.apache.batik.gvt.GraphicsNode;
@@ -56,6 +53,19 @@ import org.w3c.dom.svg.SVGSVGElement;
  * colors with choice colors and turning on/off maintain aspect ratio capability.
  */
 public class ImageTranscoderEx extends ImageTranscoder {
+    
+    /**
+     * Custom Batik UserAgent to disallow access to external resources when rendering SVG images.
+     * 
+     * @author pcdavid
+     */
+    private static final class NoExternalAccessUserAgentAdapter extends UserAgentAdapter {
+        @Override
+        public ExternalResourceSecurity getExternalResourceSecurity(ParsedURL resourceURL, ParsedURL docURL) {
+            throw new SecurityException("External resources access from SVG images disabled"); //$NON-NLS-1$
+        }
+    }
+    
 	/**
 	 * @author sshaw
 	 *
@@ -146,12 +156,7 @@ public class ImageTranscoderEx extends ImageTranscoder {
 	
     @Override
     protected UserAgent createUserAgent() {
-        return new UserAgentAdapter() {
-            @Override
-            public ExternalResourceSecurity getExternalResourceSecurity(ParsedURL resourceURL, ParsedURL docURL) {
-                throw new SecurityException("External resources access from SVG images disabled"); //$NON-NLS-1$
-            }
-        };
+        return new NoExternalAccessUserAgentAdapter();
     }
 	
 	/**
