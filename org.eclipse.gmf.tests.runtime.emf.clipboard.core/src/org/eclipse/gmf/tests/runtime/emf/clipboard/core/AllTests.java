@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2021 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -12,41 +12,32 @@
 
 package org.eclipse.gmf.tests.runtime.emf.clipboard.core;
 
-import java.util.Arrays;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.core.runtime.IPlatformRunnable;
-
 /**
  * 
  * @author Christian Vogt (cvogt)
  */
-public class AllTests extends TestCase implements IPlatformRunnable {
+public class AllTests extends TestCase {
 
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
+    public static void main(String[] args) {
+        TestRunner.run(suite());
+    }
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite();
-		
-		suite.addTest(RegressionTest.suite());
-		//suite.addTest(ClipboardUtilTest.suite());
+    public static Test suite() {
+        TestSuite suite = new TestSuite();
 
-		return suite;
-	}
+        suite.addTest(RegressionTest.suite());
+        // suite.addTest(ClipboardUtilTest.suite());
 
-	public AllTests() {
-		super(""); //$NON-NLS-1$
-	}
+        return suite;
+    }
 
-	public Object run(Object args) throws Exception {
-		TestRunner.run(suite());
-		return Arrays.asList(new String[] { "Please see raw test suite output for details." }); //$NON-NLS-1$
-	}
+    public AllTests() {
+        super(""); //$NON-NLS-1$
+    }
 
 }
