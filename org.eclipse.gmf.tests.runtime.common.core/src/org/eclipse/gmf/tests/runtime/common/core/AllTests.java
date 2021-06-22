@@ -12,14 +12,6 @@
 
 package org.eclipse.gmf.tests.runtime.common.core;
 
-import java.util.Arrays;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.AbstractCommandTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.CompositeCommandTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.FileModificationApproverTest;
@@ -32,7 +24,12 @@ import org.eclipse.gmf.tests.runtime.common.core.internal.util.HashUtilTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.util.ProxyTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.util.StringUtilTest;
 
-public class AllTests extends TestCase implements IPlatformRunnable {
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
+
+public class AllTests extends TestCase {
 
     public static void main(String[] args) {
         TestRunner.run(suite());
@@ -43,7 +40,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
         suite.addTest(AbstractCommandTest.suite());
         suite.addTest(AbstractProviderTest.suite());
         suite.addTest(CompositeCommandTest.suite());
-		suite.addTest(ExecutionStrategyTest.suite());
+        suite.addTest(ExecutionStrategyTest.suite());
         suite.addTest(FileModificationApproverTest.suite());
         suite.addTest(HashUtilTest.suite());
         suite.addTest(OneTimeCommandTest.suite());
@@ -57,10 +54,4 @@ public class AllTests extends TestCase implements IPlatformRunnable {
     public AllTests() {
         super(""); //$NON-NLS-1$
     }
-
-    public Object run(Object args) throws Exception {
-        TestRunner.run(suite());
-        return Arrays.asList(new String[] { "Please see raw test suite output for details." }); //$NON-NLS-1$
-    }
-
 }
