@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde?>
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<target name="gmf-runtime-2021-06" sequenceNumber="1624530489">
+  <locations>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
+      <repository id="Eclipse-Shared-License" location="https://download.eclipse.org/cbi/updates/license"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+      <unit id="org.eclipse.test.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.sdk.tests.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.platform.ide" version="0.0.0"/>
+      <repository id="Eclipse-4.20" location="https://download.eclipse.org/eclipse/updates/4.20/R-4.20-202106111600/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.emf.examples.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.emf.ecore.edit.feature.group" version="0.0.0"/>
+      <repository id="EMF-2.26" location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.26"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.ocl.feature.group" version="0.0.0"/>
+      <repository id="OCL-6.15" location="https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.15.0/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.uml2.sdk.feature.group" version="5.5.2.v20210228-1829"/>
+      <unit id="org.eclipse.uml2.common.feature.group" version="2.5.0.v20210228-1829"/>
+      <repository id="UML2-5.5.2" location="https://download.eclipse.org/modeling/mdt/uml2/updates/5.5/R202102281829/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.apache.batik.awt.util" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.awt.util.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.anim" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.anim.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.bridge" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.bridge.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.codec" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.css" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.css.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.dom" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.dom.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.dom.svg" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.dom.svg.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.ext" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.gvt" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.gvt.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.parser" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.parser.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.svggen" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.svggen.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.transcoder" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.transcoder.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.util" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.util.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.xml" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.batik.xml.source" version="1.14.0.v20210324-0332"/>
+      <unit id="org.apache.xerces" version="2.12.1.v20210115-0812"/>
+      <unit id="org.apache.xerces.source" version="2.12.1.v20210115-0812"/>
+      <unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
+      <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
+      <unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
+      <unit id="org.hamcrest.text.source" version="1.1.0.v20090501071000"/>
+      <unit id="org.w3c.css.sac.source" version="1.3.1.v200903091627"/>
+      <unit id="org.w3c.dom.events.source" version="3.0.0.draft20060413_v201105210656"/>
+      <unit id="org.w3c.dom.smil.source" version="1.0.1.v200903091627"/>
+      <unit id="org.w3c.dom.svg.source" version="1.1.0.v201011041433"/>
+      <repository id="Orbit" location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210602031627/repository"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.emf.query.sdk.feature.group" version="1.11.0.201706061326"/>
+      <repository id="EMF-Query-1.11" location="https://download.eclipse.org/modeling/emf/query/updates/releases/R201706061326/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.11.0.201706061352"/>
+      <repository id="EMF-Validation-1.11" location="https://download.eclipse.org/modeling/emf/validation/updates/releases/R201706061352/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.11.0.201706061339"/>
+      <repository id="EMF-Transaction-1.11" location="https://download.eclipse.org/modeling/emf/transaction/updates/releases/R201706061339/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.13.0.202004160913"/>
+      <repository id="GMF-Notation-1.13.0" location="https://download.eclipse.org/modeling/gmp/gmf-notation/updates/releases/R202004160913/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.gef.sdk.feature.group" version="3.11.0.201606061308"/>
+      <repository id="GEF-Legacy" location="https://download.eclipse.org/tools/gef/updates/legacy/releases"/>
+    </location>
+  </locations>
+</target>

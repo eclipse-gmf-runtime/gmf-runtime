@@ -1,0 +1,51 @@
+target "gmf-runtime-2021-03" with source, requirements
+
+location Eclipse-Shared-License "https://download.eclipse.org/cbi/updates/license" {
+	org.eclipse.license.feature.group [2.0.2.v20181016-2210,2.0.2.v20181016-2210]
+}
+
+location Eclipse-4.19 "https://download.eclipse.org/eclipse/updates/4.19/R-4.19-202103031800/" {
+	org.eclipse.sdk.ide lazy
+	org.eclipse.test.feature.group lazy
+	org.eclipse.sdk.tests.feature.group lazy
+	org.eclipse.platform.ide lazy
+}
+
+location EMF-2.25 "https://download.eclipse.org/modeling/emf/emf/builds/release/2.25" {
+	org.eclipse.emf.edit.feature.group lazy
+	org.eclipse.emf.examples.feature.group lazy
+	org.eclipse.emf.sdk.feature.group lazy
+	org.eclipse.emf.ecore.edit.feature.group lazy
+}
+
+location OCL-6.14 "https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.14.0/" {
+    org.eclipse.ocl.feature.group [3.14.500.v20210310-0557,3.14.500.v20210310-0557]
+}
+
+location UML2-5.5.1 "https://download.eclipse.org/modeling/mdt/uml2/updates/5.5/R202003021312/" {
+    org.eclipse.uml2.sdk.feature.group [5.5.1.v20200302-1312,5.5.1.v20200302-1312]
+    org.eclipse.uml2.common.feature.group [2.5.0.v20200302-1312,2.5.0.v20200302-1312]
+}
+
+include "orbit.tpd"
+
+// Still needed by EMF Transaction 1.11
+location EMF-Query-1.11 "https://download.eclipse.org/modeling/emf/query/updates/releases/R201706061326/" {
+	org.eclipse.emf.query.sdk.feature.group [1.11.0.201706061326,1.11.0.201706061326]
+}
+
+location EMF-Validation-1.11 "https://download.eclipse.org/modeling/emf/validation/updates/releases/R201706061352/" {
+	org.eclipse.emf.validation.sdk.feature.group [1.11.0.201706061352,1.11.0.201706061352]
+}
+
+location EMF-Transaction-1.11 "https://download.eclipse.org/modeling/emf/transaction/updates/releases/R201706061339/" {
+	org.eclipse.emf.transaction.sdk.feature.group [1.11.0.201706061339,1.11.0.201706061339]
+}
+
+location GMF-Notation-1.13.0 "https://download.eclipse.org/modeling/gmp/gmf-notation/updates/releases/R202004160913/" {
+	org.eclipse.gmf.runtime.notation.sdk.feature.group [1.13.0,1.13.1)
+}
+
+location GEF-Legacy "https://download.eclipse.org/tools/gef/updates/legacy/releases" {
+	org.eclipse.gef.sdk.feature.group 3.11.0.201606061308
+}
