@@ -42,8 +42,8 @@ location EMF-Transaction-1.11 "https://download.eclipse.org/modeling/emf/transac
     org.eclipse.emf.transaction.sdk.feature.group [1.11.0.201706061339,1.11.0.201706061339]
 }
 
-location GMF-Notation-1.13M2 "https://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones/S202003100829/" {
-    org.eclipse.gmf.runtime.notation.sdk.feature.group [1.13.0,1.13.1)
+location GMF-Notation-1.13.0 "https://download.eclipse.org/modeling/gmp/gmf-notation/updates/releases/R202004160913/" {
+	org.eclipse.gmf.runtime.notation.sdk.feature.group [1.13.0,1.13.1)
 }
 
 location GEF-Legacy "https://download.eclipse.org/tools/gef/updates/legacy/releases" {
