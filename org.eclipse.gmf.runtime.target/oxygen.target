@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="gmf-runtime-oxygen" sequenceNumber="1624524093">
+<target name="gmf-runtime-oxygen" sequenceNumber="1624527931">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
-      <repository id="Eclipse-Shared-License" location="http://download.eclipse.org/cbi/updates/license"/>
+      <repository id="Eclipse-Shared-License" location="https://download.eclipse.org/cbi/updates/license"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.sdk.ide" version="4.7.1.M20171009-0410"/>
       <unit id="org.eclipse.test.feature.group" version="3.7.200.v20170511-1043"/>
       <unit id="org.eclipse.sdk.tests.feature.group" version="4.7.1.v20171009-0410"/>
       <unit id="org.eclipse.platform.ide" version="4.7.1.M20171009-0410"/>
-      <repository id="Eclipse-Oxygen.1a" location="http://download.eclipse.org/eclipse/updates/4.7/R-4.7.1a-201710090410/"/>
+      <repository id="Eclipse-Oxygen.1a" location="https://download.eclipse.org/eclipse/updates/4.7/R-4.7.1a-201710090410/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.edit.feature.group" version="2.12.0.v20170609-0928"/>
       <unit id="org.eclipse.emf.examples.feature.group" version="2.12.0.v20170609-0928"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="2.13.0.v20170609-0928"/>
       <unit id="org.eclipse.emf.ecore.edit.feature.group" version="2.9.0.v20170609-0928"/>
-      <repository id="EMF-2.13" location="http://download.eclipse.org/modeling/emf/emf/updates/2.13"/>
+      <repository id="EMF-2.13" location="https://download.eclipse.org/modeling/emf/emf/updates/2.13"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.ocl.feature.group" version="3.7.0.v20170522-1736"/>
@@ -28,7 +28,7 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.uml2.sdk.feature.group" version="5.3.0.v20170605-1616"/>
       <unit id="org.eclipse.uml2.common.feature.group" version="2.1.0.v20170605-1616"/>
-      <repository id="UML2-5.3" location="http://download.eclipse.org/modeling/mdt/uml2/updates/5.3"/>
+      <repository id="UML2-5.3" location="https://download.eclipse.org/modeling/mdt/uml2/updates/5.3"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.apache.batik.awt.util" version="1.14.0.v20210324-0332"/>
@@ -71,15 +71,15 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.query.sdk.feature.group" version="1.11.0.201706061326"/>
-      <repository id="EMF-Query-1.11" location="http://download.eclipse.org/modeling/emf/query/updates/releases/R201706061326/"/>
+      <repository id="EMF-Query-1.11" location="https://download.eclipse.org/modeling/emf/query/updates/releases/R201706061326/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.11.0.201706061352"/>
-      <repository id="EMF-Validation-1.11" location="http://download.eclipse.org/modeling/emf/validation/updates/releases/R201706061352/"/>
+      <repository id="EMF-Validation-1.11" location="https://download.eclipse.org/modeling/emf/validation/updates/releases/R201706061352/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.11.0.201706061339"/>
-      <repository id="EMF-Transaction-1.11" location="http://download.eclipse.org/modeling/emf/transaction/updates/releases/R201706061339/"/>
+      <repository id="EMF-Transaction-1.11" location="https://download.eclipse.org/modeling/emf/transaction/updates/releases/R201706061339/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.13.0.202003100829"/>
@@ -87,7 +87,7 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.gef.sdk.feature.group" version="3.11.0.201606061308"/>
-      <repository id="GEF-Legacy" location="http://download.eclipse.org/tools/gef/updates/legacy/releases"/>
+      <repository id="GEF-Legacy" location="https://download.eclipse.org/tools/gef/updates/legacy/releases"/>
     </location>
   </locations>
 </target>

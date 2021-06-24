@@ -1,17 +1,17 @@
 target "gmf-runtime-photon" with source, requirements
 
-location Eclipse-Shared-License "http://download.eclipse.org/cbi/updates/license" {
+location Eclipse-Shared-License "https://download.eclipse.org/cbi/updates/license" {
     org.eclipse.license.feature.group [2.0.2.v20181016-2210,2.0.2.v20181016-2210]
 }
 
-location Eclipse-Photon "http://download.eclipse.org/eclipse/updates/4.8/R-4.8-201806110500/" {
+location Eclipse-Photon "https://download.eclipse.org/eclipse/updates/4.8/R-4.8-201806110500/" {
     org.eclipse.sdk.ide [4.8.0.I20180611-0500,4.8.0.I20180611-0500]
     org.eclipse.test.feature.group [3.7.300.v20180524-2246,3.7.300.v20180524-2246]
     org.eclipse.sdk.tests.feature.group [4.8.0.v20180611-0500,4.8.0.v20180611-0500]
     org.eclipse.platform.ide [4.8.0.I20180611-0500,4.8.0.I20180611-0500]
 }
 
-location EMF-2.14 "http://download.eclipse.org/modeling/emf/emf/builds/release/2.14" {
+location EMF-2.14 "https://download.eclipse.org/modeling/emf/emf/builds/release/2.14" {
     org.eclipse.emf.edit.feature.group [2.13.0.v20180421-1151,2.13.0.v20180421-1151]
     org.eclipse.emf.examples.feature.group [2.13.0.v20180529-1157,2.13.0.v20180529-1157]
     org.eclipse.emf.sdk.feature.group [2.14.0.v20180529-1157,2.14.0.v20180529-1157]
@@ -30,15 +30,15 @@ location UML2-5.4.0 "https://download.eclipse.org/modeling/mdt/uml2/updates/5.4/
 include "orbit.tpd"
 
 // Still needed by EMF Transaction 1.11
-location EMF-Query-1.11 "http://download.eclipse.org/modeling/emf/query/updates/releases/R201706061326/" {
+location EMF-Query-1.11 "https://download.eclipse.org/modeling/emf/query/updates/releases/R201706061326/" {
     org.eclipse.emf.query.sdk.feature.group [1.11.0.201706061326,1.11.0.201706061326]
 }
 
-location EMF-Validation-1.11 "http://download.eclipse.org/modeling/emf/validation/updates/releases/R201706061352/" {
+location EMF-Validation-1.11 "https://download.eclipse.org/modeling/emf/validation/updates/releases/R201706061352/" {
     org.eclipse.emf.validation.sdk.feature.group [1.11.0.201706061352,1.11.0.201706061352]
 }
 
-location EMF-Transaction-1.11 "http://download.eclipse.org/modeling/emf/transaction/updates/releases/R201706061339/" {
+location EMF-Transaction-1.11 "https://download.eclipse.org/modeling/emf/transaction/updates/releases/R201706061339/" {
     org.eclipse.emf.transaction.sdk.feature.group [1.11.0.201706061339,1.11.0.201706061339]
 }
 
@@ -46,6 +46,6 @@ location GMF-Notation-1.13M2 "https://download.eclipse.org/modeling/gmp/gmf-nota
     org.eclipse.gmf.runtime.notation.sdk.feature.group [1.13.0,1.13.1)
 }
 
-location GEF-Legacy "http://download.eclipse.org/tools/gef/updates/legacy/releases" {
+location GEF-Legacy "https://download.eclipse.org/tools/gef/updates/legacy/releases" {
     org.eclipse.gef.sdk.feature.group 3.11.0.201606061308
 }
