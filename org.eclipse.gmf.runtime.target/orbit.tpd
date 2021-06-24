@@ -1,6 +1,6 @@
 target "Orbit"
 
-location Orbit-2021-06M1 "https://download.eclipse.org/tools/orbit/downloads/drops/S20210406213021/repository" {
+location Orbit "https://download.eclipse.org/tools/orbit/downloads/drops/R20210602031627/repository" {
     org.apache.batik.awt.util [1.14.0,1.14.1)
     org.apache.batik.awt.util.source [1.14.0,1.14.1)
     org.apache.batik.anim[1.14.0,1.14.1)
