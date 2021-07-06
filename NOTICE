@@ -1,0 +1,295 @@
+# Notices for Eclipse GMF Runtime
+
+This content is produced and maintained by the Eclipse GMF Runtime project.
+
+* Project home: https://projects.eclipse.org/projects/modeling.gmf-runtime
+
+## Trademarks
+
+Eclipse GMF Runtime, and GMF Runtime are trademarks of the Eclipse Foundation.
+
+## Copyright
+
+All content is the property of the respective authors or their employers. For
+more information regarding authorship of content, please consult the listed
+source code repository logs.
+
+## Declared Project Licenses
+
+This program and the accompanying materials are made available under the terms
+of the Eclipse Public License v1.0 which is available at
+https://www.eclipse.org/legal/epl-v10.html.
+
+SPDX-License-Identifier: EPL-1.0
+
+## Source Code
+
+The project maintains the following source code repositories:
+
+* https://git.eclipse.org/r/plugins/gitiles/gmf-notation/org.eclipse.gmf.notation
+* https://git.eclipse.org/r/plugins/gitiles/gmf-runtime/org.eclipse.gmf-runtime
+
+## Third-party Content
+
+This project leverages the following third party content.
+
+Apache Batik (1.6)
+
+* License: W3C License
+
+Apache Batik (1.6)
+
+* License: Apache License, 2.0
+
+Apache Batik DOM Component (1.6.1)
+
+* License: Apache License, 2.0, W3C License, Public Domain
+
+Apache Batik PDF Transcoder library (1.9.1)
+
+* License: Apache-2.0 AND Apache-1.1 AND Zlib AND
+   LicenseRef-Adobe-Permissive-Terms
+
+Apache pdf transcoder library (1.7)
+
+* License: Apache License, 2.0 + Custom Open Source License for one file
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Apache Xerces (2.8)
+
+* License: Apache License, 2.0
+
+Apache Xerces for Java (2.9)
+
+* License: Apache License, 2.0
+
+Batik animation engine (1.9)
+
+* License: Apache-2.0 
+
+Batik animation library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik AWT utility library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik bridge library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik constants library (1.9.1)
+
+* License: Apache-2.0
+
+Batik CSS engine library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik CSS engine library (1.9.1)
+
+* License: Apache-2.0 
+
+Batik DOM Level 3 implementation library (1.7)
+
+* License: Apache License, 2.0, W3C License
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik extensions library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik extensions library (1.9)
+
+* License: Apache-2.0 
+* Project: https://xmlgraphics.apache.org/batik/
+* Source:
+   https://svn.apache.org/repos/asf/xmlgraphics/batik/trunk/batik-extension/
+
+Batik external code library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik external code library (1.9.1)
+
+* License: Apache-2.0
+* Project: https://xmlgraphics.apache.org/batik/
+* Source: https://svn.apache.org/repos/asf/xmlgraphics/batik/trunk/batik-ext/
+
+Batik Graphics Vector Tree (GVT) (1.9)
+
+* License: Apache-2.0
+
+Batik GUI utility library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik GUI utility library (1.9)
+
+* License: Apache-2.0 
+
+Batik GVT library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik i18n library (1.9.1)
+
+* License: Apache-2.0
+
+Batik image codecs (1.9)
+
+* License: Apache-2.0 
+
+Batik image codecs library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik parser library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik parser library (1.9)
+
+* License: Apache-2.0 
+* Project: https://xmlgraphics.apache.org/batik/
+* Source:
+   https://svn.apache.org/repos/asf/xmlgraphics/batik/trunk/batik-parser/
+
+Batik script library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik Script library (1.9.1)
+
+* License: Apache-2.0
+* Project: https://xmlgraphics.apache.org/batik/
+* Source:
+   https://svn.apache.org/repos/asf/xmlgraphics/batik/trunk/batik-script/
+
+Batik SVG DOM implementation (1.7)
+
+* License: Apache License, 2.0, W3C License, Historical Permission Notice
+   (without Disclaimer)
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik SVG generator library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik SVG generator library (1.9)
+
+* License: Apache-2.0 
+
+Batik Swing components library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik Swing components library (1.9)
+
+* License: Apache-2.0 
+
+Batik transcoder library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik transcoder library (1.9)
+
+* License: Apache-2.0 
+
+Batik utility library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik utility library (1.9.1)
+
+* License: Apache-2.0 
+
+Batik XML utility library (1.7)
+
+* License: Apache License, 2.0
+* Project: http://xmlgraphics.apache.org/batik/
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+Batik XML utility library (1.9)
+
+* License: Apache-2.0 
+
+Junit (3.8.1)
+
+* License: Common Public License 1.0
+
+org.apache.ant (1.6.5)
+
+* License: Apache License, 2.0
+
+xerces impl.jar (2.6.2)
+
+* License: Apache Software License 1.1
+
+xml-apis.jar (1.3.04)
+
+* License: Apache License, 2.0, Public Domain, W3C
+* Source:
+   http://mirror.csclub.uwaterloo.ca/apache/xmlgraphics/batik/batik-src-1.7.zip
+
+## Cryptography
+
+Content may contain encryption software. The country in which you are currently
+may have restrictions on the import, possession, and use, and/or re-export to
+another country, of encryption software. BEFORE using any encryption software,
+please check the country's laws, regulations and policies concerning the import,
+possession, or use, and re-export of encryption software, to see if this is
+permitted.
