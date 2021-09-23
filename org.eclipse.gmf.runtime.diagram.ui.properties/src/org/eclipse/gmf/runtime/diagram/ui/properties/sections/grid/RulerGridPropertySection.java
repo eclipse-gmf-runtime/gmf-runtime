@@ -682,6 +682,10 @@ public class RulerGridPropertySection
 	public void dispose() {
 		stopTextWidgetEventListener();
 		removeWorkspacePropertyListener();
+		if (lineColorButton != null) {
+			// setLineColorButtonImage() created an overlay image dynamically
+			disposeImage(lineColorButton.getImage());
+		}
 		super.dispose();
 	}
 
