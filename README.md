@@ -1,5 +1,7 @@
 # Eclipse GMF Runtime
 
+**NOTE:** As of september of 2021, the source code for GMF Runtime is now hosted on GitHub at https://github.com/eclipse/gmf-runtime. If you have Git clones which refers to the old location at git.eclipse.org, update them or you will not get the latest changes.
+
 The [Eclipse GMF Runtime](https://projects.eclipse.org/projects/modeling.gmf-runtime) is an industry proven application framework for creating graphical editors using Eclipse EMF and Eclipse GEF.
 
 The GMF Runtime provides many features that one would have to code by hand if using EMF and GMF directly.
@@ -11,12 +13,7 @@ The GMF Runtime provides many features that one would have to code by hand if us
 
 ### Source
 
-* Clone: <https://git.eclipse.org/r/gmf-runtime/org.eclipse.gmf-runtime>
-* Browse the sources: <https://git.eclipse.org/r/plugins/gitiles/gmf-runtime/org.eclipse.gmf-runtime>
-
-### Reviews
-
-Gerrit Reviews are available at <https://git.eclipse.org/r/q/gmf-runtime%2Forg.eclipse.gmf-runtime>
+* Clone: https://github.com/eclipse/gmf-runtime
 
 ### Issues
 
@@ -39,7 +36,7 @@ For example:
 
 ### CI
 
-The official builds are executed on the Eclipse-provided Jenkins instance at <https://hudson.eclipse.org/hudson/job/gmf-runtime-master/>
+The official builds are executed on the Eclipse-provided Jenkins instance at <https://ci.eclipse.org/gmf-runtime/job/gmf-runtime-master/>
 
 ### Update Sites
 
