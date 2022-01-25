@@ -354,6 +354,15 @@ public class Graphics2DToGraphicsAdaptor
 		return g;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.batik.ext.awt.g2d.DefaultGraphics2D#create()
+	 */
+	@Override
+	public Graphics2DToGraphicsAdaptor create() {
+		return new Graphics2DToGraphicsAdaptor(swtGC, transparency, transparency_replace); 
+	}
 
 	/*
 	 * (non-Javadoc)
