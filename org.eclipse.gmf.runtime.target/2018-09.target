@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="gmf-runtime-2018-09" sequenceNumber="1624529586">
+<target name="gmf-runtime-2018-09" sequenceNumber="1643625963">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
@@ -57,8 +57,8 @@
       <unit id="org.apache.batik.util.source" version="1.14.0.v20210324-0332"/>
       <unit id="org.apache.batik.xml" version="1.14.0.v20210324-0332"/>
       <unit id="org.apache.batik.xml.source" version="1.14.0.v20210324-0332"/>
-      <unit id="org.apache.xerces" version="2.12.1.v20210115-0812"/>
-      <unit id="org.apache.xerces.source" version="2.12.1.v20210115-0812"/>
+      <unit id="org.apache.xerces" version="2.12.2.v20220131-0835"/>
+      <unit id="org.apache.xerces.source" version="2.12.2.v20220131-0835"/>
       <unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
       <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
       <unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
@@ -67,7 +67,7 @@
       <unit id="org.w3c.dom.events.source" version="3.0.0.draft20060413_v201105210656"/>
       <unit id="org.w3c.dom.smil.source" version="1.0.1.v200903091627"/>
       <unit id="org.w3c.dom.svg.source" version="1.1.0.v201011041433"/>
-      <repository id="Orbit" location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210602031627/repository"/>
+      <repository id="Orbit" location="https://download.eclipse.org/tools/orbit/downloads/drops/I20220131095416/repository"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.query.sdk.feature.group" version="1.11.0.201706061326"/>

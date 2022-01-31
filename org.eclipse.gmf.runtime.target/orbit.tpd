@@ -1,6 +1,6 @@
 target "Orbit"
 
-location Orbit "https://download.eclipse.org/tools/orbit/downloads/drops/R20210602031627/repository" {
+location Orbit "https://download.eclipse.org/tools/orbit/downloads/drops/I20220131095416/repository" {
     org.apache.batik.awt.util [1.14.0,1.14.1)
     org.apache.batik.awt.util.source [1.14.0,1.14.1)
     org.apache.batik.anim[1.14.0,1.14.1)
@@ -27,8 +27,8 @@ location Orbit "https://download.eclipse.org/tools/orbit/downloads/drops/R202106
     org.apache.batik.util.source [1.14.0,1.14.1)
     org.apache.batik.xml [1.14.0,1.14.1)
     org.apache.batik.xml.source [1.14.0,1.14.1)
-    org.apache.xerces [2.12.1,2.12.2)
-    org.apache.xerces.source [2.12.1,2.12.2)
+    org.apache.xerces [2.12.2,2.13)
+    org.apache.xerces.source [2.12.2,2.13)
     org.apache.xml.resolver [1.2.0.v201005080400,1.2.0.v201005080400]
     org.hamcrest [1.1.0.v20090501071000,1.1.0.v20090501071000]
     org.hamcrest.text [1.1.0.v20090501071000,1.1.0.v20090501071000]
