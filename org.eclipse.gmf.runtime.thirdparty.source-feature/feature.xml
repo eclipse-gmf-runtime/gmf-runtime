@@ -30,14 +30,19 @@ SPDX-License-Identifier: EPL-2.0
       <update label="%updateSiteName" url="http://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/"/>
    </url>
 
-   <plugin id="org.apache.batik.awt.util.source"   download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.anim.source"       download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.awt.util.source"   download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.bridge.source"     download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.codec.source"      download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.constants.source"  download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.css.source"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.dom.source"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.dom.svg.source"    download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.ext.source"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.gvt.source"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.i18n.source"       download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.parser.source"     download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.script.source"     download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.svggen.source"     download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.transcoder.source" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.util.source"       download-size="0" install-size="0" version="0.0.0" unpack="false"/>
