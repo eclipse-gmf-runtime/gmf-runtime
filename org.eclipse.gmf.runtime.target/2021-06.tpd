@@ -1,7 +1,7 @@
 target "gmf-runtime-2021-06" with source, requirements
 
 location Eclipse-Shared-License "https://download.eclipse.org/cbi/updates/license" {
-	org.eclipse.license.feature.group [2.0.2.v20181016-2210,2.0.2.v20181016-2210]
+	org.eclipse.license.feature.group lazy
 }
 
 location Eclipse-4.20 "https://download.eclipse.org/eclipse/updates/4.20/R-4.20-202106111600/" {
