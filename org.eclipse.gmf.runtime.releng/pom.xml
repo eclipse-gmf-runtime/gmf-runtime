@@ -11,8 +11,8 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>2.3.0</tycho-version>
-		<cbi-plugins.version>1.3.1</cbi-plugins.version>
+		<tycho-version>2.7.1</tycho-version>
+		<cbi-plugins.version>1.3.2</cbi-plugins.version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<platform>photon</platform>
@@ -62,7 +62,7 @@
 						<id>replace-build-token</id>
 						<phase>generate-sources</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<taskdef
 									resource="net/sf/antcontrib/antcontrib.properties"
 									classpathref="maven.plugin.classpath" />
@@ -88,7 +88,7 @@
 										</replace>
 									</then>
 								</if>
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
@@ -98,7 +98,7 @@
 						<id>replace-back-build-token</id>
 						<phase>install</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<taskdef
 									resource="net/sf/antcontrib/antcontrib.properties"
 									classpathref="maven.plugin.classpath" />
@@ -126,7 +126,7 @@
 										</replace>
 									</then>
 								</if>
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
@@ -189,7 +189,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>hudson.eclipse.org</id>
+			<id>sign</id>
 			<build>
 				<plugins>
 					<plugin>
