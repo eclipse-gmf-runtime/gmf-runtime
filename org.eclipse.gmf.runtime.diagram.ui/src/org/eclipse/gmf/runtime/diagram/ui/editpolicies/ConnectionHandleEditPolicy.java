@@ -232,7 +232,8 @@ public class ConnectionHandleEditPolicy extends DiagramAssistantEditPolicy {
 	protected ConnectionHandleLocator getConnectionHandleLocator(Point referencePoint){
 		return new ConnectionHandleLocator(getHostFigure(), referencePoint);		
 	}
-	/* (non-Javadoc)
+
+	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#isDiagramAssistantShowing()
 	 */
 	protected boolean isDiagramAssistantShowing() {
