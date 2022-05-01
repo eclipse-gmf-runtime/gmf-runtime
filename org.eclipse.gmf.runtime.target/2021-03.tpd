@@ -46,6 +46,7 @@ location GMF-Notation-1.13.0 "https://download.eclipse.org/modeling/gmp/gmf-nota
 	org.eclipse.gmf.runtime.notation.sdk.feature.group [1.13.0,1.13.1)
 }
 
-location GEF-Legacy "https://download.eclipse.org/tools/gef/updates/legacy/releases" {
-	org.eclipse.gef.sdk.feature.group 3.11.0.201606061308
+location GEF-Classic "https://download.eclipse.org/tools/gef/classic/latest/" {
+	org.eclipse.gef-feature.feature.group lazy
+    org.eclipse.gef.sdk.feature.group lazy
 }

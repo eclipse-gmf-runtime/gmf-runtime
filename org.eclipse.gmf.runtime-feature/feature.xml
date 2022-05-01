@@ -35,7 +35,7 @@ SPDX-License-Identifier: EPL-2.0
 
    <requires>
       <import feature="org.eclipse.gmf.runtime.notation" version="1.8.0"/>
-      <import feature="org.eclipse.gef" version="3.9.2"/>
+      <import feature="org.eclipse.gef-feature" version="3.12.100"/>
       <import feature="org.eclipse.emf.common" version="2.10.0"/>
       <import feature="org.eclipse.emf.ecore" version="2.10.0"/>
       <import feature="org.eclipse.emf.ecore.edit" version="2.8.0"/>
