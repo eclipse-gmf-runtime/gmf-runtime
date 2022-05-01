@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.draw2d.ui.figures;
 
 import org.eclipse.draw2d.Border;
-
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
 
 /**

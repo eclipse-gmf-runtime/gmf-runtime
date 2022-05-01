@@ -13,9 +13,8 @@
 package org.eclipse.gmf.tests.runtime.diagram.ui.action;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DeleteFromDiagramAction;
+import org.eclipse.ui.IWorkbenchPage;
 
 
 /**

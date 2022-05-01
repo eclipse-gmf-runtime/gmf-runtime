@@ -16,12 +16,11 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.actions.OpenResourceAction;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.ResourceGlobalActionHandler;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.actions.OpenResourceAction;
 
 /**
  * Global action handler that opens resources using the Eclipse 

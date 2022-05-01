@@ -14,10 +14,6 @@ package org.eclipse.gmf.runtime.common.ui.services.dnd.drop;
 
 import java.lang.ref.WeakReference;
 
-import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.dnd.TransferData;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.DragDropListenerService;
@@ -26,6 +22,9 @@ import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesD
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.DropListenerContext;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 
 /**
  * Parent of all the transfer drop target adapters. Every transfer type drop

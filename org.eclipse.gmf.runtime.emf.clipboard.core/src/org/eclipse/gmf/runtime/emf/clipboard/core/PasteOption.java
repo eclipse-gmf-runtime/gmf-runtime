@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.AbstractEnumerator;
+import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
 
 
 /**

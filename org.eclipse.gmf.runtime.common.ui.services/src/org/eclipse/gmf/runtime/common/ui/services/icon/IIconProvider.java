@@ -13,9 +13,8 @@
 package org.eclipse.gmf.runtime.common.ui.services.icon;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * The interface for providers of the "iconProvider" extension point.  Implement this interface

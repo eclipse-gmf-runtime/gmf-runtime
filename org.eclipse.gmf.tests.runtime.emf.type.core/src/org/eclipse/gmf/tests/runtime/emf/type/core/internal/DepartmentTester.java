@@ -13,7 +13,6 @@
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
 
 import org.eclipse.core.expressions.PropertyTester;
-
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 
 

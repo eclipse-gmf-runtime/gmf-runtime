@@ -19,9 +19,8 @@ import java.util.Map;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.ui.provider.PropertySource;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
 import org.eclipse.gmf.runtime.common.ui.services.properties.ICompositePropertySource;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 /**
  * <code>IItemPropertySource</code> wrapper, is a linked list of composite 

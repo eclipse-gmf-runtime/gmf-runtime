@@ -12,6 +12,7 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.internal.impl;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.gmf.runtime.emf.type.core.MetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper;

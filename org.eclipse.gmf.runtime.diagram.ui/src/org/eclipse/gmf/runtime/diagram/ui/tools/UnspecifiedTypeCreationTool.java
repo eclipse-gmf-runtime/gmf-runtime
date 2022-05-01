@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.diagram.ui.tools;
 import java.util.List;
 
 import org.eclipse.gef.Request;
-
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeRequest;
 
 /**

@@ -17,9 +17,9 @@ import org.eclipse.draw2d.Locator;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.handles.ResizeHandle;
-import org.eclipse.swt.graphics.Cursor;
-
+import org.eclipse.gef.handles.SquareHandle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RotateTracker;
+import org.eclipse.swt.graphics.Cursor;
 
 
 /**

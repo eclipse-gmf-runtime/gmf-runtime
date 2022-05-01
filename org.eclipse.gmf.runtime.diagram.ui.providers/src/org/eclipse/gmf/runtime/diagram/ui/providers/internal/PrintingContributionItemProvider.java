@@ -12,11 +12,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.providers.internal;
 
-import org.eclipse.jface.action.IAction;
-
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.PageSetupAction;
+import org.eclipse.jface.action.IAction;
 
 /**
  * Add the page setup action.

@@ -21,12 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiBrush;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiFont;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiPath;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiPen;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiRegion;
-
 /**
  * Represents the current state of the device context.  As metafile records are parsed, the data in this
  * class is updated.  This class also handles all unit conversions.  

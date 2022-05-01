@@ -14,9 +14,6 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile;
 
 import java.io.IOException;
 
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.IRenderableObject;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record;
-
 /**
  * This interface must be implemented by each class that handles a WMF metafile record.  
  * This is the basis for all metafile conversions.  

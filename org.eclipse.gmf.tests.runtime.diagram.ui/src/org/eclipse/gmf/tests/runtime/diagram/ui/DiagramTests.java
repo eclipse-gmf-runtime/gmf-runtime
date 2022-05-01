@@ -14,9 +14,6 @@ package org.eclipse.gmf.tests.runtime.diagram.ui;
 
 import java.util.Date;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.draw2d.Animation;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
@@ -24,6 +21,9 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 
 /**

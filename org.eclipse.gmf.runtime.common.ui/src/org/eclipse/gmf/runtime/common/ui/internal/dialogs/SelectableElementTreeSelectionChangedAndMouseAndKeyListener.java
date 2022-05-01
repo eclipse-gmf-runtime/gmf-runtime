@@ -12,6 +12,8 @@
 
 package org.eclipse.gmf.runtime.common.ui.internal.dialogs;
 
+import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
+import org.eclipse.gmf.runtime.common.ui.dialogs.SelectedType;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -20,9 +22,6 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-
-import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
-import org.eclipse.gmf.runtime.common.ui.dialogs.SelectedType;
 
 /**
  * This is a selection changed listener for SelectableElement. You must

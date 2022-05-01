@@ -18,9 +18,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClass;
@@ -44,6 +41,9 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Customer;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.ClientDependentsAdvice;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.DestroyCustomerAdvice;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Tests the extensible {@link DestroyElementCommand}.

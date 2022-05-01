@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.palette;
 
 import org.eclipse.gef.Tool;
-
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.ZoomTool;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
 import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;

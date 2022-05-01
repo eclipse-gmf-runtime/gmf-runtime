@@ -13,10 +13,6 @@ package org.eclipse.gmf.tests.runtime.emf.core.resources;
 
 import java.io.IOException;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.DefaultOperationHistory;
 import org.eclipse.core.commands.operations.IUndoContext;
@@ -32,6 +28,10 @@ import org.eclipse.emf.workspace.ResourceUndoContext;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceModificationManager;
 import org.eclipse.gmf.tests.runtime.emf.core.BaseTests;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 /**
  * Tests the management of the modified state of GMF resources as operations are

@@ -19,10 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -74,6 +70,10 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.internal.FinanceEditHelperAdv
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.ManagerEditHelperAdvice;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.NotInheritedEditHelperAdvice;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.SecurityClearedElementTypeFactory;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 /**
  * @author ldamus

@@ -15,12 +15,11 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.MEditingDomainElement;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IPersistableElement;
-
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.MEditingDomainElement;
 
 
 /**

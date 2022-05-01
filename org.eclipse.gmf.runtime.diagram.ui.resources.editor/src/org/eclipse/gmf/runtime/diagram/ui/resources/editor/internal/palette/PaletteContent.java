@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette;
 
 
 import org.eclipse.core.resources.IProject;
-
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 

@@ -12,12 +12,11 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem;
 
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ContributionItemService;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * An operation to contribute to a popup menu of a given part type.

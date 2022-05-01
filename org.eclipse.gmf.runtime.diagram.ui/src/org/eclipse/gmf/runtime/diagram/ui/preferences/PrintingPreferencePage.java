@@ -11,17 +11,16 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.diagram.ui.preferences;
 
+import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
+import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.PageSetupConfigBlock;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.ILabels;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-
-import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
-import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.PageSetupConfigBlock;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.ILabels;
 
 /**
  * PrintingPreferencePage enables the user to specify printing settings such as

@@ -14,7 +14,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts;
 
 import org.eclipse.draw2d.IFigure;
-
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeFigure;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeTriangleFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;

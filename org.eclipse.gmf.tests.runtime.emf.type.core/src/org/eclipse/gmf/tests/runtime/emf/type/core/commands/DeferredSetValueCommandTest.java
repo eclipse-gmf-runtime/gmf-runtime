@@ -11,9 +11,6 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.commands;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
@@ -25,6 +22,9 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Tests the DeferredSetValueCommand.

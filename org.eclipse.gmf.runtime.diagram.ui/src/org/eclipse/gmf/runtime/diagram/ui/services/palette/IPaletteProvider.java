@@ -16,9 +16,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * @author melaasar

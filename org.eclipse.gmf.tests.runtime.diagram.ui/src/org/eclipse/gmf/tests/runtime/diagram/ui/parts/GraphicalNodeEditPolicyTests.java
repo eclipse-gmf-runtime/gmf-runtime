@@ -15,9 +15,6 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.parts;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -49,6 +46,9 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestFixture;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Control;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * GraphicalNodeEditPolicy class tests.

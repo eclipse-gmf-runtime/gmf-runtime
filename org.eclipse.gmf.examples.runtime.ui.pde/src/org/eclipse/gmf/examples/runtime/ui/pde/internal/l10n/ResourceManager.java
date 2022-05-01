@@ -14,7 +14,6 @@
 package org.eclipse.gmf.examples.runtime.ui.pde.internal.l10n;
 
 import org.eclipse.core.runtime.Plugin;
-
 import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesPlugin;
 
 

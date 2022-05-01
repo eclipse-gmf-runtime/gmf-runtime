@@ -12,12 +12,11 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem;
 
+import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPart;
-
-import org.eclipse.gmf.runtime.common.core.service.IProvider;
-import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 
 /**
  * A provider interface to contribute to the action bars and/or

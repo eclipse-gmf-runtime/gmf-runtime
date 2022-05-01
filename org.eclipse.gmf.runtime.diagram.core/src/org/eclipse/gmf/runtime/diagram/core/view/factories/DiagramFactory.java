@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.diagram.core.view.factories;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.notation.Diagram;
 

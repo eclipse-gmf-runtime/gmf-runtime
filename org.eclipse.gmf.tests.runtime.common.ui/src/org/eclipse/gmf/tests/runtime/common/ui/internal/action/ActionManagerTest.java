@@ -12,17 +12,17 @@
 
 package org.eclipse.gmf.tests.runtime.common.ui.internal.action;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManagerChangeEvent;
 import org.eclipse.gmf.runtime.common.ui.action.IActionManagerChangeListener;
 import org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 /**
  * @author khussey

@@ -13,9 +13,8 @@
 package org.eclipse.gmf.runtime.common.ui.services.action.contributionitem;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionItemProvider;
 import org.eclipse.jface.viewers.ISelection;
-
-import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ContributionItemService;
 
 /**
  * A policy interface for popup menu contributions. It inspects a

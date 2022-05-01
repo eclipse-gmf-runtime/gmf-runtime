@@ -12,15 +12,14 @@
 
 package org.eclipse.gmf.runtime.common.ui.action.ide.actions.global;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.ui.actions.RenameResourceAction;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.ResourceGlobalActionHandler;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
 import org.eclipse.gmf.runtime.common.ui.util.IInlineTextEditorPart;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.ui.actions.RenameResourceAction;
 
 /**
  * Global action handler that renames resources using an inline

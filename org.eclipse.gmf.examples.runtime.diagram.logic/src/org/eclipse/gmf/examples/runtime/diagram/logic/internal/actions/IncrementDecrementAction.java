@@ -15,11 +15,10 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions;
 import java.util.HashMap;
 
 import org.eclipse.gef.Request;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author qili

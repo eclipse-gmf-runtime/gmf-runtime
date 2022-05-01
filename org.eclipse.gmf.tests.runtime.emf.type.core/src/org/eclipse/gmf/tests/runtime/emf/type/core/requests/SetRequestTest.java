@@ -11,15 +11,15 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.requests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.AbstractEMFTypeTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Tests the SetRequest.

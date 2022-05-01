@@ -11,10 +11,6 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.commands;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -25,6 +21,10 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.AbstractEMFTypeTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 /**
  * @author ldamus

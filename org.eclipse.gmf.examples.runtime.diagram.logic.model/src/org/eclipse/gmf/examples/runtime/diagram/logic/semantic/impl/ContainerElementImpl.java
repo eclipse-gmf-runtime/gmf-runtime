@@ -14,15 +14,11 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.ContainerElement;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Element;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;

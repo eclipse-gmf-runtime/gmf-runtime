@@ -16,7 +16,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import org.apache.batik.transcoder.TranscoderException;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
 
 /**  
  * @author dhabib

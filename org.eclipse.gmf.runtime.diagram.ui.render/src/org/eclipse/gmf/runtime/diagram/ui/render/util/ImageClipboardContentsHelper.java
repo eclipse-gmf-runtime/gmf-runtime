@@ -12,12 +12,11 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.render.util;
 
-import org.eclipse.swt.dnd.Transfer;
-
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.ClipboardContentsHelper;
 import org.eclipse.gmf.runtime.common.ui.util.CustomDataTransfer;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.AWTClipboardHelper;
+import org.eclipse.swt.dnd.Transfer;
 
 /**
  * A specialized <code>ClipboardContentsHelper</code> that supports images in

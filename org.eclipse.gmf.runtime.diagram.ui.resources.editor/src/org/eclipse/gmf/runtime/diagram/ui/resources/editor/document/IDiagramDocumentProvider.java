@@ -12,9 +12,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.document;
 
-import org.eclipse.ui.IEditorInput;
-
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.ui.IEditorInput;
 
 
 

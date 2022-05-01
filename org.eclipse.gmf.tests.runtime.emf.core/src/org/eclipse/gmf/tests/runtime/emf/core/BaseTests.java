@@ -16,8 +16,6 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -39,6 +37,8 @@ import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.osgi.framework.Bundle;
+
+import junit.framework.TestCase;
 
 
 /**

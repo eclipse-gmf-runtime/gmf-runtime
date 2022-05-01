@@ -14,13 +14,6 @@ package org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core;
 
 import java.util.Hashtable;
 
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.RTFTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.ui.part.PluginTransfer;
-
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.AbstractTransferAdapterProvider;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.SelectionTransfer;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAgent;
@@ -32,6 +25,12 @@ import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.ITransferDropTargetLi
 import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.SelectionDropAdapter;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.TransferDropTargetAdapter;
 import org.eclipse.gmf.runtime.common.ui.util.CustomDataTransfer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.RTFTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.ui.part.PluginTransfer;
 
 /**
  * Concrete implementation for common transfer adapters

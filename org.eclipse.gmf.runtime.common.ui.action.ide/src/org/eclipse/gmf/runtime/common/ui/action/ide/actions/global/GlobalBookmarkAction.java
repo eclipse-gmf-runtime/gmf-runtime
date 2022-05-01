@@ -12,14 +12,13 @@
 
 package org.eclipse.gmf.runtime.common.ui.action.ide.actions.global;
 
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.ide.global.IDEGlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.ide.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.ide.internal.l10n.CommonUIActionIDEMessages;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 /** Global Bookmark Action
  * <p>

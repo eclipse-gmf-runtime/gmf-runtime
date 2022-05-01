@@ -16,13 +16,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import org.apache.batik.transcoder.TranscoderException;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.AbstractTranscoder;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiBrush;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiFont;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiPen;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiRegion;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.ITraceMe;
 
 
 /**  

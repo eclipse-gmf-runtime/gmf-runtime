@@ -18,14 +18,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandler;
+import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-
-import org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandler;
-import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
 
 /**
  * Global action handler that works with the resources in the context selection.

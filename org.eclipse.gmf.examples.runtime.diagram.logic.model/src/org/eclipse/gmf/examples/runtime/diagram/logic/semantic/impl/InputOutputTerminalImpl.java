@@ -12,7 +12,6 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputOutputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 

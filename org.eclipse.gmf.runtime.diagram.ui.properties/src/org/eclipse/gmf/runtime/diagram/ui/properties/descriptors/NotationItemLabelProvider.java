@@ -13,6 +13,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.properties.descriptors;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -20,8 +21,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * A label provider object used by the notation property descriptors.

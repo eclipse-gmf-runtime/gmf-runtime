@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration;
 
 /**

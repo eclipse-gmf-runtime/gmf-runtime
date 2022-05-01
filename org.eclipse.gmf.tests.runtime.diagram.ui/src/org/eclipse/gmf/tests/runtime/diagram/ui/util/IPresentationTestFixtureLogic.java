@@ -16,9 +16,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * @author choang

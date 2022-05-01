@@ -19,8 +19,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.util.Vector;
 
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
-
 /**
  * Represents a 'path'.  A path is a set of lines and curves that represent closed or open shapes.
  * Paths may be filled with a brush or stroked with a pen.  There is only ever one path

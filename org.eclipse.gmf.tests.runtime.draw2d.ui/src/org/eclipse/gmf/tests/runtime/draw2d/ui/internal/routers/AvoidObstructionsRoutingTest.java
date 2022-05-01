@@ -11,8 +11,6 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers;
 
-import junit.framework.TestCase;
-
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.Connection;
@@ -27,6 +25,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ObliqueRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.RectilinearRouter;
+
+import junit.framework.TestCase;
 
 
 /**

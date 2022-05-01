@@ -12,9 +12,6 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.services;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.CircuitEditPart;
@@ -24,6 +21,9 @@ import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTestFixture;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 
 public class DiagramEventBrokerServiceTests extends AbstractTestBase{

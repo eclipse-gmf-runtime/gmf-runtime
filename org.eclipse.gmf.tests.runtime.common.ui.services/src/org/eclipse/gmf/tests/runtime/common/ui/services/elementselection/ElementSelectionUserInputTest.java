@@ -13,11 +13,6 @@ package org.eclipse.gmf.tests.runtime.common.ui.services.elementselection;
 
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.AbstractElementSelectionInput;
@@ -25,6 +20,11 @@ import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelect
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelectionService;
 import org.eclipse.gmf.tests.runtime.common.ui.services.dialogs.TestElementSelectionProviderContext;
 import org.eclipse.jface.viewers.IFilter;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 /**
  * Test cases for the user input for the element selection service.

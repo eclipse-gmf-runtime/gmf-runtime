@@ -12,8 +12,6 @@
 
 package org.eclipse.gmf.tests.runtime.gef.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -23,6 +21,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayer
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.internal.figures.DiamondFigure;
+
+import junit.framework.TestCase;
 
 /**
  * @author oboyko

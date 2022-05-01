@@ -17,7 +17,6 @@ import org.eclipse.draw2d.AbstractRouter;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
-
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 
 /**

@@ -15,8 +15,6 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 import java.util.List;
 import java.util.ListIterator;
 
-import junit.framework.Assert;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -61,6 +59,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.EditorPart;
+
+import junit.framework.Assert;
 
 
 /**

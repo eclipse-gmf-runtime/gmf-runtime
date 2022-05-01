@@ -12,10 +12,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter;
 
+import org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter.SortFilterPage;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceNode;
-
-import org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter.SortFilterPage;
 
 /**
  * Extended to provide access from the <code>PreferenceNode</code> to the <code>

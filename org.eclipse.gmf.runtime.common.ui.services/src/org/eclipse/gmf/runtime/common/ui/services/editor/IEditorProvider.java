@@ -12,10 +12,9 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.editor;
 
+import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-
-import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**
  * An interface for manipulating editors

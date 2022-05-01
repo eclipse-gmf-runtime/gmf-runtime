@@ -15,9 +15,6 @@ package org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers;
 import java.util.Iterator;
 
 import org.eclipse.gef.EditPart;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.ui.action.ide.global.IDEGlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandler;
@@ -26,6 +23,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.resources.AddBookmarkHelper;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * The global action handler for diagram global actions with IDE dependencies. 

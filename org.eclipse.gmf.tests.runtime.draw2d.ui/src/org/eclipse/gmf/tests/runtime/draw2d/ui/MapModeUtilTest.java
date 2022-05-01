@@ -13,14 +13,14 @@
 
 package org.eclipse.gmf.tests.runtime.draw2d.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+
+import junit.framework.TestCase;
 
 
 

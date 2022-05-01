@@ -17,18 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
-import org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.render.editparts.AbstractImageEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.render.editparts.URLImageEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 
 /**

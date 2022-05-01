@@ -12,11 +12,10 @@
 
 package org.eclipse.gmf.runtime.common.ui.internal.dialogs;
 
+import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-
-import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
 
 /**
  * Content provider for SelectableElement viewer

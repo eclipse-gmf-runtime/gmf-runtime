@@ -17,13 +17,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
+import org.eclipse.gmf.runtime.common.ui.dialogs.SelectedType;
+
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
-import org.eclipse.gmf.runtime.common.ui.dialogs.SelectedType;
 
 /**
  * @author cmcgee

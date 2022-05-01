@@ -14,8 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import java.util.Iterator;
 
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -23,6 +21,7 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.action.AbstractModelActionFilterProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * An action filter provider for the Diagram UI Actions plugin.

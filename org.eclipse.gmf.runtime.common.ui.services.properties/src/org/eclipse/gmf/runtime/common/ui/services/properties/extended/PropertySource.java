@@ -18,10 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
 import org.eclipse.gmf.runtime.common.ui.services.properties.ICompositePropertySource;
 import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.CommonUIServicesPropertiesMessages;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 /**
  * @author Tauseef A. Israr Created on: Aug 27, 2002

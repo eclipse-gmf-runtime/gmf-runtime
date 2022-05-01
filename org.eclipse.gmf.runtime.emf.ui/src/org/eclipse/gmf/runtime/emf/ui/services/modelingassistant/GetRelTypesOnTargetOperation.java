@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.emf.ui.services.modelingassistant;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**

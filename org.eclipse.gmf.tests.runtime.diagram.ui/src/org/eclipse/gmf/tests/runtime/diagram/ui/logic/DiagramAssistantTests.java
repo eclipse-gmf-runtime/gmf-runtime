@@ -12,9 +12,6 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
@@ -23,6 +20,9 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Tests for the diagram assistant functionality.

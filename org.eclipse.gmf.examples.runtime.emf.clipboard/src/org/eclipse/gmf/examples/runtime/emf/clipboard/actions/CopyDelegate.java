@@ -13,12 +13,11 @@
 
 package org.eclipse.gmf.examples.runtime.emf.clipboard.actions;
 
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.Transfer;
-
-import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.examples.runtime.emf.clipboard.transfer.EmfTransfer;
 import org.eclipse.gmf.examples.runtime.emf.clipboard.transfer.EmfTransferType;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.Transfer;
 
 
 

@@ -12,6 +12,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.contentassist;
 
+import org.eclipse.gmf.runtime.common.ui.internal.contentassist.TextPresenter;
 import org.eclipse.jface.contentassist.SubjectControlContentAssistant;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IDocument;
@@ -24,8 +25,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.contentassist.ContentAssistHandler;
-
-import org.eclipse.gmf.runtime.common.ui.internal.contentassist.TextPresenter;
 
 /**
  * Helper class for content assist

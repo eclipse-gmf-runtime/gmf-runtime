@@ -14,9 +14,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette;
 
 
-import org.eclipse.ui.IEditorInput;
-
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
+import org.eclipse.ui.IEditorInput;
 
 
 /**

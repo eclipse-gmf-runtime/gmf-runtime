@@ -18,8 +18,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 
 import org.apache.batik.transcoder.TranscoderException;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiPen;
 
 /**
  * @author dhabib

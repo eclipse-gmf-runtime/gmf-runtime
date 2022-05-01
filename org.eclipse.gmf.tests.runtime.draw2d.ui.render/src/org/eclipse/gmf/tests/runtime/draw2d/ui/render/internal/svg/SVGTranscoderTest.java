@@ -12,10 +12,10 @@
 
 package org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg;
 
-import junit.framework.TestCase;
-
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.export.GraphicsSVG;
+
+import junit.framework.TestCase;
 
 
 

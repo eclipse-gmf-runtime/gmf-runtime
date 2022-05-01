@@ -12,12 +12,12 @@
 
 package org.eclipse.gmf.tests.runtime.emf.ui.services.action;
 
-import junit.framework.TestCase;
-
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.emf.ui.services.action.AbstractModelActionFilterProvider;
+
+import junit.framework.TestCase;
 
 /**
  * Tests the AbstractModelActionFilterProvider.

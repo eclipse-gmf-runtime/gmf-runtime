@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.View;
 

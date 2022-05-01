@@ -12,14 +12,13 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.action.filter;
 
+import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.filter.IActionFilterProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-
-import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
-import org.eclipse.gmf.runtime.common.ui.services.action.internal.filter.IActionFilterProvider;
 
 /**
  * The parent of all action filter providers. Defines useful constants and

@@ -14,7 +14,6 @@
 package org.eclipse.gmf.examples.runtime.common.service.application;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration;
 
 /** 

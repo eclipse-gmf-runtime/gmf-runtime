@@ -13,7 +13,6 @@
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.AbstractElementTypeFactory;
 import org.eclipse.gmf.runtime.emf.type.core.ISpecializationType;

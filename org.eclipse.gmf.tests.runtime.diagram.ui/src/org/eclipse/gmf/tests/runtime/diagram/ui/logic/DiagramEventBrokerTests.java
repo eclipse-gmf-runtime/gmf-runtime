@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.Assert;
@@ -50,6 +47,9 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractShapeTests;
 import org.eclipse.swt.widgets.Display;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 public class DiagramEventBrokerTests extends AbstractShapeTests {
 

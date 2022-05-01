@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import org.eclipse.gef.EditPart;
-
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 

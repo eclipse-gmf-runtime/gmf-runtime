@@ -18,11 +18,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import org.apache.batik.transcoder.TranscoderException;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.EMFRecord;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.IEmf2SvgConverter;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.IWmf2SvgConverter;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record;
 
 /**
  * @author dhabib

@@ -11,13 +11,13 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core;
 
+import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.SpecializationTypeDescriptor;
+import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-
-import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.SpecializationTypeDescriptor;
-import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
 
 
 public class SpecializationTypeDescriptorTest extends TestCase {

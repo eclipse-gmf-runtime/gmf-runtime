@@ -19,7 +19,6 @@ import java.util.Map;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
-
 import org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter.SortFilterLabelProvider;
 import org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter.SortFilterPage;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;

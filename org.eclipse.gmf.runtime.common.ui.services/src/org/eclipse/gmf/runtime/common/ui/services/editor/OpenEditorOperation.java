@@ -12,10 +12,9 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.editor;
 
-import org.eclipse.ui.IEditorInput;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.ui.IEditorInput;
 
 /**
  * An operation that opens an editor with a given input

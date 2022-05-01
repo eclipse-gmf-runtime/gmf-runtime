@@ -12,7 +12,6 @@
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.HighSchoolStudent;
 

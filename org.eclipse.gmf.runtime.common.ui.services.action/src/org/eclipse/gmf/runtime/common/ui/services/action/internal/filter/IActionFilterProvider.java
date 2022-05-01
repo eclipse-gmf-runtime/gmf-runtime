@@ -12,9 +12,8 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.action.internal.filter;
 
-import org.eclipse.ui.IActionFilter;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.ui.IActionFilter;
 
 /**
  * The interface for providers of action filters, implementations of

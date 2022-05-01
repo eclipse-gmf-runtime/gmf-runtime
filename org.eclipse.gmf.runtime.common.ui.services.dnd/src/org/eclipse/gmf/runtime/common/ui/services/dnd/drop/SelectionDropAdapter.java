@@ -12,10 +12,9 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.drop;
 
+import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.dnd.DropTargetEvent;
-
-import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
 
 /**
  * Concrete implementation of the transfer drop target adapter for the selection

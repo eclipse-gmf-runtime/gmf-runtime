@@ -14,12 +14,11 @@ package org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers;
 
 import java.util.Hashtable;
 
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandlerProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandlerContext;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * The provider for the DiagramIDEGlobalActionHandler. 

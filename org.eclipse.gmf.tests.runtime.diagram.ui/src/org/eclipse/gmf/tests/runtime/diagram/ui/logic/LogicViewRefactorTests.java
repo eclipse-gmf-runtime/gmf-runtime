@@ -13,9 +13,6 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
 import java.util.Collection;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -58,6 +55,9 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.swt.graphics.RGB;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 
 /**

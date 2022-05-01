@@ -15,9 +15,8 @@ package org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter;
 
 import java.util.Locale;
 
-import org.eclipse.jface.viewers.ViewerSorter;
-
 import org.eclipse.gmf.runtime.notation.SortingDirection;
+import org.eclipse.jface.viewers.ViewerSorter;
 
 import com.ibm.icu.text.Collator;
 

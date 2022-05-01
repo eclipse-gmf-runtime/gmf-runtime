@@ -15,8 +15,22 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.*;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.AndGate;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Circuit;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.ContainerElement;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Element;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.FlowContainer;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Gate;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputOutputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.LED;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Model;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.OrGate;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.OutputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Wire;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.XORGate;
 
 /**
  * <!-- begin-user-doc -->

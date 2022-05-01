@@ -17,12 +17,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.gmf.examples.runtime.common.service.application.WidgetService;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-
-import org.eclipse.gmf.examples.runtime.common.service.application.WidgetService;
 
 /**
  * Simple action to run the Widget Service example.

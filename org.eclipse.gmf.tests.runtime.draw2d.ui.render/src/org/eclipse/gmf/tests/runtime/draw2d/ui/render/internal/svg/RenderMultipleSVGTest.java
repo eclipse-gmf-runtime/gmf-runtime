@@ -17,12 +17,6 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import junit.framework.Assert;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -32,6 +26,12 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageConverte
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
+
+import junit.framework.Assert;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 
 

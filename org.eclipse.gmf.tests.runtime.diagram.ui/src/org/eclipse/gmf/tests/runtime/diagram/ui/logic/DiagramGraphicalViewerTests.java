@@ -12,9 +12,6 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
@@ -32,6 +29,9 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestCommandCallback;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Tests the

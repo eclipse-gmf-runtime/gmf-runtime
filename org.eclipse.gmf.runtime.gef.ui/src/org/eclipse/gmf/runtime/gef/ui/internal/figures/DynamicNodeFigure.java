@@ -16,7 +16,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.eclipse.draw2d.ConnectionAnchor;
-
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 public class DynamicNodeFigure extends NodeFigure {

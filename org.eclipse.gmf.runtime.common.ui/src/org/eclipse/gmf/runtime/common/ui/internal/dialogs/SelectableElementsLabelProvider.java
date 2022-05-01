@@ -16,15 +16,14 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
+import org.eclipse.gmf.runtime.common.ui.util.ShiftedImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
-import org.eclipse.gmf.runtime.common.ui.util.ShiftedImageDescriptor;
 
 /**
  * Label provider for SelectableElement viewer

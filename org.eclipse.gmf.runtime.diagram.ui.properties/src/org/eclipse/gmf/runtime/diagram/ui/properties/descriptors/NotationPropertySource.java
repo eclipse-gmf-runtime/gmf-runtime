@@ -14,9 +14,8 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.descriptors;
 
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
 import org.eclipse.gmf.runtime.emf.ui.properties.descriptors.EMFCompositePropertySource;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 
 /**

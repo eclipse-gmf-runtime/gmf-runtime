@@ -18,13 +18,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.eclipse.gmf.tests.runtime.emf.type.core.employee.*;
-
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Client;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Customer;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.HighSchoolStudent;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Location;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student;

@@ -13,13 +13,13 @@ package org.eclipse.gmf.tests.runtime.emf.type.core;
 
 import java.util.Arrays;
 
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.MetamodelType;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-
-import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
-import org.eclipse.gmf.runtime.emf.type.core.MetamodelType;
 
 public class MetamodelTypeTest extends TestCase {
 

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.gef.Request;
-
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 
 /**

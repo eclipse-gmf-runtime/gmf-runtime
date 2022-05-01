@@ -17,6 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
+import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
+import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
+import org.eclipse.gmf.runtime.common.ui.util.IInlineTextEditorPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
@@ -24,11 +28,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ISetSelectionTarget;
-
-import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
-import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
-import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.common.ui.util.IInlineTextEditorPart;
 
 /**
  * This class provides selection utility methods.

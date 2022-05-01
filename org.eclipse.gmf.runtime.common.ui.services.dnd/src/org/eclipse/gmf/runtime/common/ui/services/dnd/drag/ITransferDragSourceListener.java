@@ -12,9 +12,8 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.drag;
 
-import org.eclipse.swt.dnd.DragSourceListener;
-
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
+import org.eclipse.swt.dnd.DragSourceListener;
 
 /**
  * Interface to be implemented by providers of transfer agents that are used by

@@ -12,11 +12,10 @@
 
 package org.eclipse.gmf.runtime.common.ui.action.actions.global;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.dialogs.PropertyDialogAction;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.dialogs.PropertyDialogAction;
 
 /**
  * Global action handler that opens a property page on resources using the

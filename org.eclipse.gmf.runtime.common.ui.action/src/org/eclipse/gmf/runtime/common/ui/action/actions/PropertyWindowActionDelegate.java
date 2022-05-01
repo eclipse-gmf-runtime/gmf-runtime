@@ -13,15 +13,14 @@
 package org.eclipse.gmf.runtime.common.ui.action.actions;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.ui.IActionDelegate2;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IViewActionDelegate;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.AbstractActionDelegate;
 import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartActivator;
+import org.eclipse.ui.IActionDelegate2;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.eclipse.ui.IViewActionDelegate;
 
 /**
  * Action delegate to show the properties window or give it focus if it's

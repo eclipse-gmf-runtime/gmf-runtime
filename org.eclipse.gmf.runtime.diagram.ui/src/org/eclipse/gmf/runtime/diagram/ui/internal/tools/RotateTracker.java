@@ -14,13 +14,13 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.tools;
 
 
 import org.eclipse.draw2d.Cursors;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.tools.ResizeTracker;
-import org.eclipse.swt.graphics.Cursor;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IRotatableEditPart;
 import org.eclipse.gmf.runtime.gef.ui.internal.requests.RotateShapeRequest;
+import org.eclipse.swt.graphics.Cursor;
 
 /**
  * Rotate tracker provides support for figure rotations.

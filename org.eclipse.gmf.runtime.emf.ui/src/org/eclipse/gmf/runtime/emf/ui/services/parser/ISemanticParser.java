@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.emf.ui.services.parser;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 
 /**

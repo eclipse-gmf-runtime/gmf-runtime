@@ -16,9 +16,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.jface.action.IAction;
-
 import org.eclipse.gmf.runtime.common.ui.action.IDisposableAction;
+import org.eclipse.jface.action.IAction;
 
 /**
  * An action registry used for action life cycle management

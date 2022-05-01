@@ -16,9 +16,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
-import org.eclipse.swt.graphics.Color;
-
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.swt.graphics.Color;
 
 /**
  * code copied from real logic example in gef

@@ -19,9 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IAdaptable;
@@ -71,6 +68,9 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorSite;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Diagram tests for the logic diagram and general diagrams.

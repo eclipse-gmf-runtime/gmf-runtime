@@ -11,6 +11,8 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.diagram.core.util;
 
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
+
 /**
  * Defines the basic view types.
  * The view type is required at View creation time; It could be an empty string 

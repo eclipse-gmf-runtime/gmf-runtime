@@ -15,9 +15,6 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -54,6 +51,9 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestActionCallback;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Event;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Tests for group and ungroup functionality.

@@ -12,13 +12,13 @@
 
 package org.eclipse.gmf.tests.runtime.common.ui.internal.action;
 
+import org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler;
+import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-
-import org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler;
-import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 
 /**
  * Tests the action classes that remove the mnemonics and specifically removes

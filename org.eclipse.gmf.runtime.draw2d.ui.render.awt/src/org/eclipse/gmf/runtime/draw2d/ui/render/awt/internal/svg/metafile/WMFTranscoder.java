@@ -16,48 +16,6 @@ import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.AbstractTranscoder;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Arc;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.BitBlt;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.CreateBrushIndirect;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.CreateFontIndirect;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.CreatePatternBrush;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.CreatePen;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeleteObject;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Ellipse;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.ExtTextOut;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Header;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.IRenderableObject;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.IWmf2SvgConverter;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.LineTo;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.MoveTo;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.PolyBezier;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.PolyPolygon;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Polygon;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Polyline;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Rectangle;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.RestoreDC;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.RoundRect;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SaveDC;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SelectObject;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetBkColor;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetBkMode;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetMapMode;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetPolyFillMode;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetROP2;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetStretchBltMode;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetTextAlign;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetTextColor;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetViewportExtent;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetViewportOrg;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetWindowExtent;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.SetWindowOrg;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.StretchBlt;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.StretchDIBits;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.TranscoderException;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.WMFRecord;
-
 /**
  * This class implements a fairly simple transcoder for Windows format  Metafiles.  It reads the
  * metafile records and turns them into SVG.  It uses the Batik libraries for the SVG generation.

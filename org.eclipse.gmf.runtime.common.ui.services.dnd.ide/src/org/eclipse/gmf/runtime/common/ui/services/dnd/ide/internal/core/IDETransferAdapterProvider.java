@@ -14,12 +14,6 @@ package org.eclipse.gmf.runtime.common.ui.services.dnd.ide.internal.core;
 
 import java.util.Hashtable;
 
-import org.eclipse.jface.util.LocalSelectionTransfer;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.ui.part.MarkerTransfer;
-import org.eclipse.ui.part.ResourceTransfer;
-
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.AbstractTransferAdapterProvider;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAgent;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.drag.ITransferDragSourceListener;
@@ -29,6 +23,11 @@ import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.ITransferDropTargetLi
 import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.SelectionDropAdapter;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.TransferDropTargetAdapter;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.ide.core.IDETransferId;
+import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.ui.part.MarkerTransfer;
+import org.eclipse.ui.part.ResourceTransfer;
 
 /**
  * Concrete implementation for common transfer adapters

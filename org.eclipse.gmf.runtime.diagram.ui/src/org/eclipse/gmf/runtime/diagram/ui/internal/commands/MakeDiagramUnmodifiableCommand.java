@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
 import org.eclipse.gef.commands.Command;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 
 

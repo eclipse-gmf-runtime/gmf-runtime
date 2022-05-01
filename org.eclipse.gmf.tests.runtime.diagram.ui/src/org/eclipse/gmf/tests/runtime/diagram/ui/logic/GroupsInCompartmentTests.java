@@ -15,9 +15,6 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.Request;
@@ -30,6 +27,9 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Repeat all the same tests in <code>GroupTests</code> but within a

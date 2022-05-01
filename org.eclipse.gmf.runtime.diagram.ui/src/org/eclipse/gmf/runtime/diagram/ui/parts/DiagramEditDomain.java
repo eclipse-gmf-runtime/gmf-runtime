@@ -13,9 +13,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.parts;
 
 import org.eclipse.gef.DefaultEditDomain;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * The diagram editor edit domain that holds all data that is contexual

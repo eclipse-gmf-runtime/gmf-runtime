@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.gef.ui.internal.handles;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.handles.BendpointCreationHandle;
-
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
 
 /**

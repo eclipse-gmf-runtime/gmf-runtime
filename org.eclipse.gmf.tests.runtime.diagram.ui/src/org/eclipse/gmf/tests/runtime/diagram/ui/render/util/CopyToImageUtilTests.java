@@ -15,9 +15,6 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.render.util;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -47,6 +44,9 @@ import org.eclipse.gmf.runtime.notation.datatype.GradientData;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTestFixture;
 import org.eclipse.swt.widgets.Shell;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 public class CopyToImageUtilTests
     extends AbstractTestBase {

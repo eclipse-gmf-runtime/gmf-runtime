@@ -14,15 +14,15 @@ package org.eclipse.gmf.tests.runtime.emf.core;
 
 import java.util.Arrays;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmf.tests.runtime.emf.core.resources.GMFResourceModificationManagerTests;
 import org.eclipse.gmf.tests.runtime.emf.core.util.EMFCoreUtilTests;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 public class AllTests extends TestCase implements IApplication {
 

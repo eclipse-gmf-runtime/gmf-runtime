@@ -13,11 +13,6 @@ package org.eclipse.gmf.tests.runtime.common.ui.internal.action;
 
 import java.lang.reflect.InvocationTargetException;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler;
@@ -26,6 +21,11 @@ import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 
 public class AbstractActionHandlerTest extends TestCase {

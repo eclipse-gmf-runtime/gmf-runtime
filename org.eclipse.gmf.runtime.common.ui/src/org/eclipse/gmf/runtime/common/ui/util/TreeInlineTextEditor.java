@@ -15,6 +15,8 @@ package org.eclipse.gmf.runtime.common.ui.util;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -42,9 +44,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.contentassist.ContentAssistHandler;
-
-import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * A class that enables inline-text editing for tree nodes

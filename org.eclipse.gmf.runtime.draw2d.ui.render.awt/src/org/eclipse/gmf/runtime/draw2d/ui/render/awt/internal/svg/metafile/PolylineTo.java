@@ -17,9 +17,6 @@ import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 
 import org.apache.batik.transcoder.TranscoderException;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.GdiPen;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.IRenderToPath;
 
 /**  
  * @author dhabib

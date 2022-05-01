@@ -15,8 +15,6 @@ package org.eclipse.gmf.tests.runtime.emf.type.core;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -37,6 +35,8 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
+
+import junit.framework.TestCase;
 
 public class AbstractEMFTypeTest
     extends TestCase {

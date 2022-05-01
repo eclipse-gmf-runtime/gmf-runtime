@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.GroupRequest;
-
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 
 

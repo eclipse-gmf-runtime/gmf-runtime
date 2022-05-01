@@ -18,14 +18,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.drag.IDragSourceContext;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.drag.IDragSourceListener;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.ide.core.IDETransferId;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.views.navigator.NavigatorDragAdapter;
-
-import org.eclipse.gmf.runtime.common.ui.services.dnd.drag.IDragSourceContext;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.drag.IDragSourceListener;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.ide.core.IDETransferId;
 
 /**
  * Concrete class that implements the IDragSourceListener. This class handles

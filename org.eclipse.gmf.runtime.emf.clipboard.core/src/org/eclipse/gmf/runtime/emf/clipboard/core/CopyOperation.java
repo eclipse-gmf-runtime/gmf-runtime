@@ -30,7 +30,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
-
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ResourceInfoProcessor;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.SavingEMFResource;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.SerializationEMFResource;

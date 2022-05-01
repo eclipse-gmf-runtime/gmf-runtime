@@ -16,9 +16,6 @@ import java.awt.Graphics2D;
 import java.io.IOException;
 
 import org.apache.batik.transcoder.TranscoderException;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.IEmf2SvgConverter;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record;
 
 /**
  * This is a placeholder.  It handles the EOF metafile record which appears at the end of

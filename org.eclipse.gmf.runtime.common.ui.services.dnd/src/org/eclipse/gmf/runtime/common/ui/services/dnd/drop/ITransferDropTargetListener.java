@@ -12,10 +12,9 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.drop;
 
+import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
-
-import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
 
 /**
  * Interface to be implemented by providers of transfer agents that are used by

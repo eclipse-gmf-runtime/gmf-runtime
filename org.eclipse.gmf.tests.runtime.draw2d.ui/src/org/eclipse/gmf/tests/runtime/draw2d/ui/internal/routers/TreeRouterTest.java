@@ -14,8 +14,6 @@ package org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.RectangleFigure;
@@ -25,10 +23,11 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ITreeConnection;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.TreeRouter;
 import org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers.AbstractForestRouterTest.TreeConnection;
+
+import junit.framework.TestCase;
 /**
  * @author sshaw
  * 

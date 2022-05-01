@@ -14,6 +14,10 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.dialogs;
 
 import java.util.ArrayList;
 
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.ILabels;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupWidgetFactory;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.IPreferencePage;
@@ -29,11 +33,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.ILabels;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupWidgetFactory;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
 
 /**
  * PSSelectionConfigurationBlock implements part of PSDialog allowing the user to toggle

@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelper;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;

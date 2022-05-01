@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.xmi.XMLLoad;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMILoadImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 
 /**

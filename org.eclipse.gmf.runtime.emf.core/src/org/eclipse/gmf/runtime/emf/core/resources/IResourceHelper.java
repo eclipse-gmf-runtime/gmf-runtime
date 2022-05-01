@@ -15,6 +15,7 @@ package org.eclipse.gmf.runtime.emf.core.resources;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 
 
 /**

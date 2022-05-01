@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.emf.type.core.commands;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 

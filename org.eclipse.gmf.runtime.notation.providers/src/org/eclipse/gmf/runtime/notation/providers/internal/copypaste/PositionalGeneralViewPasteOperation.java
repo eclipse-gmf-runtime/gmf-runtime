@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.notation.providers.internal.copypaste;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 import org.eclipse.gmf.runtime.emf.clipboard.core.OverridePasteChildOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation;

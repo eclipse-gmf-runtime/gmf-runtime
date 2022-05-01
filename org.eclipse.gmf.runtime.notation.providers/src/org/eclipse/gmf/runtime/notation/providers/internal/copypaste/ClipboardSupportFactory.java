@@ -14,7 +14,6 @@
 package org.eclipse.gmf.runtime.notation.providers.internal.copypaste;
 
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupportFactory;
 

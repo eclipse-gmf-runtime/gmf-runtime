@@ -16,9 +16,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.swt.SWT;
-
 import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
+import org.eclipse.swt.SWT;
 
 /**
  * An enumeration of image formats supported by the copy diagram to image

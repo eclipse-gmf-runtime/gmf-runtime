@@ -17,6 +17,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferId;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetContext;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetEvent;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetListener;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.ide.core.IDETransferId;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -26,14 +33,6 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
-
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferId;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetContext;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetEvent;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetListener;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.ide.core.IDETransferId;
 
 /**
  * Concrete class that implements the IDropTargetListener. This class handles

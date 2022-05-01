@@ -12,13 +12,13 @@
 
 package org.eclipse.gmf.tests.runtime.common.core.internal.util;
 
+import org.eclipse.gmf.runtime.common.core.util.Proxy;
+import org.eclipse.gmf.runtime.common.core.util.StringUtil;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-
-import org.eclipse.gmf.runtime.common.core.util.Proxy;
-import org.eclipse.gmf.runtime.common.core.util.StringUtil;
 
 /**
  * Tests org.eclipse.gmf.runtime.common.core.internal.util.StringUtil

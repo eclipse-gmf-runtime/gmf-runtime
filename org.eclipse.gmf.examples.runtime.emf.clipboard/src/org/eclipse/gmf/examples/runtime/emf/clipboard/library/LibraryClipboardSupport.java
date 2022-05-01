@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
-
 import org.eclipse.gmf.runtime.emf.clipboard.core.AbstractClipboardSupport;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteAction;
 

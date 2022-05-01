@@ -18,9 +18,8 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editpolicies.GraphicalEditPolicy;
-import org.eclipse.swt.graphics.Color;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
+import org.eclipse.swt.graphics.Color;
 
 
 /**

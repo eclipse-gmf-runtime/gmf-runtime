@@ -14,9 +14,6 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
 import java.util.Iterator;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -31,6 +28,9 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDragSourceListener;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDropTargetListener;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Tests for the palette functionality.

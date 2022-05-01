@@ -12,9 +12,6 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -46,6 +43,9 @@ import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author sshaw

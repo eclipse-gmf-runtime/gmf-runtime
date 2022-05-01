@@ -20,8 +20,6 @@ import java.awt.TexturePaint;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
-
 /**
  * Represents a Brush that is used for filling shapes.  There may be multiple brushes at any one 
  * time, though only one will be used at a time to fill (the current brush is retrieved from 

@@ -14,10 +14,6 @@ package org.eclipse.gmf.tests.runtime.emf.type.core;
 
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.type.core.ClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.ClientContextAddedEvent;
@@ -30,6 +26,10 @@ import org.eclipse.gmf.runtime.emf.type.core.NullElementMatcher;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 public class ClientContextManagerTest extends AbstractEMFTypeTest {
 

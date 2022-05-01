@@ -16,8 +16,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
-
 
 /**
  * Represents a Pen that is used for drawing lines.  There may be multiple pens at any one 

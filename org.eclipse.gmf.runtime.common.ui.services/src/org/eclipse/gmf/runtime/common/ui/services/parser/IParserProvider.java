@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.common.ui.services.parser;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**

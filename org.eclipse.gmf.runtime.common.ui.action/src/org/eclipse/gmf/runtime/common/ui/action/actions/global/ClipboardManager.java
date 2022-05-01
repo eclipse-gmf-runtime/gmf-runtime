@@ -17,12 +17,11 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.eclipse.gmf.runtime.common.ui.util.CustomDataTransfer;
+import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.common.ui.util.CustomDataTransfer;
-import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 
 /**
  * This class is used to add/retrieve data to/from the system clipboard. This

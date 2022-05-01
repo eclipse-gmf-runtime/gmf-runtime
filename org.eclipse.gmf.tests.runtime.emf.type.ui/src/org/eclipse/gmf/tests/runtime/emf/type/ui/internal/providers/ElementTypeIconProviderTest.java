@@ -14,11 +14,6 @@ package org.eclipse.gmf.tests.runtime.emf.type.ui.internal.providers;
 import java.net.URL;
 import java.util.Arrays;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -26,6 +21,11 @@ import org.eclipse.gmf.runtime.emf.type.ui.internal.providers.ElementTypeIconPro
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 public class ElementTypeIconProviderTest
 	extends TestCase {

@@ -12,10 +12,9 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core;
 
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.IDragListenerContext;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.IListenerContext;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * This class implements <code>IDragListenerContext</code> interface.

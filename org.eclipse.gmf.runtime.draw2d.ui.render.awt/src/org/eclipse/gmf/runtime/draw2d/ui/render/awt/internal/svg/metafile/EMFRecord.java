@@ -15,8 +15,6 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.Record;
-
 /**
  * The EMFRecord class reads the record header from an EMF record, then reads the
  * record's data into a buffer.  The record header contains the type of the

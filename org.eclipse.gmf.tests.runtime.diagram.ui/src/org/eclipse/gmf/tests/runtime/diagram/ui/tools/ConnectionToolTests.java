@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeConnectionTool;
 import org.eclipse.gmf.runtime.diagram.ui.type.DiagramNotationType;
@@ -27,6 +24,9 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestFixture;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Event;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Tests for Connection Tools.

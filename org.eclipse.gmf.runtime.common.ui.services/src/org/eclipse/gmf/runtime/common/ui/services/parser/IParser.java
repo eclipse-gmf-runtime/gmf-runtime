@@ -13,9 +13,8 @@
 package org.eclipse.gmf.runtime.common.ui.services.parser;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 
 /**
  * The interface for all parsers

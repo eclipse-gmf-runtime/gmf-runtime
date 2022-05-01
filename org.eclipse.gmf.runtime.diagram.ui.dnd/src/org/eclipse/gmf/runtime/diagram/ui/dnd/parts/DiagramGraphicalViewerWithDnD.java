@@ -14,10 +14,9 @@
 package org.eclipse.gmf.runtime.diagram.ui.dnd.parts;
 
 import org.eclipse.gef.dnd.DelegatingDropAdapter;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
-
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 
 
 /**

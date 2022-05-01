@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.services.editpolicy;
 
 import org.eclipse.gef.EditPart;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**

@@ -12,10 +12,9 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.properties.extended;
 
+import org.eclipse.gmf.runtime.common.ui.services.properties.descriptors.ICompositeSourcePropertyDescriptor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.ui.views.properties.IPropertySource;
-
-import org.eclipse.gmf.runtime.common.ui.services.properties.descriptors.ICompositeSourcePropertyDescriptor;
 
 /**
  * @author Tauseef A. Israr

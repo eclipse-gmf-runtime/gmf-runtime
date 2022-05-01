@@ -20,7 +20,6 @@ import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.tools.ConnectionBendpointTracker;
-
 import org.eclipse.gmf.runtime.gef.ui.internal.tools.ConnectionBendpointTrackerEx;
 
 /**

@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.emf.core.util;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.common.core.util.Proxy;
 
 /**

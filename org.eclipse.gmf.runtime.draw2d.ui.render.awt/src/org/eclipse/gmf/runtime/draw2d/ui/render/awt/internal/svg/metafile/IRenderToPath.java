@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile;
 
 import org.apache.batik.transcoder.TranscoderException;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
 
 /**
  * This interface is implemented by IEmf2SvgConverter's that support rendering to a 'path'.

@@ -16,10 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.type.core.ClientContext;
@@ -32,6 +28,10 @@ import org.eclipse.gmf.runtime.emf.type.core.MultiClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.NullElementMatcher;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 public class MultiClientContextTest extends AbstractEMFTypeTest {
 

@@ -17,11 +17,10 @@
  */
 package org.eclipse.gmf.tests.runtime.draw2d.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.draw2d.geometry.PointList;
-
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
+
+import junit.framework.TestCase;
 
 /**
  * @author jschofie

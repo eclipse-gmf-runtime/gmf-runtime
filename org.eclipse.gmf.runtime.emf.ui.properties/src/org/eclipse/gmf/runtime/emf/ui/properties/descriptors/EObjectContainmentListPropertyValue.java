@@ -20,14 +20,13 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-
-import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
 
 /**
  * A property source object that wraps around a containment list, presenting each item on the list

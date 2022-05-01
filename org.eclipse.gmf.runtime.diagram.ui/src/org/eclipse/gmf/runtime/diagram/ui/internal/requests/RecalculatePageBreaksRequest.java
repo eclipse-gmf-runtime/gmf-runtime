@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.requests;
 
 import org.eclipse.gef.Request;
-
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 
 /**

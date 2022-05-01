@@ -16,7 +16,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
-
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 
 /** Open Shape Edit Policy

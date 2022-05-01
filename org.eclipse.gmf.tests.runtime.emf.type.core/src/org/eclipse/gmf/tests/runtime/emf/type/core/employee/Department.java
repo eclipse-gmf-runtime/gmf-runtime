@@ -13,7 +13,6 @@
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 

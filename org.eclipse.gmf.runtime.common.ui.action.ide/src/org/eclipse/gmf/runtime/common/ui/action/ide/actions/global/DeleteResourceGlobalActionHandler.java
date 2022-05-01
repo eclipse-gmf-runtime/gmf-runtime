@@ -12,12 +12,11 @@
 
 package org.eclipse.gmf.runtime.common.ui.action.ide.actions.global;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.actions.DeleteResourceAction;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.ResourceGlobalActionHandler;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.actions.DeleteResourceAction;
 
 /**
  * Global action handler that delete resources using the Eclipse 

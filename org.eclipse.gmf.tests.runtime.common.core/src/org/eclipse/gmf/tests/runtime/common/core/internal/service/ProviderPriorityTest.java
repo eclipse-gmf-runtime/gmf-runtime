@@ -21,12 +21,12 @@ import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.gmf.runtime.common.core.service.ProviderPriority;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-
-import org.eclipse.gmf.runtime.common.core.service.ProviderPriority;
 
 /**
  * @author khussey

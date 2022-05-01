@@ -13,9 +13,8 @@
 package org.eclipse.gmf.runtime.common.ui.services.internal.marker;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * This interface enables clients to handle the navigation when the user goes to

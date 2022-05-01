@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration;
 import org.eclipse.gmf.runtime.notation.View;
 

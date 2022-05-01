@@ -13,11 +13,10 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal;
 
+import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-
-import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 
 
 /**

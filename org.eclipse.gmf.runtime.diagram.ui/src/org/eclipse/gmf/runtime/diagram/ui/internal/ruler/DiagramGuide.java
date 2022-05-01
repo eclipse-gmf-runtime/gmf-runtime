@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.gmf.runtime.notation.Alignment;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.View;

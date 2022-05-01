@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
-
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers.AbstractDiagramMarkerNavigationProvider;

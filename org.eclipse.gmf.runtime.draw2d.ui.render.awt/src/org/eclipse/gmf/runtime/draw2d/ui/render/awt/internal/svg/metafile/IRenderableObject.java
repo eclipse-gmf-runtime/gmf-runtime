@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile;
 import java.awt.Graphics2D;
 
 import org.apache.batik.transcoder.TranscoderException;
-import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.DeviceContext;
 
 /**
  * This class must be implemented by all metafile record handlers.  Generally, classes

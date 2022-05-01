@@ -16,12 +16,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalCloseAction;
@@ -39,6 +33,11 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalRe
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalSaveAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalSelectAllAction;
 import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * This class manages all the global actions. It has methods to create

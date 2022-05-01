@@ -12,12 +12,11 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem;
 
-import org.eclipse.ui.IActionBars;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ContributionItemService;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
+import org.eclipse.ui.IActionBars;
 
 /**
  * An operation to contribute to the action bars of a given part type

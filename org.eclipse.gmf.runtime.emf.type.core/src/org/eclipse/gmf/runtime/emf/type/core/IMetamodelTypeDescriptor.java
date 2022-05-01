@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.emf.type.core;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelper;
 
 /**

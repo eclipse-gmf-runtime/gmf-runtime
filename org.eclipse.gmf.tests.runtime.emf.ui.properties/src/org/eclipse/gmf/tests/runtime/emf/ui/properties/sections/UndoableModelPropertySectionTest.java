@@ -13,8 +13,6 @@
 
 package org.eclipse.gmf.tests.runtime.emf.ui.properties.sections;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.Status;
@@ -35,6 +33,8 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
+
+import junit.framework.TestCase;
 
 /**
  *@author mchauvin 

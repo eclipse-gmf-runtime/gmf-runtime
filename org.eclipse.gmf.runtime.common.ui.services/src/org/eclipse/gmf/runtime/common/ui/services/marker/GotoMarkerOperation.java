@@ -13,11 +13,10 @@
 package org.eclipse.gmf.runtime.common.ui.services.marker;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.ui.services.internal.marker.IMarkerNavigationProvider;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * This class contains the information needed to perform the navigation to an

@@ -14,10 +14,6 @@ package org.eclipse.gmf.runtime.common.ui.internal.dialogs;
 
 import java.util.Hashtable;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
@@ -27,6 +23,9 @@ import org.eclipse.gmf.runtime.common.ui.internal.CommonUIIconNames;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.util.OverlayImageDescriptor;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * This label provider overlays a selected or unselected icon on another icon.

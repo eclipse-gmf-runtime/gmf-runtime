@@ -12,16 +12,16 @@
 
 package org.eclipse.gmf.tests.runtime.common.ui.providers;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
 import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies.TestParserPolicy;
 import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses.TestAdaptable;
 import org.osgi.framework.Bundle;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * This test case tests provider polciies using the Parser Service from a UI

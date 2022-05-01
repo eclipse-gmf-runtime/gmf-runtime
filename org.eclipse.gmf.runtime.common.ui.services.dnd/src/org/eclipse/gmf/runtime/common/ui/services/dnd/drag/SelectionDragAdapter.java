@@ -12,9 +12,8 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.drag;
 
-import org.eclipse.swt.dnd.DragSourceEvent;
-
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
+import org.eclipse.swt.dnd.DragSourceEvent;
 
 /**
  * Concrete implementation of the transfer drag source adapter for the selection
