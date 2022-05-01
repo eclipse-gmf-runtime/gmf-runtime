@@ -142,7 +142,7 @@ public class OfficeImpl extends EModelElementImpl implements Office {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
-				return new Integer(getNumberOfWindows());
+				return Integer.valueOf(getNumberOfWindows());
 			case EmployeePackage.OFFICE__HAS_DOOR:
 				return isHasDoor() ? Boolean.TRUE : Boolean.FALSE;
 		}

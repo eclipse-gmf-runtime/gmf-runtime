@@ -175,7 +175,7 @@ public class URLImageEditPartTests
 				
 				RenderedImage renderedImage = fixture.regenerateImageFromSourceTest();
 				
-				assertNull("Non image file was rendered to an image? " + (new Integer(testno++)).toString(), //$NON-NLS-1$
+				assertNull("Non image file was rendered to an image? " + (Integer.valueOf(testno++)).toString(), //$NON-NLS-1$
 						(renderedImage == null?(Object) renderedImage:(Object) renderedImage.getSWTImage()));
 			}
 		}

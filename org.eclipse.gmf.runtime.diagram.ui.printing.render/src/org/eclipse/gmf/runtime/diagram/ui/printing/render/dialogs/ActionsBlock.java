@@ -52,7 +52,7 @@ class ActionsBlock extends DialogBlock {
 	 */
 	public Control createContents(Composite parent) {
 		printPreview = new Button(parent, SWT.PUSH);
-		printPreview.setData(new Integer(2));
+		printPreview.setData(Integer.valueOf(2));
 		printPreview
 				.setText(DiagramUIPrintingMessages.JPSPrintDialog_Button_PrintPreview);
 

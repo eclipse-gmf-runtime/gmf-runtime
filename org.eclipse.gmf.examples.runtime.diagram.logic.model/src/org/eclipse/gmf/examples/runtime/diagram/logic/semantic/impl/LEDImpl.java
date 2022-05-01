@@ -98,7 +98,7 @@ public class LEDImpl extends ElementImpl implements LED {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case SemanticPackage.LED__VALUE:
-				return new Integer(getValue());
+				return Integer.valueOf(getValue());
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}

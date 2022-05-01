@@ -164,7 +164,7 @@ public abstract class ResizableCompartmentEditPart
 		if (ViewUtil.isPropertySupported((View)getModel(), Properties.ID_RATIO))
 			setRatio((Double)getStructuralFeatureValue(NotationPackage.eINSTANCE.getRatio_Value()));
 		else
-			setRatio(new Double(-1));
+			setRatio(Double.valueOf(-1));
 	}
 	
 	/**

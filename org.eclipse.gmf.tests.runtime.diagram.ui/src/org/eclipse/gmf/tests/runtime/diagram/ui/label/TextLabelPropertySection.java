@@ -168,21 +168,21 @@ public class TextLabelPropertySection
 
         enableLabelAlignmentButtons();
 
-        checkButton(new ButtonKey(LABEL_ALIGNMENT, new Integer(
+        checkButton(new ButtonKey(LABEL_ALIGNMENT, Integer.valueOf(
             getLabelAlignment(ep))));
-        checkButton(new ButtonKey(ICON_ALIGNMENT, new Integer(
+        checkButton(new ButtonKey(ICON_ALIGNMENT, Integer.valueOf(
             getIconAlignment(ep))));
-        checkButton(new ButtonKey(TEXT_ALIGNMENT, new Integer(
+        checkButton(new ButtonKey(TEXT_ALIGNMENT, Integer.valueOf(
             getTextAlignment(ep))));
-        checkButton(new ButtonKey(TEXT_PLACEMENT, new Integer(
+        checkButton(new ButtonKey(TEXT_PLACEMENT, Integer.valueOf(
             getTextPlacement(ep))));
-        checkButton(new ButtonKey(TEXT_JUSTIFICATION, new Integer(
+        checkButton(new ButtonKey(TEXT_JUSTIFICATION, Integer.valueOf(
             getTextJustification(ep))));
-        checkButton(new ButtonKey(TEXT_UNDERLINE, new Boolean(
+        checkButton(new ButtonKey(TEXT_UNDERLINE, Boolean.valueOf(
             getTextUnderline(ep))));
-        checkButton(new ButtonKey(TEXT_STRIKETHROUGH, new Boolean(
+        checkButton(new ButtonKey(TEXT_STRIKETHROUGH, Boolean.valueOf(
             getTextStrikethrough(ep))));
-        checkButton(new ButtonKey(TEXT_WRAP, new Boolean(getWrappingOn(ep))));
+        checkButton(new ButtonKey(TEXT_WRAP, Boolean.valueOf(getWrappingOn(ep))));
 
     }
 
@@ -199,10 +199,10 @@ public class TextLabelPropertySection
         }
 
         Integer[] CORNERS = new Integer[] {
-            new Integer(PositionConstants.TOP | PositionConstants.LEFT),
-            new Integer(PositionConstants.TOP | PositionConstants.RIGHT),
-            new Integer(PositionConstants.BOTTOM | PositionConstants.LEFT),
-            new Integer(PositionConstants.BOTTOM | PositionConstants.RIGHT)};
+            Integer.valueOf(PositionConstants.TOP | PositionConstants.LEFT),
+            Integer.valueOf(PositionConstants.TOP | PositionConstants.RIGHT),
+            Integer.valueOf(PositionConstants.BOTTOM | PositionConstants.LEFT),
+            Integer.valueOf(PositionConstants.BOTTOM | PositionConstants.RIGHT)};
 
         for (int i = 0; i < CORNERS.length; i++) {
             Button button = (Button) buttons.get(new ButtonKey(LABEL_ALIGNMENT,
@@ -241,7 +241,7 @@ public class TextLabelPropertySection
 
             Button radioButton = getWidgetFactory().createButton(group, label,
                 SWT.RADIO);
-            buttons.put(new ButtonKey(TEXT_JUSTIFICATION, new Integer(value)),
+            buttons.put(new ButtonKey(TEXT_JUSTIFICATION, Integer.valueOf(value)),
                 radioButton);
             radioButton.addSelectionListener(new SelectionAdapter() {
 
@@ -289,7 +289,7 @@ public class TextLabelPropertySection
 
             Button radioButton = getWidgetFactory().createButton(group, label,
                 SWT.RADIO);
-            buttons.put(new ButtonKey(TEXT_ALIGNMENT, new Integer(value)),
+            buttons.put(new ButtonKey(TEXT_ALIGNMENT, Integer.valueOf(value)),
                 radioButton);
             radioButton.addSelectionListener(new SelectionAdapter() {
 
@@ -336,7 +336,7 @@ public class TextLabelPropertySection
 
             Button radioButton = getWidgetFactory().createButton(group, label,
                 SWT.RADIO);
-            buttons.put(new ButtonKey(ICON_ALIGNMENT, new Integer(value)),
+            buttons.put(new ButtonKey(ICON_ALIGNMENT, Integer.valueOf(value)),
                 radioButton);
             radioButton.addSelectionListener(new SelectionAdapter() {
 
@@ -390,7 +390,7 @@ public class TextLabelPropertySection
 
             Button radioButton = getWidgetFactory().createButton(group, label,
                 SWT.RADIO);
-            buttons.put(new ButtonKey(LABEL_ALIGNMENT, new Integer(value)),
+            buttons.put(new ButtonKey(LABEL_ALIGNMENT, Integer.valueOf(value)),
                 radioButton);
             radioButton.addSelectionListener(new SelectionAdapter() {
 
@@ -491,7 +491,7 @@ public class TextLabelPropertySection
 
             Button radioButton = getWidgetFactory().createButton(group, label,
                 SWT.RADIO);
-            buttons.put(new ButtonKey(TEXT_PLACEMENT, new Integer(value)),
+            buttons.put(new ButtonKey(TEXT_PLACEMENT, Integer.valueOf(value)),
                 radioButton);
             radioButton.addSelectionListener(new SelectionAdapter() {
 
@@ -536,7 +536,7 @@ public class TextLabelPropertySection
 
             Button radioButton = getWidgetFactory().createButton(group, label,
                 SWT.RADIO);
-            buttons.put(new ButtonKey(TEXT_UNDERLINE, new Boolean(value)),
+            buttons.put(new ButtonKey(TEXT_UNDERLINE, Boolean.valueOf(value)),
                 radioButton);
             radioButton.addSelectionListener(new SelectionAdapter() {
 
@@ -581,7 +581,7 @@ public class TextLabelPropertySection
 
             Button radioButton = getWidgetFactory().createButton(group, label,
                 SWT.RADIO);
-            buttons.put(new ButtonKey(TEXT_STRIKETHROUGH, new Boolean(value)),
+            buttons.put(new ButtonKey(TEXT_STRIKETHROUGH, Boolean.valueOf(value)),
                 radioButton);
             radioButton.addSelectionListener(new SelectionAdapter() {
 
@@ -626,7 +626,7 @@ public class TextLabelPropertySection
 
             Button radioButton = getWidgetFactory().createButton(group, label,
                 SWT.RADIO);
-            buttons.put(new ButtonKey(TEXT_WRAP, new Boolean(value)),
+            buttons.put(new ButtonKey(TEXT_WRAP, Boolean.valueOf(value)),
                 radioButton);
             radioButton.addSelectionListener(new SelectionAdapter() {
 

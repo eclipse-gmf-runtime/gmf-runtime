@@ -210,15 +210,15 @@ public class DefaultPaletteProvider
         public EntryDescriptor(IConfigurationElement configElement) {
             String kindStr = configElement.getAttribute(KIND);
             if (DRAWER.equals(kindStr))
-                kind = new Integer(ENUM_DRAWER);
+                kind = Integer.valueOf(ENUM_DRAWER);
             else if (STACK.equals(kindStr))
-                kind = new Integer(ENUM_STACK);
+                kind = Integer.valueOf(ENUM_STACK);
             else if (SEPARATOR.equals(kindStr))
-                kind = new Integer(ENUM_SEPARATOR);
+                kind = Integer.valueOf(ENUM_SEPARATOR);
             else if (TEMPLATE.equals(kindStr))
-                kind = new Integer(ENUM_TEMPLATE);
+                kind = Integer.valueOf(ENUM_TEMPLATE);
             else if (TOOL.equals(kindStr))
-                kind = new Integer(ENUM_TOOL);
+                kind = Integer.valueOf(ENUM_TOOL);
             else
                 Log.info(DiagramProvidersPlugin.getInstance(), DiagramProvidersStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
 
@@ -241,15 +241,15 @@ public class DefaultPaletteProvider
 
             if (NONE.equals(kindStr))
                 permission =
-                    new Integer(PaletteEntry.PERMISSION_NO_MODIFICATION);
+                    Integer.valueOf(PaletteEntry.PERMISSION_NO_MODIFICATION);
             if (HIDEONLY.equals(kindStr))
-                permission = new Integer(PaletteEntry.PERMISSION_HIDE_ONLY);
+                permission = Integer.valueOf(PaletteEntry.PERMISSION_HIDE_ONLY);
             if (LIMITED.equals(kindStr))
                 permission =
-                    new Integer(PaletteEntry.PERMISSION_LIMITED_MODIFICATION);
+                    Integer.valueOf(PaletteEntry.PERMISSION_LIMITED_MODIFICATION);
             if (FULL.equals(kindStr))
                 permission =
-                    new Integer(PaletteEntry.PERMISSION_FULL_MODIFICATION);
+                    Integer.valueOf(PaletteEntry.PERMISSION_FULL_MODIFICATION);
 
             String smallIconPath = configElement.getAttribute(SMALL_ICON);
             if (NONE.equals(smallIconPath)) {

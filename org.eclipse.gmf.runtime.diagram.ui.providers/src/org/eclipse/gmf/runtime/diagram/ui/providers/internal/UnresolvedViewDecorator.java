@@ -98,7 +98,7 @@ public class UnresolvedViewDecorator
 		if (ViewUtil.isPropertySupported(view,Properties.ID_LINECOLOR)) {
 			LineStyle style = (LineStyle) view.getStyle(NotationPackage.eINSTANCE.getLineStyle());
 			getDecoration().setForegroundColor(
-				DiagramColorRegistry.getInstance().getColor(new Integer(style.getLineColor())));
+				DiagramColorRegistry.getInstance().getColor(Integer.valueOf(style.getLineColor())));
 		}
 	}
 

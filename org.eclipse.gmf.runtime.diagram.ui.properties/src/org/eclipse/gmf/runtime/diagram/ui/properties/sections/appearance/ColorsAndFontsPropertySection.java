@@ -497,7 +497,7 @@ public class ColorsAndFontsPropertySection
 
 					public void run() {
 						ep.setStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_Italic(),
-							new Boolean(fontItalicButton.getSelection()));
+							Boolean.valueOf(fontItalicButton.getSelection()));
 					}
 				}));
 		}
@@ -550,7 +550,7 @@ public class ColorsAndFontsPropertySection
 
 					public void run() {
 						ep.setStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_FontHeight(),
-							new Integer(fontSizeCombo.getText()));
+							Integer.valueOf(fontSizeCombo.getText()));
 					}
 				}));
 			}

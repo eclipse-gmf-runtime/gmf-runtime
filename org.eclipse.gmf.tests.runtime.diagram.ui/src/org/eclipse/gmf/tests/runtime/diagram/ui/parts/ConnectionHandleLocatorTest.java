@@ -87,10 +87,10 @@ public class ConnectionHandleLocatorTest
 		throws Exception {
 
 		Object data[][] = {
-			{new Point(130, 100), new Integer(PositionConstants.NORTH)},
-			{new Point(130, 200), new Integer(PositionConstants.WEST)},
-			{new Point(180, 170), new Integer(PositionConstants.EAST)},
-			{new Point(140, 290), new Integer(PositionConstants.SOUTH)}};
+			{new Point(130, 100), Integer.valueOf(PositionConstants.NORTH)},
+			{new Point(130, 200), Integer.valueOf(PositionConstants.WEST)},
+			{new Point(180, 170), Integer.valueOf(PositionConstants.EAST)},
+			{new Point(140, 290), Integer.valueOf(PositionConstants.SOUTH)}};
 
 		for (int i = 0; i < data.length; i++) {
 			ConnectionHandleLocator locator = new ConnectionHandleLocator(
@@ -139,11 +139,11 @@ public class ConnectionHandleLocatorTest
 		}
 
 		Object data2[][] = {
-			{new Point(130, 100), new Integer(PositionConstants.WEST)},
-			{new Point(180, 110), new Integer(PositionConstants.EAST)},
-			{new Point(130, 200), new Integer(PositionConstants.WEST)},
-			{new Point(180, 170), new Integer(PositionConstants.EAST)},
-			{new Point(140, 290), new Integer(PositionConstants.SOUTH)}};
+			{new Point(130, 100), Integer.valueOf(PositionConstants.WEST)},
+			{new Point(180, 110), Integer.valueOf(PositionConstants.EAST)},
+			{new Point(130, 200), Integer.valueOf(PositionConstants.WEST)},
+			{new Point(180, 170), Integer.valueOf(PositionConstants.EAST)},
+			{new Point(140, 290), Integer.valueOf(PositionConstants.SOUTH)}};
 
 		for (int i = 0; i < data.length; i++) {
 			ConnectionHandleLocator locator = new ConnectionHandleLocator(

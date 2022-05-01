@@ -248,9 +248,9 @@ public class RadialProvider
 				View view = gep.getNotationView();
 				if (view!=null){
 					Integer pos = (Integer)ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X());
-					ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), new Integer(pos.intValue() + translate.x));
+					ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), Integer.valueOf(pos.intValue() + translate.x));
 					pos = (Integer)ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y());
-					ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(pos.intValue() + translate.y));
+					ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), Integer.valueOf(pos.intValue() + translate.y));
 				}
 			}
 			
@@ -739,7 +739,7 @@ public class RadialProvider
 
 			ChangePropertyValueRequest cpvr = new ChangePropertyValueRequest(
 				DiagramUIProvidersMessages.RadialProvider_changeFontRequest_label,
-				Properties.ID_FONTSIZE, new Integer(size));
+				Properties.ID_FONTSIZE, Integer.valueOf(size));
 		
 			return getCommand(sep, cpvr, true);
 		}

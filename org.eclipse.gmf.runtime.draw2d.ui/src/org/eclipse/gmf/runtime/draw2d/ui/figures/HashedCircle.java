@@ -61,7 +61,7 @@ public class HashedCircle extends Ellipse {
 
         // calculate the x and y shift from the center to the corners of the circle
         double radius = getBounds().width / 2.0;
-        int xyShift = new Double(radius / Math.sqrt(2.0)).intValue();
+        int xyShift = Double.valueOf(radius / Math.sqrt(2.0)).intValue();
 
         Point center = getBounds().getCenter();
 

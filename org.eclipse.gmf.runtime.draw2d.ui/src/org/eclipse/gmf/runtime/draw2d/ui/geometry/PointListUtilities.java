@@ -2098,7 +2098,7 @@ public class PointListUtilities {
     				points.getPoint(i).getDistanceOrthogonal(points.getPoint(i+1)));
     		if (r >= distance / 2) {
     			r = distance / 2 - 1;
-    			rForBendpoint.put(new Integer(i), new Integer(r));
+    			rForBendpoint.put(Integer.valueOf(i), Integer.valueOf(r));
     		}
     			
     		// Find the coordinates of the arc center, as well as the sign (+ or -) for the circle equasion    		

@@ -49,7 +49,7 @@ public class SetCompartmentRatioCommand extends SetPropertyCommand {
 	 */
 	public SetCompartmentRatioCommand(TransactionalEditingDomain editingDomain,
             IAdaptable viewAdapter, double newValue) {
-		super(editingDomain, viewAdapter, Properties.ID_RATIO, Properties.ID_RATIO, new Double(newValue));
+		super(editingDomain, viewAdapter, Properties.ID_RATIO, Properties.ID_RATIO, Double.valueOf(newValue));
 	}
 
 	protected CommandResult doExecuteWithResult(

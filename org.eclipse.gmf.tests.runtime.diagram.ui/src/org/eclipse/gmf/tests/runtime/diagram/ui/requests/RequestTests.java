@@ -71,7 +71,7 @@ public class RequestTests
 		Map extendedData = new HashMap();
 		Point location = new Point(1, 2);
 		Dimension size = new Dimension(10, 5);
-		Object type = new Integer(5);
+		Object type = Integer.valueOf(5);
 
 		request.setExtendedData(extendedData);
 		request.setLocation(location);

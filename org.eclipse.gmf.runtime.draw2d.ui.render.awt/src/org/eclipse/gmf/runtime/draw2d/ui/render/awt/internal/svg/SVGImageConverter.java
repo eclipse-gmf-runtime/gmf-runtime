@@ -166,11 +166,11 @@ public class SVGImageConverter {
 		if (info.getWidth() > 0)
 			transcoder.addTranscodingHint(
 				ImageTranscoder.KEY_WIDTH,
-				new Float(info.getWidth()));
+				Float.valueOf(info.getWidth()));
 		if (info.getHeight() > 0)
 			transcoder.addTranscodingHint(
 				ImageTranscoder.KEY_HEIGHT,
-				new Float(info.getHeight()));
+				Float.valueOf(info.getHeight()));
 		
 		transcoder.addTranscodingHint(
 			ImageTranscoderEx.KEY_MAINTAIN_ASPECT_RATIO,

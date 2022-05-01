@@ -49,6 +49,6 @@ public class EMFCoreConstants {
 
 	public final static String FILE_SCHEME = "file"; //$NON-NLS-1$
 
-	public final static Integer OUTPUT_BUFFER_SIZE = new Integer(256 * 1024);
+	public final static Integer OUTPUT_BUFFER_SIZE = Integer.valueOf(256 * 1024);
 
 }

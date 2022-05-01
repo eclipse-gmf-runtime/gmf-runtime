@@ -163,10 +163,10 @@ public class SVGImageTest
 
 		if (width > 0)
 			transcoder.addTranscodingHint(ImageTranscoderEx.KEY_WIDTH,
-				new Float(width));
+				Float.valueOf(width));
 		if (height > 0)
 			transcoder.addTranscodingHint(ImageTranscoderEx.KEY_HEIGHT,
-				new Float(height));
+			        Float.valueOf(height));
 
 		transcoder.addTranscodingHint(
 			ImageTranscoderEx.KEY_MAINTAIN_ASPECT_RATIO, Boolean.valueOf(info

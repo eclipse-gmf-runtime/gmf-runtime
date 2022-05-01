@@ -46,9 +46,9 @@ public class SetBoundsCommandTest
 	public void testDoExecute() {
 		assertTrue(getCommand().canExecute());
 	
-		assertEquals( new Integer(-1),
+		assertEquals( Integer.valueOf(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( new Integer(-1),
+		assertEquals( Integer.valueOf(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 		
         try {
@@ -57,9 +57,9 @@ public class SetBoundsCommandTest
             fail(e.getLocalizedMessage());
         }
 		
-		assertEquals( new Integer(WIDTH),
+		assertEquals( Integer.valueOf(WIDTH),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( new Integer(HEIGHT),
+		assertEquals( Integer.valueOf(HEIGHT),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 	}
 	
@@ -69,9 +69,9 @@ public class SetBoundsCommandTest
 		
 		assertTrue(moveCommand.canExecute());
 		
-		assertEquals( new Integer(0),
+		assertEquals( Integer.valueOf(0),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_X()));
-		assertEquals( new Integer(0),
+		assertEquals( Integer.valueOf(0),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_Y()));
 			
         try {
@@ -80,13 +80,13 @@ public class SetBoundsCommandTest
             fail(e.getLocalizedMessage());
         }
 			
-		assertEquals( new Integer(XPOS),
+		assertEquals( Integer.valueOf(XPOS),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_X()));
-		assertEquals( new Integer(YPOS),
+		assertEquals( Integer.valueOf(YPOS),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_Y()));
-		assertEquals( new Integer(-1),
+		assertEquals( Integer.valueOf(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( new Integer(-1),
+		assertEquals( Integer.valueOf(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 	}
 	
@@ -96,9 +96,9 @@ public class SetBoundsCommandTest
 		
 		assertTrue(resizeCommand.canExecute());
 		
-		assertEquals( new Integer(-1),
+		assertEquals( Integer.valueOf(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( new Integer(-1),
+		assertEquals( Integer.valueOf(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 			
         try {
@@ -107,9 +107,9 @@ public class SetBoundsCommandTest
             fail(e.getLocalizedMessage());
         }
 			
-		assertEquals( new Integer(WIDTH),
+		assertEquals( Integer.valueOf(WIDTH),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( new Integer(HEIGHT),
+		assertEquals( Integer.valueOf(HEIGHT),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 	}
 }

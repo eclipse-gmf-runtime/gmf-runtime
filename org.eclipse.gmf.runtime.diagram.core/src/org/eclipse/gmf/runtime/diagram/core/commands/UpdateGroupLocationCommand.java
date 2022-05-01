@@ -116,7 +116,7 @@ public class UpdateGroupLocationCommand
             Integer x = (Integer) ViewUtil.getStructuralFeatureValue(group,
                 NotationPackage.eINSTANCE.getLocation_X());
             ViewUtil.setStructuralFeatureValue(group, NotationPackage.eINSTANCE
-                .getLocation_X(), new Integer(x.intValue() + minChildX));
+                .getLocation_X(), Integer.valueOf(x.intValue() + minChildX));
 
             for (Iterator iterator = group.getChildren().iterator(); iterator
                 .hasNext();) {
@@ -124,7 +124,7 @@ public class UpdateGroupLocationCommand
                 x = (Integer) ViewUtil.getStructuralFeatureValue(childView,
                     NotationPackage.eINSTANCE.getLocation_X());
                 ViewUtil.setStructuralFeatureValue(childView,
-                    NotationPackage.eINSTANCE.getLocation_X(), new Integer(x
+                    NotationPackage.eINSTANCE.getLocation_X(), Integer.valueOf(x
                         .intValue()
                         - minChildX));
             }
@@ -139,7 +139,7 @@ public class UpdateGroupLocationCommand
             Integer y = (Integer) ViewUtil.getStructuralFeatureValue(group,
                 NotationPackage.eINSTANCE.getLocation_Y());
             ViewUtil.setStructuralFeatureValue(group, NotationPackage.eINSTANCE
-                .getLocation_Y(), new Integer(y.intValue() + minChildY));
+                .getLocation_Y(), Integer.valueOf(y.intValue() + minChildY));
 
             for (Iterator iterator = group.getChildren().iterator(); iterator
                 .hasNext();) {

@@ -386,11 +386,11 @@ public class RulerGridPropertySection
 
 		if (popup.useDefaultColor()) {
 			Image overlyedImage = new ColorOverlayImageDescriptor(
-					imageDescriptor.getImageData(), FigureUtilities.integerToRGB(new Integer(LIGHT_GRAY_RGB)))
+					imageDescriptor.getImageData(), FigureUtilities.integerToRGB(Integer.valueOf(LIGHT_GRAY_RGB)))
 					.createImage();
 			disposeImage(button.getImage());
 			button.setImage(overlyedImage);
-			return FigureUtilities.integerToRGB(new Integer(LIGHT_GRAY_RGB));
+			return FigureUtilities.integerToRGB(Integer.valueOf(LIGHT_GRAY_RGB));
 		}
 
 		if (popup.getSelectedColor() != null) {
@@ -427,7 +427,7 @@ public class RulerGridPropertySection
 			value = forceDouble(numberFormatter.parse(strValue));
 		} catch (ParseException e) {
 			// default value
-            value = new Double(getWorkspacePropertyDouble(WorkspaceViewerProperties.GRIDSPACING));
+            value = Double.valueOf(getWorkspacePropertyDouble(WorkspaceViewerProperties.GRIDSPACING));
 			setGridSpacing(value.doubleValue());
 		}
 		return value;
@@ -663,7 +663,7 @@ public class RulerGridPropertySection
 		if (valueString.equals(StringStatics.BLANK)) {
 			value = 0;
 		} else {
-			value = new Integer(getWorkspaceProperty(property)).intValue();
+			value = Integer.valueOf(getWorkspaceProperty(property)).intValue();
 		}
 		return value;
 	}
@@ -853,7 +853,7 @@ public class RulerGridPropertySection
 			}
         } else if (WorkspaceViewerProperties.GRIDSPACING.equals(event.getProperty())) {
 			if (!textWidget.isDisposed()) {
-				Double value = new Double(getEventString(event));
+				Double value = Double.valueOf(getEventString(event));
 				textWidget.setText(NumberFormat.getInstance().format(value));
 			}
         } else if (WorkspaceViewerProperties.RULERUNIT.equals(event.getProperty())) {           
@@ -910,7 +910,7 @@ public class RulerGridPropertySection
 	 */
 	private Double forceDouble(Number number) {
 		if (!(number instanceof Double))
-			return new Double(number.doubleValue());
+			return Double.valueOf(number.doubleValue());
 		return (Double) number;
 	}
 }

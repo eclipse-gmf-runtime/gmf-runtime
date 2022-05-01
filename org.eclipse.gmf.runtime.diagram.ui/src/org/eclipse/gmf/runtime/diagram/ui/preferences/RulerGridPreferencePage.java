@@ -174,7 +174,7 @@ public class RulerGridPreferencePage
 		
 		//Double value = Double.valueOf( valueStr );
 		NumberFormat numberFormatter = NumberFormat.getInstance();		
-		Double value = new Double(0.125);
+		Double value = Double.valueOf(0.125);
 		try {
 			value = forceDouble(numberFormatter.parse(valueStr));
 		} catch (ParseException e) {
@@ -423,7 +423,7 @@ public class RulerGridPreferencePage
 	 */
 	private Double forceDouble(Number number) {
 		if (!(number instanceof Double))
-			return new Double(number.doubleValue());			
+			return Double.valueOf(number.doubleValue());			
 		return (Double) number;
 	}	
 

@@ -255,7 +255,7 @@ public class DepartmentImpl extends EModelElementImpl implements Department {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EmployeePackage.DEPARTMENT__NUMBER:
-				return new Integer(getNumber());
+				return Integer.valueOf(getNumber());
 			case EmployeePackage.DEPARTMENT__NAME:
 				return getName();
 			case EmployeePackage.DEPARTMENT__MEMBERS:

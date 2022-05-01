@@ -159,7 +159,7 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
      * @see org.eclipse.draw2d.Graphics#pushState()
      */
     public void pushState() {
-        stateStack.push(new Double(printScale));
+        stateStack.push(Double.valueOf(printScale));
         super.pushState();
     }
     

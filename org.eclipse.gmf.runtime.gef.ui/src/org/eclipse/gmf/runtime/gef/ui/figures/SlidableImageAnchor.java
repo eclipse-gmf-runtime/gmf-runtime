@@ -163,7 +163,7 @@ public class SlidableImageAnchor
 			// Default anchors are cached
 			if (isDefaultAnchor) {
 				// determine if a cached value exists
-				ptIntersect = locationMap.get(new Integer(angle));
+				ptIntersect = locationMap.get(Integer.valueOf(angle));
 			}
 			if (ptIntersect == null) {
 				// if no cached value exists return the calculated value and add to

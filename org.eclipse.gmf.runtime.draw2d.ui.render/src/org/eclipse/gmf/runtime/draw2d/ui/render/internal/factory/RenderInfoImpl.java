@@ -148,8 +148,8 @@ class RenderInfoImpl
 	 * @see Object#hashCode()
 	 */
 	public int hashCode() {
-		int hashCode = (new Integer(width)).hashCode();
-		hashCode = hashCode + (new Integer(height)).hashCode();
+		int hashCode = (Integer.valueOf(width)).hashCode();
+		hashCode = hashCode + (Integer.valueOf(height)).hashCode();
 		hashCode = hashCode + (Boolean.valueOf(maintainAspectRatio)).hashCode();
 		hashCode = hashCode + (Boolean.valueOf(antialias)).hashCode();
 		if (fill != null)

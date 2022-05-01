@@ -31,7 +31,7 @@ public final class SelectionTransfer
 	 * Eclipse application uses a different "type" of
 	 * <code>SelectionTransfer</code>
 	 */
-	private static final String TYPE_NAME = "Element Selection Format" + (new Long(System.currentTimeMillis())).toString(); //$NON-NLS-1$
+	private static final String TYPE_NAME = "Element Selection Format" + (Long.valueOf(System.currentTimeMillis())).toString(); //$NON-NLS-1$
 
 	/**
 	 * Attribute for the type id

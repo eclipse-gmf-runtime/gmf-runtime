@@ -160,16 +160,16 @@ extends TestCase {
 	 * @param renderedImage
 	 */
 	protected void verifyRenderedImage(RenderedImage renderedImage, int testno) {
-		assertTrue("renderedImage is null in testno " + (new Integer(testno)).toString(),//$NON-NLS-1$
+		assertTrue("renderedImage is null in testno " + (Integer.valueOf(testno)).toString(),//$NON-NLS-1$
 			renderedImage != null);
 		
 		Image swtImage = renderedImage.getSWTImage();
-		assertTrue("swtImage is null in testno " + (new Integer(testno)).toString(), //$NON-NLS-1$
+		assertTrue("swtImage is null in testno " + (Integer.valueOf(testno)).toString(), //$NON-NLS-1$
 			swtImage != null);
 		
 		// ensure the protection image isn't being returned.
 		Rectangle rect = swtImage.getBounds();
-		assertTrue("swtImage is not correct size in testno " + (new Integer(testno)).toString(),//$NON-NLS-1$
+		assertTrue("swtImage is not correct size in testno " + (Integer.valueOf(testno)).toString(),//$NON-NLS-1$
 			rect.width > 10 && rect.height > 10);
 	}
 

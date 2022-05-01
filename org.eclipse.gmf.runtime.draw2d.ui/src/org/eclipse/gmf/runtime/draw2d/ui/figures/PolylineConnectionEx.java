@@ -420,7 +420,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
         	int index = 0;
         	for (int i = 0; i < displayPointsWithoutJumpLinksList.size(); i++) {
         	    for (int j = 0; j < displayPointsWithoutJumpLinksList.get(i).size(); j++) {
-        	        originalDisplayPoints.put(displayPointsWithoutJumpLinksList.get(i).getPoint(j), new Integer(index++));
+        	        originalDisplayPoints.put(displayPointsWithoutJumpLinksList.get(i).getPoint(j), Integer.valueOf(index++));
                 }
         	}
         }
@@ -602,7 +602,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
             			int r = rDefault;         			
             			Point p = displayPoints.getPoint(j);
             			int origIndex = ((Integer)originalDisplayPoints.get(p)).intValue();       	
-            			Object o = rForBendpointArc.get(new Integer((origIndex+1)/2));
+            			Object o = rForBendpointArc.get(Integer.valueOf((origIndex+1)/2));
             			if (o != null) {
             				r = ((Integer)o).intValue();
             			}

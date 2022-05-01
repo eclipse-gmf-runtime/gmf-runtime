@@ -43,7 +43,7 @@ public class ImageExporter {
     
     static public final String JPEG_FILE = "JPEG"; //$NON-NLS-1$
     static public final String PNG_FILE = "PNG"; //$NON-NLS-1$
-	static private final Float DEFAULT_QUALITY = new Float(1.00);
+	static private final Float DEFAULT_QUALITY = Float.valueOf((float) 1.00);
     /**
      * Allows export of an image to specific supported image file formats.
      * 

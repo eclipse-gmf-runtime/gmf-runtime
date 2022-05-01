@@ -607,7 +607,7 @@ abstract public class DiagramGenerator {
 				diagramEditPart.getPrimaryEditParts(), getImageMargin(),
 				emptyImageSize).getLocation();
 		options.put(PartPositionInfoGenerator.CONNECTION_MARGIN,
-				new Double(getImageMargin() >> 1));
+		        Double.valueOf(getImageMargin() >> 1));
 		options.put(PartPositionInfoGenerator.DIAGRAM_ORIGIN, origin);
 		return PartPositionInfoGenerator.getDiagramPartInfo(diagramEditPart,
 				options);
@@ -644,9 +644,9 @@ abstract public class DiagramGenerator {
 
 		Map<String, Object> options = new HashMap<String, Object>();
 		options.put(PartPositionInfoGenerator.CONNECTION_MARGIN,
-				new Double(mm.DPtoLP(5)));
+		        Double.valueOf(mm.DPtoLP(5)));
 		options.put(PartPositionInfoGenerator.DIAGRAM_ORIGIN, imageRect.getLocation());
-		options.put(PartPositionInfoGenerator.SCALE_FACTOR, new Double(data.scalingFactor));
+		options.put(PartPositionInfoGenerator.SCALE_FACTOR, Double.valueOf(data.scalingFactor));
 		
 		return PartPositionInfoGenerator.getDiagramPartInfo(diagramEditPart, options);
 	}

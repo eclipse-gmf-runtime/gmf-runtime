@@ -137,7 +137,7 @@ public class AbstractEditHelperTest
         
         // Request is approved by the DepartmentEditHelper
         SetRequest setRequest = new SetRequest(department,
-            getEmployeePackage().getDepartment_Number(), new Integer(123456));
+            getEmployeePackage().getDepartment_Number(), Integer.valueOf(123456));
         
         boolean canEdit = EmployeeType.DEPARTMENT.getEditHelper().canEdit(setRequest);
         assertTrue(canEdit);
@@ -155,7 +155,7 @@ public class AbstractEditHelperTest
         
         // Request is not approved by the DepartmentEditHelper
         setRequest = new SetRequest(department,
-            getEmployeePackage().getDepartment_Number(), new Integer(0));
+            getEmployeePackage().getDepartment_Number(), Integer.valueOf(0));
         
         canEdit = EmployeeType.DEPARTMENT.getEditHelper().canEdit(setRequest);
         assertFalse(canEdit);

@@ -330,11 +330,11 @@ public class EmployeeImpl extends EModelElementImpl implements Employee {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EmployeePackage.EMPLOYEE__SALARY:
-				return new Integer(getSalary());
+				return Integer.valueOf(getSalary());
 			case EmployeePackage.EMPLOYEE__BAND:
 				return getBand();
 			case EmployeePackage.EMPLOYEE__NUMBER:
-				return new Integer(getNumber());
+				return Integer.valueOf(getNumber());
 			case EmployeePackage.EMPLOYEE__SECURITY_CLEARANCE:
 				return isSecurityClearance() ? Boolean.TRUE : Boolean.FALSE;
 			case EmployeePackage.EMPLOYEE__DEPARTMENT:

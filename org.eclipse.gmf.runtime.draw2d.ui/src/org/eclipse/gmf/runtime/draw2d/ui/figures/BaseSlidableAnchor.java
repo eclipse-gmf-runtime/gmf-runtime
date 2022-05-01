@@ -135,8 +135,8 @@ public class BaseSlidableAnchor
 		if (relativeReference == null) {
 			return figureHashCode;
 		}
-		return new Double(relativeReference.preciseX()).hashCode()
-				^ new Double(relativeReference.preciseY()).hashCode()
+		return Double.valueOf(relativeReference.preciseX()).hashCode()
+				^ Double.valueOf(relativeReference.preciseY()).hashCode()
 				^ figureHashCode;
 	}
 

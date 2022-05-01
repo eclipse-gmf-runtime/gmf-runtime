@@ -317,7 +317,7 @@ public class SortFilterPage extends PropertyPage {
 		removeFrom.setText(REMOVE_FROM_LABEL);
 		removeFrom.setToolTipText(REMOVE_FROM);
 		removeFrom.setLayoutData(makeArrowButtonGridData(removeFrom));
-		removeFrom.setData(new Integer(REMOVE_FROM_ID));
+		removeFrom.setData(Integer.valueOf(REMOVE_FROM_ID));
 		removeFrom.addSelectionListener(buttonSelectionAdapter);
 		removeFrom.setEnabled(false);
 
@@ -325,7 +325,7 @@ public class SortFilterPage extends PropertyPage {
 		addTo.setText(ADD_TO_LABEL);
 		addTo.setToolTipText(ADD_TO);
 		addTo.setLayoutData(makeArrowButtonGridData(addTo));
-		addTo.setData(new Integer(ADD_TO_ID));
+		addTo.setData(Integer.valueOf(ADD_TO_ID));
 		addTo.addSelectionListener(buttonSelectionAdapter);
 		addTo.setEnabled(false);
 
@@ -333,7 +333,7 @@ public class SortFilterPage extends PropertyPage {
 		removeAllFrom.setText(REMOVE_ALL_LABEL);
 		removeAllFrom.setToolTipText(REMOVE_ALL);
 		removeAllFrom.setLayoutData(makeArrowButtonGridData(removeAllFrom));
-		removeAllFrom.setData(new Integer(REMOVE_ALL_FROM_ID));
+		removeAllFrom.setData(Integer.valueOf(REMOVE_ALL_FROM_ID));
 		removeAllFrom.addSelectionListener(buttonSelectionAdapter);
 		addAllTo = new Button(buttonComposite, SWT.PUSH);
 

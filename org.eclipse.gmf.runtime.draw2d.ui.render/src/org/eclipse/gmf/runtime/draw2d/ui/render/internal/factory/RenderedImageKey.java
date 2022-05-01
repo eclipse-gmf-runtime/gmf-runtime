@@ -91,7 +91,7 @@ public final class RenderedImageKey extends RenderInfoImpl {
      * @see Object#hashCode()
      */
     public int hashCode() {
-        int hashCode = new Long(getChecksum()).hashCode();
+        int hashCode = Long.valueOf(getChecksum()).hashCode();
         hashCode += super.hashCode();
 
         return hashCode;

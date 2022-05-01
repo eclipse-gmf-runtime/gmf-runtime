@@ -1074,7 +1074,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 	 * @return hash code
 	 */
 	private Object getIntersectingShapesConnectionKey(Connection conn) {
-		return new Integer(conn.getSourceAnchor().getOwner().hashCode()
+		return Integer.valueOf(conn.getSourceAnchor().getOwner().hashCode()
 				^ conn.getTargetAnchor().getOwner().hashCode());
 	}
 

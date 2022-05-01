@@ -260,7 +260,7 @@ public class NestableListItemEditPart
 			setRatio((Double) ViewUtil.getStructuralFeatureValue(
 				(View) getModel(), NotationPackage.Literals.RATIO__VALUE));
 		else
-			setRatio(new Double(-1));
+			setRatio(Double.valueOf(-1));
 	}
 
 	/**

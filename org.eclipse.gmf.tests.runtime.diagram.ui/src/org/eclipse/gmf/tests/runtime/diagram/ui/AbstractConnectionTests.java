@@ -61,7 +61,7 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 					getTestFixture().getConnectorView().getDiagram();
 
 				diagramValues[0] = dgrm2;
-				diagramValues[1] = new Integer(dgrm2.getEdges().size());
+				diagramValues[1] = Integer.valueOf(dgrm2.getEdges().size());
 			}
 		});
 

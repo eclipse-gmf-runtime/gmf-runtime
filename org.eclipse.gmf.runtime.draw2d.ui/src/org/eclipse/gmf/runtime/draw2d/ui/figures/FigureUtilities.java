@@ -38,7 +38,7 @@ public class FigureUtilities extends org.eclipse.draw2d.FigureUtilities {
 	 * @return Integer
 	 */
 	public static Integer colorToInteger(Color c) {
-		return new Integer(
+		return Integer.valueOf(
 			(c.getBlue() << 16) | (c.getGreen() << 8) | c.getRed());
 	}
 
@@ -70,7 +70,7 @@ public class FigureUtilities extends org.eclipse.draw2d.FigureUtilities {
 	 * @return Integer
 	 */
 	public static Integer RGBToInteger(RGB rgb) {
-		return new Integer((rgb.blue << 16) | (rgb.green << 8) | rgb.red);
+		return Integer.valueOf((rgb.blue << 16) | (rgb.green << 8) | rgb.red);
 	}
 
 
