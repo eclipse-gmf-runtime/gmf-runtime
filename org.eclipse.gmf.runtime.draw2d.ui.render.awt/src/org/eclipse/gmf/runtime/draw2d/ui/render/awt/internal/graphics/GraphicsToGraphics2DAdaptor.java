@@ -1075,7 +1075,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 
 			int height = fontInfo[0].getHeight();
 			
-			int dpi = Integer.getInteger("org.eclipse.gmf.runtime.draw2d.ui.render.dpi", DisplayUtils.getDisplay().getDPI().x);
+			int dpi = Integer.getInteger("org.eclipse.gmf.runtime.draw2d.ui.render.dpi", DisplayUtils.getDisplay().getDPI().x); //$NON-NLS-1$
 			float fsize = (float) height * (float) dpi / 72.0f;        // display DPI / AWT DPI
 			height = (int) fsize;
 			
