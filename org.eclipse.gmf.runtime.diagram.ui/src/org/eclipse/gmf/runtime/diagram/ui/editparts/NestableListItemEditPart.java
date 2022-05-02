@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2008, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -179,7 +179,7 @@ public class NestableListItemEditPart
 			return ((View) getModel()).getChildren();
 		}
 
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 	/**
