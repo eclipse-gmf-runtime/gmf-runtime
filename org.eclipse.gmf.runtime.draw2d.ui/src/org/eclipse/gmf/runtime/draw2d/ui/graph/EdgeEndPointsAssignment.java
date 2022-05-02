@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -61,7 +61,7 @@ class EdgeEndPointsAssignment {
 	
 	private void assignEndPointsForEdgesFromNode(Node node) {
 		EdgeList incoming = new EdgeList(), outgoing = new EdgeList();
-		List<BorderNode> specialBorderNodes = new ArrayList<BorderNode>();
+		List<BorderNode> specialBorderNodes = new ArrayList<>();
 		if (node instanceof ConstantSizeNode) {
 			initEdgesSets((ConstantSizeNode)node, incoming, outgoing, specialBorderNodes);
 		} else {
@@ -240,14 +240,14 @@ class EdgeEndPointsAssignment {
 	}
 	
 	private void assignEndPointsForJointEdgeWithIncomingAndOutgoingEdges(ConstantSizeNode node, List<BorderNode> specialBorderNodes) {
-		Collections.sort(specialBorderNodes, new Comparator<BorderNode>() {
+		Collections.sort(specialBorderNodes, new Comparator<>() {
 			public int compare(BorderNode bn1, BorderNode bn2) {
 				return bn1.incomingJointEdges.edges.size() + bn1.outgoingJointEdges.edges.size() - bn2.incomingJointEdges.edges.size() - bn2.outgoingJointEdges.edges.size(); 
 			}
 		});
 		
-		List<BorderNode> leftSideBorderNodes = new ArrayList<BorderNode>(specialBorderNodes.size() / 2 + 1);
-		List<BorderNode> rightSideBorderNodes = new ArrayList<BorderNode>(specialBorderNodes.size() / 2 + 1);
+		List<BorderNode> leftSideBorderNodes = new ArrayList<>(specialBorderNodes.size() / 2 + 1);
+		List<BorderNode> rightSideBorderNodes = new ArrayList<>(specialBorderNodes.size() / 2 + 1);
 		
 		for (Iterator<BorderNode> itr = specialBorderNodes.iterator(); itr.hasNext();) {
 			leftSideBorderNodes.add(itr.next());
@@ -258,12 +258,12 @@ class EdgeEndPointsAssignment {
 			}
 		}
 		
-		Collections.sort(leftSideBorderNodes, new Comparator<BorderNode>() {
+		Collections.sort(leftSideBorderNodes, new Comparator<>() {
 			public int compare(BorderNode bn1, BorderNode bn2) {
 				return bn1.outgoingJointEdges.edges.size() - bn1.incomingJointEdges.edges.size() - (bn2.outgoingJointEdges.edges.size() - bn2.incomingJointEdges.edges.size());
 			}		
 		});
-		Collections.sort(rightSideBorderNodes, new Comparator<BorderNode>() {
+		Collections.sort(rightSideBorderNodes, new Comparator<>() {
 			public int compare(BorderNode bn1, BorderNode bn2) {
 				return bn1.outgoingJointEdges.edges.size() - bn1.incomingJointEdges.edges.size() - (bn2.outgoingJointEdges.edges.size() - bn2.incomingJointEdges.edges.size());
 			}		

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2015, 2021 IBM Corporation and others.
+ * Copyright (c) 2004, 2015, 2021, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -175,7 +175,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	private SWTGraphics swtGraphics;
 	private Graphics2D graphics2D;
 	private BasicStroke stroke;
-	private Stack<State> states = new Stack<State>();
+	private Stack<State> states = new Stack<>();
 	private final State currentState = new State();
 	private final State appliedState = new State();
 	

@@ -56,7 +56,7 @@ public class StatusLineService extends Service implements
 				ExecutionStrategy.FORWARD,
 				new GetStatusLineContributionOperation(workbenchPage));
 		// execute returns a list of lists, so compact into a single list.
-		List<IContributionItem> result = new ArrayList<IContributionItem>();
+		List<IContributionItem> result = new ArrayList<>();
 		for (List<IContributionItem> items : lists) {
 			result.addAll(items);
 

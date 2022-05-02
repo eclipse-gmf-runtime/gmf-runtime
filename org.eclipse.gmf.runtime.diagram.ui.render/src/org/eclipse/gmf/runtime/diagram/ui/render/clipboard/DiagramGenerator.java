@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2010 IBM Corporation and others.
+ * Copyright (c) 2002, 2010, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -210,7 +210,7 @@ abstract public class DiagramGenerator {
 		graphics.translate((-translateOffset.x), (-translateOffset.y));
 		graphics.pushState();
 
-		List<GraphicalEditPart> connectionsToPaint = new LinkedList<GraphicalEditPart>();
+		List<GraphicalEditPart> connectionsToPaint = new LinkedList<>();
 
 		Map decorations = findDecorations(editparts);
 
@@ -250,17 +250,17 @@ abstract public class DiagramGenerator {
 		/*
 		 * Set of node editparts contained within the given editpart
 		 */
-		HashSet<GraphicalEditPart> editParts = new HashSet<GraphicalEditPart>();
+		HashSet<GraphicalEditPart> editParts = new HashSet<>();
 		
 		/*
 		 * All connection editparts that have a source contained within the given editpart
 		 */
-		HashSet<ConnectionEditPart> connectionEPs = new HashSet<ConnectionEditPart>();
+		HashSet<ConnectionEditPart> connectionEPs = new HashSet<>();
 		
 		/*
 		 * Connections contained within the given editpart (or just the connections to paint
 		 */
-		HashSet<ConnectionEditPart> connectionsToPaint = new HashSet<ConnectionEditPart>();
+		HashSet<ConnectionEditPart> connectionsToPaint = new HashSet<>();
 		
 		/*
 		 * Populate the set of node editparts
@@ -283,7 +283,7 @@ abstract public class DiagramGenerator {
 			 * through that connection that leads to the target contained within
 			 * the given editpart
 			 */
-			Stack<ConnectionEditPart> connectionsPath = new Stack<ConnectionEditPart>();
+			Stack<ConnectionEditPart> connectionsPath = new Stack<>();
 			ConnectionEditPart conn = connectionEPs.iterator().next();
 			connectionEPs.remove(conn);
 			connectionsPath.add(conn);
@@ -330,7 +330,7 @@ abstract public class DiagramGenerator {
 	 * @return all source connections
 	 */
 	private List<ConnectionEditPart> getAllConnectionsFrom(GraphicalEditPart ep) {
-		LinkedList<ConnectionEditPart> connections = new LinkedList<ConnectionEditPart>();
+		LinkedList<ConnectionEditPart> connections = new LinkedList<>();
 		for (Iterator itr = ep.getSourceConnections().iterator(); itr.hasNext();) {
 			ConnectionEditPart sourceConn = (ConnectionEditPart) itr.next();
 			connections.add(sourceConn);
@@ -602,7 +602,7 @@ abstract public class DiagramGenerator {
 	 *         diagram.
 	 */
 	public List getDiagramPartInfo(DiagramEditPart diagramEditPart) {
-		Map<String, Object> options = new HashMap<String, Object>();
+		Map<String, Object> options = new HashMap<>();
 		Point origin = DiagramImageUtils.calculateImageRectangle(
 				diagramEditPart.getPrimaryEditParts(), getImageMargin(),
 				emptyImageSize).getLocation();
@@ -642,7 +642,7 @@ abstract public class DiagramGenerator {
 			imageRect.expand(getImageMargin(), getImageMargin());
 		}
 
-		Map<String, Object> options = new HashMap<String, Object>();
+		Map<String, Object> options = new HashMap<>();
 		options.put(PartPositionInfoGenerator.CONNECTION_MARGIN,
 		        Double.valueOf(mm.DPtoLP(5)));
 		options.put(PartPositionInfoGenerator.DIAGRAM_ORIGIN, imageRect.getLocation());

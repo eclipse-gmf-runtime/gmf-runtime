@@ -156,7 +156,7 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 				.getAdapter(domain,
 						TransactionalEditingDomain.DefaultOptions.class));
 
-		Map<Object, Object> aMap = new HashMap<Object, Object>();
+		Map<Object, Object> aMap = new HashMap<>();
 		aMap.put(Transaction.OPTION_VALIDATE_EDIT,
 				new WorkspaceValidateEditSupport() {
 
@@ -223,7 +223,7 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 	 */
 	public static class TransactionalSyncExecHelper implements ISyncExecHelper {
 
-		private final ThreadLocal<TransactionalEditingDomain> domain = new ThreadLocal<TransactionalEditingDomain>();
+		private final ThreadLocal<TransactionalEditingDomain> domain = new ThreadLocal<>();
 
 		private void setDomain(TransactionalEditingDomain domain) {
 			this.domain.set(domain);
