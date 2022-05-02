@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -14,11 +14,11 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -44,40 +44,33 @@ public class SidesBlock extends DialogBlock {
 		this.options = options;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.printing.internal.dialogs.DialogBlock#createContents(org.eclipse.swt.widgets.Composite)
-	 */
+	@Override
 	public Control createContents(Composite parent) {
 		final Realm realm = bindings.getValidationRealm();
 
-		Composite result = group(parent,
-				DiagramUIPrintingMessages.JPSOptionsDialog_Sides);
+		Composite result = group(parent, DiagramUIPrintingMessages.JPSOptionsDialog_Sides);
 		layout(result, 2);
 
-		Button oneSideRadio = radio(result,
-				DiagramUIPrintingMessages.JPSOptionsDialog_SidesOneSided);
+		Button oneSideRadio = radio(result, DiagramUIPrintingMessages.JPSOptionsDialog_SidesOneSided);
 		layoutSpanHorizontal(oneSideRadio, 4);
 
-		Button tumbleRadio = radio(result,
-				DiagramUIPrintingMessages.JPSOptionsDialog_SidesTumble);
+		Button tumbleRadio = radio(result, DiagramUIPrintingMessages.JPSOptionsDialog_SidesTumble);
 		layoutSpanHorizontal(tumbleRadio, 4);
 
-		Button duplexRadio = radio(result,
-				DiagramUIPrintingMessages.JPSOptionsDialog_SidesDuplex);
+		Button duplexRadio = radio(result, DiagramUIPrintingMessages.JPSOptionsDialog_SidesDuplex);
 		layoutSpanHorizontal(duplexRadio, 4);
 
-		oneSidedBinding = bindings.bindValue(SWTObservables.observeSelection(oneSideRadio),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_SIDES_ONESIDED), null, null);
+		oneSidedBinding = bindings.bindValue(
+		        WidgetProperties.buttonSelection().observe(oneSideRadio),
+		        BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_SIDES_ONESIDED).observe(realm, options));
 
-		tumbleBinding = bindings.bindValue(SWTObservables.observeSelection(tumbleRadio),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_SIDES_TUMBLE), null, null);
+		tumbleBinding = bindings.bindValue(
+		        WidgetProperties.buttonSelection().observe(tumbleRadio),
+		        BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_SIDES_TUMBLE).observe(realm, options));
 
-		duplexBinding = bindings.bindValue(SWTObservables.observeSelection(duplexRadio),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_SIDES_DUPLEX), null, null);
+		duplexBinding = bindings.bindValue(
+		        WidgetProperties.buttonSelection().observe(duplexRadio),
+                BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_SIDES_DUPLEX).observe(realm, options));
 
 		return result;
 	}

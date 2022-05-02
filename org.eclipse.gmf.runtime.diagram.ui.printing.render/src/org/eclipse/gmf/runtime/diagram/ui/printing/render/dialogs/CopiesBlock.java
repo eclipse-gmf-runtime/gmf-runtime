@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -13,12 +13,12 @@
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -54,11 +54,7 @@ class CopiesBlock extends DialogBlock {
 		this.options = options;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.printing.internal.dialogs.DialogBlock#createContents(org.eclipse.swt.widgets.Composite)
-	 */
+	@Override
 	public Control createContents(Composite parent) {
 		final Realm realm = bindings.getValidationRealm();
 
@@ -69,9 +65,8 @@ class CopiesBlock extends DialogBlock {
 		label(result, DiagramUIPrintingMessages.JPSPrintDialog_NumberOfCopies);
 		Spinner copiesSpinner = spinner(result, 1, 999);
 
-		bindings.bindValue(SWTObservables.observeSelection(copiesSpinner),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_COPIES), null, null);
+		bindings.bindValue(WidgetProperties.spinnerSelection().observe(copiesSpinner),
+		        BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_COPIES).observe(realm, options), null, null);
 
 		final Label collateImageButton = new Label(result, SWT.CENTER
 				| SWT.SHADOW_NONE);
@@ -82,9 +77,8 @@ class CopiesBlock extends DialogBlock {
 		Button collateCheck = check(result,
 				DiagramUIPrintingMessages.JPSPrintDialog_Collate);
 
-		bindings.bindValue(SWTObservables.observeSelection(collateCheck),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_COLLATE), null, null);
+		bindings.bindValue(WidgetProperties.buttonSelection().observe(collateCheck),
+		        BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_COLLATE).observe(realm, options), null, null);
 
 		collateCheck.addSelectionListener(new SelectionListener() {
 

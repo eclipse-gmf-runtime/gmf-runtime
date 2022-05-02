@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2010, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -18,13 +18,13 @@ import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintDestination;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -60,11 +60,7 @@ class PrinterBlock extends DialogBlock {
 		this.options = options;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.printing.internal.dialogs.DialogBlock#createContents(org.eclipse.swt.widgets.Composite)
-	 */
+	@Override
 	public Control createContents(Composite parent) {
 		final Realm realm = bindings.getValidationRealm();
 
@@ -101,37 +97,9 @@ class PrinterBlock extends DialogBlock {
 			}
 		});
 
-		IObservableValue destination = BeansObservables.observeValue(realm,
-				options, PrintOptions.PROPERTY_DESTINATION);
-		bindings.bindValue(ViewersObservables.observeSingleSelection(combo),
+		IObservableValue<Object> destination = BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_DESTINATION).observe(realm, options);
+		bindings.bindValue(ViewerProperties.singleSelection().observe(combo),
 				destination, null, null);
-		
-		// Label statusLabel = label(result, "Status:");
-		// layoutAlignLeft(statusLabel);
-		// resultStatusLabel = label(result, "");
-		// layoutFillHorizontal(layoutSpanHorizontal(resultStatusLabel, 2));
-		//				
-		// Label typeLabel = label(result, "Type:");
-		// layoutAlignLeft(typeLabel);
-		// resultTypeLabel = label(result, "");
-		// layoutFillHorizontal(layoutSpanHorizontal(resultTypeLabel, 2));
-		// 
-		// Label whereLabel = label(result, "Where:");
-		// layoutAlignLeft(whereLabel);
-		// resultWhereLabel = label(result, "");
-		// layoutFillHorizontal(layoutSpanHorizontal(resultWhereLabel, 2));
-		// 
-		// Label commentLabel = label(result, "Comment:");
-		// layoutAlignLeft(commentLabel);
-		// resultCommentLabel = label(result, "");
-		// layoutFillHorizontal(resultCommentLabel);
-
-		// The Destination attribute is not IPP compatible. 
-		
-		// Button printToFile = check(result,
-		// DiagramUIPrintingMessages.JPSPrintDialog_PrintToFile);
-		// layoutSpanHorizontal(printToFile, 3);
-		// printToFile.setEnabled(false);
 
 		initializePrinters();
 
@@ -202,28 +170,29 @@ class PrinterBlock extends DialogBlock {
 		public Object[] getElements(Object inputElement) {
 			return destinations.toArray();
 		}
-
+		
+	    @Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// input never changes
 		}
-
+	    
+	    @Override
 		public void dispose() {
 			// nothing to dispose
 		}
 	}
 
 	private class PrinterLabelProvider extends LabelProvider {
+	    @Override
 		public String getText(Object element) {
 			return ((PrintDestination) element).getName();
 		}
 	}
 		
 	private void openPrintOptionsDialog() {
-
 		JPSOptionsDialog dlg = new JPSOptionsDialog(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getShell(), bindings, options);
 		dlg.open();
-
 	}
 
 	@Override

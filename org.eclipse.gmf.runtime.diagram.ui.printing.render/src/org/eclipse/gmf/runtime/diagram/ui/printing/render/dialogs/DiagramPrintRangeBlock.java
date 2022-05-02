@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008, 2014 IBM Corporation and others.
+ * Copyright (c) 2008, 2014, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -15,11 +15,11 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -134,14 +134,12 @@ public class DiagramPrintRangeBlock extends DialogBlock {
 		diagramList.setInput(availableDiagrams);
 
 		bindings.bindValue(
-				SWTObservables.observeSelection(currentDiagramRadio),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_DIAGRAM_CURRENT), null, null);
+		        WidgetProperties.buttonSelection().observe(currentDiagramRadio),
+		        BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_DIAGRAM_CURRENT).observe(realm, options), null, null);
 
-		bindings.bindValue(SWTObservables
-				.observeSelection(selectedDiagramsRadio), BeansObservables
-				.observeValue(realm, options,
-						PrintOptions.PROPERTY_DIAGRAM_SELECTION), null, null);
+		bindings.bindValue(
+		        WidgetProperties.buttonSelection().observe(selectedDiagramsRadio),
+		        BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_DIAGRAM_SELECTION).observe(realm, options), null, null);
 
 		return result;
 	}

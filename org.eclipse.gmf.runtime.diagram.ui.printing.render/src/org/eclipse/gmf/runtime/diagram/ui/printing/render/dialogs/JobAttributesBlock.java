@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -14,11 +14,11 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -42,11 +42,7 @@ public class JobAttributesBlock extends DialogBlock {
 		this.options = options;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.printing.internal.dialogs.DialogBlock#createContents(org.eclipse.swt.widgets.Composite)
-	 */
+	@Override
 	public Control createContents(Composite parent) {
 		final Realm realm = bindings.getValidationRealm();
 
@@ -58,9 +54,9 @@ public class JobAttributesBlock extends DialogBlock {
 				DiagramUIPrintingMessages.JPSOptionsDialog_JobName)));
 		Text jobName = text(result, 80);
 
-		jobNameBinding = bindings.bindValue(SWTObservables.observeText(jobName, SWT.Modify),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_JOB_NAME), null, null);
+		jobNameBinding = bindings.bindValue(
+		        WidgetProperties.text(SWT.Modify).observe(jobName),
+				BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_JOB_NAME).observe(realm, options), null, null);
 
 		return result;
 	}

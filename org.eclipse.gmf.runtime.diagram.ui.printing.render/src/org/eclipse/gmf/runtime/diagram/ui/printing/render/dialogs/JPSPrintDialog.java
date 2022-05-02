@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.DisplayRealm;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.window.IShellProvider;
@@ -74,23 +74,16 @@ public class JPSPrintDialog
         this.allDiagrams = allDiagrams;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
-     */
+    @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         
         newShell.setText(DiagramUIPrintingMessages.JPSPrintDialog_Title);
     }
     
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-     */
+    @Override
     protected Control createDialogArea(Composite parent) {
-		bindings = new DataBindingContext(SWTObservables.getRealm(parent
-				.getDisplay()));
+		bindings = new DataBindingContext(DisplayRealm.getRealm(parent.getDisplay()));
 
 		Composite result = new Composite(parent, SWT.NONE);
 		DialogBlock.layout(result, 2);
@@ -142,12 +135,13 @@ public class JPSPrintDialog
     	  // meant to be overridden by subclasses to add additional blocks.
   	}
     
-        
+    @Override
     protected void createButtonsForButtonBar(Composite parent) {
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
         createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
     }
     
+    @Override
     protected void buttonPressed(int buttonId) {
 		switch (buttonId) {
 		case -1:
@@ -157,6 +151,7 @@ public class JPSPrintDialog
 		}
 	}
 
+    @Override
 	public boolean close() {
 		bindings.dispose();
 		copiesBlock.dispose();
@@ -166,10 +161,6 @@ public class JPSPrintDialog
 		rangeBlock.dispose();
 		actionsBlock.dispose();
 		return super.close();
-	}
-
-	protected void cancelPressed() {
-		super.cancelPressed();
 	}
     
     /**

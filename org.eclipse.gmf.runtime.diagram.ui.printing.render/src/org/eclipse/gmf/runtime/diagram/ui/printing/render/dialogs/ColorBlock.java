@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -25,11 +25,11 @@ import javax.print.attribute.standard.PrinterName;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -41,96 +41,77 @@ import org.eclipse.swt.widgets.Control;
  */
 public class ColorBlock extends DialogBlock {
 
-	private final DataBindingContext bindings;
-	private final PrintOptions options;
+    private final DataBindingContext bindings;
 
-	private Button colorRadio;
-	private Button monoRadio;
-	
-	private Binding colorBinding;
-	private Binding monoBinding;
+    private final PrintOptions options;
 
-	ColorBlock(IDialogUnitConverter dluConverter, DataBindingContext bindings,
-			PrintOptions options) {
-		super(dluConverter);
+    private Button colorRadio;
 
-		this.bindings = bindings;
-		this.options = options;
-	}
+    private Button monoRadio;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.printing.internal.dialogs.DialogBlock#createContents(org.eclipse.swt.widgets.Composite)
-	 */
-	public Control createContents(Composite parent) {
-		final Realm realm = bindings.getValidationRealm();
+    private Binding colorBinding;
 
-		Composite result = group(parent,
-				DiagramUIPrintingMessages.JPSOptionsDialog_Color);
-		layout(result, 2);
+    private Binding monoBinding;
 
-		colorRadio = radio(result,
-				DiagramUIPrintingMessages.JPSOptionsDialog_ChromaticityColor);
-		layoutSpanHorizontal(colorRadio, 4);
+    ColorBlock(IDialogUnitConverter dluConverter, DataBindingContext bindings, PrintOptions options) {
+        super(dluConverter);
+        this.bindings = bindings;
+        this.options = options;
+    }
 
-		monoRadio = radio(
-				result,
-				DiagramUIPrintingMessages.JPSOptionsDialog_ChromaticityMonochrome);
-		layoutSpanHorizontal(monoRadio, 4);
+    @Override
+    public Control createContents(Composite parent) {
+        final Realm realm = bindings.getValidationRealm();
 
-		colorBinding = bindings.bindValue(SWTObservables.observeSelection(colorRadio),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_CHROMATICITY_COLOR), null, null);
+        Composite result = group(parent, DiagramUIPrintingMessages.JPSOptionsDialog_Color);
+        layout(result, 2);
 
-		monoBinding = bindings.bindValue(SWTObservables.observeSelection(monoRadio),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_CHROMATICITY_MONO), null, null);
+        colorRadio = radio(result, DiagramUIPrintingMessages.JPSOptionsDialog_ChromaticityColor);
+        layoutSpanHorizontal(colorRadio, 4);
 
-		initializeControls(options.getDestination().getName());
+        monoRadio = radio(result, DiagramUIPrintingMessages.JPSOptionsDialog_ChromaticityMonochrome);
+        layoutSpanHorizontal(monoRadio, 4);
 
-		return result;
-	}
+        colorBinding = bindings.bindValue(WidgetProperties.buttonSelection().observe(colorRadio),
+                BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_CHROMATICITY_COLOR).observe(realm, options), null, null);
 
-	/**
-	 * Initialize the enabled state of the controls based on the printer
-	 * capabilities.
-	 * 
-	 * @param printerName
-	 */
-	private void initializeControls(String printerName) {
+        monoBinding = bindings.bindValue(WidgetProperties.buttonSelection().observe(monoRadio),
+                BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_CHROMATICITY_MONO).observe(realm, options), null, null);
 
-		AttributeSet attributes = new HashPrintServiceAttributeSet(
-				new PrinterName(printerName, Locale.getDefault()));
+        initializeControls(options.getDestination().getName());
 
-		PrintService[] services = PrintServiceLookup.lookupPrintServices(
-				DocFlavor.SERVICE_FORMATTED.PRINTABLE, attributes);
+        return result;
+    }
 
-		PrintService printService = services[0];
+    /**
+     * Initialize the enabled state of the controls based on the printer capabilities.
+     * 
+     * @param printerName
+     */
+    private void initializeControls(String printerName) {
+        AttributeSet attributes = new HashPrintServiceAttributeSet(new PrinterName(printerName, Locale.getDefault()));
+        PrintService[] services = PrintServiceLookup.lookupPrintServices(DocFlavor.SERVICE_FORMATTED.PRINTABLE, attributes);
+        PrintService printService = services[0];
+        PrintServiceAttributeSet printServiceAttributes = printService.getAttributes();
+        ColorSupported colorSupported = (ColorSupported) printServiceAttributes.get(ColorSupported.class);
 
-		PrintServiceAttributeSet printServiceAttributes = printService
-				.getAttributes();
+        if (colorSupported == ColorSupported.SUPPORTED) {
+            options.setChromaticityColor(true);
+            options.setChromaticityMono(false);
+            colorRadio.setEnabled(true);
+        } else {
+            options.setChromaticityColor(false);
+            options.setChromaticityMono(true);
+            colorRadio.setEnabled(false);
+        }
+    }
 
-		ColorSupported colorSupported = (ColorSupported) printServiceAttributes
-				.get(ColorSupported.class);
-		
-		if (colorSupported == ColorSupported.SUPPORTED) {
-			options.setChromaticityColor(true);
-			options.setChromaticityMono(false);
-			colorRadio.setEnabled(true);
-		} else {
-			options.setChromaticityColor(false);
-			options.setChromaticityMono(true);
-			colorRadio.setEnabled(false);
-		}
-	}
-	
-	@Override
-	public void dispose() {
-		bindings.removeBinding(colorBinding);
-		colorBinding.dispose();
-		bindings.removeBinding(monoBinding);
-		monoBinding.dispose();
-	}
+    @Override
+    public void dispose() {
+        bindings.removeBinding(colorBinding);
+        colorBinding.dispose();
+        bindings.removeBinding(monoBinding);
+        monoBinding.dispose();
+    }
 
 }

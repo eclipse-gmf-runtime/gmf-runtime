@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -14,11 +14,11 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -45,41 +45,33 @@ public class QualityBlock extends DialogBlock {
 		this.options = options;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.printing.internal.dialogs.DialogBlock#createContents(org.eclipse.swt.widgets.Composite)
-	 */
+	@Override
 	public Control createContents(Composite parent) {
 		final Realm realm = bindings.getValidationRealm();
 
-		Composite result = group(parent,
-				DiagramUIPrintingMessages.JPSOptionsDialog_Quality);
+		Composite result = group(parent, DiagramUIPrintingMessages.JPSOptionsDialog_Quality);
 		layout(result, 2);
 
-		Button highRadio = radio(result,
-				DiagramUIPrintingMessages.JPSOptionsDialog_QualityHigh);
+		Button highRadio = radio(result, DiagramUIPrintingMessages.JPSOptionsDialog_QualityHigh);
 		layoutSpanHorizontal(highRadio, 4);
 
-		Button mediumRadio = radio(result,
-				DiagramUIPrintingMessages.JPSOptionsDialog_QualityMedium);
+		Button mediumRadio = radio(result, DiagramUIPrintingMessages.JPSOptionsDialog_QualityMedium);
 		layoutSpanHorizontal(mediumRadio, 4);
 
-		Button lowRadio = radio(result,
-				DiagramUIPrintingMessages.JPSOptionsDialog_QualityLow);
+		Button lowRadio = radio(result, DiagramUIPrintingMessages.JPSOptionsDialog_QualityLow);
 		layoutSpanHorizontal(lowRadio, 4);
 
-		qualityHighBinding = bindings.bindValue(SWTObservables.observeSelection(highRadio),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_QUALITY_HIGH), null, null);
+		qualityHighBinding = bindings.bindValue(
+		        WidgetProperties.buttonSelection().observe(highRadio),
+		        BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_QUALITY_HIGH).observe(realm, options), null, null);
 
-		qualityMedBinding = bindings.bindValue(SWTObservables.observeSelection(mediumRadio),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_QUALITY_MED), null, null);
+		qualityMedBinding = bindings.bindValue(
+		        WidgetProperties.buttonSelection().observe(mediumRadio),
+                BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_QUALITY_MED).observe(realm, options), null, null);
 
-		qualityLowBinding = bindings.bindValue(SWTObservables.observeSelection(lowRadio),
-				BeansObservables.observeValue(realm, options,
-						PrintOptions.PROPERTY_QUALITY_LOW), null, null);
+		qualityLowBinding = bindings.bindValue(
+		        WidgetProperties.buttonSelection().observe(lowRadio),
+                BeanProperties.value(PrintOptions.class, PrintOptions.PROPERTY_QUALITY_LOW).observe(realm, options), null, null);
 
 		return result;
 	}
