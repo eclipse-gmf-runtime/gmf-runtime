@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2007, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -229,7 +229,7 @@ public class FileDiagramDocumentProvider
 		// unload the diagram from the MSL.
 		// Since MSL won't load another resource from same file if one is already loaded.
 		FileInfo info= (FileInfo) getElementInfo(fileEditorInput);
-		if (info == null && !(info.fDocument instanceof IDiagramDocument))
+		if (info == null || !(info.fDocument instanceof IDiagramDocument))
 			return;
 		assert fileEditorInput instanceof FileEditorInputProxy;
 		IDiagramDocument diagramDoc = (IDiagramDocument)info.fDocument;
