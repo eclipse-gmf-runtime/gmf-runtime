@@ -216,9 +216,9 @@ public class NestableListItemEditPart
 	}
 
 	public IFigure getContentPane() {
-		if (getCompartmentFigure() != null) {
-
-			return getCompartmentFigure().getContentPane();
+		ResizableCompartmentFigure compartmentFigure = getCompartmentFigure();
+        if (compartmentFigure != null) {
+			return compartmentFigure.getContentPane();
 		} else {
 			return super.getContentPane();
 		}
@@ -283,17 +283,18 @@ public class NestableListItemEditPart
 	 *            the animate flag
 	 */
 	protected void setCollapsed(boolean collapsed, boolean animate) {
-		if (getCompartmentFigure() != null) {
+		ResizableCompartmentFigure compartmentFigure = getCompartmentFigure();
+        if (compartmentFigure != null) {
 			if (collapsed) {
 				if (animate)
-					getCompartmentFigure().collapse();
+					compartmentFigure.collapse();
 				else
-					getCompartmentFigure().setCollapsed();
+					compartmentFigure.setCollapsed();
 			} else {
 				if (animate)
-					getCompartmentFigure().expand();
+					compartmentFigure.expand();
 				else
-					getCompartmentFigure().setExpanded();
+					compartmentFigure.setExpanded();
 			}
 		}
 	}
@@ -314,8 +315,9 @@ public class NestableListItemEditPart
 	 * @param showCompartmentTitle
 	 */
 	protected void setShowCompartmentTitle(boolean showCompartmentTitle) {
-		if (getCompartmentFigure() != null)
-			getCompartmentFigure().setTitleVisibility(showCompartmentTitle);
+		ResizableCompartmentFigure compartmentFigure = getCompartmentFigure();
+        if (compartmentFigure != null)
+			compartmentFigure.setTitleVisibility(showCompartmentTitle);
 	}
 
 }
