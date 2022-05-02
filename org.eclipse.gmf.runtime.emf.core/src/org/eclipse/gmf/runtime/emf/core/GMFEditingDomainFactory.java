@@ -160,7 +160,6 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 		aMap.put(Transaction.OPTION_VALIDATE_EDIT,
 				new WorkspaceValidateEditSupport() {
 
-					@SuppressWarnings("unchecked")
 					protected IStatus doValidateEdit(Transaction transaction,
 							Collection resources, Object context) {
 						return GMFEditingDomainFactory.transactionalSyncExecHelper

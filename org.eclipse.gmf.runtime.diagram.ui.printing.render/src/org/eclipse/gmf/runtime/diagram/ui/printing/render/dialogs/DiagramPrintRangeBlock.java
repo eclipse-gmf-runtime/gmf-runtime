@@ -114,7 +114,6 @@ public class DiagramPrintRangeBlock extends DialogBlock {
 		diagramList
 				.addSelectionChangedListener(new ISelectionChangedListener() {
 
-					@SuppressWarnings("unchecked")
 					public void selectionChanged(SelectionChangedEvent event) {
 						if (event != null) {
 

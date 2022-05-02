@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -50,14 +50,6 @@ public class StatusLineService extends Service implements
 		return service;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.services.statusline.
-	 * IStatusLineContributionItemProvider
-	 * #getStatusLineContributionItems(org.eclipse.ui.IWorkbenchPage)
-	 */
-	@SuppressWarnings("unchecked")
 	public List<IContributionItem> getStatusLineContributionItems(
 			IWorkbenchPage workbenchPage) {
 		List<List<IContributionItem>> lists = execute(
