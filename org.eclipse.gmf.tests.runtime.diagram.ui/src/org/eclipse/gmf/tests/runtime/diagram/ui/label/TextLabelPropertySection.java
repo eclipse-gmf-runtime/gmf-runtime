@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -23,15 +23,12 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.LabelEx;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
-import org.eclipse.gmf.runtime.draw2d.ui.text.TextFlowEx;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -693,10 +690,5 @@ public class TextLabelPropertySection
             }
         }
         return textCompartmentEPs;
-    }
-
-    private TextFlowEx getTextFlow(WrappingLabel label) {
-        return ((TextFlowEx) ((IFigure) label.getChildren().get(0))
-            .getChildren().get(0));
     }
 }

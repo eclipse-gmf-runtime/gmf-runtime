@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2013, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -117,12 +117,7 @@ public class DiagramGraphicalViewerTests
 			.findEditPartsForElement(
 				((XMLResource) inputTerminal.eResource()).getID(inputTerminal),
 				TerminalEditPart.class).get(0);
-		ConnectionEditPart wireEP = getLogicTestFixture()
-			.createConnectorUsingTool(outputTerminalEP, inputTerminalEP,
-				typeWire);
-
-		EObject wire = ((View) wireEP.getModel()).getElement();
-		String wireID = ((XMLResource) wire.eResource()).getID(wire);
+		getLogicTestFixture().createConnectorUsingTool(outputTerminalEP, inputTerminalEP, typeWire);
 
 		assertEquals("Number of LEDEditPart for led1ID incorrect", 1, viewer//$NON-NLS-1$
 			.findEditPartsForElement(led1ID, LEDEditPart.class).size());
@@ -150,15 +145,6 @@ public class DiagramGraphicalViewerTests
 			}
 		});
 		clearDiagram();
-		//assertEquals("Number of IGraphicalEditParts for led1ID incorrect", 0,//$NON-NLS-1$
-		//	viewer.findEditPartsForElement(led1ID, IGraphicalEditPart.class)
-		//		.size());
-		//assertEquals("Number of IGraphicalEditParts for led2ID incorrect", 0,//$NON-NLS-1$
-		//	viewer.findEditPartsForElement(led2ID, IGraphicalEditPart.class)
-		//		.size());
-		//assertEquals("Number of IGraphicalEditParts for wireID incorrect", 0,//$NON-NLS-1$
-		//	viewer.findEditPartsForElement(wireID, IGraphicalEditPart.class)
-		//		.size());
 	}
 
 }

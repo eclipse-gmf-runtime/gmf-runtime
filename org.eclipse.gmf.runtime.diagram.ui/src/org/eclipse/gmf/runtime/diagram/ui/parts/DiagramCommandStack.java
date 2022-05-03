@@ -70,23 +70,11 @@ public class DiagramCommandStack
 
     private IUndoContext undoContext;
 
-    private final class HistoryEventObject
-        extends EventObject {
-
-        private final OperationHistoryEvent event;
+    private final class HistoryEventObject extends EventObject {
+        private static final long serialVersionUID = 1L;
 
         private HistoryEventObject(OperationHistoryEvent event) {
             super(event.getHistory());
-            this.event = event;
-        }
-
-        /**
-         * Gets my operation history event.
-         * 
-         * @return my operation history event.
-         */
-        public OperationHistoryEvent getOperationHistoryEvent() {
-            return event;
         }
     }
 

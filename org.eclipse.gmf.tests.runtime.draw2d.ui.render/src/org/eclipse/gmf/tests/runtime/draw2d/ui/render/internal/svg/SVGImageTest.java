@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2006, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -323,6 +323,7 @@ public class SVGImageTest
 		RenderedImage retImage = renderHelper.drawRenderedImage(swtG, ri,
 			target, listener);
 		assertTrue(retImage.isRendered());
+		assertTrue(listener.isDone());
 		assertTrue(retImage.getSWTImage() != null);
 
 		// second test with delay render turned on
