@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2008, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -225,10 +225,6 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 
 		private final ThreadLocal<TransactionalEditingDomain> domain = new ThreadLocal<>();
 
-		private void setDomain(TransactionalEditingDomain domain) {
-			this.domain.set(domain);
-		}
-
 		/**
 		 * Sets the thread specific transactional domain before the approval
 		 * process since subsequent calls to validateEdit() requires it and
@@ -245,13 +241,12 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 		public IStatus approveFileModification(IFile[] files,
 				TransactionalEditingDomain transactionalDomain) {
 
-			setDomain(transactionalDomain);
+		    this.domain.set(transactionalDomain);
 			IStatus status = Status.OK_STATUS;
 			try {
-				status = FileModificationValidator
-						.approveFileModification(files);
+				status = FileModificationValidator.approveFileModification(files);
 			} finally {
-				setDomain(null);
+			    this.domain.remove();
 			}
 			return status;
 		}
