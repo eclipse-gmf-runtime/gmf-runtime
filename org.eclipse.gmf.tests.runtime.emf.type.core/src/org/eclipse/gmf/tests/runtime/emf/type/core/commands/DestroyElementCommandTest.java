@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2006, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -395,10 +395,10 @@ public class DestroyElementCommandTest
 		if (cmd instanceof DestroyElementCommand) {
 			try {
 				Method getElementToDestroy = DestroyElementCommand.class
-						.getDeclaredMethod("getElementToDestroy", null); //$NON-NLS-1$
+						.getDeclaredMethod("getElementToDestroy", (Class<?>[]) null); //$NON-NLS-1$
 				getElementToDestroy.setAccessible(true);
 				EObject element = (EObject) getElementToDestroy.invoke(
-						cmd, null);
+						cmd, (Object[]) null);
 
 				if (toDestroy.contains(element)) {
 					fail("Duplicate destroy command for: " + element); //$NON-NLS-1$
