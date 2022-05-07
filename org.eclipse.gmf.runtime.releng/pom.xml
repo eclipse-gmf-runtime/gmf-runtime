@@ -15,7 +15,7 @@
 		<cbi-plugins.version>1.3.2</cbi-plugins.version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<platform>photon</platform>
+		<platform>2020-09</platform>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
