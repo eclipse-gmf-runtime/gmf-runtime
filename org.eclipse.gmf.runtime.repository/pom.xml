@@ -15,7 +15,7 @@
 
 	<profiles>
 		<profile>
-			<id>hudson.eclipse.org</id>
+			<id>sign</id>
 			<build>
 				<plugins>
 					<plugin>
