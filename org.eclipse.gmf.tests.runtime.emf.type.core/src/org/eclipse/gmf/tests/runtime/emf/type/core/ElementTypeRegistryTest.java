@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2015 IBM Corporation, Christian W. Damus, and others.
+ * Copyright (c) 2005, 2015, 2022 IBM Corporation, Christian W. Damus, and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -377,8 +377,8 @@ public class ElementTypeRegistryTest
 		assertEquals(4, specializations.length);
 		for (int i = 0; i < specializations.length; i++) {
 			if (specializations[i].getId().equals("org.eclipse.gmf.tests.runtime.emf.type.core.manager") //$NON-NLS-1$
-				&& specializations[i].getClass().equals("org.eclipse.gmf.tests.runtime.emf.type.core.topSecret") //$NON-NLS-1$
-				&& specializations[i].getClass().equals("org.eclipse.gmf.tests.runtime.emf.type.core.executive")) { //$NON-NLS-1$
+				&& specializations[i].getId().equals("org.eclipse.gmf.tests.runtime.emf.type.core.topSecret") //$NON-NLS-1$
+				&& specializations[i].getId().equals("org.eclipse.gmf.tests.runtime.emf.type.core.executive")) { //$NON-NLS-1$
 				fail("expected manager, top-secret and executive specializations"); //$NON-NLS-1$
 			}
 		}
@@ -1449,7 +1449,7 @@ public class ElementTypeRegistryTest
 
 		// Check that the advice can no longer be retrieved
 		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(dynamicSpecializationType);
-		assertFalse(Arrays.asList(advice).contains(advice));
+		assertFalse(Arrays.asList(advice).contains(specialAdvice));
 
 		// And the removed type's supertype has forgotten the subtype
 		assertFalse(Arrays.asList(getFixture().getSpecializationsOf(EmployeeType.EMPLOYEE.getId())).contains(
