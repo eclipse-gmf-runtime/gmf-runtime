@@ -27,7 +27,7 @@ SPDX-License-Identifier: EPL-2.0
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/"/>
+      <update label="%updateSiteName" url="https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/"/>
    </url>
 
    <plugin

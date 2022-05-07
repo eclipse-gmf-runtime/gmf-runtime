@@ -27,7 +27,7 @@ SPDX-License-Identifier: EPL-2.0
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/"/>
+      <update label="%updateSiteName" url="https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/"/>
    </url>
 
    <plugin id="org.apache.batik.anim.source"       download-size="0" install-size="0" version="0.0.0" unpack="false"/>
