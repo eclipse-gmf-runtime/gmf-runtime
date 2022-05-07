@@ -10,6 +10,6 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.eclipse.gmf.runtime.releng</module>
+    <module>releng/org.eclipse.gmf.runtime.releng</module>
   </modules>
 </project>
