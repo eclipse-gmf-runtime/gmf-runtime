@@ -59,8 +59,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.EditorPart;
-
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

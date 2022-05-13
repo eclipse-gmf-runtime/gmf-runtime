@@ -19,8 +19,8 @@ import java.util.Set;
 
 import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
 import org.eclipse.gmf.runtime.common.ui.dialogs.SelectedType;
+import org.junit.Assert;
 
-import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
