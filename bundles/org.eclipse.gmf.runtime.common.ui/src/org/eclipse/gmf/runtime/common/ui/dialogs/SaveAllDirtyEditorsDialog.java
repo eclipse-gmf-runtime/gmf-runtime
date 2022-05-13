@@ -30,6 +30,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 
 /**
@@ -99,7 +100,7 @@ public class SaveAllDirtyEditorsDialog
 	public static IEditorPart[] getDirtyEditors() {
 		Set inputs = new HashSet();
 		List result = new ArrayList(0);
-		IWorkbench workbench = CommonUIPlugin.getDefault().getWorkbench();
+		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		for (int i = 0; i < windows.length; i++) {
 			IWorkbenchPage[] pages = windows[i].getPages();

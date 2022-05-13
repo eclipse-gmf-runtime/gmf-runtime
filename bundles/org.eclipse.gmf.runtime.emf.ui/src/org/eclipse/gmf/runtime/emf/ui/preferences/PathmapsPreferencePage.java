@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
@@ -857,7 +858,7 @@ public class PathmapsPreferencePage
             if (PathmapManager.isRegisteredPathVariable(name)) {
                 return getLockImage();
             } else if (!isDirectory(entry.getLocation())) {
-                return MslUIPlugin.getDefault().getWorkbench()
+                return PlatformUI.getWorkbench()
                     .getSharedImages()
                     .getImage(ISharedImages.IMG_OBJS_WARN_TSK);
             }
