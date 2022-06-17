@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="gmf-runtime-2021-12" sequenceNumber="1655491698">
+<target name="gmf-runtime-2022-06" sequenceNumber="1655491792">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="0.0.0"/>
@@ -12,18 +12,18 @@
       <unit id="org.eclipse.test.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.sdk.tests.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.platform.ide" version="0.0.0"/>
-      <repository id="Eclipse-4.22" location="https://download.eclipse.org/eclipse/updates/4.22/R-4.22-202111241800/"/>
+      <repository id="Eclipse-4.24" location="https://download.eclipse.org/eclipse/updates/4.24/R-4.24-202206070700/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.examples.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.ecore.edit.feature.group" version="0.0.0"/>
-      <repository id="EMF-2.28" location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.28"/>
+      <repository id="EMF-2.30" location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.30"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.ocl.feature.group" version="0.0.0"/>
-      <repository id="OCL-6.17" location="https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.17.0/"/>
+      <repository id="OCL-6.17.1" location="https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.17.1/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.uml2.sdk.feature.group" version="5.5.2.v20210228-1829"/>

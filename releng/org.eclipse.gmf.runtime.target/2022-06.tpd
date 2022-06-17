@@ -1,24 +1,24 @@
-target "gmf-runtime-2021-12" with source, requirements
+target "gmf-runtime-2022-06" with source, requirements
 
 location Eclipse-Shared-License "https://download.eclipse.org/cbi/updates/license" {
 	org.eclipse.license.feature.group lazy
 }
 
-location Eclipse-4.22 "https://download.eclipse.org/eclipse/updates/4.22/R-4.22-202111241800/" {
+location Eclipse-4.24 "https://download.eclipse.org/eclipse/updates/4.24/R-4.24-202206070700/" {
 	org.eclipse.sdk.ide lazy
 	org.eclipse.test.feature.group lazy
 	org.eclipse.sdk.tests.feature.group lazy
 	org.eclipse.platform.ide lazy
 }
 
-location EMF-2.28 "https://download.eclipse.org/modeling/emf/emf/builds/release/2.28" {
+location EMF-2.30 "https://download.eclipse.org/modeling/emf/emf/builds/release/2.30" {
 	org.eclipse.emf.edit.feature.group lazy
 	org.eclipse.emf.examples.feature.group lazy
 	org.eclipse.emf.sdk.feature.group lazy
 	org.eclipse.emf.ecore.edit.feature.group lazy
 }
 
-location OCL-6.17 "https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.17.0/" {
+location OCL-6.17.1 "https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.17.1/" {
     org.eclipse.ocl.feature.group lazy
 }
 
