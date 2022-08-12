@@ -9,7 +9,7 @@ The GMF Runtime provides many features that one would have to code by hand if us
 * A set of reusable components for graphical editors, such as printing, image export, actions and toolbars and much more.
 * A standardized model to describe diagram elements, which separates between the semantic (domain) and notation (diagram) elements.
 * A command infrastructure that bridges the different command frameworks used by EMF and GEF.
-* An extensible framework that allows graphical editors to be open and extendible.
+* An extensible framework that allows graphical editors to be open and extensible.
 
 ### Source
 
