@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerPro
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
-import com.ibm.icu.text.DateFormat;
+import java.text.DateFormat;
 
 /**
  * Helper for header and footers. 

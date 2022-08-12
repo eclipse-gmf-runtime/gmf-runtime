@@ -47,7 +47,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import com.ibm.icu.text.Collator;
+import java.text.Collator;
 
 /**
  * Action responsible for showing the properties page dialog when the it is

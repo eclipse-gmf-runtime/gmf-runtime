@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.emf.core.resources.IResourceHelper;
 
-import com.ibm.icu.util.StringTokenizer;
+import java.util.StringTokenizer;
 
 
 /**

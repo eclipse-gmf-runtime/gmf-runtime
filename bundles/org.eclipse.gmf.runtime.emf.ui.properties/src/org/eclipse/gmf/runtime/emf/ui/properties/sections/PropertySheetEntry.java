@@ -35,7 +35,7 @@ import org.eclipse.ui.views.properties.IPropertySheetEntryListener;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
-import com.ibm.icu.text.Collator;
+import java.text.Collator;
 
 /**
  * PropertySheetEntry that will be used in the PropertySheet view

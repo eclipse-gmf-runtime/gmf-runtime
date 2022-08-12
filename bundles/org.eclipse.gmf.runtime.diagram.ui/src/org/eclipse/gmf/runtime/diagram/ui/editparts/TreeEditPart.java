@@ -39,7 +39,7 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IActionFilter;
 
-import com.ibm.icu.util.StringTokenizer;
+import java.util.StringTokenizer;
 
 /**
  * @author melaasar, mmostafa

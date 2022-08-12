@@ -25,8 +25,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.5.0,4.0.0)";visibility:=reexpo
  org.eclipse.gmf.runtime.diagram.ui;bundle-version="[1.2.0,2.0.0)";visibility:=reexport,
  org.eclipse.gef;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.gmf.runtime.common.ui.services.properties;bundle-version="[1.2.0,2.0.0)";visibility:=reexport
-Import-Package: com.ibm.icu.text,
- com.ibm.icu.util
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.gmf.runtime.diagram.ui.properties

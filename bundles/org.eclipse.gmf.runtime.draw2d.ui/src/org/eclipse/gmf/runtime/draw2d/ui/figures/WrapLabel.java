@@ -23,8 +23,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.Image;
 
-import com.ibm.icu.text.BreakIterator;
-import com.ibm.icu.util.StringTokenizer;
+import java.text.BreakIterator;
+import java.util.StringTokenizer;
 
 /**
  * An extended label that has the following extra features:

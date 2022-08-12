@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
 
-import com.ibm.icu.util.StringTokenizer;
+import java.util.StringTokenizer;
 
 /**
  * In JDK 1.3 we don't have the luxury of replaceAll as in JDK 1.4.

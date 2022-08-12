@@ -18,7 +18,7 @@ import java.util.Locale;
 import org.eclipse.gmf.runtime.notation.SortingDirection;
 import org.eclipse.jface.viewers.ViewerSorter;
 
-import com.ibm.icu.text.Collator;
+import java.text.Collator;
 
 /**
  * Provides a <code>ViewerSorter</code> which tracks the type 

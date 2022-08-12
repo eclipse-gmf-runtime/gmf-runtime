@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.emf.type.core.internal.descriptors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -23,8 +24,6 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementTypeFactory;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
-
-import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Descriptor for an element type factory. Used to delay loading of the plugin

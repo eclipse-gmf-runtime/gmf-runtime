@@ -15,10 +15,7 @@ Export-Package: org.eclipse.gmf.runtime.common.core.command,
  org.eclipse.gmf.runtime.common.core.util
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.5.0,4.0.0)";visibility:=reexport,
  org.eclipse.core.resources;bundle-version="[3.5.0,4.0.0)";visibility:=reexport,
- org.eclipse.core.commands;bundle-version="[3.4.0,4.0.0)";visibility:=reexport,
- com.ibm.icu
-Import-Package: com.ibm.icu.text,
- com.ibm.icu.util
+ org.eclipse.core.commands;bundle-version="[3.4.0,4.0.0)";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.gmf.runtime.common.core

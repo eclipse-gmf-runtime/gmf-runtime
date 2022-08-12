@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.providers.ide.internal.providers;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.gef.EditPart;
@@ -21,8 +22,6 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers.AbstractDiagramMarkerNavigationProvider;
-
-import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Provider for marker navigation in diagrams
