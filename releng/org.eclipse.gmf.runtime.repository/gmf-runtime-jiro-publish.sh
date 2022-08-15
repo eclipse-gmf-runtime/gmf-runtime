@@ -170,7 +170,7 @@ EOF
 entries=""
 if ssh "$SSH_ACCOUNT" test -d "$remoteUpdateSite" ; then
     message "Add existing update sites to the composite update site repository file."
-    if [ "$buildType" != "$R" ]; then
+    if [ "$buildType" != "R" ]; then
         for e in $(ssh "$SSH_ACCOUNT" find ${remoteUpdateSite}/ -mindepth 1 -maxdepth 1 -type d | sort | tail -n 5); do
             entries="$entries $(basename $e)"
         done
