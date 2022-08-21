@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -227,8 +227,6 @@ public class AbstractModelActionHandlerTest extends TestCase {
 
 		private boolean undone = false;
 
-		private boolean redone = false;
-
 		public TestCommand() {
 			super("AbstractModelActionHandlerTest", //$NON-NLS-1$
 					Collections.singletonList(file));
@@ -251,7 +249,6 @@ public class AbstractModelActionHandlerTest extends TestCase {
 		protected CommandResult doUndoWithResult(
 				IProgressMonitor progressMonitor, IAdaptable info)
 				throws ExecutionException {
-			this.redone = true;
 			return CommandResult.newOKCommandResult();
 		}
 
@@ -261,10 +258,6 @@ public class AbstractModelActionHandlerTest extends TestCase {
 
 		public boolean isUndone() {
 			return undone;
-		}
-
-		public boolean isRedone() {
-			return redone;
 		}
 	}
 }
