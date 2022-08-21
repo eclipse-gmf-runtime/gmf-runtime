@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2009, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -40,7 +40,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -140,8 +139,7 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager, IPat
 
 	private static IEclipsePreferences getPreferenceStore() {
 		if (preferenceStore == null) {
-			IScopeContext ctx = new InstanceScope();
-			preferenceStore = ctx.getNode(NODE_QUALIFIER);
+			preferenceStore = InstanceScope.INSTANCE.getNode(NODE_QUALIFIER);
 		}
 		
 		return preferenceStore;
