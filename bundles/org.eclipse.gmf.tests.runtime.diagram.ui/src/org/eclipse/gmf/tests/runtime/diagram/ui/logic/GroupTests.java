@@ -415,7 +415,6 @@ public class GroupTests
             .getFirstElement() instanceof GroupEditPart);
     }
 
-    @SuppressWarnings("unchecked")
 	public void testGroupActionEnablement()
         throws Exception {
         setupShapes();
