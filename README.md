@@ -47,6 +47,7 @@ Update Sites (p2 repositories) are available at:
 
 | Version | Repository URL                                                                        |
 |:--------|:--------------------------------------------------------------------------------------|
+| 1.15.2  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202208271122/ |
 | 1.15.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202208152011/ |
 | 1.15.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202206180919/ |
 | 1.14.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202204130739/ |
