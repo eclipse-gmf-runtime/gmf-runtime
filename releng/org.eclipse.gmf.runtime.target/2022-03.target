@@ -69,16 +69,12 @@
       <repository id="Orbit" location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.emf.query.sdk.feature.group" version="0.0.0"/>
-      <repository id="EMF-Query-1.12" location="https://download.eclipse.org/modeling/emf/query/updates/releases/R201805030653/"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.validation.sdk.feature.group" version="0.0.0"/>
-      <repository id="EMF-Validation-1.12" location="https://download.eclipse.org/modeling/emf/validation/updates/releases/R202008210805/"/>
+      <repository id="EMF-Validation-1.13.2" location="https://download.eclipse.org/modeling/emf/validation/updates/releases/R202208271102/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="0.0.0"/>
-      <repository id="EMF-Transaction-1.12" location="https://download.eclipse.org/modeling/emf/transaction/updates/releases/R201805140824/"/>
+      <repository id="EMF-Transaction-1.13" location="https://download.eclipse.org/modeling/emf/transaction/updates/releases/R202208110935/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="0.0.0"/>
