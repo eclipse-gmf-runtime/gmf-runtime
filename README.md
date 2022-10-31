@@ -36,7 +36,7 @@ For example:
 
 ### CI
 
-The official builds are executed on the Eclipse-provided Jenkins instance at <https://ci.eclipse.org/gmf-runtime/job/gmf-runtime-master/>
+The official builds are executed on the Eclipse-provided Jenkins instance at <https://ci.eclipse.org/gmf-runtime/job/gmf-runtime//>
 
 ### Update Sites
 
