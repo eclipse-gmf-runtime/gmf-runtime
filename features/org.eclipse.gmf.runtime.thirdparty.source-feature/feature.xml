@@ -47,11 +47,4 @@ SPDX-License-Identifier: EPL-2.0
    <plugin id="org.apache.batik.transcoder.source" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.util.source"       download-size="0" install-size="0" version="0.0.0" unpack="false"/>
    <plugin id="org.apache.batik.xml.source"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   
-   <plugin id="org.apache.xerces.source"           download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   
-   <plugin id="org.w3c.dom.svg.source"             download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.w3c.dom.events.source"          download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.w3c.dom.smil.source"            download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.w3c.css.sac.source"             download-size="0" install-size="0" version="1.3.1.v200903091627" unpack="false"/>
 </feature>
