@@ -34,21 +34,23 @@ SPDX-License-Identifier: EPL-2.0
       <import plugin="org.eclipse.osgi"/>
    </requires>
 
-   <plugin id="org.apache.batik.anim"       download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.awt.util"   download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.bridge"     download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.codec"      download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.constants"  download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.css"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.dom"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.dom.svg"    download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.ext"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.gvt"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.i18n"       download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.parser"     download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.script"     download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.svggen"     download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.transcoder" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.util"       download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-   <plugin id="org.apache.batik.xml"        download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.anim"               download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.awt.util"           download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.bridge"             download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.codec"              download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.constants"          download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.css"                download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.dom"                download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.dom.svg"            download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.ext"                download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.gvt"                download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.i18n"               download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.parser"             download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.script"             download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.shared.resources"   download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.svggen"             download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.transcoder"         download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.util"               download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.batik.xml"                download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <plugin id="org.apache.xmlgraphics"              download-size="0" install-size="0" version="0.0.0" unpack="false"/>
 </feature>
