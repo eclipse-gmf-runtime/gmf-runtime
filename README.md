@@ -45,27 +45,28 @@ Update Sites (p2 repositories) are available at:
 * <https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/milestones>: milestone builds
 * <https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases>: official releases
 
-| Version | Repository URL                                                                        |
-|:--------|:--------------------------------------------------------------------------------------|
-| 1.15.2  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202208271122/ |
-| 1.15.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202208152011/ |
-| 1.15.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202206180919/ |
-| 1.14.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202204130739/ |
-| 1.14.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202202190902/ |
-| 1.14.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202107090702/ |
-| 1.13.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202106221344/ |
-| 1.13.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202004160913  |
-| 1.12.2  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201912020813  |
-| 1.12.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201806010809  |
-| 1.11.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201706061437  |
-| 1.10.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201703310734  |
-| 1.10.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201606071959  |
-| 1.9.0   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201506060219  |
-| 1.8.1   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201408201453  |
-| 1.8.0   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201406111639  |
-| 1.8.0   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201306111432  |
-| 1.7.0   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201306111432  |
-| 1.6.2   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201306111432  |
+| Version | Repository URL                                                                       |
+|:--------|:-------------------------------------------------------------------------------------|
+| 1.15.3  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202211041032 |
+| 1.15.2  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202208271122 |
+| 1.15.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202208152011 |
+| 1.15.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202206180919 |
+| 1.14.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202204130739 |
+| 1.14.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202202190902 |
+| 1.14.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202107090702 |
+| 1.13.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202106221344 |
+| 1.13.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202004160913 |
+| 1.12.2  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201912020813 |
+| 1.12.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201806010809 |
+| 1.11.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201706061437 |
+| 1.10.1  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201703310734 |
+| 1.10.0  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201606071959 |
+| 1.9.0   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201506060219 |
+| 1.8.1   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201408201453 |
+| 1.8.0   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201406111639 |
+| 1.8.0   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201306111432 |
+| 1.7.0   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201306111432 |
+| 1.6.2   | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R201306111432 |
 
 
 ### License
