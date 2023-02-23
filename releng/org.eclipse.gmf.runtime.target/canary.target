@@ -32,16 +32,16 @@
       <unit id="org.apache.batik.anim.source" version="1.16.0.v20221027-0840"/>
       <unit id="org.apache.batik.awt.util" version="1.16.0.v20221027-0840"/>
       <unit id="org.apache.batik.awt.util.source" version="1.16.0.v20221027-0840"/>
-      <unit id="org.apache.batik.bridge" version="1.16.0.v20221027-0840"/>
-      <unit id="org.apache.batik.bridge.source" version="1.16.0.v20221027-0840"/>
+      <unit id="org.apache.batik.bridge" version="1.16.0.v20230210-1249"/>
+      <unit id="org.apache.batik.bridge.source" version="1.16.0.v20230210-1249"/>
       <unit id="org.apache.batik.codec" version="1.16.0.v20221027-0840"/>
       <unit id="org.apache.batik.codec.source" version="1.16.0.v20221027-0840"/>
       <unit id="org.apache.batik.constants" version="1.16.0.v20221027-0840"/>
       <unit id="org.apache.batik.constants.source" version="1.16.0.v20221027-0840"/>
       <unit id="org.apache.batik.css" version="1.16.0.v20221027-0840"/>
       <unit id="org.apache.batik.css.source" version="1.16.0.v20221027-0840"/>
-      <unit id="org.apache.batik.dom" version="1.16.0.v20221027-0840"/>
-      <unit id="org.apache.batik.dom.source" version="1.16.0.v20221027-0840"/>
+      <unit id="org.apache.batik.dom" version="1.16.0.v20230210-1249"/>
+      <unit id="org.apache.batik.dom.source" version="1.16.0.v20230210-1249"/>
       <unit id="org.apache.batik.dom.svg" version="1.16.0.v20221027-0840"/>
       <unit id="org.apache.batik.dom.svg.source" version="1.16.0.v20221027-0840"/>
       <unit id="org.apache.batik.ext" version="1.16.0.v20221027-0840"/>
