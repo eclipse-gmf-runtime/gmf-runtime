@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2010 IBM Corporation and others.
+ * Copyright (c) 2002, 2010, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -187,22 +187,6 @@ public class ConstrainedToolbarLayoutEditPolicy
 			}
 		}
 		return new ICommandProxy(cmc);
-	}
-
-	/**
-	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#createAddCommand(org.eclipse.gef.EditPart, java.lang.Object)
-	 */
-	protected Command createAddCommand(EditPart child, Object constraint) {
-		return null;
-	}
-
-	/**
-	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#createChangeConstraintCommand(org.eclipse.gef.EditPart, java.lang.Object)
-	 */
-	protected Command createChangeConstraintCommand(
-		EditPart child,
-		Object constraint) {
-		return null;
 	}
 
 	/**
