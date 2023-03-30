@@ -881,11 +881,18 @@ public class RulerGridPropertySection
      * listener.
 	 */
 	private void initWorkspacePropertyListener() {
-		IDiagramWorkbenchPart editor = (IDiagramWorkbenchPart) getPart();
-        if (editor == null) return;
-        DiagramGraphicalViewer viewer = (DiagramGraphicalViewer) editor.getDiagramGraphicalViewer();
-		workspaceViewerProperties = viewer.getWorkspaceViewerPreferenceStore();
-		workspaceViewerProperties.addPropertyChangeListener(propertyListener);
+		IWorkbenchPart activePart = getPart();
+		IDiagramWorkbenchPart editor = null;
+		if (activePart instanceof IDiagramWorkbenchPart) {
+			editor = (IDiagramWorkbenchPart) activePart;
+		} else if (activePart != null) {
+			editor = activePart.getAdapter(IDiagramWorkbenchPart.class);
+		}
+		if (editor != null) {
+			DiagramGraphicalViewer viewer = (DiagramGraphicalViewer) editor.getDiagramGraphicalViewer();
+			workspaceViewerProperties = viewer.getWorkspaceViewerPreferenceStore();
+			workspaceViewerProperties.addPropertyChangeListener(propertyListener);
+		}
 	}
 
 	/**
