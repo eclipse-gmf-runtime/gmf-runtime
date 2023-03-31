@@ -6,17 +6,17 @@
       <unit id="org.eclipse.license.feature.group" version="0.0.0"/>
       <repository id="Eclipse-Shared-License" location="https://download.eclipse.org/cbi/updates/license"/>
     </location>
-	<location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
       <unit id="org.eclipse.platform.ide" version="0.0.0"/>
-      <repository id="Eclipse-4.27" location="https://download.eclipse.org/eclipse/updates/4.27-I-builds/"/>
+      <repository id="Eclipse-4.27" location="https://download.eclipse.org/eclipse/updates/4.27/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.examples.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.ecore.edit.feature.group" version="0.0.0"/>
-      <repository id="EMF-2.33" location="https://download.eclipse.org/modeling/emf/emf/builds/milestone"/>
+      <repository id="EMF-2.33" location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.33.0/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.ocl.feature.group" version="0.0.0"/>
@@ -67,7 +67,7 @@
       <unit id="org.apache.xmlgraphics" version="2.7.0.v20221018-0736" />
       <unit id="org.apache.xmlgraphics.source" version="2.7.0.v20221018-0736" />
       <unit id="org.hamcrest" version="2.2.0.v20210711-0821"/>
-      <repository id="Orbit" location="https://download.eclipse.org/tools/orbit/downloads/drops/S20230214193619/repository"/>
+      <repository id="Orbit" location="https://download.eclipse.org/tools/orbit/downloads/drops/R20230302014618/repository"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.validation.sdk.feature.group" version="0.0.0"/>
@@ -84,7 +84,7 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.gef.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.gef.sdk.feature.group" version="0.0.0"/>
-      <repository id="GEF-Classic" location="https://download.eclipse.org/tools/gef/classic/releases/3.15.0M1"/>
+      <repository id="GEF-Classic" location="https://download.eclipse.org/tools/gef/classic/releases/3.15.0"/>
     </location>
   </locations>
 </target>
