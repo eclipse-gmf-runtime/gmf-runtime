@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2008, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Vincent LORENZO (CEA LIST) vincent.lorenzo@cea.fr - Bug GH-26
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
@@ -311,6 +312,10 @@ public abstract class DiagramAssistantEditPolicy
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {
 				IWorkbenchPart activePart = page.getActivePart();
+				if(activePart!=null && !(activePart instanceof IDiagramWorkbenchPart)) {
+				    activePart = activePart.getAdapter(IDiagramWorkbenchPart.class);
+				}
+				
 				if (activePart instanceof IDiagramWorkbenchPart) {
 					return ((IDiagramWorkbenchPart) activePart)
 						.getDiagramEditPart().getRoot().equals(
