@@ -16,5 +16,5 @@ Export-Package: org.eclipse.gmf.tests.runtime.common.ui.services;x-internal:=tru
  org.eclipse.gmf.tests.runtime.common.ui.services.dialogs;x-internal:=true,
  org.eclipse.gmf.tests.runtime.common.ui.services.elementselection;x-internal:=true,
  org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.gmf.tests.runtime.common.ui.services

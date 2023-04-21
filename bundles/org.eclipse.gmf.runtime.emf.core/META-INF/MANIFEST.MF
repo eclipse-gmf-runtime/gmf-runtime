@@ -22,5 +22,5 @@ Require-Bundle: org.eclipse.emf.ecore.xmi;bundle-version="[2.5.0,3.0.0)";visibil
  org.eclipse.gmf.runtime.emf.clipboard.core;bundle-version="[1.2.0,2.0.0)";visibility:=reexport,
  org.eclipse.core.expressions;bundle-version="[3.4.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.gmf.runtime.emf.core

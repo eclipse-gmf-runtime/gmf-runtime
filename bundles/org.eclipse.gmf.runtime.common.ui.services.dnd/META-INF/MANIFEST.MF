@@ -15,5 +15,5 @@ Export-Package: org.eclipse.gmf.runtime.common.ui.services.dnd.core,
 Require-Bundle: org.eclipse.gmf.runtime.common.core;bundle-version="[1.2.0,2.0.0)";visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui;bundle-version="[1.2.0,2.0.0)";visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.gmf.runtime.common.ui.services.dnd

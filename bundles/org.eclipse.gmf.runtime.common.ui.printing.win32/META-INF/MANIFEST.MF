@@ -9,5 +9,5 @@ Fragment-Host: org.eclipse.gmf.runtime.common.ui.printing
 Require-Bundle: org.eclipse.ui;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.gmf.runtime.common.core;bundle-version="[1.2.0,2.0.0)"
 Export-Package: org.eclipse.gmf.runtime.common.ui.printing
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.gmf.runtime.common.ui.printing.win32
