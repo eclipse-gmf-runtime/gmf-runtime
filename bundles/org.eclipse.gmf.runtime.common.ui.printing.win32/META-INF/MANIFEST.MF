@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.printing.win32;singleton:=true
 Bundle-Name: %Fragment.name
 Bundle-Vendor: %Fragment.providerName
-Bundle-Version: 1.7.0.qualifier
+Bundle-Version: 1.8.0.qualifier
 Bundle-Localization: printingWin32Fragment
 Fragment-Host: org.eclipse.gmf.runtime.common.ui.printing
 Require-Bundle: org.eclipse.ui;bundle-version="[3.5.0,4.0.0)",

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.draw2d.ui.render.awt;singleton:=true
-Bundle-Version: 1.10.0.qualifier
+Bundle-Version: 1.11.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRenderPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
