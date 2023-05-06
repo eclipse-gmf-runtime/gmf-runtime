@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -51,72 +51,69 @@ public class SnapToGridEx
         makeRelative(container.getContentPane(), correction);
 
         if (gridX > 0 && (snapLocations & EAST) != 0) {
-            correction.preciseWidth -= Math.IEEEremainder(rect.preciseRight()
-                - origin.x - 1, gridX);
+            correction.setPreciseWidth(correction.preciseWidth() - Math.IEEEremainder(rect.preciseRight() - origin.x - 1, gridX));
             snapLocations &= ~EAST;
         }
 
         if ((snapLocations & (WEST | HORIZONTAL)) != 0 && gridX > 0) {
             double leftCorrection = Math.IEEEremainder(
-                rect.preciseX - origin.x, gridX);
+                rect.preciseX() - origin.x, gridX);
 
             // /////////////////// ADDED THIS CODE
             if ((restrictedDirections & EAST) != 0
                 && (restrictedDirections & WEST) == 0 && leftCorrection > 0) {
                 // restricted to moving EAST
-                correction.preciseX += gridX - leftCorrection;
+                correction.setPreciseX(correction.preciseX() + (gridX - leftCorrection));
             } else if ((restrictedDirections & WEST) != 0
                 && (restrictedDirections & EAST) == 0 && leftCorrection < 0) {
                 // restricted to moving WEST
-                correction.preciseX -= gridX + leftCorrection;
+                correction.setPreciseX(correction.preciseX() - (gridX + leftCorrection));
             } else {
                 // no horizontal restrictions
-                correction.preciseX -= leftCorrection;
+                correction.setPreciseX(correction.preciseX() - leftCorrection);
             }
             // ///////////////////
 
             if ((snapLocations & HORIZONTAL) == 0)
-                correction.preciseWidth += leftCorrection;
+                correction.setPreciseWidth(correction.preciseWidth() + leftCorrection);
             snapLocations &= ~(WEST | HORIZONTAL);
         }
 
         if ((snapLocations & SOUTH) != 0 && gridY > 0) {
-            correction.preciseHeight -= Math.IEEEremainder(rect.preciseBottom()
-                - origin.y - 1, gridY);
+            correction.setPreciseHeight(correction.preciseHeight() - Math.IEEEremainder(rect.preciseBottom()
+                - origin.y - 1, gridY));
             snapLocations &= ~SOUTH;
         }
 
         if ((snapLocations & (NORTH | VERTICAL)) != 0 && gridY > 0) {
-            double topCorrection = Math.IEEEremainder(rect.preciseY - origin.y,
+            double topCorrection = Math.IEEEremainder(rect.preciseY() - origin.y,
                 gridY);
 
             // /////////////////// ADDED THIS CODE
             if ((restrictedDirections & SOUTH) != 0
                 && (restrictedDirections & NORTH) == 0 && topCorrection > 0) {
                 // restricted to moving SOUTH
-                correction.preciseY += gridY - topCorrection;
+                correction.setPreciseY(correction.preciseY() + (gridY - topCorrection));
             } else if ((restrictedDirections & NORTH) != 0
                 && (restrictedDirections & SOUTH) == 0 && topCorrection < 0) {
                 // restricted to moving NORTH
-                correction.preciseY -= gridY + topCorrection;
+                correction.setPreciseY(correction.preciseY() - (gridY + topCorrection));
             } else {
                 // no vertical restrictions
-                correction.preciseY -= topCorrection;
+                correction.setPreciseY(correction.preciseY() - topCorrection);
             }
             // ///////////////////
 
             if ((snapLocations & VERTICAL) == 0)
-                correction.preciseHeight += topCorrection;
+                correction.setPreciseHeight(correction.preciseHeight() + topCorrection);
             snapLocations &= ~(NORTH | VERTICAL);
         }
 
-        correction.updateInts();
         makeAbsolute(container.getContentPane(), correction);
-        result.preciseX += correction.preciseX;
-        result.preciseY += correction.preciseY;
-        result.preciseWidth += correction.preciseWidth;
-        result.preciseHeight += correction.preciseHeight;
-        result.updateInts();
+        result.setPreciseX(result.preciseX() + correction.preciseX());
+        result.setPreciseY(result.preciseY() + correction.preciseY());
+        result.setPreciseWidth(result.preciseWidth() + correction.preciseWidth());
+        result.setPreciseHeight(result.preciseHeight() + correction.preciseHeight());
 
         return snapLocations;
     }

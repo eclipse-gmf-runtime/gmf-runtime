@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2010, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -68,7 +68,7 @@ public class BaseSlidableAnchor
 	 */
 	public BaseSlidableAnchor(IFigure f, PrecisionPoint p) {
 		super(f);
-		this.relativeReference = new PrecisionPoint(p.preciseX, p.preciseY);
+		this.relativeReference = new PrecisionPoint(p.preciseX(), p.preciseY());
 	}
 	
 	/**
@@ -101,9 +101,9 @@ public class BaseSlidableAnchor
 	private String composeTerminalString(PrecisionPoint p) {
 		StringBuffer s = new StringBuffer(24);
 		s.append(TERMINAL_START_CHAR); 		// 1 char
-		s.append(p.preciseX);		// 10 chars
+		s.append(p.preciseX());		// 10 chars
 		s.append(TERMINAL_DELIMITER_CHAR);	// 1 char
-		s.append(p.preciseY);		// 10 chars
+		s.append(p.preciseY());		// 10 chars
 		s.append(TERMINAL_END_CHAR);		// 1 char
 		return s.toString();				// 24 chars max (+1 for safety, i.e. for string termination)
 	}
@@ -148,9 +148,9 @@ public class BaseSlidableAnchor
 		PrecisionRectangle rBox = new PrecisionRectangle(getBox());
 		if (isDefaultAnchor())
 			return rBox.getCenter();
-		return new PrecisionPoint(relativeReference.preciseX * rBox.preciseWidth
-				+ rBox.preciseX, relativeReference.preciseY * rBox.preciseHeight
-				+ rBox.preciseY);
+		return new PrecisionPoint(relativeReference.preciseX() * rBox.preciseWidth()
+				+ rBox.preciseX(), relativeReference.preciseY() * rBox.preciseHeight()
+				+ rBox.preciseY());
 	}
 	
 	/**
@@ -210,14 +210,12 @@ public class BaseSlidableAnchor
 		PrecisionPoint preciseOwnReference = new PrecisionPoint(ownReference);
 		PrecisionPoint normalizedReference = (PrecisionPoint)preciseOwnReference.getCopy();
 		PrecisionPoint preciseForeignReference = new PrecisionPoint(foreignReference);
-		if (Math.abs(preciseForeignReference.preciseX - preciseOwnReference.preciseX) < tolerance) {
-			normalizedReference.preciseX = preciseForeignReference.preciseX;
-			normalizedReference.updateInts();
+		if (Math.abs(preciseForeignReference.preciseX() - preciseOwnReference.preciseX()) < tolerance) {
+			normalizedReference.setPreciseX(preciseForeignReference.preciseX());
 			return normalizedReference;
 		}
-		if (Math.abs(preciseForeignReference.preciseY - preciseOwnReference.preciseY) < tolerance) {
-			normalizedReference.preciseY = preciseForeignReference.preciseY;
-			normalizedReference.updateInts();
+		if (Math.abs(preciseForeignReference.preciseY() - preciseOwnReference.preciseY()) < tolerance) {
+			normalizedReference.setPreciseY(preciseForeignReference.preciseY());
 		}
 		return normalizedReference;
 	}
@@ -254,11 +252,11 @@ public class BaseSlidableAnchor
 		}
 		PrecisionRectangle r = new PrecisionRectangle(getBox());
 		PrecisionPointList ptList = new PrecisionPointList(5);
-		ptList.addPoint(new PrecisionPoint(r.preciseX, r.preciseY));
-		ptList.addPoint(new PrecisionPoint(r.preciseX + r.preciseWidth, r.preciseY));
-		ptList.addPoint(new PrecisionPoint(r.preciseX + r.preciseWidth, r.preciseY + r.preciseHeight));
-		ptList.addPoint(new PrecisionPoint(r.preciseX, r.preciseY + r.preciseHeight));
-		ptList.addPoint(new PrecisionPoint(r.preciseX, r.preciseY));
+		ptList.addPoint(new PrecisionPoint(r.preciseX(), r.preciseY()));
+		ptList.addPoint(new PrecisionPoint(r.preciseX() + r.preciseWidth(), r.preciseY()));
+		ptList.addPoint(new PrecisionPoint(r.preciseX() + r.preciseWidth(), r.preciseY() + r.preciseHeight()));
+		ptList.addPoint(new PrecisionPoint(r.preciseX(), r.preciseY() + r.preciseHeight()));
+		ptList.addPoint(new PrecisionPoint(r.preciseX(), r.preciseY()));
 		return ptList;
 	}
 
@@ -284,20 +282,20 @@ public class BaseSlidableAnchor
 		if (p.x < bounds.x || p.x > bounds.x + bounds.width
 			|| p.y < bounds.y || p.y > bounds.y + bounds.height) {
 			if (p.x < bounds.x || p.x > bounds.x + bounds.width) {
-				temp.preciseX = p.x < bounds.x ? bounds.x
-					: bounds.x + bounds.width;
+				temp.setPreciseX(p.x < bounds.x ? bounds.x
+					: bounds.x + bounds.width);
 			}
 			if (p.y < bounds.y || p.y > bounds.y + bounds.height) {
-				temp.preciseY = p.y < bounds.y ? bounds.y
-					: bounds.y + bounds.height;
+				temp.setPreciseY(p.y < bounds.y ? bounds.y
+					: bounds.y + bounds.height);
 			}
-			relLocation = new PrecisionPoint((temp.preciseX - bounds.x)
-				/ bounds.width, (temp.preciseY - bounds.y)
+			relLocation = new PrecisionPoint((temp.preciseX() - bounds.x)
+				/ bounds.width, (temp.preciseY() - bounds.y)
 				/ bounds.height);
 		} else {
 
-		relLocation = new PrecisionPoint((temp.preciseX - bounds.x)
-				/ bounds.width, (temp.preciseY - bounds.y)
+		relLocation = new PrecisionPoint((temp.preciseX() - bounds.x)
+				/ bounds.width, (temp.preciseY() - bounds.y)
 				/ bounds.height);
 		}
 		return relLocation;
@@ -360,23 +358,22 @@ public class BaseSlidableAnchor
 			switch (side) {
 			case PositionConstants.LEFT:
 			case PositionConstants.RIGHT:
-				ownReference.preciseY = preciseOrthoReference.preciseY();
+				ownReference.setPreciseY(preciseOrthoReference.preciseY());
 				orientation = PositionConstants.HORIZONTAL;
 				break;
 			case PositionConstants.TOP:
 			case PositionConstants.BOTTOM:
-				ownReference.preciseX = preciseOrthoReference.preciseX();
+				ownReference.setPreciseX(preciseOrthoReference.preciseX());
 				orientation = PositionConstants.VERTICAL;
 				break;
 			}
-		} else if (preciseOrthoReference.preciseX >= bounds.preciseX && preciseOrthoReference.preciseX <= bounds.preciseX + bounds.preciseWidth) {
-			ownReference.preciseX = preciseOrthoReference.preciseX;
+		} else if (preciseOrthoReference.preciseX() >= bounds.preciseX() && preciseOrthoReference.preciseX() <= bounds.preciseX() + bounds.preciseWidth()) {
+			ownReference.setPreciseX(preciseOrthoReference.preciseX());
 			orientation = PositionConstants.VERTICAL;
-		} else if (preciseOrthoReference.preciseY >= bounds.preciseY && preciseOrthoReference.preciseY <= bounds.preciseY + bounds.preciseHeight) {
-			ownReference.preciseY = preciseOrthoReference.preciseY;
+		} else if (preciseOrthoReference.preciseY() >= bounds.preciseY() && preciseOrthoReference.preciseY() <= bounds.preciseY() + bounds.preciseHeight()) {
+			ownReference.setPreciseY(preciseOrthoReference.preciseY());
 			orientation = PositionConstants.HORIZONTAL;
 		}
-		ownReference.updateInts();
 		
 		Point location = getLocation(ownReference, preciseOrthoReference);
 		if (location == null) {
@@ -387,11 +384,10 @@ public class BaseSlidableAnchor
 		if (orientation != PositionConstants.NONE) {
 			PrecisionPoint loc = new PrecisionPoint(location);
 			if (orientation == PositionConstants.VERTICAL) {
-				loc.preciseX = preciseOrthoReference.preciseX;
+				loc.setPreciseX(preciseOrthoReference.preciseX());
 			} else {
-				loc.preciseY = preciseOrthoReference.preciseY;
+				loc.setPreciseY(preciseOrthoReference.preciseY());
 			}
-			loc.updateInts();
 			location = loc;
 		}
 		

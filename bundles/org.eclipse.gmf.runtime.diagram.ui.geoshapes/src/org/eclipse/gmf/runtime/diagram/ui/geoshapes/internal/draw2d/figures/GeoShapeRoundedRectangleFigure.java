@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2010, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -78,11 +78,11 @@ public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure implements IP
         if (arcSize == 0) {
         	// rectangle, no rounded corners
     		PrecisionPointList ptList = new PrecisionPointList(5);
-    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX, rBounds.preciseY));
-    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX + rBounds.preciseWidth, rBounds.preciseY));
-    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX + rBounds.preciseWidth, rBounds.preciseY + rBounds.preciseHeight));
-    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX, rBounds.preciseY + rBounds.preciseHeight));
-    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX, rBounds.preciseY));
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX(), rBounds.preciseY()));
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX() + rBounds.preciseWidth(), rBounds.preciseY()));
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX() + rBounds.preciseWidth(), rBounds.preciseY() + rBounds.preciseHeight()));
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX(), rBounds.preciseY() + rBounds.preciseHeight()));
+    		ptList.addPoint(new PrecisionPoint(rBounds.preciseX(), rBounds.preciseY()));
     		return ptList;        	
         }
 

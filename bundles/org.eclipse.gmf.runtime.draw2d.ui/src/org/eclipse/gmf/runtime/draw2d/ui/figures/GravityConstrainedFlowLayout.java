@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -43,16 +43,16 @@ public class GravityConstrainedFlowLayout extends ConstrainedToolbarLayout {
 		this.gravity = gravity;
 
 		if (gravity == GravityDirectionType.SOUTH) {
-			setVertical(true);
+			setHorizontal(false);
 			setReversed(true);
 		} else if (gravity == GravityDirectionType.EAST) {
-			setVertical(false);
+		    setHorizontal(true);
 			setReversed(true);
 		} else if (gravity == GravityDirectionType.NORTH) {
-			setVertical(true);
+		    setHorizontal(false);
 			setReversed(false);
 		} else if (gravity == GravityDirectionType.WEST) {
-			setVertical(false);
+		    setHorizontal(true);
 			setReversed(false);
 		}
 

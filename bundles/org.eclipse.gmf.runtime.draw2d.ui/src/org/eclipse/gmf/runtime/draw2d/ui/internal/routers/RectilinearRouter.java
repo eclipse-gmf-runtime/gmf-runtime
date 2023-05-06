@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2010 IBM Corporation and others.
+ * Copyright (c) 2002, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -289,7 +289,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 			 */
 			if (Math.abs(lastRemovedFromSource.x - lastRemovedFromTarget.x) < toleranceValue) {
 				// Vertical
-				if (source.preciseY < target.preciseY) {
+				if (source.preciseY() < target.preciseY()) {
 					newLine.addPoint(lastRemovedFromSource.x, (source
 							.getBottom().y + target.getTop().y) / 2);
 				} else {
@@ -298,7 +298,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 				}
 			} else if (Math.abs(lastRemovedFromSource.y - lastRemovedFromTarget.y) < toleranceValue) {
 				// Horizontal
-				if (source.preciseX < target.preciseX) {
+				if (source.preciseX() < target.preciseX()) {
 					newLine.addPoint(
 							(source.getRight().x + target.getLeft().x) / 2,
 							lastRemovedFromSource.y);
@@ -320,16 +320,16 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 				if (lastRemovedFromSource != null && lastRemovedFromTarget != null) {
 					newLine.addPoint((lastRemovedFromSource.x + lastRemovedFromTarget.x) / 2, (lastRemovedFromSource.y + lastRemovedFromTarget.y) / 2); 
 				} else {
-					double startX = Math.max(source.preciseX, target.preciseX);
-					double endX = Math.min(source.preciseX
-							+ source.preciseWidth, target.preciseX
-							+ target.preciseWidth);
-					double startY = Math.max(source.preciseY, target.preciseY);
-					double endY = Math.min(source.preciseY
-							+ source.preciseHeight, target.preciseY
-							+ target.preciseHeight);
+					double startX = Math.max(source.preciseX(), target.preciseX());
+					double endX = Math.min(source.preciseX()
+							+ source.preciseWidth(), target.preciseX()
+							+ target.preciseWidth());
+					double startY = Math.max(source.preciseY(), target.preciseY());
+					double endY = Math.min(source.preciseY()
+							+ source.preciseHeight(), target.preciseY()
+							+ target.preciseHeight());
 					if (startX < endX) {
-						if (source.preciseY < target.preciseY) {
+						if (source.preciseY() < target.preciseY()) {
 							newLine.addPoint((int) Math
 									.round((startX + endX) / 2.0), (source
 									.getBottom().y + target.getTop().y) / 2);
@@ -339,7 +339,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 									.getTop().y + target.getBottom().y) / 2);
 						}
 					} else if (startY < endY) {
-						if (source.preciseX < target.preciseX) {
+						if (source.preciseX() < target.preciseX()) {
 							newLine.addPoint((source.getRight().x + target
 									.getLeft().x) / 2, (int) Math
 									.round((startY + endY) / 2.0));

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2017 IBM Corporation and others.
+ * Copyright (c) 2002, 2017, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -189,8 +189,8 @@ public class NodeFigure
 	 * created, <code>false</code> otherwise
 	 */
 	protected boolean isDefaultAnchorArea(PrecisionPoint p) {
-		return p.preciseX >= getSlidableAnchorArea()/2 && p.preciseX <= 1 - getSlidableAnchorArea()/2 &&
-			p.preciseY >= getSlidableAnchorArea()/2 && p.preciseY <= 1 - getSlidableAnchorArea()/2;
+		return p.preciseX() >= getSlidableAnchorArea()/2 && p.preciseX() <= 1 - getSlidableAnchorArea()/2 &&
+			p.preciseY() >= getSlidableAnchorArea()/2 && p.preciseY() <= 1 - getSlidableAnchorArea()/2;
 	}
 
 	/* 
@@ -200,7 +200,7 @@ public class NodeFigure
 	protected void paintFigure(Graphics graphics) {
 		if (isOpaque() && getBorder() != null) {
 			Rectangle tempRect = new Rectangle(getBounds());
-			tempRect.crop(getBorder().getInsets(this));
+			tempRect.shrink(getBorder().getInsets(this));
 			graphics.fillRectangle(tempRect);
 			return;
 		}

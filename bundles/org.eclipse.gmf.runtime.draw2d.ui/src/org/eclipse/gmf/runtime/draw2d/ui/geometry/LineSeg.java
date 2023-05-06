@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2020 IBM Corporation and others.
+ * Copyright (c) 2002, 2020, 2022 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -843,8 +843,8 @@ public class LineSeg
 	public double [] getEquation() {
 		PrecisionPoint preciseOrigin = new PrecisionPoint(origin);
 		PrecisionPoint preciseTerminus = new PrecisionPoint(terminus);
-		return getLineEquation(preciseOrigin.preciseX, preciseOrigin.preciseY,
-				preciseTerminus.preciseX, preciseTerminus.preciseY);
+		return getLineEquation(preciseOrigin.preciseX(), preciseOrigin.preciseY(),
+				preciseTerminus.preciseX(), preciseTerminus.preciseY());
 	}
 	
 	/**
@@ -914,14 +914,14 @@ public class LineSeg
 		PrecisionPoint preciseOrigin = new PrecisionPoint(origin);
 		PrecisionPoint preciseTerminus = new PrecisionPoint(terminus);
 		PrecisionRectangle preciseEllipseBounds = new PrecisionRectangle(ellipseBounds);
-		if (preciseEllipseBounds.preciseWidth == 0 || preciseEllipseBounds.preciseHeight == 0)
+		if (preciseEllipseBounds.preciseWidth() == 0 || preciseEllipseBounds.preciseHeight() == 0)
 			return intersections;
 		PrecisionPoint ellipsePreciseCenter = new PrecisionPoint(
 				preciseEllipseBounds.getCenter());
-		double xl1 = preciseOrigin.preciseX - ellipsePreciseCenter.preciseX;
-		double xl2 = preciseTerminus.preciseX - ellipsePreciseCenter.preciseX;
-		double yl1 = preciseOrigin.preciseY - ellipsePreciseCenter.preciseY;
-		double yl2 = preciseTerminus.preciseY - ellipsePreciseCenter.preciseY;
+		double xl1 = preciseOrigin.preciseX() - ellipsePreciseCenter.preciseX();
+		double xl2 = preciseTerminus.preciseX() - ellipsePreciseCenter.preciseX();
+		double yl1 = preciseOrigin.preciseY() - ellipsePreciseCenter.preciseY();
+		double yl2 = preciseTerminus.preciseY() - ellipsePreciseCenter.preciseY();
 		double [] equation = LineSeg.getLineEquation(xl1, yl1, xl2, yl2);
 		
 		if (equation.length<3 || (equation[0] == 0 && equation[1] == 0))
@@ -930,8 +930,8 @@ public class LineSeg
 		double a = equation[0];
 		double b = equation[1];
 		double c = equation[2];
-		double w = preciseEllipseBounds.preciseWidth;
-		double h = preciseEllipseBounds.preciseHeight;
+		double w = preciseEllipseBounds.preciseWidth();
+		double h = preciseEllipseBounds.preciseHeight();
 		
 		// Ellipse with a center at the origin has an equation:
 		// (h*x)^2+(w*y)^2=(h*w/2)^2
@@ -947,8 +947,8 @@ public class LineSeg
 			double y = Math.pow(h/2,2)-Math.pow((h*c)/(a*w),2);
 			if (y<0)
 				return intersections;
-			intersections.addPoint(new PrecisionPoint(x+ellipsePreciseCenter.preciseX, Math.sqrt(y)+ellipsePreciseCenter.preciseY));
-			intersections.addPoint(new PrecisionPoint(x+ellipsePreciseCenter.preciseX, -Math.sqrt(y)+ellipsePreciseCenter.preciseY));
+			intersections.addPoint(new PrecisionPoint(x+ellipsePreciseCenter.preciseX(), Math.sqrt(y)+ellipsePreciseCenter.preciseY()));
+			intersections.addPoint(new PrecisionPoint(x+ellipsePreciseCenter.preciseX(), -Math.sqrt(y)+ellipsePreciseCenter.preciseY()));
 		}
 		else {
 			// y = (c-a*x)/b => we get quadratic equation for x
@@ -964,8 +964,8 @@ public class LineSeg
 			
 			double x1 = (-xB+Math.sqrt(xD))/(2*xA);
 			double x2 = (-xB-Math.sqrt(xD))/(2*xA);
-			intersections.addPoint(new PrecisionPoint(x1+ellipsePreciseCenter.preciseX, (c-a*x1)/b+ellipsePreciseCenter.preciseY));
-			intersections.addPoint(new PrecisionPoint(x2+ellipsePreciseCenter.preciseX, (c-a*x2)/b+ellipsePreciseCenter.preciseY));
+			intersections.addPoint(new PrecisionPoint(x1+ellipsePreciseCenter.preciseX(), (c-a*x1)/b+ellipsePreciseCenter.preciseY()));
+			intersections.addPoint(new PrecisionPoint(x2+ellipsePreciseCenter.preciseX(), (c-a*x2)/b+ellipsePreciseCenter.preciseY()));
 		}
 		
 		return intersections;

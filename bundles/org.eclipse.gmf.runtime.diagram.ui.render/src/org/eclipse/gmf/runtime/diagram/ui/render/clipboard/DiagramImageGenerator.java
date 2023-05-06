@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2009, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -143,8 +143,8 @@ public class DiagramImageGenerator
 
 		mm.LPtoDP(rect);
 
-		awtImage = new BufferedImage((int) Math.round(rect.preciseWidth),
-				(int) Math.rint(rect.preciseHeight),
+		awtImage = new BufferedImage((int) Math.round(rect.preciseWidth()),
+				(int) Math.rint(rect.preciseHeight()),
 				BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
 		Graphics2D g2d = awtImage.createGraphics();

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -32,6 +32,7 @@ public class CompoundSnapToHelperEx
         super(delegates);
     }
 
+    @Override
     public int snapRectangle(Request request, int snapOrientation,
             PrecisionRectangle baseRect, PrecisionRectangle result) {
 
@@ -46,9 +47,9 @@ public class CompoundSnapToHelperEx
         snapOrientation = SnapToHelperUtil.updateSnapLocations(snapOrientation,
             restrictedDirections);
 
-        SnapToHelper delegates[] = getDelegates();
-        int snapOrientations[] = new int[delegates.length];
-        PrecisionRectangle results[] = new PrecisionRectangle[delegates.length];
+        SnapToHelper[] delegates = getDelegates();
+        int[] snapOrientations = new int[delegates.length];
+        PrecisionRectangle[] results = new PrecisionRectangle[delegates.length];
 
         for (int i = 0; i < delegates.length; i++) {
             results[i] = new PrecisionRectangle();
@@ -63,24 +64,23 @@ public class CompoundSnapToHelperEx
             if (snapChanged != 0) {
                 // some snapping occurred
                 if ((snapChanged & HORIZONTAL) != 0) {
-                    if (result.preciseX == 0
-                        || Math.abs(results[i].preciseX) < Math
-                            .abs(result.preciseX)) {
-                        result.preciseX = results[i].preciseX;
+                    if (result.preciseX() == 0
+                        || Math.abs(results[i].preciseX()) < Math
+                            .abs(result.preciseX())) {
+                        result.setPreciseX(results[i].preciseX());
                     }
                     snapOrientationToReturn &= ~HORIZONTAL;
                 }
                 if ((snapChanged & VERTICAL) != 0) {
-                    if (result.preciseY == 0
-                        || Math.abs(results[i].preciseY) < Math
-                            .abs(result.preciseY)) {
-                        result.preciseY = results[i].preciseY;
+                    if (result.preciseY() == 0
+                        || Math.abs(results[i].preciseY()) < Math
+                            .abs(result.preciseY())) {
+                        result.setPreciseY(results[i].preciseY());
                     }
                     snapOrientationToReturn &= ~VERTICAL;
                 }
             }
         }
-        result.updateInts();
         return snapOrientationToReturn;
     }
 }

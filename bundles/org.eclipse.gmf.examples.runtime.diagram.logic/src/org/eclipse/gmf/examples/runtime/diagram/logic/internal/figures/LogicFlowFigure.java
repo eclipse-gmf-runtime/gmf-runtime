@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -41,7 +41,7 @@ public class LogicFlowFigure
 	 * @see org.eclipse.gef.handles.HandleBounds#getHandleBounds()
 	 */
 	public Rectangle getHandleBounds() {
-		return getBounds().getCropped(new Insets(2,0,2,0));
+		return getBounds().getShrinked(new Insets(2,0,2,0));
 	}
 
 	public Dimension getPreferredSize(int w, int h) {
@@ -55,7 +55,7 @@ public class LogicFlowFigure
 	 */
 	protected void paintFigure(Graphics graphics) {
 		Rectangle rect = getBounds().getCopy();
-		rect.crop(new Insets(2,0,2,0));
+		rect.shrink(new Insets(2,0,2,0));
 	}
 
 	public String toString() {

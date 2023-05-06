@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2010, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -76,23 +76,22 @@ public final class DiagramImageUtils {
 		}
 
 		PrecisionRectangle rect = new PrecisionRectangle();
-		rect.preciseWidth = maxX - minX;
-		rect.preciseHeight = maxY - minY;
+		rect.setPreciseWidth(maxX - minX);
+		rect.setPreciseHeight(maxY - minY);
 		
 		if (defaultSize != null) {
-			if (rect.preciseHeight <= 0) {
-				rect.preciseHeight = defaultSize.preciseWidth();
+			if (rect.preciseHeight() <= 0) {
+				rect.setPreciseHeight(defaultSize.preciseWidth());
 			}
-			if (rect.preciseHeight <= 0) {
-				rect.preciseHeight = defaultSize.preciseHeight();
+			if (rect.preciseHeight() <= 0) {
+				rect.setPreciseHeight(defaultSize.preciseHeight());
 			}
 		}
 		
-		rect.preciseX = minX - frameSize;
-		rect.preciseY = minY - frameSize;
-		rect.preciseWidth += 2 * frameSize;
-		rect.preciseHeight += 2 * frameSize;
-		rect.updateInts();
+		rect.setPreciseX(minX - frameSize);
+		rect.setPreciseY(minY - frameSize);
+		rect.setPreciseWidth(rect.preciseWidth() + 2 * frameSize);
+		rect.setPreciseHeight(rect.preciseHeight() + 2 * frameSize);
 		return rect;
 	}
 	
@@ -127,9 +126,9 @@ public final class DiagramImageUtils {
 		if (editparts == null || editparts.size() < 2) {
 			return;
 		}
-		final Map<GraphicalEditPart, List<Integer>> indexMap = new IdentityHashMap<GraphicalEditPart, List<Integer>>(editparts.size());
+		final Map<GraphicalEditPart, List<Integer>> indexMap = new IdentityHashMap<>(editparts.size());
 		for (GraphicalEditPart ep : editparts) {
-			List<Integer> index = new ArrayList<Integer>();
+			List<Integer> index = new ArrayList<>();
 			for (IFigure fig = ep.getFigure(); fig != zOrderRoot && fig.getParent() != null; fig = fig.getParent()) {
 				index.add(fig.getParent().getChildren().indexOf(fig));
 			}

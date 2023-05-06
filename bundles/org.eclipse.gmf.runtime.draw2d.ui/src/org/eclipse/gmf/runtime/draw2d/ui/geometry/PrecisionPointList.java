@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2008, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -90,7 +90,7 @@ public class PrecisionPointList extends PointList {
 	public void addPoint(Point p) {
 		if (p instanceof PrecisionPoint) {
 			PrecisionPoint precisionPt = (PrecisionPoint)p;
-			addPrecisionPoint(precisionPt.preciseX, precisionPt.preciseY);
+			addPrecisionPoint(precisionPt.preciseX(), precisionPt.preciseY());
 		} else {
 			addPrecisionPoint(p.preciseX(), p.preciseY());
 		}
@@ -188,9 +188,8 @@ public class PrecisionPointList extends PointList {
 		index *= 2;
 		if (p instanceof PrecisionPoint) {
 			PrecisionPoint preciseP = (PrecisionPoint) p;
-			preciseP.preciseX = points[index];
-			preciseP.preciseY = points[index + 1];
-			preciseP.updateInts();
+			preciseP.setPreciseX(points[index]);
+			preciseP.setPreciseY(points[index + 1]);
 		} else {
 			p.x = (int)Math.floor(points[index] + 0.000000001);
 			p.y = (int)Math.floor(points[index + 1] + 0.000000001);
@@ -218,8 +217,8 @@ public class PrecisionPointList extends PointList {
 		
 		if (p instanceof PrecisionPoint) {
 			PrecisionPoint precisionPt = (PrecisionPoint)p;
-			points[index] = precisionPt.preciseX;
-			points[index + 1] = precisionPt.preciseY;
+			points[index] = precisionPt.preciseX();
+			points[index + 1] = precisionPt.preciseY();
 		} else {
 			points[index] = p.x;
 			points[index + 1] = p.y;
@@ -301,8 +300,8 @@ public class PrecisionPointList extends PointList {
 			bounds = null;
 		if (pt instanceof PrecisionPoint) {
 			PrecisionPoint precisionPt = (PrecisionPoint)pt;
-			points[index * 2] = precisionPt.preciseX;
-			points[index * 2 + 1] = precisionPt.preciseY;
+			points[index * 2] = precisionPt.preciseX();
+			points[index * 2 + 1] = precisionPt.preciseY();
 		} else {
 			points[index * 2] = pt.x;
 			points[index * 2 + 1] = pt.y;

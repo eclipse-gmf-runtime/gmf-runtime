@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -84,7 +84,7 @@ public class ScalableFreeformLayeredPane
 				ScaledGraphics g = createScaledGraphics(gMM);
 				boolean optimizeClip = getBorder() == null || getBorder().isOpaque();
 				if (!optimizeClip)
-					g.clipRect(getBounds().getCropped(getInsets()));
+					g.clipRect(getBounds().getShrinked(getInsets()));
 				g.scale(getScale());
 				g.pushState();
 				paintChildren(g);

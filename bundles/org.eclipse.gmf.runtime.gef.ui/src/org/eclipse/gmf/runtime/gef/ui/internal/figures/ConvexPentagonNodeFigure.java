@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -7,22 +7,24 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.gef.ui.internal.figures;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.PrecisionPointList;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 
 
 /**
- * Provides support for Convex Pentagon figure (Send Signal Action for Activity diagram) 
- * 
+ * Provides support for Convex Pentagon figure (Send Signal Action for Activity diagram)
+ *
  * @author oboyko
  */
 public class ConvexPentagonNodeFigure
@@ -46,29 +48,26 @@ public class ConvexPentagonNodeFigure
 	public ConvexPentagonNodeFigure(int width, int height) {
 		super(width, height);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
-	 */
-	protected void paintFigure(Graphics graphics) {
+
+	@Override
+    protected void paintFigure(Graphics graphics) {
 		PointList pointList = getPolygonPoints();
 
 		graphics.fillPolygon(pointList);
 		graphics.drawPolygon(pointList);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.figures.IPolygonAnchorableFigure#getPolygonPoints()
-	 */
-	public PointList getPolygonPoints() {
-		PointList ptList = new PointList();
-		ptList.addPoint(new Point(getBounds().x, getBounds().y));
-		ptList.addPoint(new Point(getBounds().x + getBounds().width*(1-DEFAULT_CONVEX_RATIO), getBounds().y));
-		ptList.addPoint(new Point(getBounds().x+getBounds().width, getBounds().y+getBounds().height/2));
-		ptList.addPoint(new Point(getBounds().x+getBounds().width*(1-DEFAULT_CONVEX_RATIO), getBounds().y+getBounds().height));
-		ptList.addPoint(new Point(getBounds().x, getBounds().y+getBounds().height));
-		ptList.addPoint(new Point(getBounds().x, getBounds().y));
+	@Override
+    public PointList getPolygonPoints() {
+	    PrecisionPointList ptList = new PrecisionPointList();
+		Rectangle b = getBounds();
+        ptList.addPoint(new PrecisionPoint(b.x, b.y));
+        ptList.addPoint(new PrecisionPoint(b.x + b.width * (1 - DEFAULT_CONVEX_RATIO), b.y));
+        ptList.addPoint(new PrecisionPoint(b.x + b.width, b.y + b.height / 2));
+        ptList.addPoint(new PrecisionPoint(b.x + b.width * (1 - DEFAULT_CONVEX_RATIO), b.y + b.height));
+        ptList.addPoint(new PrecisionPoint(b.x, b.y + b.height));
+        ptList.addPoint(new PrecisionPoint(b.x, b.y));
 		return ptList;
 	}
-	
+
 }

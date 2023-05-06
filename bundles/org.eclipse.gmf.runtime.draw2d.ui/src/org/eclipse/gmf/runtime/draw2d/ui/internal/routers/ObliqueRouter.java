@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2010 IBM Corporation and others.
+ * Copyright (c) 2002, 2010, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -880,14 +880,11 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			if (!isFeedbackConn) {
 				IMapMode mm = MapModeUtil.getMapMode(conn);
 				translateExpansion = (PrecisionPoint) mm.LPtoDP(translateExpansion);
-				translateExpansion.preciseX = Math.pow(translateExpansion.preciseX,
-						0.8);
+				translateExpansion.setPreciseX(Math.pow(translateExpansion.preciseX(), 0.8));
 				translateExpansion = (PrecisionPoint) mm.DPtoLP(translateExpansion);
 			} else {
-				translateExpansion.preciseX = Math.pow(translateExpansion.preciseX,
-						0.8);
+				translateExpansion.setPreciseX(Math.pow(translateExpansion.preciseX(), 0.8));
 			}
-			translateExpansion.updateInts();
 	
 			/*
 			 * Transform rough connection area to primary precise connection area
@@ -928,8 +925,8 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		conn.translateToRelative(ptEdge);
 		ptE1 = new PrecisionPoint(getStraightEdgePoint(ptEdge, ptE1, ptE2));
 
-		newLine.insertPoint(new Point(Math.round(ptS1.preciseX), Math.round(ptS1.preciseY)), 0);
-		newLine.insertPoint(new Point(Math.round(ptE1.preciseX), Math.round(ptE1.preciseY)), newLine.size());
+		newLine.insertPoint(new PrecisionPoint(Math.round(ptS1.preciseX()), Math.round(ptS1.preciseY())), 0);
+		newLine.insertPoint(new PrecisionPoint(Math.round(ptE1.preciseX()), Math.round(ptE1.preciseY())), newLine.size());
 
 	}
 	

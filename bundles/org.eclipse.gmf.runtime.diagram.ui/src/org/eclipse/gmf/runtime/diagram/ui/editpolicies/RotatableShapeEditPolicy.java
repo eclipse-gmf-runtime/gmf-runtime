@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2006, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -18,6 +18,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
@@ -29,7 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RotateTracker;
 import org.eclipse.gmf.runtime.gef.ui.internal.requests.RotateShapeRequest;
 
 /**
- * A rotatable editpolicy for rotating fork and join itparts
+ * A rotatable editpolicy for rotating fork and join parts
  * It rotates the figure if diagonal handlers are dragged and
  * resizes the figure otherwise as defined by the superclass
  *  
@@ -113,12 +114,12 @@ public class RotatableShapeEditPolicy extends ResizableShapeEditPolicy {
 	private PrecisionRectangle rotateRectangle(Rectangle r) {
 		PrecisionRectangle rect = new PrecisionRectangle(r);
 		if (isVertical(r)) {
-			rect.setX(rect.preciseX-rect.preciseHeight/2.0+rect.preciseWidth/2.0);
-			rect.setY(rect.preciseY+rect.preciseHeight/2.0-rect.preciseWidth/2.0);
+			rect.setPreciseX(rect.preciseX()-rect.preciseHeight()/2.0+rect.preciseWidth()/2.0);
+			rect.setPreciseY(rect.preciseY()+rect.preciseHeight()/2.0-rect.preciseWidth()/2.0);
 		}
 		else {
-			rect.setX(rect.preciseX+rect.preciseWidth/2.0-rect.preciseHeight/2.0);
-			rect.setY(rect.preciseY-rect.preciseWidth/2.0+rect.preciseHeight/2.0);
+			rect.setPreciseX(rect.preciseX()+rect.preciseWidth()/2.0-rect.preciseHeight()/2.0);
+			rect.setPreciseY(rect.preciseY()-rect.preciseWidth()/2.0+rect.preciseHeight()/2.0);
 		}
 		transposePrecisionRectangleSize(rect);
 		return rect;
@@ -139,9 +140,9 @@ public class RotatableShapeEditPolicy extends ResizableShapeEditPolicy {
 	 * @return PrecisionRectangle with transposed size  
 	 */
 	private void transposePrecisionRectangleSize(PrecisionRectangle r) {
-		double height = r.preciseHeight;
-		r.setHeight(r.preciseWidth);
-		r.setWidth(height);
+		double height = r.preciseHeight();
+		r.setPreciseHeight(r.preciseWidth());
+		r.setPreciseWidth(height);
 	}
 	
 	/*
@@ -175,7 +176,7 @@ public class RotatableShapeEditPolicy extends ResizableShapeEditPolicy {
 					PrecisionRectangle rect = getAbsoluteRotatedBounds();
 					PrecisionRectangle initFigure = getAbsoluteInitialBounds();
 					req.setMoveDelta
-						(new Point(rect.preciseX - initFigure.preciseX, rect.preciseY - initFigure.preciseY));
+						(new PrecisionPoint(rect.preciseX() - initFigure.preciseX(), rect.preciseY() - initFigure.preciseY()));
 					req.setSizeDelta
 						(new Dimension(rect.width - initFigure.width, rect.height - initFigure.height));
 				}

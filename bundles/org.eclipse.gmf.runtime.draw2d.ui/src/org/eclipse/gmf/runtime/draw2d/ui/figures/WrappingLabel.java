@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007, 2015 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -744,7 +744,7 @@ public class WrappingLabel
 
         Dimension minimumSize = getMinimumSize(area.width, area.height);
 
-        Dimension shrinkAmount = preferredSize.getDifference(getBounds().getSize()
+        Dimension shrinkAmount = preferredSize.getShrinked(getBounds().getSize()
             .getUnioned(minimumSize));
 
         Dimension textSize = preferredTextSize.getCopy();
@@ -770,7 +770,7 @@ public class WrappingLabel
     private void calculateLabelAlignment(Rectangle textBounds,
             Rectangle iconBounds) {
 
-        Dimension offset = getClientArea().getSize().getDifference(
+        Dimension offset = getClientArea().getSize().getShrinked(
             textBounds.getUnion(iconBounds).getSize());
         switch (getAlignment()) {
             case TOP | LEFT:
