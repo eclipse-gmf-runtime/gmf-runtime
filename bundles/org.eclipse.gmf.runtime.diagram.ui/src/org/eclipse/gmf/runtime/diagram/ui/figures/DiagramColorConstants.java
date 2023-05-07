@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -24,78 +24,65 @@ import org.eclipse.swt.graphics.Color;
  * 
  * @author sshaw
  */
-public interface DiagramColorConstants
-	extends ColorConstants{
-    
+public interface DiagramColorConstants extends ColorConstants {
+
 	/**
 	 * Constant <code>Color</code> representing green.
 	 */
-	public final static Color 
-		diagramGreen = new Color(null, 40,100,70);
-    
+	Color diagramGreen = new Color(null, DiagramColorPalette.diagramGreen);
+
 	/**
 	 * Constant <code>Color</code> representing light red.
 	 */
-	public final static Color
-		diagramLightRed = new Color(null, 255, 203, 203);
-    
+	Color diagramLightRed = new Color(null, DiagramColorPalette.diagramLightRed);
+
 	/**
 	 * Constant <code>Color</code> representing red.
 	 */
-	public final static Color
-		diagramRed = new Color(null, 255, 128, 128);
-    
+	Color diagramRed = new Color(DiagramColorPalette.diagramLightRed);
+
 	/**
 	 * Constant <code>Color</code> representing light blue.
 	 */
-    public final static Color
-		diagramLightBlue = new Color(null, 202, 203, 255);
+	Color diagramLightBlue = new Color(DiagramColorPalette.diagramLightBlue);
 
 	/**
 	 * Constant <code>Color</code> representing blue.
 	 */
-    public final static Color
-		diagramBlue = new Color(null, 128, 128, 255);
-	
-    /**
+	Color diagramBlue = new Color(DiagramColorPalette.diagramBlue);
+
+	/**
 	 * Constant <code>Color</code> representing light gray.
 	 */
-	public final static Color
-		diagramLightGray = new Color(null, 250, 250, 254);
-	
+	Color diagramLightGray = new Color(DiagramColorPalette.diagramLightGray);
+
 	/**
 	 * Constant <code>Color</code> representing gray.
 	 */
-	public final static Color
-		diagramGray = new Color(null, 176, 176, 176);
-	
+	Color diagramGray = new Color(DiagramColorPalette.diagramGray);
+
 	/**
 	 * Constant <code>Color</code> representing dark gray.
 	 */
-	public final static Color
-		diagramDarkGray = new Color(null, 131, 122, 133);
-	
+	Color diagramDarkGray = new Color(DiagramColorPalette.diagramDarkGray);
+
 	/**
 	 * Constant <code>Color</code> representing light yellow.
 	 */
-	public final static Color
-		diagramLightYellow = new Color(null, 255, 255, 203);
-	
+	Color diagramLightYellow = new Color(DiagramColorPalette.diagramLightYellow);
+
 	/**
 	 * Constant <code>Color</code> representing dark yellow.
-	 */ 
-	public final static Color
-		diagramDarkYellow = new Color(null, 255, 204, 102);	
-	
+	 */
+	Color diagramDarkYellow = new Color(DiagramColorPalette.diagramDarkYellow);
+
 	/**
 	 * Constant <code>Color</code> representing a light gold yellow.
 	 */
-	public final static Color
-		diagramLightGoldYellow = new Color(null, 255, 255, 204);
+	Color diagramLightGoldYellow = new Color(DiagramColorPalette.diagramLightGoldYellow);
 
 	/**
 	 * Constant <code>Color</code> representing burgundy red.
 	 */
-	public final static Color
-		diagramBurgundyRed = new Color(null, 153, 0, 51);
+	Color diagramBurgundyRed = new Color(DiagramColorPalette.diagramBurgundyRed);
 }

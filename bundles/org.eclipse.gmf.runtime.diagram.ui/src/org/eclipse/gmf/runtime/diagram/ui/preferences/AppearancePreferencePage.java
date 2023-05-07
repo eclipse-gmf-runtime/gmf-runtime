@@ -16,6 +16,7 @@ package org.eclipse.gmf.runtime.diagram.ui.preferences;
 import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
 import org.eclipse.gmf.runtime.common.ui.preferences.FontFieldEditor;
 import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorConstants;
+import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorPalette;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.ColorFieldEditor;
@@ -222,34 +223,35 @@ protected void addFontAndColorFields(Composite composite) {
 
     	setDefaultFontPreference(store);
 
+    	RGB black = new RGB(0, 0, 0);
         PreferenceConverter.setDefault(
             store,
             IPreferenceConstants.PREF_FONT_COLOR,
-            new RGB(0, 0, 0));
+            black);
 
-        Color fillColor = DiagramColorConstants.white;
+        RGB white =  new RGB(255, 255, 255);
         PreferenceConverter.setDefault(
             store,
             IPreferenceConstants.PREF_FILL_COLOR,
-            fillColor.getRGB());
+           white);
 
-        Color lineColor = DiagramColorConstants.diagramGray;
+        RGB lineColor = DiagramColorPalette.diagramGray;
         PreferenceConverter.setDefault(
             store,
             IPreferenceConstants.PREF_LINE_COLOR,
-            lineColor.getRGB());
+            lineColor);
 
-        Color noteFillColor = DiagramColorConstants.diagramLightYellow;
+        RGB noteFillColor = DiagramColorPalette.diagramLightYellow;
         PreferenceConverter.setDefault(
             store,
             IPreferenceConstants.PREF_NOTE_FILL_COLOR,
-			noteFillColor.getRGB());
+			noteFillColor);
 
-        Color noteLineColor = DiagramColorConstants.diagramDarkYellow;
+        RGB noteLineColor = DiagramColorPalette.diagramDarkYellow;
         PreferenceConverter.setDefault(
             store,
             IPreferenceConstants.PREF_NOTE_LINE_COLOR,
-			noteLineColor.getRGB());
+			noteLineColor);
     }
     	
 	/**
