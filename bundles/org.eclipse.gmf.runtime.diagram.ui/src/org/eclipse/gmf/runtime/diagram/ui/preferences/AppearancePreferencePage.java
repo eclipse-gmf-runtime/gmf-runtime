@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.preferences;
 
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
 import org.eclipse.gmf.runtime.common.ui.preferences.FontFieldEditor;
 import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorConstants;
@@ -28,6 +27,7 @@ import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -222,11 +222,10 @@ protected void addFontAndColorFields(Composite composite) {
 
     	setDefaultFontPreference(store);
 
-        Color fontColor = ColorConstants.black;
         PreferenceConverter.setDefault(
             store,
             IPreferenceConstants.PREF_FONT_COLOR,
-            fontColor.getRGB());
+            new RGB(0, 0, 0));
 
         Color fillColor = DiagramColorConstants.white;
         PreferenceConverter.setDefault(
