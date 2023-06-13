@@ -279,11 +279,14 @@ public class ContainerEditPolicy
         String layoutDesc = request.getLayoutType() != null ? request.getLayoutType() : LayoutType.DEFAULT;
         
         boolean offsetFromBoundingBox = false;
-        List<IGraphicalEditPart> editparts = new ArrayList<IGraphicalEditPart>();
+        List<IGraphicalEditPart> editparts = new ArrayList<>();
         
         if ( (ActionIds.ACTION_ARRANGE_ALL.equals(request.getType())) || 
              (ActionIds.ACTION_TOOLBAR_ARRANGE_ALL.equals(request.getType()))) {
-            editparts = ((IGraphicalEditPart)getHost()).getChildren();          
+            editparts = ((IGraphicalEditPart) getHost()).getChildren().stream()
+            				.filter(IGraphicalEditPart.class::isInstance)
+            				.map(IGraphicalEditPart.class::cast)
+            				.toList();
             request.setPartsToArrange(editparts);
         }
         if ( (ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())) ||
