@@ -101,7 +101,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 */
 	protected void refreshOnActivate() {
 		// need to activate editpart children before invoking the canonical refresh
-		List<EditPart> c = getHost().getChildren();
+		List<? extends EditPart> c = getHost().getChildren();
 		for (int i = 0; i < c.size(); i++) {
 			c.get(i).activate();
 		}
