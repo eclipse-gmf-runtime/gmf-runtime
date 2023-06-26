@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2013, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -7,7 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Ansgar Radermacher - contribution for bug 582119
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts;
@@ -163,9 +164,18 @@ public class DiagramDocumentEditor
 	 * @see org.eclipse.ui.part.WorkbenchPart#setSite(org.eclipse.ui.IWorkbenchPartSite)
 	 */
 	protected final void setSite(IWorkbenchPartSite site) {
+		boolean siteChanged = site != getSite();
 		super.setSite(site);
-		fActivationListener= new ActivationListener(site.getWorkbenchWindow().getPartService());
-		fActivationListener.activate();
+		if (siteChanged && fActivationListener != null) {
+			// dispose old activation listener, if workbench site has changed
+			fActivationListener.deactivate();
+			fActivationListener.dispose();
+			fActivationListener = null;
+		}
+		if (fActivationListener == null) {
+			fActivationListener = new ActivationListener(site.getWorkbenchWindow().getPartService());
+			fActivationListener.activate();
+		}
 	}
 
 	/*
