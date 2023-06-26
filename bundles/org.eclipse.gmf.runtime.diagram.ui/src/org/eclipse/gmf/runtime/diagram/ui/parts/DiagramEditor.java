@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2009, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -9,6 +9,7 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  *    Dmitry Stadnik (Borland) - contribution for bugzilla 136582
+ *    Ansgar Radermacher - contribution for bug 582119
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.parts;
@@ -172,6 +173,8 @@ public abstract class DiagramEditor
      */
     protected PreferenceStore workspaceViewerPreferenceStore = null;
 
+    private KeyHandler viewerKeyHandler;
+    
     /**
      * A diagram outline page
      */
@@ -709,6 +712,13 @@ public abstract class DiagramEditor
                 disableUpdateHistoryListener);
         }
         
+        if (viewerKeyHandler != null) {
+        	viewerKeyHandler.setParent(null);
+        	getDiagramGraphicalViewer().setKeyHandler(null);
+        	viewerKeyHandler = null;
+        }
+        keyHandler = null;
+      
         super.dispose();
     }
 
@@ -849,7 +859,7 @@ public abstract class DiagramEditor
         viewer.setContextMenu(provider);
         getSite().registerContextMenu(ActionIds.DIAGRAM_EDITOR_CONTEXT_MENU,
             provider, viewer);
-        KeyHandler viewerKeyHandler = new DiagramGraphicalViewerKeyHandler(viewer)
+        viewerKeyHandler = new DiagramGraphicalViewerKeyHandler(viewer)
             .setParent(getKeyHandler());
         viewer.setKeyHandler(new DirectEditKeyHandler(viewer)
             .setParent(viewerKeyHandler));

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2008, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -7,7 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Ansgar Radermacher - contribution for bug xxxx 
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.parts;
@@ -645,4 +646,20 @@ public abstract class DiagramEditorWithFlyOutPalette
         return new PaletteCustomizerEx(getPreferenceStore());
     }
 
+    /**
+     * Dispose splitter
+     */
+    @Override
+	public void dispose() {
+		if (splitter != null) {
+			splitter.setExternalViewer(null);
+			splitter.dispose();
+			splitter = null;
+		}
+		if (page != null) {
+			page.dispose();
+			page = null;
+		}
+		super.dispose();
+	}
 }
