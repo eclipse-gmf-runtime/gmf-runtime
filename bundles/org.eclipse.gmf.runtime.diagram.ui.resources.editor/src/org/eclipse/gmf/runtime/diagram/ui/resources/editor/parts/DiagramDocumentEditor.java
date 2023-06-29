@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation
- *    Ansgar Radermacher - contribution for bug 582119
+ *    Ansgar Radermacher (CEA LIST) - contribution for bug 582119
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts;
