@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation
- *    Ansgar Radermacher - contribution for bug xxxx 
+ *    Ansgar Radermacher (CEA LIST) - contribution for bug 582119
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.parts;
@@ -650,16 +650,16 @@ public abstract class DiagramEditorWithFlyOutPalette
      * Dispose splitter
      */
     @Override
-	public void dispose() {
-		if (splitter != null) {
-			splitter.setExternalViewer(null);
-			splitter.dispose();
-			splitter = null;
-		}
-		if (page != null) {
-			page.dispose();
-			page = null;
-		}
-		super.dispose();
-	}
+    public void dispose() {
+        if (splitter != null) {
+            splitter.setExternalViewer(null);
+            splitter.dispose();
+            splitter = null;
+        }
+        if (page != null) {
+            page.dispose();
+            page = null;
+        }
+        super.dispose();
+    }
 }
