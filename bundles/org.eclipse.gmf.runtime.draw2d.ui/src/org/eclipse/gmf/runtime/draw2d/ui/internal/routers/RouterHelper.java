@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -517,8 +517,9 @@ class RouterHelper {
         conn.translateToRelative(sourceAnchorPoint);
         conn.translateToRelative(targetAnchorPoint);
         
-        newLine.setPoint(sourceAnchorPoint,0);
-        newLine.setPoint(targetAnchorPoint,newLine.size() - 1);
+        // use Math.round because insertPoint takes the integer x,y of the precisePoint. The consequence is a potential error of one pixel
+        newLine.setPoint(new Point((int) Math.round(sourceAnchorPoint.preciseX()), (int) Math.round(sourceAnchorPoint.preciseY())),0);
+        newLine.setPoint(new Point((int) Math.round(targetAnchorPoint.preciseX()), (int) Math.round(targetAnchorPoint.preciseY())),newLine.size() - 1);
     }
 
     private final static int ROUTER_OBSTRUCTION_BUFFER = 12;

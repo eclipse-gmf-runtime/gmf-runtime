@@ -471,8 +471,9 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
     		Dimension offsetDim = offStart.getDifference(offEnd).scale(0.5);
     		offStart.translate(getTranslationValue(sourceAnchorRelativeLocation, Math.abs(offsetDim.width), Math.abs(offsetDim.height)));
     		offEnd.translate(getTranslationValue(targetAnchorRelativeLocation, Math.abs(offsetDim.width), Math.abs(offsetDim.height)));
-    		line.insertPoint(offStart, 1);
-    		line.insertPoint(offEnd, 2);
+    		// use Math.round because insertPoint takes the integer x,y of the precisePoint. The consequence is a potential error of one pixel
+    		line.insertPoint(new Point((int) Math.round(offStart.preciseX()), (int) Math.round(offStart.preciseY())), 1);
+    		line.insertPoint(new Point((int) Math.round(offEnd.preciseX()), (int) Math.round(offEnd.preciseY())), 2);
     		offSourceDirection = getOffShapeDirection(sourceAnchorRelativeLocation);
     		offTargetDirection = getOffShapeDirection(targetAnchorRelativeLocation);
     	} else {
