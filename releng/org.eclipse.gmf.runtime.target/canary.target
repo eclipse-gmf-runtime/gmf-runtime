@@ -67,7 +67,7 @@
       <unit id="org.apache.xmlgraphics" version="2.7.0.v20221018-0736" />
       <unit id="org.apache.xmlgraphics.source" version="2.7.0.v20221018-0736" />
       <unit id="org.hamcrest" version="2.2.0.v20210711-0821"/>
-      <repository id="Orbit-latest-I" location="https://download.eclipse.org/tools/orbit/downloads/latest-I"/>
+      <repository id="Orbit-latest-I" location="https://download.eclipse.org/oomph/simrel-orbit/nightly"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.validation.sdk.feature.group" version="0.0.0"/>
