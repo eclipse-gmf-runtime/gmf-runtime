@@ -10,6 +10,6 @@
   </parent>
   <groupId>org.eclipse.gmf.runtime.common.ui.services.dnd.ide</groupId>
   <artifactId>org.eclipse.gmf.runtime.common.ui.services.dnd.ide</artifactId>
-  <version>1.8.0-SNAPSHOT</version>
+  <version>1.8.1-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
