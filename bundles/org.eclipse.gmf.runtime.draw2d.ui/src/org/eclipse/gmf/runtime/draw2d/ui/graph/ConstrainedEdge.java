@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -26,8 +26,8 @@ import org.eclipse.draw2d.graph.Node;
  */
 public class ConstrainedEdge extends Edge {
 	
-	public static String DEFAULT_ROUTING_STYLE = "Default"; //$NON-NLS-1$
-	public static String ORTHOGONAL_ROUTING_STYLE = "Orthogonal"; //$NON-NLS-1$
+	public static final String DEFAULT_ROUTING_STYLE = "Default"; //$NON-NLS-1$
+	public static final String ORTHOGONAL_ROUTING_STYLE = "Orthogonal"; //$NON-NLS-1$
 	
 	private String style = DEFAULT_ROUTING_STYLE;
 	
@@ -58,7 +58,7 @@ public class ConstrainedEdge extends Edge {
 	 */
 	public ConstrainedEdge(Node source, Node target, int delta, int weight) {
 		this(source, target);
-		this.delta = delta;
+		this.setDelta(delta);
 		this.weight = weight;
 	}
 

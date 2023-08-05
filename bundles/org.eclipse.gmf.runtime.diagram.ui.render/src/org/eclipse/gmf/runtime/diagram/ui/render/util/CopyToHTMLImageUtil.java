@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionDimension;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -785,7 +786,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 				for (int x = tileSize.width
 						* (Math.min(startCell.x, endCell.x) + 1); x <= tileSize.width
 						* Math.max(startCell.x, endCell.x); x += tileSize.width) {
-					linePoints.add(new Point(x, Math
+					linePoints.add(new PrecisionPoint(x, Math
 							.round((equation[2] - equation[0] * x)
 									/ equation[1])));
 				}
@@ -794,7 +795,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 				for (int y = tileSize.height
 						* (Math.min(startCell.y, endCell.y) + 1); y <= tileSize.height
 						* Math.max(startCell.y, endCell.y); y += tileSize.height) {
-					linePoints.add(new Point(Math
+					linePoints.add(new PrecisionPoint(Math
 							.round((equation[2] - equation[1] * y)
 									/ equation[0]), y));
 				}

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -104,7 +104,7 @@ public class ConstrainedToolbarLayout extends ToolbarLayout {
 				calculateChildrenSize(children, wHint, prefSize.width, true);
 		}
 
-		prefSize.height += Math.max(0, children.size() - 1) * spacing;
+		prefSize.height += Math.max(0, children.size() - 1) * getSpacing();
 		return transposer
 			.t(prefSize)
 			.expand(insets.getWidth(), insets.getHeight())
@@ -144,7 +144,7 @@ public class ConstrainedToolbarLayout extends ToolbarLayout {
 				calculateChildrenSize(children, wHint, minSize.width, false);
 		}
 
-		minSize.height += Math.max(0, children.size() - 1) * spacing;
+		minSize.height += Math.max(0, children.size() - 1) * getSpacing();
 		return transposer
 			.t(minSize)
 			.expand(insets.getWidth(), insets.getHeight())
@@ -164,9 +164,9 @@ public class ConstrainedToolbarLayout extends ToolbarLayout {
 		int y = clientArea.y;
 		int availableHeight = clientArea.height;
 
-		Dimension prefSizes[] = new Dimension[numChildren];
-		Dimension minSizes[] = new Dimension[numChildren];
-		Dimension maxSizes[] = new Dimension[numChildren];
+		Dimension[] prefSizes = new Dimension[numChildren];
+		Dimension[] minSizes = new Dimension[numChildren];
+		Dimension[] maxSizes = new Dimension[numChildren];
 
 		// Calculate the width and height hints.  If it's a vertical ToolBarLayout,
 		// then ignore the height hint (set it to -1); otherwise, ignore the 
@@ -217,9 +217,9 @@ public class ConstrainedToolbarLayout extends ToolbarLayout {
 			totalMinHeight += minSizes[i].height;
 			totalMaxHeight += maxSizes[i].height;
 		}
-		totalHeight += (numChildren - 1) * spacing;
-		totalMinHeight += (numChildren - 1) * spacing;
-		totalMaxHeight += (numChildren - 1) * spacing;
+		totalHeight += (numChildren - 1) * getSpacing();
+		totalMinHeight += (numChildren - 1) * getSpacing();
+		totalMaxHeight += (numChildren - 1) * getSpacing();
 		prefMinSumHeight = totalHeight - totalMinHeight;
 		prefMaxSumHeight = totalMaxHeight - totalHeight;
 
@@ -256,13 +256,13 @@ public class ConstrainedToolbarLayout extends ToolbarLayout {
 			}
 
 			int width = Math.min(prefWidth, maxWidth);
-			if (matchWidth)
+			if (isStretchMinorAxis())
 				width = maxWidth;
 			width = Math.max(minWidth, Math.min(clientArea.width, width));
 			newBounds.width = width;
 
 			int adjust = clientArea.width - width;
-			switch (minorAlignment) {
+			switch (getMinorAlignment()) {
 				case ALIGN_TOPLEFT :
 					adjust = 0;
 					break;
@@ -282,7 +282,7 @@ public class ConstrainedToolbarLayout extends ToolbarLayout {
 			prefMinSumHeight -= (prefHeight - minHeight);
 			prefMaxSumHeight -= (maxHeight - prefHeight);
 			totalHeight -= prefHeight;
-			y += newBounds.height + spacing;
+			y += newBounds.height + getSpacing();
 		}
 	}
 

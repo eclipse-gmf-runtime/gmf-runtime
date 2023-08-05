@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2008, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -19,6 +19,7 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
@@ -101,11 +102,11 @@ public class FanRouter extends org.eclipse.draw2d.FanRouter {
 		Point bendPoint;
 			
 		if (index % 2 == 0) {
-			bendPoint = new Point(
+			bendPoint = new PrecisionPoint(
 				midPoint.x + (index / 2) * (-1 * ySeparation),
 				midPoint.y + (index / 2) * xSeparation);
 		} else {
-			bendPoint = new Point(
+			bendPoint = new PrecisionPoint(
 				midPoint.x + (index / 2) * ySeparation,
 				midPoint.y + (index / 2) * (-1 * xSeparation));
 		}

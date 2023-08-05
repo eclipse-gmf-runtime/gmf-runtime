@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2009, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -15,6 +15,7 @@ import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
@@ -38,7 +39,7 @@ public class LabelHelper {
 	 * @return a <code>Point</code> which represents a value offset from the <code>ref</code>
 	 * point oriented based on the nearest line segment.
 	 */
-	static public Point offsetFromRelativeCoordinate(IFigure label, Rectangle bounds, Point ref) {
+	public static Point offsetFromRelativeCoordinate(IFigure label, Rectangle bounds, Point ref) {
 		return offsetFromRelativeCoordinate(label, bounds, getParentPointList(label), ref);
 	}
 	
@@ -53,7 +54,7 @@ public class LabelHelper {
 	 * @return a <code>Point</code> which represents a value offset from the <code>ref</code>
 	 * point oriented based on the nearest line segment.
 	 */
-	static private Point offsetFromRelativeCoordinate(IFigure label, Rectangle bounds, PointList points, Point ref) {
+	private static Point offsetFromRelativeCoordinate(IFigure label, Rectangle bounds, PointList points, Point ref) {
 		Rectangle rect = new Rectangle(bounds);
 		
 		//Componsate for the fact that we are using the 
@@ -78,7 +79,7 @@ public class LabelHelper {
 	 * @return a <code>Point</code> that is the relative coordinate of the label that can be
 	 * used to set it's location.
 	 */
-	static public Point relativeCoordinateFromOffset(IFigure label, Point ref, Point offset) {
+	public static Point relativeCoordinateFromOffset(IFigure label, Point ref, Point offset) {
 		return relativeCoordinateFromOffset(label, getParentPointList(label), ref, offset);
 	}
 	
@@ -95,7 +96,7 @@ public class LabelHelper {
 	 * @return a <code>Point</code> that is the relative coordinate of the label that can be
 	 * used to set it's location.
 	 */
-	static private Point relativeCoordinateFromOffset(IFigure label, PointList points, Point ref, Point offset) {
+	private static Point relativeCoordinateFromOffset(IFigure label, PointList points, Point ref, Point offset) {
 		Point location = calculatePointRelativeToPointOnLine(points, ref, offset);
 		location.translate(-1 * label.getBounds().width /2, -1 * label.getBounds().height /2);
 		return location;
@@ -107,7 +108,7 @@ public class LabelHelper {
 	 * @param label the <code>IFigure</code> to use to retrieve the parent points
 	 * @return List of points
 	 */
-	static private PointList getParentPointList(IFigure label) {
+	private static PointList getParentPointList(IFigure label) {
 		IFigure parent = label.getParent();
 		if (parent instanceof Connection) {
 			return ((Connection) parent).getPoints();
@@ -169,7 +170,7 @@ public class LabelHelper {
 						normalizedOffset = offset.getCopy().scale(-1, -1);
 					}
 
-					calculatedOffset = new Point(normalizedOffset.x
+					calculatedOffset = new PrecisionPoint(normalizedOffset.x
 						* Math.cos(theta) - normalizedOffset.y
 						* Math.sin(theta), normalizedOffset.x * Math.sin(theta)
 						+ normalizedOffset.y * Math.cos(theta));
@@ -247,7 +248,7 @@ public class LabelHelper {
 		Point p1 = parallelSeg.perpIntersect(ptOnLine.x, ptOnLine.y);
 		double dx = p1.getDistance(refPoint) * ((p1.x > refPoint.x) ? -1 : 1);
 		double dy = p1.getDistance(ptOnLine) * ((p1.y < ptOnLine.y) ? -1 : 1);
-		Point orth = new Point(dx, dy);	
+		Point orth = new PrecisionPoint(dx, dy);	
 		// Reflection in the y axis		
 		if (lineSeg.getOrigin().x > lineSeg.getTerminus().x)
 			orth = orth.scale(-1, -1);
