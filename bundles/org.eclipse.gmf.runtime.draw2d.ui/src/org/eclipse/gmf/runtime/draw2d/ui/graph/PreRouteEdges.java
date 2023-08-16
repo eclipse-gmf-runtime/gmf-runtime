@@ -158,8 +158,8 @@ class PreRouteEdges {
 		for (Iterator<BorderNode> itr = nodes.iterator(); itr.hasNext();) {
 			BorderNode bn = itr.next();
 			if (bn.position == position) {
-				incomingEdges.addAll(bn.incomingJointEdges.edges);
-				outgoingEdges.addAll(bn.outgoingJointEdges.edges);
+				bn.incomingJointEdges.edges.stream().filter(ConstrainedEdge.class::isInstance).map(ConstrainedEdge.class::cast).forEach(incomingEdges::add);
+				bn.outgoingJointEdges.edges.stream().filter(ConstrainedEdge.class::isInstance).map(ConstrainedEdge.class::cast).forEach(outgoingEdges::add);
 				maxBorderNodeOutsideWidth = Math.max(maxBorderNodeOutsideWidth, (int)(bn.width * bn.getOutsideRatio()));
 			}
 		}
