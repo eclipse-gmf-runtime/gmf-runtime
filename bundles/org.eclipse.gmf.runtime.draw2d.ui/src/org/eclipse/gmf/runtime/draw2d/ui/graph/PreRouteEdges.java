@@ -17,11 +17,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.graph.DirectedGraph;
+import org.eclipse.draw2d.graph.Edge;
+import org.eclipse.draw2d.graph.EdgeList;
 import org.eclipse.draw2d.graph.Node;
 
 /**
@@ -158,8 +161,8 @@ class PreRouteEdges {
 		for (Iterator<BorderNode> itr = nodes.iterator(); itr.hasNext();) {
 			BorderNode bn = itr.next();
 			if (bn.position == position) {
-				bn.incomingJointEdges.edges.stream().filter(ConstrainedEdge.class::isInstance).map(ConstrainedEdge.class::cast).forEach(incomingEdges::add);
-				bn.outgoingJointEdges.edges.stream().filter(ConstrainedEdge.class::isInstance).map(ConstrainedEdge.class::cast).forEach(outgoingEdges::add);
+				incomingEdges.addAll(((ArrayList<Edge>) bn.incomingJointEdges.edges).stream().filter(ConstrainedEdge.class::isInstance).map(ConstrainedEdge.class::cast).toList());
+				outgoingEdges.addAll(((ArrayList<Edge>) bn.outgoingJointEdges.edges).stream().filter(ConstrainedEdge.class::isInstance).map(ConstrainedEdge.class::cast).toList());
 				maxBorderNodeOutsideWidth = Math.max(maxBorderNodeOutsideWidth, (int)(bn.width * bn.getOutsideRatio()));
 			}
 		}
