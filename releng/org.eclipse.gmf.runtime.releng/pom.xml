@@ -11,7 +11,7 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>2.7.5</tycho-version>
+		<tycho-version>4.0.1</tycho-version>
 		<cbi-plugins.version>1.3.2</cbi-plugins.version>
 		<antrun-version>3.0.0</antrun-version>
 		<platform>2021-03</platform>
