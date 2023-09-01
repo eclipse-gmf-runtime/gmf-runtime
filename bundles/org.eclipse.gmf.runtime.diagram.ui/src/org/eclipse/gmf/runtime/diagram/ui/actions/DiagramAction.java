@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2020 IBM Corporation and others.
+ * Copyright (c) 2002, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -89,7 +89,8 @@ public abstract class DiagramAction
 	 * 
 	 * @see org.eclipse.gmf.runtime.common.ui.action.IDisposableAction#dispose()
 	 */
-	public void dispose() {
+	@Override
+    public void dispose() {
 		targetRequest = null;
 		_operationSet = null;
 		super.dispose();
@@ -100,7 +101,8 @@ public abstract class DiagramAction
 	 * 
 	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler#doRun(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected void doRun(IProgressMonitor progressMonitor) {
+	@Override
+    protected void doRun(IProgressMonitor progressMonitor) {
 		execute(getCommand(), progressMonitor);
 	}
 
@@ -109,7 +111,8 @@ public abstract class DiagramAction
 	 * 
 	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#refresh()
 	 */
-	public void refresh() {
+	@Override
+    public void refresh() {
         if (Display.getCurrent() == null) {
             /*
              * We are not in a UI thread, so we call the refresh later to avoid potential
@@ -127,7 +130,7 @@ public abstract class DiagramAction
         }
     }
 
-    private void internalRefresh() {
+    protected void internalRefresh() {
         _operationSet = null; // invalidate the cached set
         updateTargetRequest();
         setEnabled(calculateEnabled());
@@ -313,7 +316,7 @@ public abstract class DiagramAction
 	 *         otherwise
 	 */
 	protected IDiagramEditDomain getDiagramEditDomain() {
-		return (IDiagramEditDomain) getWorkbenchPart().getAdapter(
+		return getWorkbenchPart().getAdapter(
 			IDiagramEditDomain.class);
 	}
 
@@ -333,7 +336,7 @@ public abstract class DiagramAction
 			diagramPart = (IDiagramWorkbenchPart) part;
 			
 		} else if (part!=null){
-			diagramPart = (IDiagramWorkbenchPart) part
+			diagramPart = part
 					.getAdapter(IDiagramWorkbenchPart.class);
 		}
 
@@ -402,7 +405,8 @@ public abstract class DiagramAction
      * method will be called when the context menu is about to show.
      * </p>
      */
-	protected abstract boolean isSelectionListener();
+	@Override
+    protected abstract boolean isSelectionListener();
 
 	/**
 	 * @param targetRequest

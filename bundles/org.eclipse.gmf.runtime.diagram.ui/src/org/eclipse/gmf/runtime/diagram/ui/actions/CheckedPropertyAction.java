@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2023 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -47,6 +47,7 @@ public class CheckedPropertyAction extends PropertyChangeAction {
 		this.propertyValue = propertyValue;
 	}
     
+    @Override
     protected boolean isOperationHistoryListener() {
         return true;
     }
@@ -54,15 +55,17 @@ public class CheckedPropertyAction extends PropertyChangeAction {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IAction#getStyle()
 	 */
-	public int getStyle() {
+	@Override
+    public int getStyle() {
 		return AS_CHECK_BOX;
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#refresh()
 	 */
-	public void refresh() {
-		super.refresh();
+    @Override
+    protected void internalRefresh() {
+        super.internalRefresh();
 		setChecked(calculateChecked());
 	}
 
@@ -78,7 +81,8 @@ public class CheckedPropertyAction extends PropertyChangeAction {
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.internal.PropertyChangeAction#getNewPropertyValue()
 	 */
-	protected Object getNewPropertyValue() {
+	@Override
+    protected Object getNewPropertyValue() {
 		return propertyValue;
 	}
 
