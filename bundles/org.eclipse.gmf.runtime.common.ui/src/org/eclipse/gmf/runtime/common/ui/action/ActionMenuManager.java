@@ -66,14 +66,21 @@ public class ActionMenuManager extends MenuManager {
         // the menu widget
         private Menu menu;
 
+        private boolean isRetargetableAction(IAction action) {
+            // INotRetargetable is a marker interface.
+            // There are no "IRetargetable" interface, so a double negation with INotRetargetable is required
+            return !(action instanceof INonRetargetable);
+        }
+
         // menu item selection listener: listens to selection events
         private Listener menuItemListener = new Listener() {
+            @Override
             public void handleEvent(Event event) {
                 if (SWT.Selection == event.type
                     && !event.widget.isDisposed()) {
                     ActionContributionItem item =
                         (ActionContributionItem) event.widget.getData();
-                    if (retargetLastAction) {
+                    if (retargetLastAction && isRetargetableAction(item.getAction())) {
                         setActionHandler(item.getAction());
                         setDefaultAction(item.getAction());
                     }
@@ -97,6 +104,7 @@ public class ActionMenuManager extends MenuManager {
         /* (non-Javadoc)
          * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Control)
          */
+        @Override
         public Menu getMenu(Control parent) {
             if (menu != null)
                 menu.dispose();
@@ -108,6 +116,7 @@ public class ActionMenuManager extends MenuManager {
         /* (non-Javadoc)
          * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Menu)
          */
+        @Override
         public Menu getMenu(Menu parent) {
             if (menu != null)
                 menu.dispose();
@@ -118,6 +127,7 @@ public class ActionMenuManager extends MenuManager {
         /* (non-Javadoc)
          * @see org.eclipse.ui.actions.ActionFactory.IWorkbenchAction#dispose()
          */
+        @Override
         public void dispose() {
             if (menu != null) {
                 menu.dispose();
@@ -178,6 +188,7 @@ public class ActionMenuManager extends MenuManager {
          * is determined by the sub-action(s) enablement state
          * 
          */
+        @Override
         protected void propagateChange(PropertyChangeEvent event) {
             if (!event.getProperty().equals(Action.ENABLED))
                 super.propagateChange(event);
@@ -188,6 +199,7 @@ public class ActionMenuManager extends MenuManager {
          * is determined by the sub-action(s)
          * 
          */
+        @Override
         protected void setActionHandler(IAction handler) {
             boolean enabled = MenuCreatorAction.this.isEnabled();
             super.setActionHandler(handler);
@@ -198,6 +210,7 @@ public class ActionMenuManager extends MenuManager {
          * Only run the action handler if it is enabled
          * 
          */
+        @Override
         public void run() {
             if (getActionHandler() != null && getActionHandler().isEnabled())
                 super.run();
@@ -211,6 +224,7 @@ public class ActionMenuManager extends MenuManager {
          * Only run the action handler if it is enabled
          * 
          */
+        @Override
         public void runWithEvent(Event event) {
             if (getActionHandler() != null && getActionHandler().isEnabled())
                 super.runWithEvent(event);
@@ -288,6 +302,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     public void fill(Composite parent) {
         // this is only relevant in toolbars
         retargetLastAction = false;
@@ -297,6 +312,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
      */
+    @Override
     public void fill(Menu parent, int index) {
         // this is only relevant in toolbars
         retargetLastAction = false;
@@ -306,6 +322,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
      */
+    @Override
     public void fill(ToolBar parent, int index) {
         actionContributionItem.fill(parent, index);
     }
@@ -313,6 +330,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#dispose()
      */
+    @Override
     public void dispose() {
         actionContributionItem.dispose();
         super.dispose();
@@ -321,6 +339,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#isEnabled()
      */
+    @Override
     public boolean isEnabled() {
         return actionContributionItem.isEnabled();
     }
@@ -328,6 +347,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionManager#isDirty()
      */
+    @Override
     public boolean isDirty() {
         return actionContributionItem.isDirty();
     }
@@ -335,6 +355,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#isDynamic()
      */
+    @Override
     public boolean isDynamic() {
         return actionContributionItem.isDynamic();
     }
@@ -342,6 +363,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#isGroupMarker()
      */
+    @Override
     public boolean isGroupMarker() {
         return actionContributionItem.isGroupMarker();
     }
@@ -349,6 +371,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#isSeparator()
      */
+    @Override
     public boolean isSeparator() {
         return actionContributionItem.isSeparator();
     }
@@ -356,6 +379,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#isVisible()
      */
+    @Override
     public boolean isVisible() {
         IContributionItem[] items = getRealItems();
         for (int i = 0; i < items.length; i++) {
@@ -370,6 +394,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#setParent(org.eclipse.jface.action.IContributionManager)
      */
+    @Override
     public void setParent(IContributionManager parent) {
         actionContributionItem.setParent(parent);
     }
@@ -377,6 +402,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#setVisible(boolean)
      */
+    @Override
     public void setVisible(boolean visible) {
         actionContributionItem.setVisible(visible);
     }
@@ -384,6 +410,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#update()
      */
+    @Override
     public void update() {
         actionContributionItem.update();
     }
@@ -391,6 +418,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#update(java.lang.String)
      */
+    @Override
     public void update(String id) {
         actionContributionItem.update(id);
     }
@@ -398,6 +426,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuManager#updateAll(boolean)
      */
+    @Override
     public void updateAll(boolean force) {
         update(force);
 
@@ -416,6 +445,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionManager#update(boolean)
      */
+    @Override
     public void update(boolean force) {
         update();
     }
@@ -423,6 +453,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.ContributionManager#itemAdded(org.eclipse.jface.action.IContributionItem)
      */
+    @Override
     protected void itemAdded(IContributionItem item) {
         super.itemAdded(item);
         if (item instanceof SubContributionItem)
@@ -434,6 +465,7 @@ public class ActionMenuManager extends MenuManager {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.ContributionManager#itemRemoved(org.eclipse.jface.action.IContributionItem)
      */
+    @Override
     protected void itemRemoved(IContributionItem item) {
         super.itemRemoved(item);
         if (item instanceof SubContributionItem)
