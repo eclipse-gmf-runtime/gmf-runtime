@@ -272,9 +272,7 @@ public class ColorPalettePopup {
 		moreColors.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent event) {
-
-				ColorDialog dialog = new ColorDialog(Display.getCurrent()
-					.getActiveShell());	
+				ColorDialog dialog = new ColorDialog(parent);	
 				dialog.setRGB(FigureUtilities.integerToRGB(getPreviousColor()));
 				WindowUtil.centerDialog(dialog.getParent(), Display
 					.getCurrent().getActiveShell());
