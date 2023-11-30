@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.eclipse.gmf.runtime</groupId>
     <artifactId>org.eclipse.gmf.runtime.releng</artifactId>
-    <version>1.16.2-SNAPSHOT</version>
+    <version>1.16.3-SNAPSHOT</version>
     <relativePath>../../releng/org.eclipse.gmf.runtime.releng/pom.xml</relativePath>
   </parent>
   <groupId>org.eclipse.gmf-runtime</groupId>
   <artifactId>org.eclipse.gmf</artifactId>
-  <version>1.16.2-SNAPSHOT</version>
+  <version>1.16.3-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
