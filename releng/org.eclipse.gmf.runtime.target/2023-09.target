@@ -9,7 +9,7 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
       <unit id="org.eclipse.platform.ide" version="0.0.0"/>
-       <repository id="Eclipse-4.29" location="https://download.eclipse.org/eclipse/updates/4.29"/>
+      <repository id="Eclipse-4.29" location="https://download.eclipse.org/eclipse/updates/4.29"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
