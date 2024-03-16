@@ -19,9 +19,9 @@
       <repository id="EMF-Nightly" location="https://download.eclipse.org/modeling/emf/emf/builds/nightly/latest"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.ocl.feature.group" version="0.0.0"/>
-      <repository id="OCL-LastSuccessful" location="https://download.eclipse.org/modeling/mdt/ocl/updates/nightly/"/>
-    </location>
+      <unit id="org.eclipse.ocl.all.sdk.feature.group" version="0.0.0"/>
+      <repository id="OCL-LastSuccessful" location="https://download.eclipse.org/modeling/mdt/ocl/builds/nightly/latest"/>
+   </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.uml2.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.uml2.common.feature.group" version="0.0.0"/>
