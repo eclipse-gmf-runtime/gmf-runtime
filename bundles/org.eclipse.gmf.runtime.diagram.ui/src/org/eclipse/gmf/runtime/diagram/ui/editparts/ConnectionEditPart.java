@@ -382,6 +382,7 @@ abstract public class ConnectionEditPart
 	   
         boolean wasActive = isActive();
         super.deactivate();
+		removeNotationalListeners();
         if (listenerFilters != null && wasActive != isActive()) {
             for (Iterator i = listenerFilters.keySet().iterator(); i.hasNext();) {
                 Object[] obj = (Object[]) listenerFilters.get(i.next());
