@@ -10,6 +10,6 @@
   </parent>
   <groupId>org.eclipse.gmf.runtime.diagram.ui</groupId>
   <artifactId>org.eclipse.gmf.runtime.diagram.ui</artifactId>
-  <version>1.10.1-SNAPSHOT</version>
+  <version>1.10.2-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
