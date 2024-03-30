@@ -70,7 +70,7 @@
       <unit id="org.apache.commons.logging" version="1.2.0"/>
       <unit id="org.hamcrest" version="2.2.0"/>
       <unit id="org.eclipse.orbit.xml-apis-ext" version="1.0.0.v20230923-0644"/>
-	  <repository id="Orbit" location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/nightly/latest"/>
+	  <repository id="Orbit" location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.31.0"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.validation.sdk.feature.group" version="0.0.0"/>
