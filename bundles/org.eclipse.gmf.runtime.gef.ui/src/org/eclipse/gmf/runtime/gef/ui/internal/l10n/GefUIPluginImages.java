@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2024 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -34,17 +34,9 @@ public class GefUIPluginImages {
 
 	// Image descriptors.
 
-	public static final ImageDescriptor DESC_SEG_ADD_MASK = create(PREFIX_ROOT
-		+ "Seg_Add_Mask.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_SEG_ADD = create(PREFIX_ROOT + "Seg_Add.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor DESC_SEG_ADD = create(PREFIX_ROOT
-		+ "Seg_Add.gif"); //$NON-NLS-1$
-
-	public static final ImageDescriptor DESC_SEG_MOVE_MASK = create(PREFIX_ROOT
-		+ "Seg_Move_Mask.gif"); //$NON-NLS-1$
-
-	public static final ImageDescriptor DESC_SEG_MOVE = create(PREFIX_ROOT
-		+ "Seg_Move.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_SEG_MOVE = create(PREFIX_ROOT + "Seg_Move.png"); //$NON-NLS-1$
 
 	/**
 	 * Creates the image descriptor from the filename given.
@@ -54,8 +46,7 @@ public class GefUIPluginImages {
 	 * @return the new image descriptor
 	 */
 	private static ImageDescriptor create(String imageName) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin(GefPlugin
-			.getPluginId(), imageName);
+		return AbstractUIPlugin.imageDescriptorFromPlugin(GefPlugin.getPluginId(), imageName);
 	}
 
 }

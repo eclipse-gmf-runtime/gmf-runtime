@@ -33,15 +33,27 @@ public class Cursors {
      * Constant define for a cusor used to move an existing line segment
      */
     public static final Cursor CURSOR_SEG_MOVE;
+    
+    private static int deviceZoom = -1;
 
     static {
-		CURSOR_SEG_ADD = new Cursor(null, GefUIPluginImages.DESC_SEG_ADD_MASK
-			.getImageData(), GefUIPluginImages.DESC_SEG_ADD.getImageData(), 0,
-			0);
-
-		CURSOR_SEG_MOVE = new Cursor(null, GefUIPluginImages.DESC_SEG_MOVE_MASK
-			.getImageData(), GefUIPluginImages.DESC_SEG_MOVE.getImageData(), 0,
-			0);
+		CURSOR_SEG_ADD = new Cursor(null, GefUIPluginImages.DESC_SEG_ADD.getImageData(getDeviceZoom()), 0, 0);
+		CURSOR_SEG_MOVE = new Cursor(null, GefUIPluginImages.DESC_SEG_MOVE.getImageData(getDeviceZoom()), 0, 0);
 	}
-
+    
+    // Taken from org.eclipse.gef.SharedCursors.java
+	private static int getDeviceZoom() {
+		if (deviceZoom == -1) {
+			deviceZoom = 100; // default value
+			String deviceZoomProperty = System.getProperty("org.eclipse.swt.internal.deviceZoom"); //$NON-NLS-1$
+			if (deviceZoomProperty != null) {
+				try {
+					deviceZoom = Integer.parseInt(deviceZoomProperty);
+				} catch (NumberFormatException ex) {
+					// if the property can not be parsed we keep the default 100% zoom level
+				}
+			}
+		}
+		return deviceZoom;
+	}
 }
