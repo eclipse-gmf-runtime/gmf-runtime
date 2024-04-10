@@ -16,7 +16,7 @@
 		<antrun-version>3.0.0</antrun-version>
 		<platform>2022-09</platform>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<tycho.scmUrl>scm:git:https://github.com/eclipse/gmf-runtime.git</tycho.scmUrl>
+		<tycho.scmUrl>scm:git:https://github.com/eclipse-gmf-runtime/gmf-runtime.git</tycho.scmUrl>
 	</properties>
 
 	<build>
