@@ -151,7 +151,9 @@ abstract public class ConnectionEditPart
     implements IGraphicalEditPart, PropertyChangeListener, IContainedEditPart,
     IPrimaryEditPart, NotificationListener {
 
-    /** A map of listener filters ids to filter data */
+    private static final String SEMANTIC_PROXY = "SemanticProxy"; //$NON-NLS-1$
+
+	/** A map of listener filters ids to filter data */
     private Map listenerFilters;
 
     /** Used for registering and unregistering the edit part */
@@ -253,7 +255,7 @@ abstract public class ConnectionEditPart
         if (semanticElement != null)
             addSemanticListeners();
         else if (semanticProxy != null) {
-            addListenerFilter("SemanticProxy", this, semanticProxy); //$NON-NLS-1$
+            addListenerFilter(SEMANTIC_PROXY, this, semanticProxy);
         }
         super.activate();
     }
@@ -383,6 +385,16 @@ abstract public class ConnectionEditPart
         boolean wasActive = isActive();
         super.deactivate();
 		removeNotationalListeners();
+
+        EObject semanticProxy = ((View) getModel()).getElement();
+        EObject semanticElement = EMFCoreUtil.resolve(getEditingDomain(),
+            semanticProxy);
+        if (semanticElement != null)
+            removeSemanticListeners();
+        else if (semanticProxy != null) {
+            removeListenerFilter(SEMANTIC_PROXY);
+        }
+        
         if (listenerFilters != null && wasActive != isActive()) {
             for (Iterator i = listenerFilters.keySet().iterator(); i.hasNext();) {
                 Object[] obj = (Object[]) listenerFilters.get(i.next());
