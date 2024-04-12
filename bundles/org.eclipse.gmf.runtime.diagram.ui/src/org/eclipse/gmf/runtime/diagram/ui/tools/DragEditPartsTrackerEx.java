@@ -21,6 +21,7 @@ import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.commands.Command;
@@ -29,7 +30,6 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.gef.tools.ToolUtilities;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToHelperUtil;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -94,7 +94,7 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
             if (request instanceof ChangeBoundsRequest) {
                 Point delta = ((ChangeBoundsRequest) request).getMoveDelta();
                 MapModeUtil.getMapMode(
-                    ((IGraphicalEditPart) getTargetEditPart()).getFigure())
+                    ((GraphicalEditPart) getTargetEditPart()).getFigure())
                     .DPtoLP(delta);
 
                 duplicateRequest.setOffset(delta);
@@ -152,8 +152,8 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 		super.executeCurrentCommand();
 		if (isActive()) {
 			if (getOperationSet().size() > 0) {
-				if (getOperationSet().get(0) instanceof IGraphicalEditPart) {
-					IGraphicalEditPart editpart = (IGraphicalEditPart) getOperationSet()
+				if (getOperationSet().get(0) instanceof GraphicalEditPart) {
+					GraphicalEditPart editpart = (GraphicalEditPart) getOperationSet()
 						.get(0);
 					if ((editpart.getFigure() == null)
 						|| (editpart.getFigure().getParent() == null)
@@ -289,7 +289,7 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
     protected boolean handleKeyDown(KeyEvent e) {
         if (acceptArrowKey(e)) {
             if (isInState(STATE_INITIAL)) {
-                IGraphicalEditPart ep = (IGraphicalEditPart) getSourceEditPart();
+                GraphicalEditPart ep = (GraphicalEditPart) getSourceEditPart();
                 if (ep != null) {
                     Point location = ep.getFigure().getBounds().getCenter();
                     ep.getFigure().translateToAbsolute(location);
