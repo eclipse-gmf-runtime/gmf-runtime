@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2024 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -56,7 +56,8 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 	/**
 	 * @see org.eclipse.gef.tools.AbstractTool#getCommand()
 	 */
-	protected Command getCommand() {
+	@Override
+    protected Command getCommand() {
 		if (!isMove()) {
 			CompoundCommand command = new CompoundCommand();
 			addSourceCommands(false, command); 
@@ -116,7 +117,8 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 	/**
 	 * @see org.eclipse.gef.tools.AbstractTool#getCommandName()
 	 */
-	protected String getCommandName() {
+	@Override
+    protected String getCommandName() {
 		if (!isMove())
 			return RequestConstants.REQ_DROP;
 		return super.getCommandName();
@@ -126,7 +128,8 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 	 * If the source is not in the operation set, it is not a move
 	 * @see org.eclipse.gef.tool s.DragEditPartsTracker#isMove()
 	 */
-	protected boolean isMove() {		
+	@Override
+    protected boolean isMove() {		
 		for (int i = 0 ; i < getOperationSet().size(); i++){
 			if (getOperationSet().get(i).equals(getSourceEditPart())){
 				return super.isMove();
@@ -148,7 +151,8 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 	/* (non-Javadoc)
 	 * @see org.eclipse.gef.tools.AbstractTool#executeCurrentCommand()
 	 */
-	protected void executeCurrentCommand() {
+	@Override
+    protected void executeCurrentCommand() {
 		super.executeCurrentCommand();
 		if (isActive()) {
 			if (getOperationSet().size() > 0) {
@@ -174,6 +178,7 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 		editpart.getViewer().reveal(editpart);
 	}
    
+    @Override
     protected boolean handleDragInProgress() {
         boolean returnValue = super.handleDragInProgress();
         if (isInState(STATE_DRAG_IN_PROGRESS)
@@ -186,6 +191,7 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
         return returnValue;
     }
 
+    @Override
     protected Cursor calculateCursor() {
         if (isInState(STATE_DRAG_IN_PROGRESS)
             || isInState(STATE_ACCESSIBLE_DRAG_IN_PROGRESS)) {
@@ -215,6 +221,7 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
         return super.calculateCursor();
     }
     
+    @Override
     protected boolean handleButtonDown(int button) {
 
         // If the group is selected, and the user clicks on a shape, defer the
@@ -232,6 +239,7 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
         return super.handleButtonDown(button);
     }
 
+    @Override
     protected boolean handleDoubleClick(int button) {
         // If the user double-clicks a shape in a group and the shape is not
         // selected, select the shape.
@@ -244,6 +252,7 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
         }
     }
 
+    @Override
     protected void performSelection() {
         super.performSelection();
 
@@ -258,23 +267,24 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
      * Overridden to add extended data to the request to restrict snapping to
      * specific directions based on the move delta.
      */
+    @Override
     protected void snapPoint(ChangeBoundsRequest request) {
         Point moveDelta = request.getMoveDelta();
         if (getState() == STATE_ACCESSIBLE_DRAG_IN_PROGRESS) {
             int restrictedDirection = 0;
 
-            if (moveDelta.x > 0) {
+            if (moveDelta.preciseX() > 0) {
                 restrictedDirection = restrictedDirection
                     | PositionConstants.EAST;
-            } else if (moveDelta.x < 0) {
+            } else if (moveDelta.preciseX() < 0) {
                 restrictedDirection = restrictedDirection
                     | PositionConstants.WEST;
             }
 
-            if (moveDelta.y > 0) {
+            if (moveDelta.preciseY() > 0) {
                 restrictedDirection = restrictedDirection
                     | PositionConstants.SOUTH;
-            } else if (moveDelta.y < 0) {
+            } else if (moveDelta.preciseY() < 0) {
                 restrictedDirection = restrictedDirection
                     | PositionConstants.NORTH;
             }
@@ -286,6 +296,7 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
         super.snapPoint(request);
     }
     
+    @Override
     protected boolean handleKeyDown(KeyEvent e) {
         if (acceptArrowKey(e)) {
             if (isInState(STATE_INITIAL)) {
