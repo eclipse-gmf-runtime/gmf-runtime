@@ -17,26 +17,25 @@ The GMF Runtime provides many features that one would have to code by hand if us
 
 ### Issues
 
-Issues are tracked in the Eclipse Bugzilla under the _GMF-Runtime_ product:
+New issues are tracked in GitHib at https://github.com/eclipse-gmf-runtime/gmf-runtime/issues
 
-* [List of all open issues](https://bugs.eclipse.org/bugs/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&classification=Modeling&component=General&list_id=20785712&product=GMF-Runtime&query_format=advanced)
-
+Historical issues are still available [in the Eclipse Bugzilla under the _GMF-Runtime_ product](https://bugs.eclipse.org/bugs/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&classification=Modeling&component=General&list_id=20785712&product=GMF-Runtime&query_format=advanced).
 
 ### Building
 
 From the top-level directory:
 
     mvn clean verify
-    
+
 You can build against a specific Target Platform using `-Dplatform=$PLATFORM_NAME`.
-The supported platforms are available in the `org.eclipse.gmf.runtime.target` directory.
+The supported platforms are available in the `releng/org.eclipse.gmf.runtime.target` directory.
 For example:
 
     mvn clean verify -Dplatform=2021-06
 
 ### CI
 
-The official builds are executed on the Eclipse-provided Jenkins instance at <https://ci.eclipse.org/gmf-runtime/job/gmf-runtime//>
+The official builds are executed on the Eclipse-provided Jenkins instance at <https://ci.eclipse.org/gmf-runtime/job/gmf-runtime/>
 
 ### Update Sites
 
@@ -47,6 +46,7 @@ Update Sites (p2 repositories) are available at:
 
 | Version | Repository URL                                                                       |
 |:--------|:-------------------------------------------------------------------------------------|
+| 1.16.3  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202403010913 |
 | 1.15.5  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202312180813 |
 | 1.15.4  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202312022032 |
 | 1.16.2  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202311130907 |
