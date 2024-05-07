@@ -385,15 +385,8 @@ abstract public class ConnectionEditPart
         boolean wasActive = isActive();
         super.deactivate();
 		removeNotationalListeners();
-
-        EObject semanticProxy = ((View) getModel()).getElement();
-        EObject semanticElement = EMFCoreUtil.resolve(getEditingDomain(),
-            semanticProxy);
-        if (semanticElement != null)
-            removeSemanticListeners();
-        else if (semanticProxy != null) {
-            removeListenerFilter(SEMANTIC_PROXY);
-        }
+        removeSemanticListeners();
+        removeListenerFilter(SEMANTIC_PROXY);
         
         if (listenerFilters != null && wasActive != isActive()) {
             for (Iterator i = listenerFilters.keySet().iterator(); i.hasNext();) {
