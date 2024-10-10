@@ -13,7 +13,7 @@ The GMF Runtime provides many features that one would have to code by hand if us
 
 ### Source
 
-* Clone: https://github.com/eclipse/gmf-runtime
+Clone <https://github.com/eclipse-gmf-runtime/gmf-runtime>
 
 ### Issues
 
@@ -31,7 +31,7 @@ You can build against a specific Target Platform using `-Dplatform=$PLATFORM_NAM
 The supported platforms are available in the `releng/org.eclipse.gmf.runtime.target` directory.
 For example:
 
-    mvn clean verify -Dplatform=2021-06
+    mvn clean verify -Dplatform=2023-09
 
 ### CI
 
@@ -46,6 +46,7 @@ Update Sites (p2 repositories) are available at:
 
 | Version | Repository URL                                                                       |
 |:--------|:-------------------------------------------------------------------------------------|
+| 1.16.4  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202405171447 |
 | 1.16.3  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202403010913 |
 | 1.15.5  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202312180813 |
 | 1.15.4  | https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/R202312022032 |
