@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.gmf.runtime</groupId>
 		<artifactId>org.eclipse.gmf.runtime.releng</artifactId>
-		<version>1.16.4-SNAPSHOT</version>
+		<version>1.16.5-SNAPSHOT</version>
 		<relativePath>../../releng/org.eclipse.gmf.runtime.releng/pom.xml</relativePath>
 	</parent>
 	<groupId>org.eclipse.gmf.tests.runtime.common.core</groupId>
