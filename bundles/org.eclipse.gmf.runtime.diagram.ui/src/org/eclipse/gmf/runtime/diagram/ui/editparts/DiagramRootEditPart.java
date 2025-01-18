@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2025 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -24,12 +24,12 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
+import org.eclipse.draw2d.zoom.ZoomListener;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
-import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -193,7 +193,7 @@ public class DiagramRootEditPart
 
 		/* 
 		 * (non-Javadoc)
-		 * @see org.eclipse.gef.editparts.ZoomListener#zoomChanged(double)
+		 * @see ZoomListener#zoomChanged(double)
 		 */
 		public void zoomChanged(double zoom) {
 			ScaledGraphics.resetFontCache();
