@@ -88,29 +88,31 @@ public class ConnectorTests
 
 			flushEventQueue();
 
-			class MyConnectorEndpointTracker
-				extends ConnectionEndpointTracker {
+			class MyConnectorEndpointTracker extends ConnectionEndpointTracker {
 
 				private Point location;
 
-				public MyConnectorEndpointTracker(ConnectionEditPart cep,
-						Point location) {
+				public MyConnectorEndpointTracker(ConnectionEditPart cep, Point location) {
 					super(cep);
 					this.location = location;
 				}
 
+				@Override
 				public void updateTargetRequest() {
 					super.updateTargetRequest();
 				}
 
-				public Request getTargetRequest() {
-					return super.getTargetRequest();
+				@Override
+				public ReconnectRequest getTargetRequest() {
+					return (ReconnectRequest) super.getTargetRequest();
 				}
 
+				@Override
 				public Point getLocation() {
 					return location;
 				}
 
+				@Override
 				public boolean updateTargetUnderMouse() {
 					return false;
 				}
@@ -205,18 +207,22 @@ public class ConnectorTests
 					this.location = location;
 				}
 
+				@Override
 				public boolean handleDragInProgress() {
 					return super.handleDragInProgress();
 				}
 
-				public Request getTargetRequest() {
-					return super.getTargetRequest();
+				@Override
+				public ReconnectRequest getTargetRequest() {
+					return (ReconnectRequest) super.getTargetRequest();
 				}
 
+				@Override
 				public Point getLocation() {
 					return location;
 				}
-
+				
+				@Override
 				public boolean updateTargetUnderMouse() {
 					return false;
 				}
