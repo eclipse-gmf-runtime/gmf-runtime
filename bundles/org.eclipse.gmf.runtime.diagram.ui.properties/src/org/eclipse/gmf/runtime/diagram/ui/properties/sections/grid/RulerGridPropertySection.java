@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2025 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -37,6 +37,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -341,6 +343,17 @@ public class RulerGridPropertySection
 			}
 		});
 		lineColorButton.setEnabled(true);
+		lineColorButton.addDisposeListener(new DisposeListener() {
+
+		    public void widgetDisposed(DisposeEvent e) {
+		        if (lineColorButton != null) {
+		            // setLineColorButtonImage() created an overlay image dynamically, so the image must be disposed
+		            // before the dispose of the Button to avoid a "org.eclipse.swt.SWTException: Widget is disposed"
+		            // when calling "getImage()".
+		            disposeImage(lineColorButton.getImage());
+		        }
+		    }
+	    });
 	}
 
 	private void createLineStyleControl(Composite composite) {
@@ -682,10 +695,6 @@ public class RulerGridPropertySection
 	public void dispose() {
 		stopTextWidgetEventListener();
 		removeWorkspacePropertyListener();
-		if (lineColorButton != null) {
-			// setLineColorButtonImage() created an overlay image dynamically
-			disposeImage(lineColorButton.getImage());
-		}
 		super.dispose();
 	}
 
