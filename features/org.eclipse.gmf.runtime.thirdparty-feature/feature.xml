@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.gmf.runtime.thirdparty"
       label="%featureName"
-      version="1.16.6.qualifier"
+      version="1.16.7.qualifier"
       provider-name="%providerName"
       image="modeling32.png"
       license-feature="org.eclipse.license"
