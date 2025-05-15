@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<target name="gmf-runtime-2022-12" sequenceNumber="1655491792">
+<target name="gmf-runtime-2025-03" sequenceNumber="1655491792">
   <locations>
     <!-- Common locations -->
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -52,31 +52,31 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
       <unit id="org.eclipse.platform.ide" version="0.0.0"/>
-      <repository id="Eclipse-4.26" location="https://download.eclipse.org/eclipse/updates/4.26"/>
+      <repository id="Eclipse-4.36" location="https://download.eclipse.org/eclipse/updates/4.35"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.examples.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.ecore.edit.feature.group" version="0.0.0"/>
-      <repository id="EMF-2.32" location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.32"/>
+      <repository id="EMF-2.41" location="https://download.eclipse.org/modeling/emf/emf/builds/milestone/latest"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.ocl.feature.group" version="0.0.0"/>
-      <repository id="OCL-6.17.1" location="https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.17.1/"/>
+      <repository id="OCL-6.22" location="https://download.eclipse.org/modeling/mdt/ocl/builds/release/6.22.0"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.uml2.sdk.feature.group" version="5.5.2.v20210228-1829"/>
-      <unit id="org.eclipse.uml2.common.feature.group" version="2.5.0.v20210228-1829"/>
-      <repository id="UML2-5.5.2" location="https://download.eclipse.org/modeling/mdt/uml2/updates/5.5/R202102281829/"/>
+      <unit id="org.eclipse.uml2.sdk.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.uml2.common.feature.group" version="0.0.0"/>
+      <repository id="UML2-5.5.3" location="https://download.eclipse.org/modeling/mdt/uml2/updates/5.5/R202211161811/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.validation.sdk.feature.group" version="0.0.0"/>
-      <repository id="EMF-Validation-1.13.3" location="https://download.eclipse.org/modeling/emf/validation/updates/releases/R202305230712/"/>
+      <repository id="EMF-Validation-1.14.0" location="https://download.eclipse.org/modeling/emf/validation/updates/releases/R202408231629/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="0.0.0"/>
-      <repository id="EMF-Transaction-1.13" location="https://download.eclipse.org/modeling/emf/transaction/updates/releases/R202208110935/"/>
+      <repository id="EMF-Transaction-1.14.0" location="https://download.eclipse.org/modeling/emf/transaction/updates/releases/R202408231629/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="0.0.0"/>
@@ -85,7 +85,7 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.gef.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.gef.sdk.feature.group" version="0.0.0"/>
-      <repository id="GEF-Classic" location="https://download.eclipse.org/tools/gef/classic/releases/3.17.0"/>
+      <repository id="GEF-Classic" location="https://download.eclipse.org/tools/gef/classic/release/3.23.0"/>
     </location>
   </locations>
 </target>
