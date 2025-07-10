@@ -59,7 +59,7 @@
       <unit id="org.eclipse.emf.examples.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.ecore.edit.feature.group" version="0.0.0"/>
-      <repository id="EMF-2.41" location="https://download.eclipse.org/modeling/emf/emf/builds/milestone/latest"/>
+      <repository id="EMF-2.41" location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.41.0"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.ocl.feature.group" version="0.0.0"/>
