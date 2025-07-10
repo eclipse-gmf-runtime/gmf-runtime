@@ -500,7 +500,7 @@ public class ProjectUnzipperNewWizard
 		
 		IConfigurationElement[] projectElements = config.getChildren("project"); //$NON-NLS-1$
 		for (int i=0;i<projectElements.length;i++) {
-			zipURLs.add(FileLocator.find(GmfExamplesPlugin.getDefault().getBundle(), new Path(projectElements[i].getAttribute("zipPath"), null))); //$NON-NLS-1$
+			zipURLs.add(FileLocator.find(GmfExamplesPlugin.getDefault().getBundle(), new Path(projectElements[i].getAttribute("zipPath")))); //$NON-NLS-1$
 			if (projectElements[i].getAttribute("nameFormat") == null) { //$NON-NLS-1$
 				nameFormatsL.add("{0}"); //$NON-NLS-1$
 			} else { 
