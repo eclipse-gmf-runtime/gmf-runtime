@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2025 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -12,7 +12,10 @@
 
 package org.eclipse.gmf.runtime.gef.ui.internal.l10n;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 
 
 /**
@@ -37,8 +40,8 @@ public class Cursors {
     private static int deviceZoom = -1;
 
     static {
-		CURSOR_SEG_ADD = new Cursor(null, GefUIPluginImages.DESC_SEG_ADD.getImageData(getDeviceZoom()), 0, 0);
-		CURSOR_SEG_MOVE = new Cursor(null, GefUIPluginImages.DESC_SEG_MOVE.getImageData(getDeviceZoom()), 0, 0);
+		CURSOR_SEG_ADD = new Cursor(null, scaledImageData(GefUIPluginImages.DESC_SEG_ADD, getDeviceZoom()), 0, 0);
+		CURSOR_SEG_MOVE = new Cursor(null, scaledImageData(GefUIPluginImages.DESC_SEG_MOVE, getDeviceZoom()), 0, 0);
 	}
     
     // Taken from org.eclipse.gef.SharedCursors.java
@@ -55,5 +58,20 @@ public class Cursors {
 			}
 		}
 		return deviceZoom;
+	}
+	
+	public static ImageData scaledImageData(ImageDescriptor descriptor, int zoom) {
+	    // Default case: Image in matching resolution has been found
+	    ImageData data = descriptor.getImageData(zoom);
+	    if (data != null) {
+	        return data;
+	    }
+	    // Otherwise artifically scale the image
+	    Image image = descriptor.createImage();
+	    try {
+	        return image.getImageData(zoom);
+	    } finally {
+	        image.dispose();
+	    }
 	}
 }
