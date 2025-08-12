@@ -12,12 +12,8 @@
    <feature url="features/org.eclipse.gmf.runtime.sdk_1.16.7.qualifier.jar" id="org.eclipse.gmf.runtime.sdk" version="1.16.7.qualifier">
       <category name="gmf-runtime"/>
    </feature>
-   <feature url="features/org.eclipse.gmf.runtime.thirdparty_1.16.7.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty" version="1.16.7.qualifier">
-      <category name="gmf-runtime"/>
-   </feature>
-   <feature url="features/org.eclipse.gmf.runtime.thirdparty.source_1.16.7.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty.source" version="1.16.7.qualifier">
-      <category name="gmf-runtime"/>
-   </feature>
+   <feature url="features/org.eclipse.gmf.runtime.thirdparty_1.16.7.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty" version="1.16.7.qualifier" />
+   <feature url="features/org.eclipse.gmf.runtime.thirdparty.source_1.16.7.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty.source" version="1.16.7.qualifier" />
    <feature url="features/org.eclipse.gmf.source_1.16.7.qualifier.jar" id="org.eclipse.gmf.source" version="1.16.7.qualifier">
       <category name="gmf-runtime"/>
    </feature>

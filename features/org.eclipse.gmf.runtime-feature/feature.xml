@@ -29,10 +29,6 @@ SPDX-License-Identifier: EPL-2.0
       <update label="%updateSiteName" url="https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases/"/>
    </url>
 
-   <includes
-         id="org.eclipse.gmf.runtime.thirdparty"
-         version="0.0.0"/>
-
    <requires>
       <import feature="org.eclipse.gmf.runtime.notation" version="1.8.0"/>
       <import feature="org.eclipse.gef" version="3.14.0"/>
