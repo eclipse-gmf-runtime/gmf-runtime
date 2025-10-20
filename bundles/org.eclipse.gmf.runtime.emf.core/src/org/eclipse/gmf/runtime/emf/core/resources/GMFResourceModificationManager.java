@@ -388,6 +388,17 @@ public class GMFResourceModificationManager {
 		}
 	}
 
+	private void disposeSaveContexts() {
+		for (Resource resource : saveContexts.keySet()) {
+			IUndoContext saveContext = getSaveContexts().get(resource);
+
+			if (saveContext != null) {
+				history.dispose(saveContext, true, true, true);
+			}
+		}
+		getSaveContexts().clear();
+	}
+
 	private void disposeSaveContext(Resource resource) {
 		IUndoContext saveContext = getSaveContexts().get(resource);
 
@@ -402,9 +413,7 @@ public class GMFResourceModificationManager {
 		managerRegistry.remove(domain);
 
 		if (saveContexts != null) {
-			for (Resource r : saveContexts.keySet()) {
-				disposeSaveContext(r);
-			}
+			disposeSaveContexts();
 		}
 		if (domainListener != null) {
 			domain.removeResourceSetListener(domainListener);
