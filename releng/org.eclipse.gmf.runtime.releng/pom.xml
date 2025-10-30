@@ -14,7 +14,7 @@
 		<tycho-version>4.0.10</tycho-version>
 		<cbi-plugins.version>1.5.2</cbi-plugins.version>
 		<antrun-version>3.0.0</antrun-version>
-		<platform>2022-09</platform>
+		<platform>2024-12</platform>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/eclipse-gmf-runtime/gmf-runtime.git</tycho.scmUrl>
 	</properties>
