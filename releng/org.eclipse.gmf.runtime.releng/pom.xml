@@ -11,7 +11,7 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>4.0.10</tycho-version>
+		<tycho-version>4.0.13</tycho-version>
 		<cbi-plugins.version>1.5.2</cbi-plugins.version>
 		<antrun-version>3.0.0</antrun-version>
 		<platform>2024-12</platform>
@@ -176,6 +176,7 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho-version}</version>
 						<configuration>
+						    <executionEnvironment>JavaSE-21</executionEnvironment>
 							<!-- add target file content to target platform -->
 							<target>
 								<artifact>
