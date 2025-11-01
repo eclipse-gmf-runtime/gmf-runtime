@@ -6,7 +6,7 @@
 
   <groupId>org.eclipse.gmf.runtime</groupId>
   <artifactId>org.eclipse.gmf.runtime.top</artifactId>
-  <version>1.16.7-SNAPSHOT</version>
+  <version>1.16.8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
