@@ -235,8 +235,7 @@ public class Graphics2DToGraphicsAdaptor
 			
 			if (currentColor != null)
 				currentColor.dispose();
-			currentColor = new org.eclipse.swt.graphics.Color(
-				null, rgb.red, rgb.green, rgb.blue);
+			currentColor = new org.eclipse.swt.graphics.Color(rgb.red, rgb.green, rgb.blue);
 			swtGraphics.setBackgroundColor(currentColor);
 			swtGraphics.setForegroundColor(currentColor);
 			return true;

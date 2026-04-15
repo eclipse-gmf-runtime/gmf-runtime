@@ -79,7 +79,7 @@ public class LogicShapeTests extends AbstractShapeTests {
 		createPt.getTranslated(ledEP1.getFigure().getSize().getExpanded(100, 100));
 		
 		final LEDEditPart ledEP2 = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, createPt, getDiagramEditPart());
-		final Color red = new Color(null, 255, 0, 0);
+		final Color red = new Color(255, 0, 0);
 		final int fontHeight = 10;
 		
 		getLogicTestFixture().execute(new AbstractTransactionalCommand(getLogicTestFixture().getEditingDomain(), "", null) { //$NON-NLS-1$

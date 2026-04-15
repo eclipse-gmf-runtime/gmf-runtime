@@ -51,7 +51,7 @@ public class DragDropEditPolicy extends GraphicalEditPolicy {
 	/**
 	 * the background feedback color
 	 */
-	private static final Color GRAY = new Color(null, 200, 200, 200);
+	private static final Color GRAY = new Color(200, 200, 200);
 
 	/**
 	 * the original background color

@@ -49,7 +49,7 @@ public class CircuitFigure
 	 */
 	protected void paintFigure(Graphics graphics) {
 		Rectangle rect = getBounds().getCopy();
-		graphics.setBackgroundColor(new Color(null, 255, 255, 255));
+		graphics.setBackgroundColor(new Color(255, 255, 255));
 		graphics.fillRectangle(rect);
 	}
 }

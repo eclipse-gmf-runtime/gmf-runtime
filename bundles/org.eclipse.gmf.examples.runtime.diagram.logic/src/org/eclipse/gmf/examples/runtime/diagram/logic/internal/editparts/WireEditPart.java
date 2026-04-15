@@ -43,7 +43,7 @@ public WireEditPart(View view) {
 	super(view);
 }
 	
-public static final Color dead  = new Color(Display.getDefault(),0,0,0);
+public static final Color dead = new Color(0, 0, 0);
 
 public void activateFigure(){
 	super.activateFigure();

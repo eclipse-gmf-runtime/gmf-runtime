@@ -423,8 +423,7 @@ public class SVGImageTest
 	 * @return Color
 	 */
 	private Color integerToColor(int color) {
-		return new Color(null, (color & 0x00FF0000) >> 16,
-			(color & 0x0000FF00) >> 8, (color & 0x000000FF));
+		return new Color((color & 0x00FF0000) >> 16, (color & 0x0000FF00) >> 8, (color & 0x000000FF));
 	}
 
 	private static RGB BLACK = new RGB(0, 0, 0);
