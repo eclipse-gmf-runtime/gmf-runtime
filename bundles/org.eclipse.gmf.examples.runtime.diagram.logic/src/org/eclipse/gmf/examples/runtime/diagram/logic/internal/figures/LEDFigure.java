@@ -40,12 +40,12 @@ public class LEDFigure
 	/**
 	 * Color of the shadow around the LEDFigure's display
 	 */
-	public static final Color DISPLAY_SHADOW = new Color(null, 57, 117, 90); 
+	public static final Color DISPLAY_SHADOW = new Color(57, 117, 90); 
 
 	/**
 	 * Color of the LEDFigure's displayed value
 	 */
-	public static final Color DISPLAY_TEXT = new Color(null, 255, 199, 16);
+	public static final Color DISPLAY_TEXT = new Color(255, 199, 16);
 
 	protected String value;
 	

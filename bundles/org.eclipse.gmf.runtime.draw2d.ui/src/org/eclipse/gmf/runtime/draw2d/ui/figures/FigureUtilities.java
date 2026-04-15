@@ -56,11 +56,7 @@ public class FigureUtilities extends org.eclipse.draw2d.FigureUtilities {
 		if (i == null)
 			return null;
 		int color = i.intValue();
-		return new Color(
-			null,
-			(color & 0x000000FF),
-			(color & 0x0000FF00) >> 8,
-			(color & 0x00FF0000) >> 16);
+		return new Color((color & 0x000000FF), (color & 0x0000FF00) >> 8, (color & 0x00FF0000) >> 16);
 	}
 
 	/**

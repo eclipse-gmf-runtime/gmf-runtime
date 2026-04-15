@@ -828,7 +828,7 @@ public class DiagramRootEditPart
 	}
 
 	protected GridLayer createGridLayer(int r, int g, int b) {
-		return new GridLayerEx(new Color(null,r,g,b));
+		return new GridLayerEx(new Color(r,g,b));
 	}
 
 }

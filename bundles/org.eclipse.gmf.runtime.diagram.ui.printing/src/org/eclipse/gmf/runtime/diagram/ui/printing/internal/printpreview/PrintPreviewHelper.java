@@ -227,8 +227,7 @@ public class PrintPreviewHelper{
 	/**
 	 * the background color
 	 */
-	private static final Color BACKGROUND_COLOR = new Color(Display
-		.getDefault(), 124, 124, 124);
+	private static final Color BACKGROUND_COLOR = new Color(124, 124, 124);
 
 	/* Images */
 	/**

@@ -62,13 +62,13 @@ public class ConsoleUtil {
 	//  error messages are red, warnings yellow and info blue.
 	
 	/** Default color used for logging error messages to the console. */
-	public final static Color DEFAULT_ERROR =  new Color(null,255,0,0);
+	public final static Color DEFAULT_ERROR =  new Color(255,0,0);
 	
 	/** Default color used for logging info messages to the console. */
-	public final static Color DEFAULT_INFO =  new Color(null,0,0,255);
+	public final static Color DEFAULT_INFO =  new Color(0,0,255);
 	
 	/** Default color used for logging warning messages to the console. */
-	public final static Color DEFAULT_WARNING =  new Color(null,255,255,0);
+	public final static Color DEFAULT_WARNING =  new Color(255,255,0);
 
 	/**
 	 * Registers the console with the Eclipse Console Manager.
