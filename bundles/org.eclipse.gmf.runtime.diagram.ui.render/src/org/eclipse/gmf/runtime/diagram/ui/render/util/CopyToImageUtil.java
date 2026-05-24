@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2026 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -12,6 +12,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.render.util;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,6 +24,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -48,6 +52,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRenderPlugin;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageExporter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.SVGImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.SVGImageConverter;
@@ -436,20 +441,37 @@ public class CopyToImageUtil {
     
     private void saveToOutputStream(OutputStream stream, Image image, ImageFileFormat imageFormat, IProgressMonitor monitor) {
         monitor.worked(1);
-        
-        ImageData imageData = image.getImageData();
-        
-        if (imageFormat.equals(ImageFileFormat.GIF) ||
-                imageFormat.equals(ImageFileFormat.BMP))
-            imageData = createImageData(image); 
 
-        monitor.worked(1);
-        ImageLoader imageLoader = new ImageLoader();
-        imageLoader.data = new ImageData[] {imageData};
-        imageLoader.logicalScreenHeight = image.getBounds().width;
-        imageLoader.logicalScreenHeight = image.getBounds().height;
-        imageLoader.save(stream, imageFormat.getOrdinal());
-        
+        if (imageFormat.equals(ImageFileFormat.JPEG) || imageFormat.equals(ImageFileFormat.JPG)) {
+            // SWT's ImageLoader silently produces empty output for JPEG on some
+            // platforms. Use Java's built-in ImageIO encoder instead, compositing
+            // transparent pixels against white since JPEG has no alpha channel.
+            try {
+                BufferedImage argbImage = ImageConverter.convertFromImageData(image.getImageData());
+                BufferedImage rgbImage = new BufferedImage(argbImage.getWidth(), argbImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+                Graphics2D g2d = rgbImage.createGraphics();
+                g2d.setColor(Color.WHITE);
+                g2d.fillRect(0, 0, rgbImage.getWidth(), rgbImage.getHeight());
+                g2d.drawImage(argbImage, 0, 0, null);
+                g2d.dispose();
+                ImageIO.write(rgbImage, "jpeg", stream); //$NON-NLS-1$
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else {
+            ImageData imageData = image.getImageData();
+            if (imageFormat.equals(ImageFileFormat.GIF) || imageFormat.equals(ImageFileFormat.BMP)) {
+                imageData = createImageData(image);
+            }
+
+            monitor.worked(1);
+            ImageLoader imageLoader = new ImageLoader();
+            imageLoader.data = new ImageData[] {imageData};
+            imageLoader.logicalScreenHeight = image.getBounds().width;
+            imageLoader.logicalScreenHeight = image.getBounds().height;
+            imageLoader.save(stream, imageFormat.getOrdinal());
+        }
+
         monitor.worked(1);
     }
 
