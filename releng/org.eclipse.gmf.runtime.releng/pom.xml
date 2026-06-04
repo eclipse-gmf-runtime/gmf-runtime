@@ -11,10 +11,10 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>4.0.13</tycho-version>
+		<tycho-version>5.0.3</tycho-version>
 		<cbi-plugins.version>1.5.2</cbi-plugins.version>
 		<antrun-version>3.0.0</antrun-version>
-		<platform>2024-12</platform>
+		<platform>2025-03</platform>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/eclipse-gmf-runtime/gmf-runtime.git</tycho.scmUrl>
 	</properties>
