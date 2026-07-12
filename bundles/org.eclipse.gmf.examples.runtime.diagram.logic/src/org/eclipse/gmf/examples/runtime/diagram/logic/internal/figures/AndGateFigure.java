@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures;
@@ -26,21 +26,22 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
 public class AndGateFigure extends NodeFigure {
-	
+
 	private Dimension prefSize;
-	
+
 	/**
 	 * Constructor for AndGateFigure.
 	 */
 	public AndGateFigure(Dimension prefSize) {
 		getBounds().width = prefSize.width;
-		getBounds().height = prefSize.height; 
+		getBounds().height = prefSize.height;
 		this.prefSize = new Dimension(prefSize);
 	}
 
 	/**
 	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
 	 */
+	@Override
 	public Dimension getPreferredSize(int wHint, int hHint) {
 		return new Dimension(prefSize);
 	}
@@ -48,22 +49,23 @@ public class AndGateFigure extends NodeFigure {
 	/**
 	 * @see org.eclipse.draw2d.Figure#paintFigure(Graphics)
 	 */
+	@Override
 	protected void paintFigure(Graphics g) {
 		Rectangle r = getBounds().getCopy();
-		
+
 		IMapMode mm = MapModeUtil.getMapMode(this);
 		r.translate(mm.DPtoLP(2), mm.DPtoLP(2));
 		r.setSize(mm.DPtoLP(11), mm.DPtoLP(9));
 
-		//draw main area
+		// draw main area
 		g.fillRectangle(r);
-	
-		//outline main area
+
+		// outline main area
 		g.drawLine(r.x, r.y, r.right(), r.y);
 		g.drawLine(r.right(), r.y, r.right(), r.bottom() - mm.DPtoLP(1));
 		g.drawLine(r.x, r.y, r.x, r.bottom() - mm.DPtoLP(1));
 
-		//draw and outline the arc
+		// draw and outline the arc
 		r.height = mm.DPtoLP(9);
 		r.y += mm.DPtoLP(4);
 		g.fillArc(r, 180, 180);

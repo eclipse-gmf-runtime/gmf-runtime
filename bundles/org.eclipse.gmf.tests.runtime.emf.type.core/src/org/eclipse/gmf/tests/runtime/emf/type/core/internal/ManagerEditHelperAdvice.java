@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -26,54 +26,55 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 /**
  * @author ldamus
  */
-public class ManagerEditHelperAdvice
-	extends AbstractEditHelperAdvice {
+public class ManagerEditHelperAdvice extends AbstractEditHelperAdvice {
 
-	public static class ManagerBeforeConfigureCommand
-		extends ConfigureElementCommand {
+	public static class ManagerBeforeConfigureCommand extends ConfigureElementCommand {
 
 		public ManagerBeforeConfigureCommand(ConfigureRequest request) {
 			super(request);
 		}
 
-        protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-            throws ExecutionException {
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+				throws ExecutionException {
 
 			return null;
 		}
 	}
 
-	public static class ManagerAfterConfigureCommand
-		extends ConfigureElementCommand {
+	public static class ManagerAfterConfigureCommand extends ConfigureElementCommand {
 
 		public ManagerAfterConfigureCommand(ConfigureRequest request) {
 			super(request);
 		}
 
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+				throws ExecutionException {
 
-        protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
-                IAdaptable info)
-            throws ExecutionException {
+			Employee employee = (Employee) getElementToEdit();
 
-            Employee employee = (Employee) getElementToEdit();
-
-            Office office = EmployeeEditHelper.createOffice(getEditingDomain(),
-                employee, monitor);
-            office.setHasDoor(false);
-            office.setNumberOfWindows(1);
-            return null;
-        }
+			Office office = EmployeeEditHelper.createOffice(getEditingDomain(), employee, monitor);
+			office.setHasDoor(false);
+			office.setNumberOfWindows(1);
+			return null;
+		}
 	}
 
+	@Override
 	protected ICommand getBeforeConfigureCommand(ConfigureRequest request) {
 		return new ManagerBeforeConfigureCommand(request);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#getAfterConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.ConfigureRequest)
+	 *
+	 * @see
+	 * org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#
+	 * getAfterConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.
+	 * ConfigureRequest)
 	 */
+	@Override
 	protected ICommand getAfterConfigureCommand(ConfigureRequest request) {
 		return new ManagerAfterConfigureCommand(request);
 	}

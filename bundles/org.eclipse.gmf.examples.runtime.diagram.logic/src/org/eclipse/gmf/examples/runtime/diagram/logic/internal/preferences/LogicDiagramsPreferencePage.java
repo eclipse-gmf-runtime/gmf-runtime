@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences;
@@ -20,9 +20,8 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramsPreferencePage;
  *
  * @author cmahoney
  */
-public class LogicDiagramsPreferencePage
-	extends DiagramsPreferencePage {
-	
+public class LogicDiagramsPreferencePage extends DiagramsPreferencePage {
+
 	/**
 	 * Creates a new instance and initializes the preference store.
 	 */

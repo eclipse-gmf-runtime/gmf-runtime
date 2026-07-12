@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -33,34 +33,31 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 /**
  * @author ldamus
  */
-public class EmployeeEditHelper
-	extends AbstractEditHelper {
+public class EmployeeEditHelper extends AbstractEditHelper {
 
-	public static class EmployeeConfigureCommand
-		extends ConfigureElementCommand {
+	public static class EmployeeConfigureCommand extends ConfigureElementCommand {
 
 		public EmployeeConfigureCommand(ConfigureRequest req) {
 			super(req);
 		}
 
+		@Override
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-		    throws ExecutionException {
+				throws ExecutionException {
 			return null;
 		}
 	}
-	
+
 	public static Office createOffice(TransactionalEditingDomain editingDomain, Employee employee,
 			IProgressMonitor progressMonitor) throws ExecutionException {
-		
+
 		Office office = null;
-		CreateElementRequest request = new CreateElementRequest(editingDomain, employee,
-			EmployeeType.OFFICE);
-		IElementType type = ElementTypeRegistry.getInstance()
-			.getElementType(employee);
+		CreateElementRequest request = new CreateElementRequest(editingDomain, employee, EmployeeType.OFFICE);
+		IElementType type = ElementTypeRegistry.getInstance().getElementType(employee);
 		ICommand command = type.getEditCommand(request);
-		
+
 		if (command != null && command.canExecute()) {
-		    command.execute(progressMonitor, null);
+			command.execute(progressMonitor, null);
 		}
 
 		CommandResult officeResult = command.getCommandResult();
@@ -68,10 +65,10 @@ public class EmployeeEditHelper
 		if (officeResult.getStatus().getCode() == IStatus.OK) {
 
 			Object returnValue = officeResult.getReturnValue();
-			
+
 			if (returnValue instanceof List && ((List) returnValue).size() > 0) {
 				office = (Office) ((List) returnValue).get(0);
-				
+
 			} else {
 				office = (Office) returnValue;
 			}
@@ -81,9 +78,12 @@ public class EmployeeEditHelper
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper#getConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.ConfigureRequest)
+	 *
+	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper#
+	 * getConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.
+	 * ConfigureRequest)
 	 */
+	@Override
 	protected ICommand getConfigureCommand(ConfigureRequest req) {
 		return new EmployeeConfigureCommand(req);
 	}

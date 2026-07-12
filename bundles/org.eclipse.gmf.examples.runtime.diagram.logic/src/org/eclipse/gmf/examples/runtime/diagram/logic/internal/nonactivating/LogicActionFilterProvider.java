@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.nonactivating;
@@ -20,13 +20,14 @@ import org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFi
 /**
  * Action filter provider for the logic example context menu action enablement.
  * Required temporarily until Bugzilla 111778 is fixed.
- * 
+ *
  * @author ldamus
  */
 public class LogicActionFilterProvider extends AbstractActionFilterProvider {
 
 	private final static String IS_CONTAINER_ELEMENT = "org.eclipse.gmf.examples.runtime.diagram.logic.isContainerElement"; //$NON-NLS-1$
 
+	@Override
 	public boolean testAttribute(Object target, String name, String value) {
 
 		if (name.equals(IS_CONTAINER_ELEMENT)) {
@@ -42,6 +43,7 @@ public class LogicActionFilterProvider extends AbstractActionFilterProvider {
 		return false;
 	}
 
+	@Override
 	public boolean provides(IOperation operation) {
 		// Not used
 		return true;

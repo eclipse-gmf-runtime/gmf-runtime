@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.ui.pde.util;
@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IPath;
 
 /**
  * This class contains string statics that are not to be translated.
- * 
+ *
  * @author wdiu, Wayne Diu
  */
 public class StringStatics {
@@ -35,7 +35,7 @@ public class StringStatics {
 	public static final String PERIOD = "."; //$NON-NLS-1$
 
 	/** The forward slash / */
-	public static final String FORWARD_SLASH = "/"; //URLs //$NON-NLS-1$
+	public static final String FORWARD_SLASH = "/"; // URLs //$NON-NLS-1$
 
 	/** The backward slash / */
 	public static final String BACKWARD_SLASH = "\\"; //$NON-NLS-1$
@@ -53,8 +53,7 @@ public class StringStatics {
 	public static final String DOUBLE_COLON = "::"; //$NON-NLS-1$
 
 	/** The newline for a particular platform */
-	public static final String PLATFORM_NEWLINE = System
-		.getProperty("line.separator"); //$NON-NLS-1$
+	public static final String PLATFORM_NEWLINE = System.getProperty("line.separator"); //$NON-NLS-1$
 
 	/** The newline for the Windows platform */
 	public static final String WINDOWS_NEWLINE = "\r\n"; //$NON-NLS-1$
@@ -91,10 +90,10 @@ public class StringStatics {
 
 	/** The comma * */
 	public static final String COMMA = ",";//$NON-NLS-1$
-	
+
 	/** Open Parenthesis */
 	public static final String OPEN_PARENTHESIS = "("; //$NON-NLS-1$
-	
+
 	/** Close Parenthesis */
 	public static final String CLOSE_PARENTHESIS = ")"; //$NON-NLS-1$
 }

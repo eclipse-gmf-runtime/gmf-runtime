@@ -7,10 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.parts;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
@@ -23,27 +25,22 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandleLocator;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit testing of the ConnectionHandle class.
- * 
+ *
  * @author cmahoney
  */
-public class ConnectionHandleTest
-	extends TestCase {
+public class ConnectionHandleTest {
 
-	private class FakeEditPart
-		extends ShapeEditPart {
+	private class FakeEditPart extends ShapeEditPart {
 
 		public FakeEditPart() {
 			super(null);
 		}
 
+		@Override
 		protected IFigure createFigure() {
 			RectangleFigure rectangle = new RectangleFigure();
 			rectangle.setLocation(new Point(0, 0));
@@ -53,31 +50,18 @@ public class ConnectionHandleTest
 
 	}
 
-	public ConnectionHandleTest(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(ConnectionHandleTest.class);
-	}
-
 	/**
 	 * Tests the public API of the ConnectionHandle class.
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public void testConnectionHandle()
-		throws Exception {
+	@Test
+	public void testConnectionHandle() throws Exception {
 
 		FakeEditPart editpart = new FakeEditPart();
-		ConnectionHandle handle = new ConnectionHandle(editpart,
-			ConnectionHandle.HandleDirection.OUTGOING, "the tooltip"); //$NON-NLS-1$
-		ConnectionHandleLocator locator = new ConnectionHandleLocator(editpart
-			.getFigure(), new Point(90, 90));
+		ConnectionHandle handle = new ConnectionHandle(editpart, ConnectionHandle.HandleDirection.OUTGOING,
+				"the tooltip"); //$NON-NLS-1$
+		ConnectionHandleLocator locator = new ConnectionHandleLocator(editpart.getFigure(), new Point(90, 90));
 
 		handle.setLocator(locator);
 
@@ -89,8 +73,8 @@ public class ConnectionHandleTest
 		assertTrue(handle.getLocator() == locator);
 		assertTrue(handle.getOwner() == editpart);
 		assertTrue(!handle.isIncoming());
-		assertTrue(editpart.getFigure().getBounds().getPosition(
-			handle.getBounds().getCenter()) == PositionConstants.EAST);
+		assertTrue(
+				editpart.getFigure().getBounds().getPosition(handle.getBounds().getCenter()) == PositionConstants.EAST);
 		assertTrue(handle.findFigureAt(handle.getBounds().getCenter()) == handle);
 
 		handle.addErrorIcon();
@@ -101,24 +85,22 @@ public class ConnectionHandleTest
 
 		assertTrue(handle.getChildren().size() == 1);
 
-		handle = new ConnectionHandle(editpart,
-			ConnectionHandle.HandleDirection.INCOMING, "the tooltip"); //$NON-NLS-1$
+		handle = new ConnectionHandle(editpart, ConnectionHandle.HandleDirection.INCOMING, "the tooltip"); //$NON-NLS-1$
 		assertTrue(handle.isIncoming());
 	}
 
 	/**
 	 * Tests the ConnectionHandle class for memory leaks.
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public void testConnectionHandleForMemoryLeaks()
-		throws Exception {
+	@Test
+	public void testConnectionHandleForMemoryLeaks() throws Exception {
 
 		FakeEditPart editpart = new FakeEditPart();
-		ConnectionHandle objTested = new ConnectionHandle(editpart,
-			ConnectionHandle.HandleDirection.OUTGOING, "the tooltip"); //$NON-NLS-1$
-		ConnectionHandleLocator locator = new ConnectionHandleLocator(editpart
-			.getFigure(), new Point(90, 90));
+		ConnectionHandle objTested = new ConnectionHandle(editpart, ConnectionHandle.HandleDirection.OUTGOING,
+				"the tooltip"); //$NON-NLS-1$
+		ConnectionHandleLocator locator = new ConnectionHandleLocator(editpart.getFigure(), new Point(90, 90));
 		objTested.setLocator(locator);
 		objTested.validate();
 
@@ -137,8 +119,9 @@ public class ConnectionHandleTest
 		assertTrue(refObjTested.isEnqueued());
 
 		Reference removedRef = spy.remove();
-		if (removedRef != null)
+		if (removedRef != null) {
 			removedRef.clear();
+		}
 	}
 
 }

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -27,22 +27,21 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 /**
  * @author ldamus
  */
-public class NullElementTypeAdvice
-	extends AbstractEditHelperAdvice {
+public class NullElementTypeAdvice extends AbstractEditHelperAdvice {
 
+	@Override
 	protected ICommand getBeforeCreateCommand(CreateElementRequest request) {
 		EObject manager = (EObject) request.getParameter("MANAGER"); //$NON-NLS-1$
-        
+
 		SetRequest setRequest = new SetRequest(request.getEditingDomain(), request.getContainer(),
-			EmployeePackage.eINSTANCE.getDepartment_Manager(), manager);
+				EmployeePackage.eINSTANCE.getDepartment_Manager(), manager);
 		return new SetValueCommand(setRequest);
 	}
 
+	@Override
 	protected ICommand getBeforeEditContextCommand(GetEditContextRequest request) {
-		IElementType nullSpecialization = ElementTypeRegistry
-			.getInstance()
-			.getType(
-				"org.eclipse.gmf.tests.runtime.emf.type.core.nullSpecialization"); //$NON-NLS-1$
+		IElementType nullSpecialization = ElementTypeRegistry.getInstance()
+				.getType("org.eclipse.gmf.tests.runtime.emf.type.core.nullSpecialization"); //$NON-NLS-1$
 
 		GetEditContextCommand result = new GetEditContextCommand(request);
 		result.setEditContext(nullSpecialization);

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
@@ -19,13 +19,13 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Student</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object
+ * '<em><b>Student</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.StudentImpl#isCoop <em>Coop</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.StudentImpl#isCoop
+ * <em>Coop</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,9 +33,9 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student;
  */
 public class StudentImpl extends EmployeeImpl implements Student {
 	/**
-	 * The default value of the '{@link #isCoop() <em>Coop</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #isCoop() <em>Coop</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isCoop()
 	 * @generated
 	 * @ordered
@@ -43,9 +43,9 @@ public class StudentImpl extends EmployeeImpl implements Student {
 	protected static final boolean COOP_EDEFAULT = false;
 
 	/**
-	 * The flag representing the value of the '{@link #isCoop() <em>Coop</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The flag representing the value of the '{@link #isCoop() <em>Coop</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isCoop()
 	 * @generated
 	 * @ordered
@@ -53,8 +53,8 @@ public class StudentImpl extends EmployeeImpl implements Student {
 	protected static final int COOP_EFLAG = 1 << 10;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected StudentImpl() {
@@ -62,96 +62,111 @@ public class StudentImpl extends EmployeeImpl implements Student {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return EmployeePackage.Literals.STUDENT;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean isCoop() {
 		return (eFlags & COOP_EFLAG) != 0;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void setCoop(boolean newCoop) {
 		boolean oldCoop = (eFlags & COOP_EFLAG) != 0;
-		if (newCoop) eFlags |= COOP_EFLAG; else eFlags &= ~COOP_EFLAG;
-		if (eNotificationRequired())
+		if (newCoop) {
+			eFlags |= COOP_EFLAG;
+		} else {
+			eFlags &= ~COOP_EFLAG;
+		}
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.STUDENT__COOP, oldCoop, newCoop));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case EmployeePackage.STUDENT__COOP:
-				return isCoop() ? Boolean.TRUE : Boolean.FALSE;
+		case EmployeePackage.STUDENT__COOP:
+			return isCoop() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case EmployeePackage.STUDENT__COOP:
-				setCoop(((Boolean)newValue).booleanValue());
-				return;
+		case EmployeePackage.STUDENT__COOP:
+			setCoop(((Boolean) newValue).booleanValue());
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case EmployeePackage.STUDENT__COOP:
-				setCoop(COOP_EDEFAULT);
-				return;
+		case EmployeePackage.STUDENT__COOP:
+			setCoop(COOP_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case EmployeePackage.STUDENT__COOP:
-				return ((eFlags & COOP_EFLAG) != 0) != COOP_EDEFAULT;
+		case EmployeePackage.STUDENT__COOP:
+			return ((eFlags & COOP_EFLAG) != 0) != COOP_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy()) {
+			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (coop: "); //$NON-NLS-1$
@@ -160,4 +175,4 @@ public class StudentImpl extends EmployeeImpl implements Student {
 		return result.toString();
 	}
 
-} //StudentImpl
+} // StudentImpl

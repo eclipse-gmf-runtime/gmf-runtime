@@ -7,10 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.requests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,27 +26,16 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.type.DiagramNotationType;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestFixture;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests things relating to Requests.
- * 
+ *
  * @author cmahoney
  */
-public class RequestTests
-	extends AbstractTestBase {
+public class RequestTests extends AbstractTestBase {
 
-	public static Test suite() {
-		TestSuite s = new TestSuite(RequestTests.class);
-		return s;
-	}
-
-	public RequestTests() {
-		super("RequestTests Test Suite");//$NON-NLS-1$
-	}
-
+	@Override
 	protected void setTestFixture() {
 		testFixture = new PresentationTestFixture();
 	}
@@ -55,18 +46,18 @@ public class RequestTests
 
 	/**
 	 * Tests the API of the <code>CreateUnspecifiedTypeRequest</code>.
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public void testCreateUnspecifiedTypeRequest()
-		throws Exception {
+	@Test
+	public void testCreateUnspecifiedTypeRequest() throws Exception {
 
 		List elementTypes = new ArrayList();
 		elementTypes.add(DiagramNotationType.NOTE);
 		elementTypes.add(DiagramNotationType.TEXT);
 
-		CreateUnspecifiedTypeRequest request = new CreateUnspecifiedTypeRequest(
-			elementTypes, PreferencesHint.USE_DEFAULTS);
+		CreateUnspecifiedTypeRequest request = new CreateUnspecifiedTypeRequest(elementTypes,
+				PreferencesHint.USE_DEFAULTS);
 
 		Map extendedData = new HashMap();
 		Point location = new Point(1, 2);
@@ -79,28 +70,20 @@ public class RequestTests
 		request.setType(type);
 
 		assertEquals(extendedData, request.getExtendedData());
-		assertEquals(extendedData, request.getRequestForType(
-			DiagramNotationType.NOTE).getExtendedData());
-		assertEquals(extendedData, request.getRequestForType(
-			DiagramNotationType.TEXT).getExtendedData());
+		assertEquals(extendedData, request.getRequestForType(DiagramNotationType.NOTE).getExtendedData());
+		assertEquals(extendedData, request.getRequestForType(DiagramNotationType.TEXT).getExtendedData());
 
 		assertEquals(location, request.getLocation());
-		assertEquals(location, request.getRequestForType(
-			DiagramNotationType.NOTE).getLocation());
-		assertEquals(location, request.getRequestForType(
-			DiagramNotationType.TEXT).getLocation());
+		assertEquals(location, request.getRequestForType(DiagramNotationType.NOTE).getLocation());
+		assertEquals(location, request.getRequestForType(DiagramNotationType.TEXT).getLocation());
 
 		assertEquals(size, request.getSize());
-		assertEquals(size, request.getRequestForType(DiagramNotationType.NOTE)
-			.getSize());
-		assertEquals(size, request.getRequestForType(DiagramNotationType.TEXT)
-			.getSize());
+		assertEquals(size, request.getRequestForType(DiagramNotationType.NOTE).getSize());
+		assertEquals(size, request.getRequestForType(DiagramNotationType.TEXT).getSize());
 
 		assertEquals(type, request.getType());
-		assertEquals(type, request.getRequestForType(DiagramNotationType.NOTE)
-			.getType());
-		assertEquals(type, request.getRequestForType(DiagramNotationType.TEXT)
-			.getType());
+		assertEquals(type, request.getRequestForType(DiagramNotationType.NOTE).getType());
+		assertEquals(type, request.getRequestForType(DiagramNotationType.TEXT).getType());
 
 	}
 

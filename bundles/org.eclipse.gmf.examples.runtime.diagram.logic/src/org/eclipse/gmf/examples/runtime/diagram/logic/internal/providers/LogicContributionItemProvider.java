@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
@@ -26,28 +26,25 @@ import org.eclipse.jface.action.IAction;
 /**
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
- * 
- * Collects all the actions that are provided by the logic diagram plug-in.
+ *
+ *              Collects all the actions that are provided by the logic diagram
+ *              plug-in.
  */
-public class LogicContributionItemProvider extends
-		AbstractContributionItemProvider implements LogicActionIds {
+public class LogicContributionItemProvider extends AbstractContributionItemProvider implements LogicActionIds {
 
 	/**
 	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider#createAction(java.lang.String,
 	 *      org.eclipse.gmf.runtime.common.ui.internal.util.IWorkbenchPartDescriptor)
 	 */
-	protected IAction createAction(String actionId,
-			IWorkbenchPartDescriptor partDescriptor) {
+	@Override
+	protected IAction createAction(String actionId, IWorkbenchPartDescriptor partDescriptor) {
 
-		if (actionId.equals(ACTION_INCREMENT_VALUE)
-				|| actionId.equals(ACTION_DECREMENT_VALUE)) {
-			return new IncrementDecrementAction(partDescriptor.getPartPage(),
-					actionId);
+		if (actionId.equals(ACTION_INCREMENT_VALUE) || actionId.equals(ACTION_DECREMENT_VALUE)) {
+			return new IncrementDecrementAction(partDescriptor.getPartPage(), actionId);
 		} else if (actionId.equals(DELETE_SEMANTIC_VALUE)) {
 			return new DeleteSemanticAction(partDescriptor.getPartPage());
 		} else if (actionId.equals(PrintPreviewAction.ID)) {
-			return new RenderedPrintPreviewAction(
-					new EnhancedPrintActionHelper());
+			return new RenderedPrintPreviewAction(new EnhancedPrintActionHelper());
 		} else if (actionId.equals(MODIFY_PORTS_COLOR_VALUE)) {
 			return new ModifyPortsColorAction(partDescriptor.getPartPage());
 		}

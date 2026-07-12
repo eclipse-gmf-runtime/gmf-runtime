@@ -7,10 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.util;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -22,60 +24,39 @@ import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+public class StatusLineUtilTest {
 
-public class StatusLineUtilTest
-    extends TestCase {
+	/**
+	 * Tests that the status line can be successfully updated from a non-UI thread.
+	 */
+	public void ignore_statusLineUpdateOnNonUIThread_128868() throws Exception {
 
-    public StatusLineUtilTest(String name) {
-        super(name);
-    }
+		final IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.getActivePart();
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
-    public static Test suite() {
-        return new TestSuite(StatusLineUtilTest.class,
-            "StatusLineUtil Test Suite"); //$NON-NLS-1$
-    }
+			@Override
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				StatusLineUtil.outputErrorMessage(part, "test_statusLineUpdateOnNonUIThread_128868"); //$NON-NLS-1$
 
-    /**
-     * Tests that the status line can be successfully updated from a non-UI
-     * thread.
-     */
-    public void ignore_statusLineUpdateOnNonUIThread_128868()
-        throws Exception {
+			}
+		};
 
-        final IWorkbenchPart part = PlatformUI.getWorkbench()
-            .getActiveWorkbenchWindow().getActivePage().getActivePart();
+		try {
+			ModalContext.run(runnable, true, new NullProgressMonitor(), Display.getCurrent());
 
-        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+		} catch (InvocationTargetException ite) {
+			fail("Unexpected exception:" + ite); //$NON-NLS-1$
 
-            public void run(IProgressMonitor monitor)
-                throws InvocationTargetException, InterruptedException {
-                StatusLineUtil.outputErrorMessage(part,
-                    "test_statusLineUpdateOnNonUIThread_128868"); //$NON-NLS-1$
+		} catch (InterruptedException ie) {
+			fail("Unexpected exception:" + ie); //$NON-NLS-1$
+		}
+	}
 
-            }
-        };
-
-        try {
-            ModalContext.run(runnable, true, new NullProgressMonitor(), Display
-                .getCurrent());
-
-        } catch (InvocationTargetException ite) {
-            fail("Unexpected exception:" + ite); //$NON-NLS-1$
-
-        } catch (InterruptedException ie) {
-            fail("Unexpected exception:" + ie); //$NON-NLS-1$
-        }
-    }
-    
+	@Test
 	public void test_testNothing() {
 		// There is an issue when running the tests, run no tests for now.
 	}

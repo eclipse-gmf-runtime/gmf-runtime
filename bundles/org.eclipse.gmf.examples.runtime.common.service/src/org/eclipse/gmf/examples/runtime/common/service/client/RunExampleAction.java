@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.common.service.client;
 
@@ -25,67 +24,84 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * Simple action to run the Widget Service example.
- * 
+ *
  */
-public class RunExampleAction
-	implements IWorkbenchWindowActionDelegate {
+public class RunExampleAction implements IWorkbenchWindowActionDelegate {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.
+	 * IWorkbenchWindow)
 	 */
+	@Override
 	public void init(IWorkbenchWindow window) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
 	 * Uses the WidgetService instance to process a variety of Widget requests.
+	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
+	@Override
 	public void run(IAction action) {
 		Object widgets = WidgetService.getInstance().createWidget(1000);
-		System.out.println(widgets == null ? "No widgets created" : "Created " + unwrapWidgets((List)widgets).size() + " widgets");//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
+		System.out.println(widgets == null ? "No widgets created" //$NON-NLS-1$
+				: "Created " + unwrapWidgets((List) widgets).size() + " widgets");//$NON-NLS-2$//$NON-NLS-1$
 		widgets = WidgetService.getInstance().createWidget(30);
-		System.out.println(widgets == null ? "No widgets created" : "Created " + unwrapWidgets((List)widgets).size() + " widgets");//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
+		System.out.println(widgets == null ? "No widgets created" //$NON-NLS-1$
+				: "Created " + unwrapWidgets((List) widgets).size() + " widgets");//$NON-NLS-2$//$NON-NLS-1$
 		widgets = WidgetService.getInstance().createWidget(76);
-		System.out.println(widgets == null ? "No widgets created" : "Created " + unwrapWidgets((List)widgets).size() + " widgets");//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
-		
+		System.out.println(widgets == null ? "No widgets created" //$NON-NLS-1$
+				: "Created " + unwrapWidgets((List) widgets).size() + " widgets");//$NON-NLS-2$//$NON-NLS-1$
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+	 * IAction, org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	/**
 	 * Helper method to unwrap a List of Lists
+	 * 
 	 * @param widgets
 	 * @return
 	 */
 	private List unwrapWidgets(List widgets) {
 		List unwrappedList = new ArrayList();
 		Iterator i = widgets.iterator();
-		while(i.hasNext()) {
+		while (i.hasNext()) {
 			Object o = i.next();
 			if (o instanceof List) {
-				unwrappedList.addAll((List)o);
+				unwrappedList.addAll((List) o);
 			} else {
 				unwrappedList.addAll(widgets);
 				break;
 			}
-		}		
-		return unwrappedList;		
+		}
+		return unwrappedList;
 	}
 
 }

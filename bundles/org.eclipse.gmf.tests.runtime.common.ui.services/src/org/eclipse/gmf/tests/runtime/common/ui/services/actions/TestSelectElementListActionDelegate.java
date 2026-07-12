@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.actions;
 
@@ -21,29 +21,24 @@ import org.eclipse.jface.dialogs.MessageDialog;
 
 /**
  * Action to launch to test the SelectElementList.
- * 
+ *
  * @author Anthony Hunter
  */
-public class TestSelectElementListActionDelegate
-    extends AbstractTestElementSelectionServiceActionDelegate {
+public class TestSelectElementListActionDelegate extends AbstractTestElementSelectionServiceActionDelegate {
 
-    /**
-     * {@inheritDoc}
-     */
-    public void run(IAction action) {
-        AbstractElementSelectionInput input = new AbstractElementSelectionInput(
-            filter, context, scope, inputString);
-        List results = ElementSelectionService.getInstance()
-            .getMatchingObjects(input);
-        if (results.size() == 0) {
-            MessageDialog.openInformation(window.getShell(),
-                "Result", "Received Nothing");//$NON-NLS-2$//$NON-NLS-1$
-        } else {
-            MessageDialog.openInformation(window.getShell(),
-                "Result", "Received " //$NON-NLS-2$//$NON-NLS-1$
-                    + results.size()
-                    + " matches, first one "//$NON-NLS-1$
-                    + ((IMatchingObject) results.get(0)).getDisplayName());
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void run(IAction action) {
+		AbstractElementSelectionInput input = new AbstractElementSelectionInput(filter, context, scope, inputString);
+		List results = ElementSelectionService.getInstance().getMatchingObjects(input);
+		if (results.size() == 0) {
+			MessageDialog.openInformation(window.getShell(), "Result", "Received Nothing");//$NON-NLS-2$//$NON-NLS-1$
+		} else {
+			MessageDialog.openInformation(window.getShell(), "Result", "Received " //$NON-NLS-2$//$NON-NLS-1$
+					+ results.size() + " matches, first one "//$NON-NLS-1$
+					+ ((IMatchingObject) results.get(0)).getDisplayName());
+		}
+	}
 }

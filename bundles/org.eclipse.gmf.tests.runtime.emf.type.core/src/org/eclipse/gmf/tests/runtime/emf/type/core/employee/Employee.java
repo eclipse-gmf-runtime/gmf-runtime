@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee;
@@ -16,20 +16,26 @@ import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Employee</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>Employee</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getSalary <em>Salary</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getBand <em>Band</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getNumber <em>Number</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#isSecurityClearance <em>Security Clearance</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getDepartment <em>Department</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#isFullTime <em>Full Time</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getOffice <em>Office</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getSalary
+ * <em>Salary</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getBand
+ * <em>Band</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getNumber
+ * <em>Number</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#isSecurityClearance
+ * <em>Security Clearance</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getDepartment
+ * <em>Department</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#isFullTime
+ * <em>Full Time</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getOffice
+ * <em>Office</em>}</li>
  * </ul>
  * </p>
  *
@@ -39,13 +45,14 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Employee extends EObject, EModelElement {
 	/**
-	 * Returns the value of the '<em><b>Salary</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Salary</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Salary</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Salary</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Salary</em>' attribute.
 	 * @see #setSalary(int)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getEmployee_Salary()
@@ -55,9 +62,10 @@ public interface Employee extends EObject, EModelElement {
 	int getSalary();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getSalary <em>Salary</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getSalary
+	 * <em>Salary</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Salary</em>' attribute.
 	 * @see #getSalary()
 	 * @generated
@@ -65,14 +73,16 @@ public interface Employee extends EObject, EModelElement {
 	void setSalary(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Band</b></em>' attribute.
-	 * The literals are from the enumeration {@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Band</b></em>' attribute. The literals are
+	 * from the enumeration
+	 * {@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band}. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Band</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Band</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Band</em>' attribute.
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band
 	 * @see #setBand(Band)
@@ -83,9 +93,10 @@ public interface Employee extends EObject, EModelElement {
 	Band getBand();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getBand <em>Band</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getBand
+	 * <em>Band</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Band</em>' attribute.
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band
 	 * @see #getBand()
@@ -94,13 +105,14 @@ public interface Employee extends EObject, EModelElement {
 	void setBand(Band value);
 
 	/**
-	 * Returns the value of the '<em><b>Number</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Number</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Number</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Number</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Number</em>' attribute.
 	 * @see #setNumber(int)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getEmployee_Number()
@@ -110,9 +122,10 @@ public interface Employee extends EObject, EModelElement {
 	int getNumber();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getNumber <em>Number</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getNumber
+	 * <em>Number</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Number</em>' attribute.
 	 * @see #getNumber()
 	 * @generated
@@ -120,13 +133,14 @@ public interface Employee extends EObject, EModelElement {
 	void setNumber(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Office</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Office</b></em>' containment reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Office</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Office</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Office</em>' containment reference.
 	 * @see #setOffice(Office)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getEmployee_Office()
@@ -136,9 +150,11 @@ public interface Employee extends EObject, EModelElement {
 	Office getOffice();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getOffice <em>Office</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getOffice
+	 * <em>Office</em>}' containment reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Office</em>' containment reference.
 	 * @see #getOffice()
 	 * @generated
@@ -146,13 +162,14 @@ public interface Employee extends EObject, EModelElement {
 	void setOffice(Office value);
 
 	/**
-	 * Returns the value of the '<em><b>Security Clearance</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Security Clearance</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Security Clearance</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Security Clearance</em>' attribute.
 	 * @see #setSecurityClearance(boolean)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getEmployee_SecurityClearance()
@@ -162,9 +179,11 @@ public interface Employee extends EObject, EModelElement {
 	boolean isSecurityClearance();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#isSecurityClearance <em>Security Clearance</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#isSecurityClearance
+	 * <em>Security Clearance</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Security Clearance</em>' attribute.
 	 * @see #isSecurityClearance()
 	 * @generated
@@ -172,14 +191,16 @@ public interface Employee extends EObject, EModelElement {
 	void setSecurityClearance(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Department</b></em>' container reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getMembers <em>Members</em>}'.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Department</b></em>' container reference. It
+	 * is bidirectional and its opposite is
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getMembers
+	 * <em>Members</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Department</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Department</em>' reference isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Department</em>' container reference.
 	 * @see #setDepartment(Department)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getEmployee_Department()
@@ -190,9 +211,11 @@ public interface Employee extends EObject, EModelElement {
 	Department getDepartment();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getDepartment <em>Department</em>}' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getDepartment
+	 * <em>Department</em>}' container reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Department</em>' container reference.
 	 * @see #getDepartment()
 	 * @generated
@@ -200,13 +223,14 @@ public interface Employee extends EObject, EModelElement {
 	void setDepartment(Department value);
 
 	/**
-	 * Returns the value of the '<em><b>Full Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Full Time</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Full Time</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Full Time</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Full Time</em>' attribute.
 	 * @see #setFullTime(boolean)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getEmployee_FullTime()
@@ -216,9 +240,10 @@ public interface Employee extends EObject, EModelElement {
 	boolean isFullTime();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#isFullTime <em>Full Time</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#isFullTime
+	 * <em>Full Time</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Full Time</em>' attribute.
 	 * @see #isFullTime()
 	 * @generated

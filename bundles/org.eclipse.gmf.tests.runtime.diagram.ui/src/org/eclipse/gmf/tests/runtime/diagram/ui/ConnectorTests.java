@@ -7,10 +7,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
@@ -34,7 +39,6 @@ import org.eclipse.gmf.runtime.diagram.ui.geoshapes.type.GeoshapeType;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.type.DiagramNotationType;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
@@ -43,29 +47,18 @@ import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author sshaw
- * 
- * ConnectorsTests
+ *
+ *         ConnectorsTests
  */
-public class ConnectorTests
-	extends AbstractConnectionTests {
-
-	public static Test suite() {
-		return new TestSuite(ConnectorTests.class);
-	}
-
+public class ConnectorTests extends AbstractConnectionTests {
 	/**
 	 * @param arg0
 	 */
-	public ConnectorTests(String arg0) {
-		super(arg0);
-	}
-
+	@Override
 	protected void setTestFixture() {
 		testFixture = new DiagramTestFixture();
 	}
@@ -74,17 +67,16 @@ public class ConnectorTests
 		return (AbstractPresentationTestFixture) testFixture;
 	}
 
-	public void testSelfConnector_RATLC00533255()
-		throws Exception {
+	@Test
+	public void testSelfConnector_RATLC00533255() throws Exception {
 		try {
 			getFixture().openDiagram();
 			// Add a notes.
-			NoteEditPart note1EP = (NoteEditPart) getFixture()
-				.createShapeUsingTool(DiagramNotationType.NOTE,
+			NoteEditPart note1EP = (NoteEditPart) getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
 					new Point(10, 10));
 
-			ConnectionNodeEditPart line = (ConnectionNodeEditPart) getFixture()
-				.createConnectorUsingTool(note1EP, note1EP, GeoshapeType.LINE);
+			ConnectionNodeEditPart line = (ConnectionNodeEditPart) getFixture().createConnectorUsingTool(note1EP,
+					note1EP, GeoshapeType.LINE);
 
 			flushEventQueue();
 
@@ -104,7 +96,7 @@ public class ConnectorTests
 
 				@Override
 				public ReconnectRequest getTargetRequest() {
-					return (ReconnectRequest) super.getTargetRequest();
+					return super.getTargetRequest();
 				}
 
 				@Override
@@ -120,17 +112,14 @@ public class ConnectorTests
 
 			PointList pointList = line.getConnectionFigure().getPoints();
 			assertTrue(pointList.size() > 1);
-			assertFalse(pointList.getFirstPoint().equals(
-				pointList.getLastPoint()));
+			assertFalse(pointList.getFirstPoint().equals(pointList.getLastPoint()));
 			Point copySrcPoint = pointList.getFirstPoint().getCopy();
 			copySrcPoint.translate(0, 20);
-			MyConnectorEndpointTracker tracker = new MyConnectorEndpointTracker(
-				line, copySrcPoint);
-			tracker.setCommandName(RequestConstants.REQ_RECONNECT_SOURCE);
+			MyConnectorEndpointTracker tracker = new MyConnectorEndpointTracker(line, copySrcPoint);
+			tracker.setCommandName(org.eclipse.gef.RequestConstants.REQ_RECONNECT_SOURCE);
 			tracker.setConnectionEditPart(line);
 			tracker.updateTargetRequest();
-			ReconnectRequest reconnectRequest = (ReconnectRequest) tracker
-				.getTargetRequest();
+			ReconnectRequest reconnectRequest = tracker.getTargetRequest();
 			reconnectRequest.setTargetEditPart(note1EP);
 
 			Command command = note1EP.getCommand(reconnectRequest);
@@ -149,35 +138,31 @@ public class ConnectorTests
 		}
 	}
 
-	public void testReorientRectilinear_bugzilla113003()
-		throws Exception {
+	@Test
+	public void testReorientRectilinear_bugzilla113003() throws Exception {
 		try {
 			getFixture().openDiagram();
 			// Add a notes.
-			NoteEditPart note1EP = (NoteEditPart) getFixture()
-				.createShapeUsingTool(DiagramNotationType.NOTE,
+			NoteEditPart note1EP = (NoteEditPart) getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
 					new Point(10, 10));
 
-			NoteEditPart note2EP = (NoteEditPart) getFixture()
-			.createShapeUsingTool(DiagramNotationType.NOTE,
-				new Point(300, 10));
-			
-			ConnectionNodeEditPart line = (ConnectionNodeEditPart) getFixture()
-			.createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
-			
+			NoteEditPart note2EP = (NoteEditPart) getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(300, 10));
+
+			ConnectionNodeEditPart line = (ConnectionNodeEditPart) getFixture().createConnectorUsingTool(note1EP,
+					note2EP, GeoshapeType.LINE);
+
 			flushEventQueue();
 
-			Request request = new ChangePropertyValueRequest(
-				StringStatics.BLANK,
-				Properties.ID_ROUTING,
-				Routing.RECTILINEAR_LITERAL );
-		
-			Command cmd = line.getCommand( request );
+			Request request = new ChangePropertyValueRequest(StringStatics.BLANK, Properties.ID_ROUTING,
+					Routing.RECTILINEAR_LITERAL);
+
+			Command cmd = line.getCommand(request);
 			getCommandStack().execute(cmd);
 
 			// Now move the line in order to create 2 bendpoints
 			PointList pointList = line.getConnectionFigure().getPoints();
-			
+
 			PointList newpts = new PointList(3);
 			newpts.addPoint(new Point(pointList.getFirstPoint()));
 			newpts.addPoint(new Point(new Point(150, 100)));
@@ -186,23 +171,21 @@ public class ConnectorTests
 			Point r1 = new Point(pointList.getFirstPoint());
 			Point r2 = new Point(pointList.getLastPoint());
 
-			SetConnectionBendpointsCommand bendpointsChanged =
-				new SetConnectionBendpointsCommand(getTestFixture().getEditingDomain());
+			SetConnectionBendpointsCommand bendpointsChanged = new SetConnectionBendpointsCommand(
+					getTestFixture().getEditingDomain());
 			bendpointsChanged.setEdgeAdapter(new EObjectAdapter(line.getNotationView()));
 			bendpointsChanged.setNewPointList(newpts, r1, r2);
-			
+
 			getCommandStack().execute(new ICommandProxy(bendpointsChanged));
 			flushEventQueue();
 
-			assertEquals("Wrong number of points.", 5, line.getConnectionFigure().getPoints().size()); //$NON-NLS-1$
-			
-			class MyConnectorEndpointTracker
-				extends ConnectionEndpointTracker {
+			assertEquals(5, line.getConnectionFigure().getPoints().size(), "Wrong number of points."); //$NON-NLS-1$
+
+			class MyConnectorEndpointTracker extends ConnectionEndpointTracker {
 
 				private Point location;
 
-				public MyConnectorEndpointTracker(ConnectionEditPart cep,
-						Point location) {
+				public MyConnectorEndpointTracker(ConnectionEditPart cep, Point location) {
 					super(cep);
 					this.location = location;
 				}
@@ -214,14 +197,14 @@ public class ConnectorTests
 
 				@Override
 				public ReconnectRequest getTargetRequest() {
-					return (ReconnectRequest) super.getTargetRequest();
+					return super.getTargetRequest();
 				}
 
 				@Override
 				public Point getLocation() {
 					return location;
 				}
-				
+
 				@Override
 				public boolean updateTargetUnderMouse() {
 					return false;
@@ -229,451 +212,445 @@ public class ConnectorTests
 			}
 
 			assertTrue(pointList.size() > 1);
-			assertFalse(pointList.getFirstPoint().equals(
-				pointList.getLastPoint()));
-			
+			assertFalse(pointList.getFirstPoint().equals(pointList.getLastPoint()));
+
 			// track it into space...
 			Point newSrcPoint = new Point(500, 500);
-			MyConnectorEndpointTracker tracker = new MyConnectorEndpointTracker(
-				line, newSrcPoint);
-			tracker.setCommandName(RequestConstants.REQ_RECONNECT_SOURCE);
+			MyConnectorEndpointTracker tracker = new MyConnectorEndpointTracker(line, newSrcPoint);
+			tracker.setCommandName(org.eclipse.gef.RequestConstants.REQ_RECONNECT_SOURCE);
 			tracker.setConnectionEditPart(line);
 			tracker.handleDragInProgress();
 			line.getConnectionFigure().revalidate();
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
 			getFixture().closeDiagram();
 		}
 	}
-    
-    /**
-     * A callback mechanism to test the line.
-     */
-    private static interface LineTester {
-        void testLine(ConnectionEditPart lineEP); 
-    }
-    
-    /**
-     * Performs some tests with rectilinear connections to ensure that the line is
-     * always connected to the source and target and that the line is rectilinear.See bugzilla#112996 for a
-     * description of the original issue.If this test fails, it can be
-     * reproduced manually on a logic diagram with notes and note attachments.
-     * See the console output for the location of the notes.
-     * 
-     * @author Cherie Revells
-     * @throws Exception
-     */
-    public void testRectilinearRoutingToConnection()
-        throws Exception {
-        try {
-            getFixture().openDiagram();
 
-            // Add three notes.
-            final ShapeEditPart note1EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(100, 100));
-            final ShapeEditPart note2EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(200, 300));
-            final ShapeEditPart note3EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(300, 100));
+	/**
+	 * A callback mechanism to test the line.
+	 */
+	private static interface LineTester {
+		void testLine(ConnectionEditPart lineEP);
+	}
 
-            flushEventQueue();
+	/**
+	 * Performs some tests with rectilinear connections to ensure that the line is
+	 * always connected to the source and target and that the line is
+	 * rectilinear.See bugzilla#112996 for a description of the original issue.If
+	 * this test fails, it can be reproduced manually on a logic diagram with notes
+	 * and note attachments. See the console output for the location of the notes.
+	 *
+	 * @author Cherie Revells
+	 * @throws Exception
+	 */
+	@Test
+	public void testRectilinearRoutingToConnection() throws Exception {
+		try {
+			getFixture().openDiagram();
 
-            ConnectionNodeEditPart targetLineEP = (ConnectionNodeEditPart) getFixture()
-                .createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
-            ConnectionNodeEditPart lineToTestEP = (ConnectionNodeEditPart) getFixture()
-                .createConnectorUsingTool(note3EP, targetLineEP,
-                    GeoshapeType.LINE);
+			// Add three notes.
+			final ShapeEditPart note1EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(100, 100));
+			final ShapeEditPart note2EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(200, 300));
+			final ShapeEditPart note3EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(300, 100));
 
-            Request request = new ChangePropertyValueRequest(
-                StringStatics.BLANK, Properties.ID_ROUTING,
-                Routing.RECTILINEAR_LITERAL);
+			flushEventQueue();
 
-            Command cmd = lineToTestEP.getCommand(request);
-            getCommandStack().execute(cmd);
-            flushEventQueue();
+			ConnectionNodeEditPart targetLineEP = (ConnectionNodeEditPart) getFixture()
+					.createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
+			ConnectionNodeEditPart lineToTestEP = (ConnectionNodeEditPart) getFixture()
+					.createConnectorUsingTool(note3EP, targetLineEP, GeoshapeType.LINE);
 
-            moveShapeAndTestLine(note3EP, lineToTestEP, new LineTester() {
+			Request request = new ChangePropertyValueRequest(StringStatics.BLANK, Properties.ID_ROUTING,
+					Routing.RECTILINEAR_LITERAL);
 
-                public void testLine(ConnectionEditPart lineEP) {
-                    if (!areEndsConnected(lineEP)) {
-                        failWithMessage("ends not connected", lineEP, note1EP, //$NON-NLS-1$
-                            note2EP, note3EP);
-                    } else if (!isRectilinear(lineEP)) {
-                        failWithMessage("not rectilinear", lineEP, note1EP, //$NON-NLS-1$
-                            note2EP, note3EP);
-                    }
-                }
-            });
+			Command cmd = lineToTestEP.getCommand(request);
+			getCommandStack().execute(cmd);
+			flushEventQueue();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            getFixture().closeDiagram();
-        }
-    }
+			moveShapeAndTestLine(note3EP, lineToTestEP, new LineTester() {
 
-    /**
-     * Performs some tests with rectilinear connections to ensure that the line is
-     * always connected to the source and target and that the line is rectilinear.See bugzilla#112996 for a
-     * description of the original issue.If this test fails, it can be
-     * reproduced manually on a logic diagram with notes and note attachments.
-     * See the console output for the location of the notes.
-     * 
-     * @author Cherie Revells
-     * @throws Exception
-     */
-    public void testRectilinearRoutingFromConnection()
-        throws Exception {
-        try {
-            getFixture().openDiagram();
+				@Override
+				public void testLine(ConnectionEditPart lineEP) {
+					if (!areEndsConnected(lineEP)) {
+						failWithMessage("ends not connected", lineEP, note1EP, //$NON-NLS-1$
+								note2EP, note3EP);
+					} else if (!isRectilinear(lineEP)) {
+						failWithMessage("not rectilinear", lineEP, note1EP, //$NON-NLS-1$
+								note2EP, note3EP);
+					}
+				}
+			});
 
-            // Add three notes.
-            final ShapeEditPart note1EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(100, 100));
-            final ShapeEditPart note2EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(200, 300));
-            final ShapeEditPart note3EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(300, 100));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			getFixture().closeDiagram();
+		}
+	}
 
-            flushEventQueue();
+	/**
+	 * Performs some tests with rectilinear connections to ensure that the line is
+	 * always connected to the source and target and that the line is
+	 * rectilinear.See bugzilla#112996 for a description of the original issue.If
+	 * this test fails, it can be reproduced manually on a logic diagram with notes
+	 * and note attachments. See the console output for the location of the notes.
+	 *
+	 * @author Cherie Revells
+	 * @throws Exception
+	 */
+	@Test
+	public void testRectilinearRoutingFromConnection() throws Exception {
+		try {
+			getFixture().openDiagram();
 
-            ConnectionNodeEditPart sourceLineEP = (ConnectionNodeEditPart) getFixture()
-                .createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
+			// Add three notes.
+			final ShapeEditPart note1EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(100, 100));
+			final ShapeEditPart note2EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(200, 300));
+			final ShapeEditPart note3EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(300, 100));
 
-            // Throw in some bendpoints
+			flushEventQueue();
 
-            ConnectionNodeEditPart lineToTestEP = (ConnectionNodeEditPart) getFixture()
-                .createConnectorUsingTool(sourceLineEP, note3EP,
-                    GeoshapeType.LINE);
+			ConnectionNodeEditPart sourceLineEP = (ConnectionNodeEditPart) getFixture()
+					.createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
 
-            Request request = new ChangePropertyValueRequest(
-                StringStatics.BLANK, Properties.ID_ROUTING,
-                Routing.RECTILINEAR_LITERAL);
+			// Throw in some bendpoints
 
-            Command cmd = lineToTestEP.getCommand(request);
-            getCommandStack().execute(cmd);
-            flushEventQueue();
+			ConnectionNodeEditPart lineToTestEP = (ConnectionNodeEditPart) getFixture()
+					.createConnectorUsingTool(sourceLineEP, note3EP, GeoshapeType.LINE);
 
-            moveShapeAndTestLine(note3EP, lineToTestEP, new LineTester() {
+			Request request = new ChangePropertyValueRequest(StringStatics.BLANK, Properties.ID_ROUTING,
+					Routing.RECTILINEAR_LITERAL);
 
-                public void testLine(ConnectionEditPart lineEP) {
-                    if (!areEndsConnected(lineEP)) {
-                        failWithMessage("ends not connected", lineEP, note1EP, //$NON-NLS-1$
-                            note2EP, note3EP);
-                    } else if (!isRectilinear(lineEP)) {
-                        failWithMessage("not rectilinear", lineEP, note1EP, //$NON-NLS-1$
-                            note2EP, note3EP);
-                    }
-                }
-            });
+			Command cmd = lineToTestEP.getCommand(request);
+			getCommandStack().execute(cmd);
+			flushEventQueue();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            getFixture().closeDiagram();
-        }
-    }
+			moveShapeAndTestLine(note3EP, lineToTestEP, new LineTester() {
 
-    /**
-     * Performs some tests with oblique connections to ensure that the line is
-     * always connected to the source and target.If this test fails, it can be
-     * reproduced manually on a logic diagram with notes and note attachments.
-     * See the console output for the location of the notes.
-     * 
-     * @author Cherie Revells
-     * @throws Exception
-     */
-    public void testObliqueRoutingToConnection()
-        throws Exception {
-        try {
-            getFixture().openDiagram();
+				@Override
+				public void testLine(ConnectionEditPart lineEP) {
+					if (!areEndsConnected(lineEP)) {
+						failWithMessage("ends not connected", lineEP, note1EP, //$NON-NLS-1$
+								note2EP, note3EP);
+					} else if (!isRectilinear(lineEP)) {
+						failWithMessage("not rectilinear", lineEP, note1EP, //$NON-NLS-1$
+								note2EP, note3EP);
+					}
+				}
+			});
 
-            // Add three notes.
-            final ShapeEditPart note1EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(100, 100));
-            final ShapeEditPart note2EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(200, 300));
-            final ShapeEditPart note3EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(300, 100));
-            flushEventQueue();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			getFixture().closeDiagram();
+		}
+	}
 
-            ConnectionNodeEditPart targetLineEP = (ConnectionNodeEditPart) getFixture()
-                .createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
-            ConnectionNodeEditPart lineToTestEP = (ConnectionNodeEditPart) getFixture()
-                .createConnectorUsingTool(note3EP, targetLineEP,
-                    GeoshapeType.LINE);
-            flushEventQueue();
+	/**
+	 * Performs some tests with oblique connections to ensure that the line is
+	 * always connected to the source and target.If this test fails, it can be
+	 * reproduced manually on a logic diagram with notes and note attachments. See
+	 * the console output for the location of the notes.
+	 *
+	 * @author Cherie Revells
+	 * @throws Exception
+	 */
+	@Test
+	public void testObliqueRoutingToConnection() throws Exception {
+		try {
+			getFixture().openDiagram();
 
-            moveShapeAndTestLine(note3EP, lineToTestEP, new LineTester() {
+			// Add three notes.
+			final ShapeEditPart note1EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(100, 100));
+			final ShapeEditPart note2EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(200, 300));
+			final ShapeEditPart note3EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(300, 100));
+			flushEventQueue();
 
-                public void testLine(ConnectionEditPart lineEP) {
-                    if (!areEndsConnected(lineEP)) {
-                        failWithMessage("ends not connected", lineEP, note1EP, //$NON-NLS-1$
-                            note2EP, note3EP);
-                    }
-                }
-            });
+			ConnectionNodeEditPart targetLineEP = (ConnectionNodeEditPart) getFixture()
+					.createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
+			ConnectionNodeEditPart lineToTestEP = (ConnectionNodeEditPart) getFixture()
+					.createConnectorUsingTool(note3EP, targetLineEP, GeoshapeType.LINE);
+			flushEventQueue();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            getFixture().closeDiagram();
-        }
-    }
+			moveShapeAndTestLine(note3EP, lineToTestEP, new LineTester() {
 
-    /**
-     * Performs some tests with oblique connections to ensure that the line is
-     * always connected to the source and target.If this test fails, it can be
-     * reproduced manually on a logic diagram with notes and note attachments.
-     * See the console output for the location of the notes.
-     * 
-     * @author Cherie Revells
-     * @throws Exception
-     */
-    public void testObliqueRoutingFromConnection()
-        throws Exception {
-        try {
-            getFixture().openDiagram();
+				@Override
+				public void testLine(ConnectionEditPart lineEP) {
+					if (!areEndsConnected(lineEP)) {
+						failWithMessage("ends not connected", lineEP, note1EP, //$NON-NLS-1$
+								note2EP, note3EP);
+					}
+				}
+			});
 
-            // Add three notes.
-            final ShapeEditPart note1EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(100, 100));
-            final ShapeEditPart note2EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(200, 300));
-            final ShapeEditPart note3EP = getFixture().createShapeUsingTool(
-                DiagramNotationType.NOTE, new Point(300, 100));
-            flushEventQueue();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			getFixture().closeDiagram();
+		}
+	}
 
-            ConnectionNodeEditPart sourceLineEP = (ConnectionNodeEditPart) getFixture()
-                .createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
-            ConnectionNodeEditPart lineToTestEP = (ConnectionNodeEditPart) getFixture()
-                .createConnectorUsingTool(sourceLineEP, note3EP,
-                    GeoshapeType.LINE);
-            flushEventQueue();
+	/**
+	 * Performs some tests with oblique connections to ensure that the line is
+	 * always connected to the source and target.If this test fails, it can be
+	 * reproduced manually on a logic diagram with notes and note attachments. See
+	 * the console output for the location of the notes.
+	 *
+	 * @author Cherie Revells
+	 * @throws Exception
+	 */
+	@Test
+	public void testObliqueRoutingFromConnection() throws Exception {
+		try {
+			getFixture().openDiagram();
 
-            moveShapeAndTestLine(note3EP, lineToTestEP, new LineTester() {
+			// Add three notes.
+			final ShapeEditPart note1EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(100, 100));
+			final ShapeEditPart note2EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(200, 300));
+			final ShapeEditPart note3EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(300, 100));
+			flushEventQueue();
 
-                public void testLine(ConnectionEditPart lineEP) {
-                    if (!areEndsConnected(lineEP)) {
-                        failWithMessage("ends not connected", lineEP, note1EP, //$NON-NLS-1$
-                            note2EP, note3EP);
-                    }
-                }
-            });
+			ConnectionNodeEditPart sourceLineEP = (ConnectionNodeEditPart) getFixture()
+					.createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
+			ConnectionNodeEditPart lineToTestEP = (ConnectionNodeEditPart) getFixture()
+					.createConnectorUsingTool(sourceLineEP, note3EP, GeoshapeType.LINE);
+			flushEventQueue();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            getFixture().closeDiagram();
-        }
-    }
+			moveShapeAndTestLine(note3EP, lineToTestEP, new LineTester() {
 
-    public void testConnectionBendpoints()
-    	throws Exception {
-    try {
-        getFixture().openDiagram();
+				@Override
+				public void testLine(ConnectionEditPart lineEP) {
+					if (!areEndsConnected(lineEP)) {
+						failWithMessage("ends not connected", lineEP, note1EP, //$NON-NLS-1$
+								note2EP, note3EP);
+					}
+				}
+			});
 
-        // Add three notes.
-        final ShapeEditPart note1EP = getFixture().createShapeUsingTool(
-            DiagramNotationType.NOTE, new Point(100, 100));
-        final ShapeEditPart note2EP = getFixture().createShapeUsingTool(
-            DiagramNotationType.NOTE, new Point(200, 300));
-        flushEventQueue();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			getFixture().closeDiagram();
+		}
+	}
 
-        ConnectionNodeEditPart lineEP = (ConnectionNodeEditPart) getFixture()
-            .createConnectorUsingTool(note1EP, note2EP, GeoshapeType.LINE);
-        flushEventQueue();
-        
-		PointList pointList = lineEP.getConnectionFigure().getPoints().getCopy();
-		Point pt1 = pointList.getFirstPoint();
-		Point pt2 = pointList.getLastPoint();
-		Point bend = new Point((pt1.x + pt2.x) / 2, pt1.y);
-		pointList.insertPoint(bend, 1);
-		SetConnectionBendpointsCommand bendpointsChanged =
-			new SetConnectionBendpointsCommand(getTestFixture().getEditingDomain());
-		bendpointsChanged.setEdgeAdapter(new EObjectAdapter(lineEP.getNotationView()));
-			bendpointsChanged.setNewPointList(pointList, lineEP
-					.getConnectionFigure().getSourceAnchor()
-					.getReferencePoint(), lineEP.getConnectionFigure()
-					.getTargetAnchor().getReferencePoint());
-		
-		getCommandStack().execute(new ICommandProxy(bendpointsChanged));
-		flushEventQueue();
-		assertEquals("Wrong number of bendpoints for the model", 3, ((RelativeBendpoints)((Edge)lineEP.getNotationView()).getBendpoints()).getPoints().size());
-		assertEquals("Wrong number of bendpoints for the figure", 3, lineEP.getConnectionFigure().getPoints().size());
-		
-		pointList = lineEP.getConnectionFigure().getPoints().getCopy();
-		pt1 = pointList.getFirstPoint();
-		pt2 = pointList.getLastPoint();
-		bend = new Point((pt1.x + pt2.x) / 4, (pt1.y + pt2.y) / 2);
-		pointList.insertPoint(bend, 2);
-		bendpointsChanged =
-			new SetConnectionBendpointsCommand(getTestFixture().getEditingDomain());
-		bendpointsChanged.setEdgeAdapter(new EObjectAdapter(lineEP.getNotationView()));
-			bendpointsChanged.setNewPointList(pointList, lineEP
-					.getConnectionFigure().getSourceAnchor()
-					.getReferencePoint(), lineEP.getConnectionFigure()
-					.getTargetAnchor().getReferencePoint());
-		getCommandStack().execute(new ICommandProxy(bendpointsChanged));
-		flushEventQueue();
-		assertEquals("Wrong number of bendpoints for the model", 4, ((RelativeBendpoints)((Edge)lineEP.getNotationView()).getBendpoints()).getPoints().size());
-		assertEquals("Wrong number of bendpoints for the figure", 4, lineEP.getConnectionFigure().getPoints().size());
+	@Test
+	public void testConnectionBendpoints() throws Exception {
+		try {
+			getFixture().openDiagram();
 
-		getCommandStack().undo();
-		flushEventQueue();		
-		assertEquals("Wrong number of bendpoints for the model", 3, ((RelativeBendpoints)((Edge)lineEP.getNotationView()).getBendpoints()).getPoints().size());
-		assertEquals("Wrong number of bendpoints for the figure", 3, lineEP.getConnectionFigure().getPoints().size());
-		
-		getCommandStack().redo();
-		flushEventQueue();
-		assertEquals("Wrong number of bendpoints for the model", 4, ((RelativeBendpoints)((Edge)lineEP.getNotationView()).getBendpoints()).getPoints().size());
-		assertEquals("Wrong number of bendpoints for the figure", 4, lineEP.getConnectionFigure().getPoints().size());
+			// Add three notes.
+			final ShapeEditPart note1EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(100, 100));
+			final ShapeEditPart note2EP = getFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+					new Point(200, 300));
+			flushEventQueue();
 
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    } finally {
-        getFixture().closeDiagram();
-    }
-}
-    /**
-     * Verifies conditions on the line as note3 is moved around.
-     * @param note1EP
-     * @param note2EP
-     * @param note3EP
-     * @param lineToTestEP
-     * @param isRectilinear
-     */
-    private void moveShapeAndTestLine(ShapeEditPart shapeToMoveEP,
-            ConnectionNodeEditPart lineToTestEP, LineTester lineTester) {
+			ConnectionNodeEditPart lineEP = (ConnectionNodeEditPart) getFixture().createConnectorUsingTool(note1EP,
+					note2EP, GeoshapeType.LINE);
+			flushEventQueue();
 
-        lineTester.testLine(lineToTestEP);
+			PointList pointList = lineEP.getConnectionFigure().getPoints().getCopy();
+			Point pt1 = pointList.getFirstPoint();
+			Point pt2 = pointList.getLastPoint();
+			Point bend = new Point((pt1.x + pt2.x) / 2, pt1.y);
+			pointList.insertPoint(bend, 1);
+			SetConnectionBendpointsCommand bendpointsChanged = new SetConnectionBendpointsCommand(
+					getTestFixture().getEditingDomain());
+			bendpointsChanged.setEdgeAdapter(new EObjectAdapter(lineEP.getNotationView()));
+			bendpointsChanged.setNewPointList(pointList,
+					lineEP.getConnectionFigure().getSourceAnchor().getReferencePoint(),
+					lineEP.getConnectionFigure().getTargetAnchor().getReferencePoint());
 
-        // Move the end note around a bit so that the rectilinear connection
-        // will move.
-        ChangeBoundsRequest moveRequest = new ChangeBoundsRequest(
-            RequestConstants.REQ_MOVE);
-        moveRequest.setEditParts(shapeToMoveEP);
+			getCommandStack().execute(new ICommandProxy(bendpointsChanged));
+			flushEventQueue();
+			assertEquals(3, ((RelativeBendpoints) ((Edge) lineEP.getNotationView()).getBendpoints()).getPoints().size(),
+					"Wrong number of bendpoints for the model");
+			assertEquals(3, lineEP.getConnectionFigure().getPoints().size(),
+					"Wrong number of bendpoints for the figure");
 
-        for (int i = 0; i <= 50; i++) {
-            moveRequest.setMoveDelta(new Point(0, 5));
-            getCommandStack().execute(shapeToMoveEP.getCommand(moveRequest));
-            flushEventQueue();
-            lineTester.testLine(lineToTestEP);
-        }
-        for (int i = 0; i <= 50; i++) {
-            moveRequest.setMoveDelta(new Point(-5, 0));
-            getCommandStack().execute(shapeToMoveEP.getCommand(moveRequest));
-            flushEventQueue();
-            lineTester.testLine(lineToTestEP);
-        }
-        for (int i = 0; i <= 50; i++) {
-            moveRequest.setMoveDelta(new Point(0, -5));
-            getCommandStack().execute(shapeToMoveEP.getCommand(moveRequest));
-            flushEventQueue();
-            lineTester.testLine(lineToTestEP);
-        }
-    }
+			pointList = lineEP.getConnectionFigure().getPoints().getCopy();
+			pt1 = pointList.getFirstPoint();
+			pt2 = pointList.getLastPoint();
+			bend = new Point((pt1.x + pt2.x) / 4, (pt1.y + pt2.y) / 2);
+			pointList.insertPoint(bend, 2);
+			bendpointsChanged = new SetConnectionBendpointsCommand(getTestFixture().getEditingDomain());
+			bendpointsChanged.setEdgeAdapter(new EObjectAdapter(lineEP.getNotationView()));
+			bendpointsChanged.setNewPointList(pointList,
+					lineEP.getConnectionFigure().getSourceAnchor().getReferencePoint(),
+					lineEP.getConnectionFigure().getTargetAnchor().getReferencePoint());
+			getCommandStack().execute(new ICommandProxy(bendpointsChanged));
+			flushEventQueue();
+			assertEquals(4, ((RelativeBendpoints) ((Edge) lineEP.getNotationView()).getBendpoints()).getPoints().size(),
+					"Wrong number of bendpoints for the model");
+			assertEquals(4, lineEP.getConnectionFigure().getPoints().size(),
+					"Wrong number of bendpoints for the figure");
 
-    /**
-     * Verifies that the connection editpart passed in is connected to the
-     * source and target ends.
-     * 
-     * @param lineEP
-     * @return
-     */
-    private boolean areEndsConnected(ConnectionEditPart lineEP) {
+			getCommandStack().undo();
+			flushEventQueue();
+			assertEquals(3, ((RelativeBendpoints) ((Edge) lineEP.getNotationView()).getBendpoints()).getPoints().size(),
+					"Wrong number of bendpoints for the model");
+			assertEquals(3, lineEP.getConnectionFigure().getPoints().size(),
+					"Wrong number of bendpoints for the figure");
 
-        Point firstPoint = ((Connection) lineEP.getFigure()).getPoints()
-            .getFirstPoint();
-        Point lastPoint = ((Connection) lineEP.getFigure()).getPoints()
-            .getLastPoint();
+			getCommandStack().redo();
+			flushEventQueue();
+			assertEquals(4, ((RelativeBendpoints) ((Edge) lineEP.getNotationView()).getBendpoints()).getPoints().size(),
+					"Wrong number of bendpoints for the model");
+			assertEquals(4, lineEP.getConnectionFigure().getPoints().size(),
+					"Wrong number of bendpoints for the figure");
 
-        // Leave a little space to account for rounding errors in himetric mode.  It is hardly noticeable.
-        Dimension buffer = new Dimension(3, 3);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			getFixture().closeDiagram();
+		}
+	}
 
-        lineEP.getFigure().translateToRelative(buffer);
+	/**
+	 * Verifies conditions on the line as note3 is moved around.
+	 * 
+	 * @param note1EP
+	 * @param note2EP
+	 * @param note3EP
+	 * @param lineToTestEP
+	 * @param isRectilinear
+	 */
+	private void moveShapeAndTestLine(ShapeEditPart shapeToMoveEP, ConnectionNodeEditPart lineToTestEP,
+			LineTester lineTester) {
 
-        IFigure sourceFigure = ((IGraphicalEditPart) lineEP.getSource())
-            .getFigure();
-        if (sourceFigure instanceof Connection) {
-            PointList points = ((Connection) sourceFigure).getPoints();
-            int index = PointListUtilities.findNearestLineSegIndexOfPoint(
-                points, firstPoint);
-            LineSeg lineSeg = (LineSeg) PointListUtilities.getLineSegments(
-                points).get(index - 1);
-            if (!lineSeg.containsPoint(firstPoint, buffer.height * 2)) {
-                return false;
-            }
-        } else {
-            Rectangle bounds = sourceFigure.getBounds().getCopy();
-            bounds.expand(buffer.width, buffer.height);
-            if (!bounds.contains(firstPoint)) {
-                return false;
-            }
-        }
+		lineTester.testLine(lineToTestEP);
 
-        IFigure targetFigure = ((IGraphicalEditPart) lineEP.getTarget())
-            .getFigure();
-        if (targetFigure instanceof Connection) {
-            PointList points = ((Connection) targetFigure).getPoints();
-            int index = PointListUtilities.findNearestLineSegIndexOfPoint(
-                points, lastPoint);
-            LineSeg lineSeg = (LineSeg) PointListUtilities.getLineSegments(
-                points).get(index - 1);
-            if (!lineSeg.containsPoint(lastPoint, buffer.height * 2)) {
-                return false;
-            }
-        } else {
-            Rectangle bounds = targetFigure.getBounds().getCopy();
-            bounds.expand(buffer.width, buffer.height);
-            if (!bounds.contains(lastPoint)) {
-                return false;
-            }
-        }
+		// Move the end note around a bit so that the rectilinear connection
+		// will move.
+		ChangeBoundsRequest moveRequest = new ChangeBoundsRequest(org.eclipse.gef.RequestConstants.REQ_MOVE);
+		moveRequest.setEditParts(shapeToMoveEP);
 
-        return true;
-    }
+		for (int i = 0; i <= 50; i++) {
+			moveRequest.setMoveDelta(new Point(0, 5));
+			getCommandStack().execute(shapeToMoveEP.getCommand(moveRequest));
+			flushEventQueue();
+			lineTester.testLine(lineToTestEP);
+		}
+		for (int i = 0; i <= 50; i++) {
+			moveRequest.setMoveDelta(new Point(-5, 0));
+			getCommandStack().execute(shapeToMoveEP.getCommand(moveRequest));
+			flushEventQueue();
+			lineTester.testLine(lineToTestEP);
+		}
+		for (int i = 0; i <= 50; i++) {
+			moveRequest.setMoveDelta(new Point(0, -5));
+			getCommandStack().execute(shapeToMoveEP.getCommand(moveRequest));
+			flushEventQueue();
+			lineTester.testLine(lineToTestEP);
+		}
+	}
 
-    /**
-     * Verifies that the connection editpart passed in is actually rectilinear.
-     * 
-     * @param lineEP
-     * @return
-     */
-    private boolean isRectilinear(ConnectionEditPart lineEP) {
+	/**
+	 * Verifies that the connection editpart passed in is connected to the source
+	 * and target ends.
+	 *
+	 * @param lineEP
+	 * @return
+	 */
+	private boolean areEndsConnected(ConnectionEditPart lineEP) {
 
-        PointList points = ((Connection) lineEP.getFigure()).getPoints();
+		Point firstPoint = ((Connection) lineEP.getFigure()).getPoints().getFirstPoint();
+		Point lastPoint = ((Connection) lineEP.getFigure()).getPoints().getLastPoint();
 
-        // Verify that the line is in fact rectilinear.
-        for (int i = 0; i < points.size() - 1; i++) {
-            Point ptCurrent = points.getPoint(i);
-            Point ptNext = points.getPoint(i + 1);
-            if (!(ptCurrent.x == ptNext.x || ptCurrent.y == ptNext.y)) {
-                return false;
-            }
-        }
-        return true;
-    }
+		// Leave a little space to account for rounding errors in himetric mode. It is
+		// hardly noticeable.
+		Dimension buffer = new Dimension(3, 3);
 
-    /**
-     * Prints debug info to the console and fails the test.
-     */
-    private void failWithMessage(String message, ConnectionEditPart lineEP,
-            ShapeEditPart note1EP, ShapeEditPart note2EP, ShapeEditPart note3EP) {
-        System.out.println("------ " + message); //$NON-NLS-1$
-        System.out
-            .println("Issue can be reproduced with notes in the following locations:"); //$NON-NLS-1$
-        System.out.println("note1: " + note1EP.getFigure().getBounds()); //$NON-NLS-1$
-        System.out.println("note2: " + note2EP.getFigure().getBounds()); //$NON-NLS-1$
-        System.out.println("note3: " + note3EP.getFigure().getBounds()); //$NON-NLS-1$
-        System.out.println("connection start: " //$NON-NLS-1$
-            + ((Connection) lineEP.getFigure()).getPoints().getFirstPoint());
-        System.out.println("connection end: " //$NON-NLS-1$
-            + ((Connection) lineEP.getFigure()).getPoints().getLastPoint());
+		lineEP.getFigure().translateToRelative(buffer);
 
-        fail("See console for details."); //$NON-NLS-1$
-    }
+		IFigure sourceFigure = ((IGraphicalEditPart) lineEP.getSource()).getFigure();
+		if (sourceFigure instanceof Connection) {
+			PointList points = ((Connection) sourceFigure).getPoints();
+			int index = PointListUtilities.findNearestLineSegIndexOfPoint(points, firstPoint);
+			LineSeg lineSeg = (LineSeg) PointListUtilities.getLineSegments(points).get(index - 1);
+			if (!lineSeg.containsPoint(firstPoint, buffer.height * 2)) {
+				return false;
+			}
+		} else {
+			Rectangle bounds = sourceFigure.getBounds().getCopy();
+			bounds.expand(buffer.width, buffer.height);
+			if (!bounds.contains(firstPoint)) {
+				return false;
+			}
+		}
+
+		IFigure targetFigure = ((IGraphicalEditPart) lineEP.getTarget()).getFigure();
+		if (targetFigure instanceof Connection) {
+			PointList points = ((Connection) targetFigure).getPoints();
+			int index = PointListUtilities.findNearestLineSegIndexOfPoint(points, lastPoint);
+			LineSeg lineSeg = (LineSeg) PointListUtilities.getLineSegments(points).get(index - 1);
+			if (!lineSeg.containsPoint(lastPoint, buffer.height * 2)) {
+				return false;
+			}
+		} else {
+			Rectangle bounds = targetFigure.getBounds().getCopy();
+			bounds.expand(buffer.width, buffer.height);
+			if (!bounds.contains(lastPoint)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Verifies that the connection editpart passed in is actually rectilinear.
+	 *
+	 * @param lineEP
+	 * @return
+	 */
+	private boolean isRectilinear(ConnectionEditPart lineEP) {
+
+		PointList points = ((Connection) lineEP.getFigure()).getPoints();
+
+		// Verify that the line is in fact rectilinear.
+		for (int i = 0; i < points.size() - 1; i++) {
+			Point ptCurrent = points.getPoint(i);
+			Point ptNext = points.getPoint(i + 1);
+			if (!(ptCurrent.x == ptNext.x || ptCurrent.y == ptNext.y)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Prints debug info to the console and fails the test.
+	 */
+	private void failWithMessage(String message, ConnectionEditPart lineEP, ShapeEditPart note1EP,
+			ShapeEditPart note2EP, ShapeEditPart note3EP) {
+		System.out.println("------ " + message); //$NON-NLS-1$
+		System.out.println("Issue can be reproduced with notes in the following locations:"); //$NON-NLS-1$
+		System.out.println("note1: " + note1EP.getFigure().getBounds()); //$NON-NLS-1$
+		System.out.println("note2: " + note2EP.getFigure().getBounds()); //$NON-NLS-1$
+		System.out.println("note3: " + note3EP.getFigure().getBounds()); //$NON-NLS-1$
+		System.out.println("connection start: " //$NON-NLS-1$
+				+ ((Connection) lineEP.getFigure()).getPoints().getFirstPoint());
+		System.out.println("connection end: " //$NON-NLS-1$
+				+ ((Connection) lineEP.getFigure()).getPoints().getLastPoint());
+
+		fail("See console for details."); //$NON-NLS-1$
+	}
 
 }

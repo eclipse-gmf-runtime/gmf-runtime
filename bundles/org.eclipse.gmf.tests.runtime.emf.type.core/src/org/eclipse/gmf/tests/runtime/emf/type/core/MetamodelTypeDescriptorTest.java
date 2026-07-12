@@ -7,35 +7,19 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core;
 
-import org.eclipse.gmf.runtime.emf.type.core.IMetamodelType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelTypeDescriptor;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-
-public class MetamodelTypeDescriptorTest extends TestCase {
+public class MetamodelTypeDescriptorTest {
 
 	private MetamodelTypeDescriptor fixture;
-
-	public MetamodelTypeDescriptorTest(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(MetamodelTypeDescriptorTest.class);
-	}
 
 	protected MetamodelTypeDescriptor getFixture() {
 		return fixture;
@@ -45,10 +29,11 @@ public class MetamodelTypeDescriptorTest extends TestCase {
 		this.fixture = fixture;
 	}
 
+	@Test
 	public void test_metamodelTypeConstructor() {
 
-		setFixture(new MetamodelTypeDescriptor((IMetamodelType) EmployeeType.STUDENT));
-		
+		setFixture(new MetamodelTypeDescriptor(EmployeeType.STUDENT));
+
 		assertEquals(EmployeeType.STUDENT.getDisplayName(), getFixture().getName());
 		assertEquals(EmployeeType.STUDENT.getId(), getFixture().getId());
 		assertEquals(EmployeeType.STUDENT.getIconURL(), getFixture().getIconURL());

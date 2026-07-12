@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -25,61 +25,67 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 /**
  * @author ldamus
  */
-public class ExecutiveEditHelperAdvice
-	extends ManagerEditHelperAdvice {
+public class ExecutiveEditHelperAdvice extends ManagerEditHelperAdvice {
 
-	public static class BeforeExecutiveConfigureCommand
-		extends ConfigureElementCommand {
+	public static class BeforeExecutiveConfigureCommand extends ConfigureElementCommand {
 
 		public BeforeExecutiveConfigureCommand(ConfigureRequest req) {
 			super(req);
 		}
 
+		@Override
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-		    throws ExecutionException {
-			
+				throws ExecutionException {
+
 			if (getRequest().getParameter("fail_configuration") != null) { //$NON-NLS-1$
-				return CommandResult
-						.newWarningCommandResult("configuration failed", null); //$NON-NLS-1$
+				return CommandResult.newWarningCommandResult("configuration failed", null); //$NON-NLS-1$
 			}
-			
+
 			return null;
 		}
 	}
 
-	public static class AfterExecutiveConfigureCommand
-		extends ConfigureElementCommand {
+	public static class AfterExecutiveConfigureCommand extends ConfigureElementCommand {
 
 		public AfterExecutiveConfigureCommand(ConfigureRequest req) {
 			super(req);
 		}
 
+		@Override
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-		    throws ExecutionException {
-            
+				throws ExecutionException {
+
 			Employee employee = (Employee) ((ConfigureRequest) getRequest()).getElementToConfigure();
-			
+
 			Office office = employee.getOffice();
 			office.setHasDoor(true);
-			
+
 			return null;
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#getBeforeConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.ConfigureRequest)
+	 *
+	 * @see
+	 * org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#
+	 * getBeforeConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.
+	 * ConfigureRequest)
 	 */
+	@Override
 	protected ICommand getBeforeConfigureCommand(ConfigureRequest request) {
 		return new BeforeExecutiveConfigureCommand(request);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#getAfterConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.ConfigureRequest)
+	 *
+	 * @see
+	 * org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#
+	 * getAfterConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.
+	 * ConfigureRequest)
 	 */
+	@Override
 	protected ICommand getAfterConfigureCommand(ConfigureRequest request) {
 		return new AfterExecutiveConfigureCommand(request);
 	}

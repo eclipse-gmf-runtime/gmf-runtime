@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui;
@@ -38,61 +38,24 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.services.DiagramEventBrokerServi
 import org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.tools.ConnectionToolTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.tools.RubberBandSelectionToolTest;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-public class AllTests extends TestCase {
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(DiagramCommandStackTest.suite());
-        suite.addTest(ConnectionHandleLocatorTest.suite());
-        suite.addTest(ConnectionHandleTest.suite());
-        suite.addTest(NoteTests.suite());
-        suite.addTest(CommandTests.suite());
-        // suite.addTest(URLImageEditPartTests.suite());
-        suite.addTest(ConnectorTests.suite());
-        suite.addTest(DiagramTests.suite());
-        suite.addTest(ShapeTests.suite());
-        suite.addTestSuite(RubberBandSelectionToolTest.class);
-        suite.addTest(PaletteServiceTests.suite());
-        suite.addTest(LogicCanonicalTests.suite());
-        suite.addTest(LogicCreationTests.suite());
-        suite.addTest(DiagramGraphicalViewerTests.suite());
-        suite.addTest(LogicDiagramTests.suite());
-        // suite.addTest(LogicShapeTests.suite());
-        suite.addTest(DiagramAssistantTests.suite());
-        suite.addTest(SemanticCreateCommandTest.suite());
-        suite.addTest(PaletteTests.suite());
-        suite.addTest(GraphicalNodeEditPolicyTests.suite());
-        // temporarily removed to check if it's causing problems on a build server
-        // suite.addTest(DiagramEventBrokerTests.suite());
-        suite.addTest(LogicTransientViewsTests.suite());
-        suite.addTest(RequestTests.suite());
-        suite.addTest(ConnectionToolTests.suite());
-        suite.addTest(CopyToImageUtilTests.suite());
-        suite.addTest(DiagramEditingDomainTestCase.suite());
-        suite.addTest(CommandUtilitiesTest.suite());
-        suite.addTest(DiagramEventBrokerServiceTests.suite());
-        suite.addTest(LabelTests.suite());
-        suite.addTest(GroupTests.suite());
-        suite.addTest(GroupsInCompartmentTests.suite());
-        suite.addTest(LayoutTests.suite());
-        suite.addTest(TextAlignmentTests.suite());
-        suite.addTest(DiagramEditingDomainFactoryTests.suite());
-
-        return suite;
-    }
-
-    public AllTests() {
-        super(""); //$NON-NLS-1$
-    }
-
+@Suite
+@SelectClasses({ DiagramCommandStackTest.class, ConnectionHandleLocatorTest.class, ConnectionHandleTest.class,
+		NoteTests.class, CommandTests.class,
+		// URLImageEditPartTests.class,
+		ConnectorTests.class, DiagramTests.class, ShapeTests.class, RubberBandSelectionToolTest.class,
+		PaletteServiceTests.class, LogicCanonicalTests.class, LogicCreationTests.class,
+		DiagramGraphicalViewerTests.class, LogicDiagramTests.class,
+		// LogicShapeTests.class,
+		DiagramAssistantTests.class, SemanticCreateCommandTest.class, PaletteTests.class,
+		GraphicalNodeEditPolicyTests.class,
+		// temporarily removed to check if it's causing problems on a build server
+		// DiagramEventBrokerTests.class,
+		LogicTransientViewsTests.class, RequestTests.class, ConnectionToolTests.class, CopyToImageUtilTests.class,
+		DiagramEditingDomainTestCase.class, CommandUtilitiesTest.class, DiagramEventBrokerServiceTests.class,
+		LabelTests.class, GroupTests.class, GroupsInCompartmentTests.class, LayoutTests.class, TextAlignmentTests.class,
+		DiagramEditingDomainFactoryTests.class, })
+public class AllTests {
 }

@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>org.eclipse.gmf.tests.runtime.diagram.ui</groupId>
 	<artifactId>org.eclipse.gmf.tests.runtime.diagram.ui</artifactId>
-	<version>1.7.0-SNAPSHOT</version>
+	<version>1.8.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 	<build>
 		<plugins>
@@ -20,13 +20,13 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<testSuite>org.eclipse.gmf.tests.runtime.diagram.ui</testSuite>
+					<providerHint>junit5</providerHint>
 					<testClass>org.eclipse.gmf.tests.runtime.diagram.ui.AllTests</testClass>
 					<product>org.eclipse.sdk.ide</product>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>true</useUIThread>
 					<argLine>-ea -Xmx1024m</argLine>
-					<dependencies>
+                    <dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>
 							<artifactId>org.eclipse.platform.feature.group</artifactId>

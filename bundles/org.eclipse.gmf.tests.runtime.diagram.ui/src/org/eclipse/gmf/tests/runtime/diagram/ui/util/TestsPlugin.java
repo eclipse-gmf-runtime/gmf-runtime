@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.util;
@@ -23,11 +23,11 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * The main plugin class to be used in the desktop.
  */
 public class TestsPlugin extends AbstractUIPlugin {
-	//The shared instance.
+	// The shared instance.
 	private static TestsPlugin plugin;
-	//Resource bundle.
+	// Resource bundle.
 	private ResourceBundle resourceBundle;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -35,7 +35,7 @@ public class TestsPlugin extends AbstractUIPlugin {
 		super();
 		plugin = this;
 		try {
-			resourceBundle= ResourceBundle.getBundle("org.eclipse.gmf.tests.runtime.diagram.ui.TestsPluginResources"); //$NON-NLS-1$
+			resourceBundle = ResourceBundle.getBundle("org.eclipse.gmf.tests.runtime.diagram.ui.TestsPluginResources"); //$NON-NLS-1$
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
@@ -56,11 +56,10 @@ public class TestsPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle= TestsPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = TestsPlugin.getDefault().getResourceBundle();
 		try {
 			return bundle.getString(key);
 		} catch (MissingResourceException e) {

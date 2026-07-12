@@ -7,10 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -26,202 +30,169 @@ import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.jface.viewers.StructuredSelection;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for layout scenarios.
- * 
+ *
  * @author crevells
  */
-public class LayoutTests
-    extends AbstractTestBase {
+public class LayoutTests extends AbstractTestBase {
+	public class LayoutTestFixture extends LogicTestFixture {
 
-    public static Test suite() {
-        TestSuite s = new TestSuite(LayoutTests.class);
-        return s;
-    }
+		@Override
+		protected void createShapesAndConnectors() throws Exception {
+			// do nothing, each test will create the shapes it wants
+		}
+	}
 
-    public class LayoutTestFixture
-        extends LogicTestFixture {
+	IElementType CIRCUIT_TYPE = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
 
-        protected void createShapesAndConnectors()
-            throws Exception {
-            // do nothing, each test will create the shapes it wants
-        }
-    }
+	IElementType LED_TYPE = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$
 
-    IElementType CIRCUIT_TYPE = ElementTypeRegistry.getInstance().getType(
-        "logic.circuit"); //$NON-NLS-1$
+	@Override
+	protected void setTestFixture() {
+		testFixture = new LayoutTestFixture();
+	}
 
-    IElementType LED_TYPE = ElementTypeRegistry.getInstance().getType(
-        "logic.led"); //$NON-NLS-1$
+	protected LayoutTestFixture getFixture() {
+		return (LayoutTestFixture) testFixture;
+	}
 
-    public LayoutTests() {
-        super("Layout Tests");//$NON-NLS-1$
-    }
+	protected IGraphicalEditPart getContainerEP() {
+		return getDiagramEditPart();
+	}
 
-    protected void setTestFixture() {
-        testFixture = new LayoutTestFixture();
-    }
+	protected void assertNotEquals(Object object1, Object object2) {
+		assertFalse(object1.equals(object2));
+	}
 
-    protected LayoutTestFixture getFixture() {
-        return (LayoutTestFixture) testFixture;
-    }
+	/**
+	 * Tests the scenario where a multiple arrange on a circuit was continually
+	 * moving the circuit.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void test151214MultipleArrangeOneCircuit() throws Exception {
+		getTestFixture().openDiagram();
 
-    protected IGraphicalEditPart getContainerEP() {
-        return getDiagramEditPart();
-    }
+		ShapeEditPart circuitEP = getFixture().createShapeUsingTool(CIRCUIT_TYPE, new Point(25, 55),
+				new Dimension(100, 100), getContainerEP());
+		flushEventQueue();
+		Rectangle prevBounds = circuitEP.getFigure().getBounds().getCopy();
 
-    protected void assertNotEquals(Object object1, Object object2) {
-        assertFalse(object1.equals(object2));
-    }
+		getContainerEP().getViewer().setSelection(new StructuredSelection(getContainerEP()));
+		ArrangeRequest request = new ArrangeRequest(ActionIds.ACTION_ARRANGE_ALL);
 
-    /**
-     * Tests the scenario where a multiple arrange on a circuit was continually
-     * moving the circuit.
-     * 
-     * @throws Exception
-     */
-    public void test151214MultipleArrangeOneCircuit()
-        throws Exception {
-        getTestFixture().openDiagram();
+		getCommandStack().execute(getContainerEP().getCommand(request));
+		flushEventQueue();
 
-        ShapeEditPart circuitEP = getFixture().createShapeUsingTool(
-            CIRCUIT_TYPE, new Point(25, 55), new Dimension(100, 100),
-            getContainerEP());
-        flushEventQueue();
-        Rectangle prevBounds = circuitEP.getFigure().getBounds().getCopy();
+		assertNotEquals(prevBounds, circuitEP.getFigure().getBounds());
+		prevBounds = circuitEP.getFigure().getBounds().getCopy();
 
-        getContainerEP().getViewer().setSelection(
-            new StructuredSelection(getContainerEP()));
-        ArrangeRequest request = new ArrangeRequest(
-            ActionIds.ACTION_ARRANGE_ALL);
+		getCommandStack().execute(getContainerEP().getCommand(request));
+		flushEventQueue();
 
-        getCommandStack().execute(getContainerEP().getCommand(request));
-        flushEventQueue();
+		assertEquals(prevBounds, circuitEP.getFigure().getBounds());
+	}
 
-        assertNotEquals(prevBounds, circuitEP.getFigure().getBounds());
-        prevBounds = circuitEP.getFigure().getBounds().getCopy();
+	/**
+	 * Tests the scenario where an arrange with a circuit not in autosize mode (i.e.
+	 * its size will not change), was arranging other siblings as if the circuit had
+	 * been in autosize mode.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void test151214DoesNotAssumeAutosizeIsOn() throws Exception {
+		getTestFixture().openDiagram();
 
-        getCommandStack().execute(getContainerEP().getCommand(request));
-        flushEventQueue();
+		// create circuit1 with autosize on
+		ShapeEditPart circuit1EP = getFixture().createShapeUsingTool(CIRCUIT_TYPE, new Point(22, 58), getContainerEP());
 
-        assertEquals(prevBounds, circuitEP.getFigure().getBounds());
-    }
+		// create circuit2 with autosize off
+		ShapeEditPart circuit2EP = getFixture().createShapeUsingTool(CIRCUIT_TYPE, new Point(27, 199),
+				new Dimension(111, 111), getContainerEP());
 
-    /**
-     * Tests the scenario where an arrange with a circuit not in autosize mode
-     * (i.e. its size will not change), was arranging other siblings as if the
-     * circuit had been in autosize mode.
-     * 
-     * @throws Exception
-     */
-    public void test151214DoesNotAssumeAutosizeIsOn()
-        throws Exception {
-        getTestFixture().openDiagram();
+		// create circuit3 with autosize on
+		ShapeEditPart circuit3EP = getFixture().createShapeUsingTool(CIRCUIT_TYPE, new Point(373, 55),
+				getContainerEP());
 
-        // create circuit1 with autosize on
-        ShapeEditPart circuit1EP = getFixture().createShapeUsingTool(
-            CIRCUIT_TYPE, new Point(22, 58), getContainerEP());
+		// Add a bunch of LEDs to circuit2 so it's autosize would be big after
+		// the arrange
+		EObject circuit2 = circuit2EP.getNotationView().getElement();
+		getFixture().createLED(circuit2);
+		getFixture().createLED(circuit2);
+		getFixture().createLED(circuit2);
+		getFixture().createLED(circuit2);
+		getFixture().createLED(circuit2);
 
-        // create circuit2 with autosize off
-        ShapeEditPart circuit2EP = getFixture().createShapeUsingTool(
-            CIRCUIT_TYPE, new Point(27, 199), new Dimension(111, 111),
-            getContainerEP());
+		flushEventQueue();
 
-        // create circuit3 with autosize on
-        ShapeEditPart circuit3EP = getFixture().createShapeUsingTool(
-            CIRCUIT_TYPE, new Point(373, 55), getContainerEP());
+		getContainerEP().getViewer().setSelection(new StructuredSelection(getContainerEP()));
+		ArrangeRequest request = new ArrangeRequest(ActionIds.ACTION_ARRANGE_ALL);
 
-        // Add a bunch of LEDs to circuit2 so it's autosize would be big after
-        // the arrange
-        EObject circuit2 = circuit2EP.getNotationView().getElement();
-        getFixture().createLED(circuit2);
-        getFixture().createLED(circuit2);
-        getFixture().createLED(circuit2);
-        getFixture().createLED(circuit2);
-        getFixture().createLED(circuit2);
+		getCommandStack().execute(getContainerEP().getCommand(request));
+		flushEventQueue();
 
-        flushEventQueue();
+		int diffX_12 = circuit2EP.getFigure().getBounds().getLeft().x - circuit1EP.getFigure().getBounds().getRight().x;
+		int diffX_23 = circuit3EP.getFigure().getBounds().getLeft().x - circuit2EP.getFigure().getBounds().getRight().x;
 
-        getContainerEP().getViewer().setSelection(
-            new StructuredSelection(getContainerEP()));
-        ArrangeRequest request = new ArrangeRequest(
-            ActionIds.ACTION_ARRANGE_ALL);
+		assertTrue(diffX_23 < diffX_12 * 2);
+	}
 
-        getCommandStack().execute(getContainerEP().getCommand(request));
-        flushEventQueue();
+	/**
+	 * The Composite Layout should accomodate for the fact that container shapes in
+	 * autosize mode will grow. If one circuit is in autosize mode and it ends up
+	 * growing vertically, any shapes below the circuit will be positioned wrongly
+	 * until Arrange All is done a second time.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void test151214CompositeLayoutRespectsNewSize() throws Exception {
+		getTestFixture().openDiagram();
 
-        int diffX_12 = circuit2EP.getFigure().getBounds().getLeft().x
-            - circuit1EP.getFigure().getBounds().getRight().x;
-        int diffX_23 = circuit3EP.getFigure().getBounds().getLeft().x
-            - circuit2EP.getFigure().getBounds().getRight().x;
+		// create circuit with autosize on
+		ShapeEditPart circuitEP = getFixture().createShapeUsingTool(CIRCUIT_TYPE, new Point(39, 81), getContainerEP());
 
-        assertTrue(diffX_23 < diffX_12 * 2);
-    }
+		// Add a bunch of LEDs the circuit so it's autosize will be big after
+		// the arrange
+		EObject circuit = circuitEP.getNotationView().getElement();
+		getFixture().createLED(circuit);
+		getFixture().createLED(circuit);
+		getFixture().createLED(circuit);
+		getFixture().createLED(circuit);
+		getFixture().createLED(circuit);
+		flushEventQueue();
 
-    /**
-     * The Composite Layout should accomodate for the fact that container shapes
-     * in autosize mode will grow. If one circuit is in autosize mode and it
-     * ends up growing vertically, any shapes below the circuit will be
-     * positioned wrongly until Arrange All is done a second time.
-     * 
-     * @throws Exception
-     */
-    public void test151214CompositeLayoutRespectsNewSize()
-        throws Exception {
-        getTestFixture().openDiagram();
+		IGraphicalEditPart compartmentEP = circuitEP.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+		ShapeEditPart innerLed1EP = (ShapeEditPart) compartmentEP.getChildren().get(0);
+		ShapeEditPart innerLed2EP = (ShapeEditPart) compartmentEP.getChildren().get(1);
 
-        // create circuit with autosize on
-        ShapeEditPart circuitEP = getFixture().createShapeUsingTool(
-            CIRCUIT_TYPE, new Point(39, 81), getContainerEP());
+		ShapeEditPart geoshapeEP = getFixture().createShapeUsingTool(GeoshapeType.DIAMOND, new Point(161, 25),
+				getContainerEP());
 
-        // Add a bunch of LEDs the circuit so it's autosize will be big after
-        // the arrange
-        EObject circuit = circuitEP.getNotationView().getElement();
-        getFixture().createLED(circuit);
-        getFixture().createLED(circuit);
-        getFixture().createLED(circuit);
-        getFixture().createLED(circuit);
-        getFixture().createLED(circuit);
-        flushEventQueue();
+		getFixture().createConnectorUsingTool(innerLed1EP, innerLed2EP, GeoshapeType.LINE);
 
-        IGraphicalEditPart compartmentEP = circuitEP
-            .getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
-        ShapeEditPart innerLed1EP = (ShapeEditPart) compartmentEP.getChildren()
-            .get(0);
-        ShapeEditPart innerLed2EP = (ShapeEditPart) compartmentEP.getChildren()
-            .get(1);
+		getFixture().createConnectorUsingTool(innerLed2EP, geoshapeEP, GeoshapeType.LINE);
 
-        ShapeEditPart geoshapeEP = getFixture().createShapeUsingTool(
-            GeoshapeType.DIAMOND, new Point(161, 25), getContainerEP());
+		flushEventQueue();
 
-        getFixture().createConnectorUsingTool(innerLed1EP, innerLed2EP,
-            GeoshapeType.LINE);
+		getContainerEP().getViewer().setSelection(new StructuredSelection(getContainerEP()));
+		ArrangeRequest request = new ArrangeRequest(ActionIds.ACTION_ARRANGE_ALL);
 
-        getFixture().createConnectorUsingTool(innerLed2EP, geoshapeEP,
-            GeoshapeType.LINE);
+		getCommandStack().execute(getContainerEP().getCommand(request));
+		flushEventQueue();
 
-        flushEventQueue();
-
-        getContainerEP().getViewer().setSelection(
-            new StructuredSelection(getContainerEP()));
-        ArrangeRequest request = new ArrangeRequest(
-            ActionIds.ACTION_ARRANGE_ALL);
-
-        getCommandStack().execute(getContainerEP().getCommand(request));
-        flushEventQueue();
-
-        assertFalse(geoshapeEP.getFigure().getBounds().intersects(
-            circuitEP.getFigure().getBounds()));
-    }
+		assertFalse(geoshapeEP.getFigure().getBounds().intersects(circuitEP.getFigure().getBounds()));
+	}
 
 //    /**
 //     * The Composite Layout should place all the shapes in the top row at the
 //     * same y value. See bugzilla 214077.
-//     * 
+//     *
 //     * @throws Exception
 //     */
 //    public void test215077CompositeLayoutAlignedAtTop()

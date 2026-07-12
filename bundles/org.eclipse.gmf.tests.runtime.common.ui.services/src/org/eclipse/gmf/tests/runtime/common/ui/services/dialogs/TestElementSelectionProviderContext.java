@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.dialogs;
 
@@ -15,17 +15,17 @@ import org.eclipse.core.runtime.IAdaptable;
 
 /**
  * A context for the tests.
- * 
+ *
  * @author Anthony Hunter
  */
-public class TestElementSelectionProviderContext
-    implements IAdaptable {
+public class TestElementSelectionProviderContext implements IAdaptable {
 
-    /**
-     * {@inheritDoc}
-     */
-    public Object getAdapter(Class adapter) {
-        return null;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object getAdapter(Class adapter) {
+		return null;
+	}
 
 }

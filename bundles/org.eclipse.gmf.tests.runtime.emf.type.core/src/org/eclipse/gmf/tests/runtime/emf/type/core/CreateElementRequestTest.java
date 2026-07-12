@@ -7,10 +7,18 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
@@ -28,205 +36,178 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.GetEditContextRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+public class CreateElementRequestTest extends AbstractEMFTypeTest {
 
-public class CreateElementRequestTest
-    extends AbstractEMFTypeTest {
+	private CreateElementRequest fixture;
 
-    private CreateElementRequest fixture;
+	private Department department;
+	private Department department2;
 
-    private Department department;
-    private Department department2;
+	private Employee employee;
 
-    private Employee employee;
+	@Override
+	protected void doModelSetup(Resource resource) {
 
-    public CreateElementRequestTest(String name) {
-        super(name);
-    }
+		department = (Department) getEmployeeFactory().create(getEmployeePackage().getDepartment());
+		department.setName("Department"); //$NON-NLS-1$
+		resource.getContents().add(department);
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+		department2 = (Department) getEmployeeFactory().create(getEmployeePackage().getDepartment());
+		department2.setName("Department2"); //$NON-NLS-1$
+		resource.getContents().add(department2);
 
-    public static Test suite() {
-        return new TestSuite(CreateElementRequestTest.class);
-    }
+		employee = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
+		resource.getContents().add(employee);
+	}
 
-    protected void doModelSetup(Resource resource) {
+	protected CreateElementRequest getFixture() {
+		return fixture;
+	}
 
-        department = (Department) getEmployeeFactory().create(
-            getEmployeePackage().getDepartment());
-        department.setName("Department"); //$NON-NLS-1$
-        resource.getContents().add(department);
-        
-        department2 = (Department) getEmployeeFactory().create(
-            getEmployeePackage().getDepartment());
-        department2.setName("Department2"); //$NON-NLS-1$
-        resource.getContents().add(department2);
+	protected void setFixture(CreateElementRequest fixture) {
+		this.fixture = fixture;
+	}
 
-        employee = (Employee) getEmployeeFactory().create(
-            getEmployeePackage().getEmployee());
-        resource.getContents().add(employee);
-    }
+	@Test
+	public void test_getEditHelperContext_eObject() {
+		// Verifies that the container of a create element request is used
+		// by default as the edit helper context, when no overrides are
+		// implemented.
 
-    protected CreateElementRequest getFixture() {
-        return fixture;
-    }
+		setFixture(new CreateElementRequest(getEditingDomain(), department, EmployeeType.EMPLOYEE));
+		Object editHelperContext = getFixture().getEditHelperContext();
+		assertEquals(department, editHelperContext);
+	}
 
-    protected void setFixture(CreateElementRequest fixture) {
-        this.fixture = fixture;
-    }
+	@Test
+	public void test_getEditHelperContext_elementType() {
+		// Verifies that the edit helper context can be customized by clients
 
-    public void test_getEditHelperContext_eObject() {
-        // Verifies that the container of a create element request is used
-        // by default as the edit helper context, when no overrides are
-        // implemented.
+		setFixture(new CreateElementRequest(getEditingDomain(), department, EmployeeType.TOP_SECRET));
+		Object editHelperContext = getFixture().getEditHelperContext();
+		IElementType elementType = ElementTypeRegistry.getInstance().getElementType(editHelperContext);
 
-        setFixture(new CreateElementRequest(getEditingDomain(), department,
-            EmployeeType.EMPLOYEE));
-        Object editHelperContext = getFixture().getEditHelperContext();
-        assertEquals(department, editHelperContext);
-    }
+		// Edit helper for security cleared employees returns the secret
+		// department element type as is edit helper context.
+		assertEquals(EmployeeType.SECRET_DEPARTMENT, elementType);
 
-    public void test_getEditHelperContext_elementType() {
-        // Verifies that the edit helper context can be customized by clients
+		// Get the edit command and execute it
+		ICommand command = elementType.getEditCommand(getFixture());
+		assertNotNull(command);
+		assertTrue(command.canExecute());
 
-        setFixture(new CreateElementRequest(getEditingDomain(), department,
-            EmployeeType.TOP_SECRET));
-        Object editHelperContext = getFixture().getEditHelperContext();
-        IElementType elementType = ElementTypeRegistry.getInstance()
-            .getElementType(editHelperContext);
+		try {
+			command.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+		CommandResult result = command.getCommandResult();
+		assertEquals(IStatus.OK, result.getStatus().getCode());
 
-        // Edit helper for security cleared employees returns the secret
-        // department element type as is edit helper context.
-        assertEquals(EmployeeType.SECRET_DEPARTMENT, elementType);
+		Employee topSecretEmployee = null;
 
-        // Get the edit command and execute it
-        ICommand command = elementType.getEditCommand(getFixture());
-        assertNotNull(command);
-        assertTrue(command.canExecute());
+		topSecretEmployee = (Employee) result.getReturnValue();
 
-        try {
-            command.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-        CommandResult result = command.getCommandResult();
-        assertEquals(IStatus.OK, result.getStatus().getCode());
+		// Verify that the edit helper override set the correct security
+		// clearance value
+		assertNotNull(topSecretEmployee);
+		assertTrue(topSecretEmployee.isSecurityClearance());
+	}
 
-        Employee topSecretEmployee = null;
+	@Test
+	public void test_invalidateEditHelperContext() {
+		// Verifies that the edit helper context request is invalidated when the
+		// container is changed
 
-        topSecretEmployee = (Employee) result.getReturnValue();
+		CreateElementRequest request = new CreateElementRequest(getEditingDomain(), department, EmployeeType.EMPLOYEE);
+		setFixture(request);
+		Object departmentContext = getFixture().getEditHelperContext();
+		assertEquals(department, departmentContext);
 
-        // Verify that the edit helper override set the correct security
-        // clearance value
-        assertNotNull(topSecretEmployee);
-        assertTrue(topSecretEmployee.isSecurityClearance());
-    }
+		request.setContainer(employee);
+		Object employeeContext = getFixture().getEditHelperContext();
+		assertNotSame(departmentContext, employeeContext);
+	}
 
-    public void test_invalidateEditHelperContext() {
-        // Verifies that the edit helper context request is invalidated when the
-        // container is changed
+	/**
+	 * Verifies that getting the editing domain from a request in which neither the
+	 * editing domain nor the container have been specified returns 'null'.
+	 */
+	@Test
+	public void test_getEditingDomain_noContainer_131766() {
+		CreateElementRequest request = new CreateElementRequest(EmployeeType.DEPARTMENT);
+		TransactionalEditingDomain domain = request.getEditingDomain();
+		assertNull(domain);
+	}
 
-        CreateElementRequest request = new CreateElementRequest(
-            getEditingDomain(), department, EmployeeType.EMPLOYEE);
-        setFixture(request);
-        Object departmentContext = getFixture().getEditHelperContext();
-        assertEquals(department, departmentContext);
+	/**
+	 * Verifies that setting the container on a CreateElementRequest does not result
+	 * in the creation of a new GetElementContextRequest.
+	 */
+	@Test
+	public void test_noNewRequestWhenSetContainer_132253() {
 
-        request.setContainer(employee);
-        Object employeeContext = getFixture().getEditHelperContext();
-        assertNotSame(departmentContext, employeeContext);
-    }
-    
-    /**
-     * Verifies that getting the editing domain from a request in which neither
-     * the editing domain nor the container have been specified returns 'null'.
-     */
-    public void test_getEditingDomain_noContainer_131766() {
-        CreateElementRequest request = new CreateElementRequest(
-            EmployeeType.DEPARTMENT);
-        TransactionalEditingDomain domain = request.getEditingDomain();
-        assertNull(domain);
-    }
-    
-    /**
-     * Verifies that setting the container on a CreateElementRequest
-     * does not result in the creation of a new GetElementContextRequest.
-     */
-    public void test_noNewRequestWhenSetContainer_132253() {
+		final GetEditContextRequest[] contextRequestArray = new GetEditContextRequest[] { null };
+		ElementTypeRegistry.getInstance().register(new SpecializationType("132253", null, "132253", //$NON-NLS-1$ //$NON-NLS-2$
+				new IElementType[] { EmployeeType.MANAGER }, null, null, new AbstractEditHelperAdvice() {
 
-        final GetEditContextRequest[] contextRequestArray = new GetEditContextRequest[] {null};
-        ElementTypeRegistry.getInstance().register(
-            new SpecializationType("132253", null, "132253", //$NON-NLS-1$ //$NON-NLS-2$
-                new IElementType[] {EmployeeType.MANAGER}, null, null,
-                new AbstractEditHelperAdvice() {
+					@Override
+					protected ICommand getBeforeEditContextCommand(GetEditContextRequest request) {
+						contextRequestArray[0] = request;
+						return null;
+					}
+				}));
 
-                    protected ICommand getBeforeEditContextCommand(
-                            GetEditContextRequest request) {
-                        contextRequestArray[0] = request;
-                        return null;
-                    };
-                }));
+		CreateElementRequest request = new CreateElementRequest(department, EmployeeType.MANAGER);
 
-        CreateElementRequest request = new CreateElementRequest(department,
-            EmployeeType.MANAGER);
+		request.getEditHelperContext();
+		GetEditContextRequest contextRequest1 = contextRequestArray[0];
+		contextRequestArray[0] = null;
 
-        request.getEditHelperContext();
-        GetEditContextRequest contextRequest1 = contextRequestArray[0];
-        contextRequestArray[0] = null;
+		request.setContainer(department2);
 
-        request.setContainer(department2);
+		request.getEditHelperContext();
+		GetEditContextRequest contextRequest2 = contextRequestArray[0];
+		contextRequestArray[0] = null;
 
-        request.getEditHelperContext();
-        GetEditContextRequest contextRequest2 = contextRequestArray[0];
-        contextRequestArray[0] = null;
+		assertSame(contextRequest1, contextRequest2);
+	}
 
-        assertSame(contextRequest1, contextRequest2);
-    }
-    
-    /**
-     * Verifies that setting the container or containment feature during the
-     * request to get the edit context does not clear the edit context request,
-     * causing the request to be made again the next time we look for the edit
-     * helper context.
-     */
-    public void test_singleGetEditContextRequest_129582() {
+	/**
+	 * Verifies that setting the container or containment feature during the request
+	 * to get the edit context does not clear the edit context request, causing the
+	 * request to be made again the next time we look for the edit helper context.
+	 */
+	@Test
+	public void test_singleGetEditContextRequest_129582() {
 
-        final GetEditContextRequest[] contextRequestArray = new GetEditContextRequest[] {null};
-        ElementTypeRegistry.getInstance().register(
-            new SpecializationType("132253", null, "132253", //$NON-NLS-1$ //$NON-NLS-2$
-                new IElementType[] {EmployeeType.MANAGER}, null, null,
-                new AbstractEditHelperAdvice() {
+		final GetEditContextRequest[] contextRequestArray = new GetEditContextRequest[] { null };
+		ElementTypeRegistry.getInstance().register(new SpecializationType("132253", null, "132253", //$NON-NLS-1$ //$NON-NLS-2$
+				new IElementType[] { EmployeeType.MANAGER }, null, null, new AbstractEditHelperAdvice() {
 
-                    protected ICommand getBeforeEditContextCommand(
-                            GetEditContextRequest request) {
-                        contextRequestArray[0] = request;
-                        CreateElementRequest createRequest = (CreateElementRequest) request
-                            .getEditCommandRequest();
-                        createRequest
-                            .setContainmentFeature(getEmployeePackage()
-                                .getDepartment_Manager());
-                        return null;
-                    };
-                }));
+					@Override
+					protected ICommand getBeforeEditContextCommand(GetEditContextRequest request) {
+						contextRequestArray[0] = request;
+						CreateElementRequest createRequest = (CreateElementRequest) request.getEditCommandRequest();
+						createRequest.setContainmentFeature(getEmployeePackage().getDepartment_Manager());
+						return null;
+					}
+				}));
 
-        CreateElementRequest request = new CreateElementRequest(department,
-            EmployeeType.MANAGER);
+		CreateElementRequest request = new CreateElementRequest(department, EmployeeType.MANAGER);
 
-        request.getEditHelperContext();
-        GetEditContextRequest contextRequest1 = contextRequestArray[0];
-        contextRequestArray[0] = null;
+		request.getEditHelperContext();
+		GetEditContextRequest contextRequest1 = contextRequestArray[0];
+		contextRequestArray[0] = null;
 
-        request.setContainer(department2);
+		request.setContainer(department2);
 
-        request.getEditHelperContext();
-        GetEditContextRequest contextRequest2 = contextRequestArray[0];
-        contextRequestArray[0] = null;
+		request.getEditHelperContext();
+		GetEditContextRequest contextRequest2 = contextRequestArray[0];
+		contextRequestArray[0] = null;
 
-        assertSame(contextRequest1, contextRequest2);
-    }
+		assertSame(contextRequest1, contextRequest2);
+	}
 }

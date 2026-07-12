@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -30,35 +30,36 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 /**
  * @author ldamus
  */
-public class SecurityClearedElementTypeFactory
-	extends AbstractElementTypeFactory {
+public class SecurityClearedElementTypeFactory extends AbstractElementTypeFactory {
 
 	private static final String SECURITY_CLEARANCE_PARAM_NAME = "securityClearance"; //$NON-NLS-1$
-	
+
 	public static final class CreateSecretEmployeeCommand extends CreateElementCommand {
-		
+
 		public CreateSecretEmployeeCommand(CreateElementRequest req) {
 			super(req);
 		}
-		
+
+		@Override
 		protected EObject doDefaultElementCreation() {
 			Employee result = (Employee) super.doDefaultElementCreation();
 			result.setSecurityClearance(true);
 			return result;
 		}
 	}
-	
+
 	public static final class SecurityClearedEditHelper extends AbstractEditHelper {
 		public SecurityClearedEditHelper() {
 			super();
 		}
-		
+
+		@Override
 		protected ICommand getEditContextCommand(GetEditContextRequest req) {
 			GetEditContextCommand result = null;
-			
+
 			if (req.getEditCommandRequest() instanceof CreateElementRequest) {
 				CreateElementRequest createRequest = (CreateElementRequest) req.getEditCommandRequest();
-				
+
 				if (createRequest.getElementType() == EmployeeType.TOP_SECRET) {
 					result = new GetEditContextCommand(req);
 					result.setEditContext(EmployeeType.SECRET_DEPARTMENT);
@@ -66,9 +67,10 @@ public class SecurityClearedElementTypeFactory
 			}
 			return result;
 		}
-		
+
+		@Override
 		protected ICommand getCreateCommand(CreateElementRequest req) {
-			
+
 			if (req.getElementType() == EmployeeType.TOP_SECRET) {
 				req.setContainmentFeature(EmployeePackage.eINSTANCE.getDepartment_Members());
 				return new CreateSecretEmployeeCommand(req);
@@ -76,13 +78,12 @@ public class SecurityClearedElementTypeFactory
 			return super.getCreateCommand(req);
 		}
 	}
-	
-	private static final class SecurityClearedSpecializationType
-		extends SpecializationType
-		implements ISecurityCleared {
+
+	private static final class SecurityClearedSpecializationType extends SpecializationType
+			implements ISecurityCleared {
 
 		private final String securityClearance;
-		
+
 		private final IEditHelper editHelper = new SecurityClearedEditHelper();
 
 		public SecurityClearedSpecializationType(ISpecializationTypeDescriptor descriptor, String securityClearance) {
@@ -91,10 +92,12 @@ public class SecurityClearedElementTypeFactory
 			this.securityClearance = securityClearance;
 		}
 
+		@Override
 		public String getSecurityClearance() {
 			return securityClearance;
 		}
-		
+
+		@Override
 		public IEditHelper getEditHelper() {
 			return editHelper;
 		}
@@ -102,13 +105,15 @@ public class SecurityClearedElementTypeFactory
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.AbstractElementTypeFactory#createSpecializationType(org.eclipse.gmf.runtime.emf.type.core.internal.impl.SpecializationTypeDescriptor)
+	 *
+	 * @see org.eclipse.gmf.runtime.emf.type.core.AbstractElementTypeFactory#
+	 * createSpecializationType(org.eclipse.gmf.runtime.emf.type.core.internal.impl.
+	 * SpecializationTypeDescriptor)
 	 */
-	public ISpecializationType createSpecializationType(
-			ISpecializationTypeDescriptor descriptor) {
+	@Override
+	public ISpecializationType createSpecializationType(ISpecializationTypeDescriptor descriptor) {
 
 		return new SecurityClearedSpecializationType(descriptor,
-			descriptor.getParamValue(SECURITY_CLEARANCE_PARAM_NAME));
+				descriptor.getParamValue(SECURITY_CLEARANCE_PARAM_NAME));
 	}
 }

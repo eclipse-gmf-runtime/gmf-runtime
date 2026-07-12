@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences;
@@ -15,14 +15,12 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.RulerGridPreferencePage;
 
-
 /**
  * The Ruler and Grid preference page used for the Logic Diagram preferences.
  *
  * @author cmahoney
  */
-public class LogicRulerGridPreferencePage
-	extends RulerGridPreferencePage {
+public class LogicRulerGridPreferencePage extends RulerGridPreferencePage {
 
 	/**
 	 * Creates a new instance and initializes the preference store.

@@ -7,33 +7,32 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.ui.pde.internal;
 
 /**
  * A list of status codes for this plug-in.
- * 
+ *
  * @author khussey
- *  
+ *
  */
 public final class GmfExamplesStatusCodes {
 
 	/**
-	 * This class should not be instantiated since it is a static constant
-	 * class.
-	 *  
+	 * This class should not be instantiated since it is a static constant class.
+	 *
 	 */
 	private GmfExamplesStatusCodes() {
-		//No-op
+		// No-op
 	}
 
 	/**
 	 * Status code indicating that an error occurred with internationalization.
 	 */
 	public static final int L10N_FAILURE = 3;
-	
+
 	/**
 	 * Status code indicating that an error occurred with a service.
 	 */

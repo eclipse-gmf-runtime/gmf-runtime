@@ -25,9 +25,7 @@ import org.eclipse.gmf.runtime.common.core.service.Service;
  *
  * @see org.eclipse.gmf.runtime.common.core.service
  */
-public class WidgetService
-	extends Service
-	implements IWidgetProvider {
+public class WidgetService extends Service implements IWidgetProvider {
 
 	/**
 	 * The singleton instance of the WidgetService.
@@ -48,64 +46,71 @@ public class WidgetService
 	}
 
 	/**
-	 * Returns a <code>List</code> containing the Widgets requested or null if no Widget
-	 * providers are found that can create orderSize Widgets.
+	 * Returns a <code>List</code> containing the Widgets requested or null if no
+	 * Widget providers are found that can create orderSize Widgets.
+	 * 
 	 * @see org.eclipse.gmf.examples.runtime.common.service.application.IWidgetProvider#createWidget(int)
 	 */
+	@Override
 	public Object createWidget(int orderSize) {
 		return execute(new CreateWidgetOperation(orderSize));
 	}
 
 	/**
 	 * Executes the operation using a <code>ExecutingStrategy.FIRST</code>
+	 * 
 	 * @param operation the operation to execute
 	 * @return the results of the operation
 	 */
 	public Object execute(IOperation operation) {
-		 List results = execute(ExecutionStrategy.FIRST, operation);
-		 return results.isEmpty() ? null : results;
+		List results = execute(ExecutionStrategy.FIRST, operation);
+		return results.isEmpty() ? null : results;
 	}
 
 	/**
-	 * Creates a new ProvderDescriptor based on the <code>IConfigurationElement</code>.
+	 * Creates a new ProvderDescriptor based on the
+	 * <code>IConfigurationElement</code>.
+	 * 
 	 * @see org.eclipse.gmf.runtime.common.core.service.Service#newProviderDescriptor(org.eclipse.core.runtime.IConfigurationElement)
 	 */
+	@Override
 	protected Service.ProviderDescriptor newProviderDescriptor(IConfigurationElement element) {
 		return new WidgetProviderDescriptor(element);
 	}
 
 	/**
-	 * WidgetProviderDescriptor. Provides convenient access to
-	 * WidgetProvider configuration information.
+	 * WidgetProviderDescriptor. Provides convenient access to WidgetProvider
+	 * configuration information.
 	 *
 	 */
-	protected static class WidgetProviderDescriptor
-		extends Service.ProviderDescriptor {
+	protected static class WidgetProviderDescriptor extends Service.ProviderDescriptor {
 
 		/** the provider configuration parsed from XML */
 		private WidgetServiceProviderConfiguration providerConfiguration;
 
 		/**
-		 * Constructs a <code>IWidgetProvider</code> descriptor for
-		 * the specified configuration element.
+		 * Constructs a <code>IWidgetProvider</code> descriptor for the specified
+		 * configuration element.
 		 *
 		 * @param element The configuration element describing the provider.
 		 */
 		public WidgetProviderDescriptor(IConfigurationElement element) {
 			super(element);
 
-			this.providerConfiguration =
-				WidgetServiceProviderConfiguration.parse(element);
+			this.providerConfiguration = WidgetServiceProviderConfiguration.parse(element);
 			assert null != element : "NULL configuration element"; //$NON-NLS-1$
 		}
 
 		/**
 		 * Returns <code>true</code> if the given ProviderDescriptor
+		 * 
 		 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 		 */
+		@Override
 		public boolean provides(IOperation operation) {
-			if (getPolicy() != null)
+			if (getPolicy() != null) {
 				return getPolicy().provides(operation);
+			}
 			if (provider == null) {
 				if (isSupportedInExtention(operation)) {
 					providerConfiguration = null;
@@ -118,12 +123,13 @@ public class WidgetService
 
 		/**
 		 * Checks if the operation is supported by the XML extension
+		 * 
 		 * @param operation
 		 * @return
 		 */
 		private boolean isSupportedInExtention(IOperation operation) {
 			if (operation instanceof CreateWidgetOperation) {
-				return providerConfiguration.supports(((CreateWidgetOperation)operation).getOrderSize());
+				return providerConfiguration.supports(((CreateWidgetOperation) operation).getOrderSize());
 			}
 			return false;
 		}

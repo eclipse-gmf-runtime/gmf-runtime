@@ -7,68 +7,69 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.ui.services.action;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.emf.ui.services.action.AbstractModelActionFilterProvider;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the AbstractModelActionFilterProvider.
- * 
+ *
  * @author ldamus
  */
-public class AbstractModelActionFilterProviderTest
-    extends TestCase {
+public class AbstractModelActionFilterProviderTest {
 
-    protected static class MyModelActionFilterProvider
-        extends AbstractModelActionFilterProvider {
+	protected static class MyModelActionFilterProvider extends AbstractModelActionFilterProvider {
 
-        private boolean testedAttribute = false;
+		private boolean testedAttribute = false;
 
-        private TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE
-            .createEditingDomain();
+		private TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE
+				.createEditingDomain();
 
-        protected boolean doTestAttribute(Object target, String name,
-                String value) {
-            
-            testedAttribute = true;
-            return true;
-        }
+		@Override
+		protected boolean doTestAttribute(Object target, String name, String value) {
 
-        protected boolean doProvides(IOperation operation) {
-            return true;
-        }
+			testedAttribute = true;
+			return true;
+		}
 
-        protected TransactionalEditingDomain getEditingDomain(Object target) {
-            return editingDomain;
-        }
+		@Override
+		protected boolean doProvides(IOperation operation) {
+			return true;
+		}
 
-        public boolean didTestAttribute() {
-            return testedAttribute;
-        }
-    }
+		@Override
+		protected TransactionalEditingDomain getEditingDomain(Object target) {
+			return editingDomain;
+		}
 
-    /**
-     * Tests that subclasses of AbstractModelActionFilterProviderTest can
-     * override the editing domain getter method.
-     */
-    public void test_editingDomainOverride_130758() {
+		public boolean didTestAttribute() {
+			return testedAttribute;
+		}
+	}
 
-        MyModelActionFilterProvider provider = new MyModelActionFilterProvider();
+	/**
+	 * Tests that subclasses of AbstractModelActionFilterProviderTest can override
+	 * the editing domain getter method.
+	 */
+	@Test
+	public void test_editingDomainOverride_130758() {
 
-        // pass in an object that will return null in the superclass
-        // getEditingDomain implementation
-        boolean result = provider.testAttribute(Boolean.FALSE,
-            StringStatics.BLANK, null);
+		MyModelActionFilterProvider provider = new MyModelActionFilterProvider();
 
-        assertTrue(result);
-        assertTrue(provider.didTestAttribute());
-    }
+		// pass in an object that will return null in the superclass
+		// getEditingDomain implementation
+		boolean result = provider.testAttribute(Boolean.FALSE, StringStatics.BLANK, null);
+
+		assertTrue(result);
+		assertTrue(provider.didTestAttribute());
+	}
 }

@@ -7,13 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.draw2d.PositionConstants;
@@ -49,7 +48,7 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * qili
- * 
+ *
  * Holds the EditPart signifying an LED.
  */
 /*
@@ -63,20 +62,24 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart {
 		super(view);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#createDefaultEditPolicies()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#
+	 * createDefaultEditPolicies()
 	 */
+	@Override
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new LEDEditPolicy());
-		installEditPolicy(StringConstants.PORTS_COLOR_EDITPOLICY_ROLE,
-				new PortsColorEditPolicy());
+		installEditPolicy(StringConstants.PORTS_COLOR_EDITPOLICY_ROLE, new PortsColorEditPolicy());
 	}
 
 	/**
-	 * Apart from the usual visual update, it also
-	 * updates the numeric contents of the LED.
+	 * Apart from the usual visual update, it also updates the numeric contents of
+	 * the LED.
 	 */
+	@Override
 	protected void refreshVisuals() {
 		super.refreshVisuals();
 		refreshValue();
@@ -88,54 +91,49 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart {
 	 */
 	protected void refreshValue() {
 		LED LEDStyle = (LED) ViewUtil.resolveSemanticElement((View) getModel());
-		if (LEDStyle != null)
+		if (LEDStyle != null) {
 			((LEDFigure) getMainFigure()).setValue(LEDStyle.getValue());
+		}
 	}
 
 	/**
 	 * Override to prevent change of bounds
 	 */
+	@Override
 	protected void refreshBounds() {
 		Dimension size = getFigure().getSize();
-		int x = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE
-				.getLocation_X())).intValue();
-		int y = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE
-				.getLocation_Y())).intValue();
+		int x = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X())).intValue();
+		int y = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
 		Point loc = new Point(x, y);
-		((GraphicalEditPart) getParent()).setLayoutConstraint(this,
-				getFigure(), new Rectangle(loc, size));
+		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), new Rectangle(loc, size));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#setFontColor(org.eclipse.swt.graphics.Color)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#setFontColor(
+	 * org.eclipse.swt.graphics.Color)
 	 */
+	@Override
 	protected void setFontColor(Color color) {
 		((LEDFigure) getMainFigure()).setFontColor(color);
 	}
 
+	@Override
 	protected void handleNotificationEvent(Notification evt) {
-		if (SemanticPackage.eINSTANCE.getLED_Value().equals(evt.getFeature()))
+		if (SemanticPackage.eINSTANCE.getLED_Value().equals(evt.getFeature())) {
 			refreshValue();
-		else if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(
-				evt.getFeature())) {
+		} else if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(evt.getFeature())) {
 			refreshFontColor();
-		} else if (NotationPackage.eINSTANCE.getPropertyValue_RawValue()
-				.equals(evt.getFeature())) {
-			View viewContainer = ViewUtil.getViewContainer((EObject) evt
-					.getNotifier());
-			if (viewContainer != null
-					&& viewContainer.equals(getNotationView())) {
-				PropertiesSetStyle style = (PropertiesSetStyle) getNotationView()
-						.getNamedStyle(
-								NotationPackage.eINSTANCE
-										.getPropertiesSetStyle(),
-								StringConstants.PORTS_PROPERTIES_STYLE_NAME);
-				if (style != null
-						&& style.getPropertiesMap().get(
-								StringConstants.PORTS_COLOR_PROPERTY_NAME)
-								.equals(evt.getNotifier())) {
-					for (Iterator itr = getChildren().iterator(); itr.hasNext();) {
-						Object obj = itr.next();
+		} else if (NotationPackage.eINSTANCE.getPropertyValue_RawValue().equals(evt.getFeature())) {
+			View viewContainer = ViewUtil.getViewContainer((EObject) evt.getNotifier());
+			if (viewContainer != null && viewContainer.equals(getNotationView())) {
+				PropertiesSetStyle style = (PropertiesSetStyle) getNotationView().getNamedStyle(
+						NotationPackage.eINSTANCE.getPropertiesSetStyle(), StringConstants.PORTS_PROPERTIES_STYLE_NAME);
+				if (style != null && style.getPropertiesMap().get(StringConstants.PORTS_COLOR_PROPERTY_NAME)
+						.equals(evt.getNotifier())) {
+					for (Object obj : getChildren()) {
 						if (obj instanceof TerminalEditPart) {
 							((TerminalEditPart) obj).refreshBackgroundColor();
 						}
@@ -148,21 +146,28 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart {
 		}
 	}
 
+	@Override
 	public EditPolicy getPrimaryDragEditPolicy() {
 		return new NonResizableEditPolicyEx();
 	}
 
 	final private Dimension ledSizeDP = new Dimension(61, 44);
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderedShapeEditPart#createMainFigure()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderedShapeEditPart#
+	 * createMainFigure()
 	 */
+	@Override
 	protected NodeFigure createMainFigure() {
 		Dimension ledSizeLP = new Dimension(ledSizeDP);
 		getMapMode().DPtoLP(ledSizeLP);
 		return new LEDFigure(ledSizeLP);
 	}
 
+	@Override
 	public Map createBoundsMap() {
 		Map boundMap = new HashMap();
 
@@ -179,9 +184,9 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart {
 		return boundMap;
 	}
 
+	@Override
 	public NodeFigure createOwnedTerminalFigure(TerminalEditPart terminalEP) {
-		Terminal terminal = (Terminal) ViewUtil
-				.resolveSemanticElement((View) terminalEP.getModel());
+		Terminal terminal = (Terminal) ViewUtil.resolveSemanticElement((View) terminalEP.getModel());
 		if (terminal == null) {
 			return null;
 		}
@@ -189,28 +194,26 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart {
 		NodeFigure theFigure = null;
 		int side = PositionConstants.NORTH;
 		if (terminal instanceof InputTerminal) {
-			theFigure = new TopTerminalFigure(terminal.getId(), new Dimension(
-					getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
+			theFigure = new TopTerminalFigure(terminal.getId(),
+					new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 		} else {
 			theFigure = new BottomTerminalFigure(terminal.getId(),
-					new Dimension(getMapMode().DPtoLP(6), getMapMode()
-							.DPtoLP(7)));
+					new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 			side = PositionConstants.SOUTH;
 		}
 
 		Dimension ledSizeLP = new Dimension(ledSizeDP);
 		getMapMode().DPtoLP(ledSizeLP);
 
-		terminalEP.setLocator(new TerminalFigure.TerminalLocator(getFigure(),
-				ledSizeLP, side));
+		terminalEP.setLocator(new TerminalFigure.TerminalLocator(getFigure(), ledSizeLP, side));
 
 		return theFigure;
 	}
 
+	@Override
 	public Object getPreferredValue(EStructuralFeature feature) {
 		if (feature == NotationPackage.eINSTANCE.getFontStyle_FontColor()) {
-			return FigureUtilities
-					.colorToInteger(LogicColorConstants.displayText);
+			return FigureUtilities.colorToInteger(LogicColorConstants.displayText);
 		}
 		return super.getPreferredValue(feature);
 	}

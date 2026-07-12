@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.actions;
 
@@ -22,64 +22,68 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * Action to test UI capabilities of the ElementSelectionService.
- * 
+ *
  * @author Anthony Hunter
  */
-public abstract class AbstractTestElementSelectionServiceActionDelegate
-    implements IWorkbenchWindowActionDelegate {
+public abstract class AbstractTestElementSelectionServiceActionDelegate implements IWorkbenchWindowActionDelegate {
 
-    protected IWorkbenchWindow window;
+	protected IWorkbenchWindow window;
 
-    /**
-     * The string input filter for the input which matches everything.
-     */
-    protected String inputString = "*"; //$NON-NLS-1$
+	/**
+	 * The string input filter for the input which matches everything.
+	 */
+	protected String inputString = "*"; //$NON-NLS-1$
 
-    /**
-     * The filter for the input which matches everything.
-     */
-    protected IFilter filter = new IFilter() {
+	/**
+	 * The filter for the input which matches everything.
+	 */
+	protected IFilter filter = new IFilter() {
 
-        public boolean select(Object toTest) {
-            return true;
-        }
+		@Override
+		public boolean select(Object toTest) {
+			return true;
+		}
 
-    };
+	};
 
-    /**
-     * ElementSelectionScope.VISIBLE - provide all visible elements based on the
-     * provided context.
-     */
-    protected ElementSelectionScope scope = ElementSelectionScope.VISIBLE;
+	/**
+	 * ElementSelectionScope.VISIBLE - provide all visible elements based on the
+	 * provided context.
+	 */
+	protected ElementSelectionScope scope = ElementSelectionScope.VISIBLE;
 
-    /**
-     * The context for the input.
-     */
-    protected IAdaptable context = new TestElementSelectionProviderContext();
+	/**
+	 * The context for the input.
+	 */
+	protected IAdaptable context = new TestElementSelectionProviderContext();
 
-    /**
-     * {@inheritDoc}
-     */
-    public abstract void run(IAction action);
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public abstract void run(IAction action);
 
-    /**
-     * {@inheritDoc}
-     */
-    public void selectionChanged(IAction action, ISelection selection) {
-        // empty
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void selectionChanged(IAction action, ISelection selection) {
+		// empty
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public void dispose() {
-        // empty
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose() {
+		// empty
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public void init(IWorkbenchWindow aWindow) {
-        this.window = aWindow;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void init(IWorkbenchWindow aWindow) {
+		this.window = aWindow;
+	}
 }

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers;
@@ -19,24 +19,25 @@ import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.views.factori
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
 
 /**
- * 
+ *
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.geoshapes.*
- * 
- * View provider for the geoshape diagram.
+ *
+ *              View provider for the geoshape diagram.
  */
-public class DiagramViewProvider extends AbstractViewProvider { 
+public class DiagramViewProvider extends AbstractViewProvider {
 
-	HashMap diagramMap = new HashMap(); 
+	HashMap diagramMap = new HashMap();
 	{
 		diagramMap.put("Geoshape", GeoshapesDiagramViewFactory.class);//$NON-NLS-1$
 	}
-	
+
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.view.AbstractViewProvider#getDiagramViewClass(IAdaptable, java.lang.String)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.view.AbstractViewProvider#getDiagramViewClass(IAdaptable,
+	 *      java.lang.String)
 	 */
+	@Override
 	protected Class getDiagramViewClass(IAdaptable semanticAdapter, String diagramKind) {
 		return (Class) diagramMap.get(diagramKind);
 	}
 }
-

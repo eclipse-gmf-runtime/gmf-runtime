@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.nonactivating;
@@ -22,34 +22,40 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Editpart provider for the geoshape diagram.
- * 
+ *
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.geoshapes.*
  */
 
-public class DiagramEditPartProvider extends AbstractEditPartProvider {	
-	
+public class DiagramEditPartProvider extends AbstractEditPartProvider {
+
 	/**
-	 * Gets a diagram's editpart class.
-	 * This method should be overridden by a provider if it wants to provide this service. 
+	 * Gets a diagram's editpart class. This method should be overridden by a
+	 * provider if it wants to provide this service.
+	 * 
 	 * @param view the view to be <i>controlled</code> by the created editpart
 	 */
-	protected Class getDiagramEditPartClass(View view ) {
-		return(DiagramEditPart.class);
+	@Override
+	protected Class getDiagramEditPartClass(View view) {
+		return (DiagramEditPart.class);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
+	 *
+	 * @see
+	 * org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.
+	 * gmf.runtime.common.core.service.IOperation)
 	 */
+	@Override
 	public boolean provides(IOperation operation) {
-		String dgrmType ="Geoshape"; //$NON-NLS-1$
+		String dgrmType = "Geoshape"; //$NON-NLS-1$
 		if (operation instanceof CreateGraphicEditPartOperation) {
-			View view = ((IEditPartOperation)operation).getView();
-			if (view instanceof Diagram && view.getType().equals(dgrmType)) 
+			View view = ((IEditPartOperation) operation).getView();
+			if (view instanceof Diagram && view.getType().equals(dgrmType)) {
 				return true;
+			}
 		}
 		return false;
-	}	
+	}
 }

@@ -7,48 +7,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.core;
 
-import java.util.Arrays;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import org.eclipse.equinox.app.IApplication;
-import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.gmf.tests.runtime.emf.core.resources.GMFResourceModificationManagerTests;
-import org.eclipse.gmf.tests.runtime.emf.core.util.EMFCoreUtilTests;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-public class AllTests extends TestCase implements IApplication {
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(GMFEditingDomainFactoryTests.suite());
-		suite.addTest(GMFResourceModificationManagerTests.suite());
-		suite.addTest(EMFCoreUtilTests.suite());
-		return suite;
-	}
-
-	public AllTests() {
-		super(""); //$NON-NLS-1$
-	}
-
-	public Object start(IApplicationContext context) throws Exception {
-		TestRunner.run(suite());
-		return Arrays
-				.asList(new String[] { "Please see raw test suite output for details." }); //$NON-NLS-1$
-	}
-
-	public void stop() {
-		// do nothing
-	}
+@Suite
+@SelectClasses({ org.eclipse.gmf.tests.runtime.emf.core.GMFEditingDomainFactoryTests.class,
+		org.eclipse.gmf.tests.runtime.emf.core.resources.GMFResourceModificationManagerTests.class,
+		org.eclipse.gmf.tests.runtime.emf.core.util.EMFCoreUtilTests.class, })
+public class AllTests {
 }

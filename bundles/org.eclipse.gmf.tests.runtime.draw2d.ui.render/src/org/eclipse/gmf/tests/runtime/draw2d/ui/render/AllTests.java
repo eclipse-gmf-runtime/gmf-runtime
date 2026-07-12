@@ -7,36 +7,20 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.draw2d.ui.render;
 
 import org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg.SVGTranscoderTest;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-public class AllTests extends TestCase {
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite("All Shapes GEF Tests"); //$NON-NLS-1$
-
-        // suite.addTestSuite( RenderMultipleSVGTest.class );
-        // suite.addTestSuite( SVGImageTest.class );
-        // suite.addTestSuite( Metafile2SvgTest.class );
-        suite.addTestSuite(SVGTranscoderTest.class);
-        return suite;
-    }
-
-    public AllTests() {
-        super(""); //$NON-NLS-1$
-    }
-
+@Suite
+@SelectClasses({
+		// RenderMultipleSVGTest.class,
+		// SVGImageTest.class,
+		// Metafile2SvgTest.class,
+		SVGTranscoderTest.class, })
+public class AllTests {
 }

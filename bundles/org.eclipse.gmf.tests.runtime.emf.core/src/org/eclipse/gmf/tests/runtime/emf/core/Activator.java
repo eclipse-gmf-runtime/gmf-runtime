@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.core;
 
@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Plugin;
 
 /**
  * The main plugin class to be used in the desktop.
- * 
+ *
  * @author Linda Damus
  */
 public class Activator extends Plugin {

@@ -7,21 +7,20 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Student</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>Student</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student#isCoop <em>Coop</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student#isCoop
+ * <em>Coop</em>}</li>
  * </ul>
  * </p>
  *
@@ -29,15 +28,16 @@ package org.eclipse.gmf.tests.runtime.emf.type.core.employee;
  * @model
  * @generated
  */
-public interface Student extends Employee{
+public interface Student extends Employee {
 	/**
-	 * Returns the value of the '<em><b>Coop</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Coop</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Coop</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Coop</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Coop</em>' attribute.
 	 * @see #setCoop(boolean)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getStudent_Coop()
@@ -47,9 +47,10 @@ public interface Student extends Employee{
 	boolean isCoop();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student#isCoop <em>Coop</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student#isCoop
+	 * <em>Coop</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Coop</em>' attribute.
 	 * @see #isCoop()
 	 * @generated

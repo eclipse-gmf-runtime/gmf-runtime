@@ -7,10 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.render.util;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,48 +47,45 @@ import org.eclipse.gmf.runtime.notation.datatype.GradientData;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTestFixture;
 import org.eclipse.swt.widgets.Shell;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+public class CopyToImageUtilTests extends AbstractTestBase {
 
-public class CopyToImageUtilTests
-    extends AbstractTestBase {
-
-    public CopyToImageUtilTests(String arg0) {
-        super(arg0);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase#setTestFixture()
-     */
-    protected void setTestFixture() {
-        testFixture = new LogicTestFixture();
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase#setTestFixture()
+	 */
+	@Override
+	protected void setTestFixture() {
+		testFixture = new LogicTestFixture();
+	}
 
 	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		super.setUp();
-		
+
 		DiagramEditPart dgmEP = getDiagramEditPart();
 
-		CreateViewRequest shapeRequest =
-			new CreateViewRequest(new ViewDescriptor(null, Node.class, ViewType.NOTE, dgmEP.getDiagramPreferencesHint()));
-		
+		CreateViewRequest shapeRequest = new CreateViewRequest(
+				new ViewDescriptor(null, Node.class, ViewType.NOTE, dgmEP.getDiagramPreferencesHint()));
+
 		shapeRequest.setLocation(new Point(300, 300));
 		getCommandStack().execute(getDiagramEditPart().getCommand(shapeRequest));
-		
-		shapeRequest =
-			new CreateViewRequest(new ViewDescriptor(null, Node.class, GeoshapeConstants.TOOL_CYLINDER, dgmEP.getDiagramPreferencesHint()));
-		
+
+		shapeRequest = new CreateViewRequest(new ViewDescriptor(null, Node.class, GeoshapeConstants.TOOL_CYLINDER,
+				dgmEP.getDiagramPreferencesHint()));
+
 		shapeRequest.setLocation(new Point(400, 400));
 		getCommandStack().execute(getDiagramEditPart().getCommand(shapeRequest));
-		
+
 		IGraphicalEditPart cylinderEP = getDiagramEditPart().getChildBySemanticHint(GeoshapeConstants.TOOL_CYLINDER);
-		
+
 		assertNotNull(cylinderEP);
-		
+
 		String propertyID = PackageUtil.getID(NotationPackage.eINSTANCE.getFillStyle_Gradient());
 		String propertyName = PackageUtil.getDisplayName(NotationPackage.eINSTANCE.getFillStyle_Gradient());
 		GradientData gradientData = new GradientData();
@@ -93,92 +93,86 @@ public class CopyToImageUtilTests
 		gradientData.setGradientColor2(FigureUtilities.colorToInteger(ColorConstants.white));
 		ChangePropertyValueRequest request = new ChangePropertyValueRequest(propertyName, propertyID, gradientData);
 		getCommandStack().execute(cylinderEP.getCommand(request));
-		
+
 	}
 
-	public static Test suite() {
-        return new TestSuite(CopyToImageUtilTests.class);
-    }
+	@Test
+	public void testCopyToImageUtilTest_BMP() throws Exception {
+		copyToImageTestForFormat(".bmp", ImageFileFormat.BMP);//$NON-NLS-1$
+	}
 
-    public void testCopyToImageUtilTest_BMP()
-        throws Exception {
-        copyToImageTestForFormat(".bmp", ImageFileFormat.BMP);//$NON-NLS-1$ 
-    }
+	@Test
+	public void testCopyToImageUtilTest_GIF() throws Exception {
+		copyToImageTestForFormat(".gif", ImageFileFormat.GIF);//$NON-NLS-1$
+	}
 
-    public void testCopyToImageUtilTest_GIF()
-        throws Exception {
-        copyToImageTestForFormat(".gif", ImageFileFormat.GIF);//$NON-NLS-1$ 
-    }
+	@Test
+	public void testCopyToImageUtilTest_JPEG() throws Exception {
+		copyToImageTestForFormat(".jpeg", ImageFileFormat.JPEG);//$NON-NLS-1$
+	}
 
-    public void testCopyToImageUtilTest_JPEG()
-        throws Exception {
-        copyToImageTestForFormat(".jpeg", ImageFileFormat.JPEG);//$NON-NLS-1$ 
-    }
+	@Test
+	public void testCopyToImageUtilTest_JPG() throws Exception {
+		copyToImageTestForFormat(".jpg", ImageFileFormat.JPG);//$NON-NLS-1$
+	}
 
-    public void testCopyToImageUtilTest_JPG()
-        throws Exception {
-        copyToImageTestForFormat(".jpg", ImageFileFormat.JPG);//$NON-NLS-1$ 
-    }
+	@Test
+	public void testCopyToImageUtilTest_PNG() throws Exception {
+		copyToImageTestForFormat(".png", ImageFileFormat.PNG);//$NON-NLS-1$
+	}
 
-    public void testCopyToImageUtilTest_PNG()
-        throws Exception {
-        copyToImageTestForFormat(".png", ImageFileFormat.PNG);//$NON-NLS-1$ 
-    }
-    
-    public void testCopyToImageOffscreenUtilTest_BMP()
-        throws Exception {
-        copyToImageOffscreenTestForFormat(".bmp", ImageFileFormat.BMP);//$NON-NLS-1$ 
-    }
+	@Test
+	public void testCopyToImageOffscreenUtilTest_BMP() throws Exception {
+		copyToImageOffscreenTestForFormat(".bmp", ImageFileFormat.BMP);//$NON-NLS-1$
+	}
 
-    public void testCopyToImageOffscreenUtilTest_GIF()
-        throws Exception {
-        copyToImageOffscreenTestForFormat(".gif", ImageFileFormat.GIF);//$NON-NLS-1$ 
-    }
+	@Test
+	public void testCopyToImageOffscreenUtilTest_GIF() throws Exception {
+		copyToImageOffscreenTestForFormat(".gif", ImageFileFormat.GIF);//$NON-NLS-1$
+	}
 
-    public void testCopyToImageOffscreenUtilTest_JPEG()
-        throws Exception {
-        copyToImageOffscreenTestForFormat(".jpeg", ImageFileFormat.JPEG);//$NON-NLS-1$ 
-    }
+	@Test
+	public void testCopyToImageOffscreenUtilTest_JPEG() throws Exception {
+		copyToImageOffscreenTestForFormat(".jpeg", ImageFileFormat.JPEG);//$NON-NLS-1$
+	}
 
-    public void testCopyToImageOffscreenUtilTest_JPG()
-        throws Exception {
-        copyToImageOffscreenTestForFormat(".jpg", ImageFileFormat.JPG);//$NON-NLS-1$ 
-    }
+	@Test
+	public void testCopyToImageOffscreenUtilTest_JPG() throws Exception {
+		copyToImageOffscreenTestForFormat(".jpg", ImageFileFormat.JPG);//$NON-NLS-1$
+	}
 
-    public void testCopyToImageOffscreenUtilTest_PNG()
-        throws Exception {
-        copyToImageOffscreenTestForFormat(".png", ImageFileFormat.PNG);//$NON-NLS-1$ 
-    }
-    
-    public void ignore_testCopyToImageUtilTest_SVG() throws Exception {
-       copyToImageTestForFormat(".svg", ImageFileFormat.SVG);//$NON-NLS-1$
-    }
+	@Test
+	public void testCopyToImageOffscreenUtilTest_PNG() throws Exception {
+		copyToImageOffscreenTestForFormat(".png", ImageFileFormat.PNG);//$NON-NLS-1$
+	}
 
-    private void copyToImageTestForFormat(String suffix, ImageFileFormat type)
-        throws IOException, CoreException {
-        IProgressMonitor monitor = new NullProgressMonitor();
-        File file = File.createTempFile("test", suffix);//$NON-NLS-1$ 
-        IPath tmpDest = new Path(file.getPath());
+	public void ignore_testCopyToImageUtilTest_SVG() throws Exception {
+		copyToImageTestForFormat(".svg", ImageFileFormat.SVG);//$NON-NLS-1$
+	}
 
-        // export to each file type
-        new CopyToImageUtil().copyToImage(getDiagramEditPart(), tmpDest, type,
-            monitor);
-
-        RenderedImage ri = RenderedImageFactory.getInstance(tmpDest.toString());
-        file.delete();
-        assertTrue("RenderedImage is null", ri != null);//$NON-NLS-1$ 
-        assertTrue("SWTImage is null", ri.getSWTImage() != null);//$NON-NLS-1$
-        /*
-         * Entries in the RenederdImageFactory#instanceMap may not get a chance to be garbage collected.
-         * Hence, schedule a garbage collection.
-         */
-        System.gc();
-    }
-
-    private void copyToImageOffscreenTestForFormat(String suffix,
-			ImageFileFormat type) throws IOException, CoreException {
+	private void copyToImageTestForFormat(String suffix, ImageFileFormat type) throws IOException, CoreException {
 		IProgressMonitor monitor = new NullProgressMonitor();
-		File file = File.createTempFile("test", suffix);//$NON-NLS-1$ 
+		File file = File.createTempFile("test", suffix);//$NON-NLS-1$
+		IPath tmpDest = new Path(file.getPath());
+
+		// export to each file type
+		new CopyToImageUtil().copyToImage(getDiagramEditPart(), tmpDest, type, monitor);
+
+		RenderedImage ri = RenderedImageFactory.getInstance(tmpDest.toString());
+		file.delete();
+		assertTrue(ri != null, "RenderedImage is null");//$NON-NLS-1$
+		assertTrue(ri.getSWTImage() != null, "SWTImage is null");//$NON-NLS-1$
+		/*
+		 * Entries in the RenederdImageFactory#instanceMap may not get a chance to be
+		 * garbage collected. Hence, schedule a garbage collection.
+		 */
+		System.gc();
+	}
+
+	private void copyToImageOffscreenTestForFormat(String suffix, ImageFileFormat type)
+			throws IOException, CoreException {
+		IProgressMonitor monitor = new NullProgressMonitor();
+		File file = File.createTempFile("test", suffix);//$NON-NLS-1$
 		IPath tmpDest = new Path(file.getPath());
 
 		// export to each file type
@@ -186,24 +180,21 @@ public class CopyToImageUtilTests
 		PreferencesHint hint = getDiagramEditPart().getDiagramPreferencesHint();
 		Shell shell = new Shell();
 		try {
-			DiagramEditPart diagramEditPart = OffscreenEditPartFactory
-					.getInstance().createDiagramEditPart(diagram, shell, hint);
-			assertNotNull(
-					"Offsreen editpart factory failed to generate diagram editpart. Diagram EditPart is null.", //$NON-NLS-1$
-					diagramEditPart);
-			new CopyToImageUtil().copyToImage(diagramEditPart, tmpDest, type,
-					monitor);
+			DiagramEditPart diagramEditPart = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagram,
+					shell, hint);
+			assertNotNull(diagramEditPart,
+					"Offsreen editpart factory failed to generate diagram editpart. Diagram EditPart is null.");
+			new CopyToImageUtil().copyToImage(diagramEditPart, tmpDest, type, monitor);
 		} finally {
 			shell.dispose();
-			RenderedImage ri = RenderedImageFactory.getInstance(tmpDest
-					.toString());
+			RenderedImage ri = RenderedImageFactory.getInstance(tmpDest.toString());
 			file.delete();
-			assertTrue("RenderedImage is null", ri != null);//$NON-NLS-1$ 
-			assertTrue("SWTImage is null", ri.getSWTImage() != null);//$NON-NLS-1$ 
-	        /*
-	         * Entries in the RenederdImageFactory#instanceMap may not get a chance to be garbage collected.
-	         * Hence, schedule a garbage collection.
-	         */
+			assertTrue(ri != null, "RenderedImage is null");//$NON-NLS-1$
+			assertTrue(ri.getSWTImage() != null, "SWTImage is null");//$NON-NLS-1$
+			/*
+			 * Entries in the RenederdImageFactory#instanceMap may not get a chance to be
+			 * garbage collected. Hence, schedule a garbage collection.
+			 */
 			System.gc();
 		}
 	}

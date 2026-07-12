@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.layout.graph;
@@ -42,11 +42,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Implementation of a common part of the graph layout demo application. Mainly, it's
- * copied from the demo from GEF with some minor differences:
- * <li> Border nodes support
- * <li> Non-applicable things removed 
- * 
+ * Implementation of a common part of the graph layout demo application. Mainly,
+ * it's copied from the demo from GEF with some minor differences:
+ * <li>Border nodes support
+ * <li>Non-applicable things removed
+ *
  * @author aboyko
  *
  */
@@ -63,8 +63,9 @@ public abstract class AbstractGMFGraphDemo {
 
 	/**
 	 * Builds a figure for the given edge and adds it to contents
+	 * 
 	 * @param contents the parent figure to add the edge to
-	 * @param edge the edge
+	 * @param edge     the edge
 	 */
 	static void buildEdgeFigure(Figure contents, Edge edge) {
 		PolylineConnection conn = connection(edge);
@@ -77,8 +78,9 @@ public abstract class AbstractGMFGraphDemo {
 
 	/**
 	 * Builds a Figure for the given node and adds it to contents
+	 * 
 	 * @param contents the parent Figure to add the node to
-	 * @param node the node to add
+	 * @param node     the node to add
 	 */
 	static void buildNodeFigure(Figure contents, Node node) {
 		Label label;
@@ -86,17 +88,18 @@ public abstract class AbstractGMFGraphDemo {
 		label.setBackgroundColor(ColorConstants.lightGray);
 		label.setOpaque(true);
 		label.setBorder(new LineBorder());
-		if (node.incoming.isEmpty())
+		if (node.incoming.isEmpty()) {
 			label.setBorder(new LineBorder(2));
+		}
 		String text = node.data.toString();
 		label.setText(text);
 		node.data = label;
 		contents.add(label, new Rectangle(node.x, node.y, node.width, node.height));
-		
+
 		if (node instanceof ConstantSizeNode) {
 			ConstantSizeNode cn = (ConstantSizeNode) node;
-			for (int i = 0; i < cn.borderNodes.size(); i++) {
-				buildBorderNodeFigure(contents, cn.borderNodes.get(i));
+			for (BorderNode element : cn.borderNodes) {
+				buildBorderNodeFigure(contents, element);
 			}
 		}
 	}
@@ -112,9 +115,10 @@ public abstract class AbstractGMFGraphDemo {
 		node.data = label;
 		contents.add(label, new Rectangle(node.x, node.y, node.width, node.height));
 	}
-	
+
 	/**
 	 * Builds a connection for the given edge
+	 * 
 	 * @param e the edge
 	 * @return the connection
 	 */
@@ -145,6 +149,7 @@ public abstract class AbstractGMFGraphDemo {
 
 	/**
 	 * Returns the FigureCanvas
+	 * 
 	 * @return this demo's FigureCanvas
 	 */
 	protected FigureCanvas getFigureCanvas() {
@@ -152,12 +157,12 @@ public abstract class AbstractGMFGraphDemo {
 	}
 
 	/**
-	 * Returns an array of strings that represent the names of the methods which build
-	 * graphs for this graph demo
-	 * @return array of graph building method names 
+	 * Returns an array of strings that represent the names of the methods which
+	 * build graphs for this graph demo
+	 * 
+	 * @return array of graph building method names
 	 */
 	protected abstract String[] getGraphMethods();
-
 
 	/**
 	 * @see org.eclipse.graph.AbstractExample#hookShell()
@@ -165,29 +170,32 @@ public abstract class AbstractGMFGraphDemo {
 	protected void hookShell() {
 		Composite composite = new Composite(shell, 0);
 		composite.setLayoutData(new GridData(GridData.FILL_VERTICAL));
-		
-		composite.setLayout(new GridLayout());	
-		final org.eclipse.swt.widgets.Label nodesLabel 
-				= new org.eclipse.swt.widgets.Label(composite, SWT.NONE);
+
+		composite.setLayout(new GridLayout());
+		final org.eclipse.swt.widgets.Label nodesLabel = new org.eclipse.swt.widgets.Label(composite, SWT.NONE);
 		nodesLabel.setText("Graph"); //$NON-NLS-1$
 		final Combo graphList = new Combo(composite, SWT.DROP_DOWN);
-		
+
 		String[] graphMethods = getGraphMethods();
-		for (int i = 0; i < graphMethods.length; i++) {
-			if (graphMethods[i] != null)
-				graphList.add(graphMethods[i]);
+		for (String graphMethod2 : graphMethods) {
+			if (graphMethod2 != null) {
+				graphList.add(graphMethod2);
+			}
 		}
 		setGraphMethod(graphMethods[0]);
 		graphList.setText(graphMethod);
 		graphList.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setGraphMethod(graphList.getItem(graphList.getSelectionIndex()));
 				getFigureCanvas().setContents(getContents());
 			}
+
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				graphList.setText(graphMethod);
 			}
-		});		
+		});
 	}
 
 	/**
@@ -208,13 +216,16 @@ public abstract class AbstractGMFGraphDemo {
 		getFigureCanvas().setLayoutData(new GridData(GridData.FILL_BOTH));
 		shell.setSize(1100, 700);
 		shell.open();
-		while (!shell.isDisposed())
-			while (!d.readAndDispatch())
+		while (!shell.isDisposed()) {
+			while (!d.readAndDispatch()) {
 				d.sleep();
+			}
+		}
 	}
 
 	/**
 	 * Sets this demo's FigureCanvas
+	 * 
 	 * @param canvas this demo's FigureCanvas
 	 */
 	protected void setFigureCanvas(FigureCanvas canvas) {
@@ -223,6 +234,7 @@ public abstract class AbstractGMFGraphDemo {
 
 	/**
 	 * Sets the name of the method to call to build the graph
+	 * 
 	 * @param method name of the method used to build the graph
 	 */
 	public static void setGraphMethod(String method) {

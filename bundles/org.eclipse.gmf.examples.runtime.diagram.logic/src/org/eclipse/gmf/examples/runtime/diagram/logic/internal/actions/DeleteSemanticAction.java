@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions;
@@ -35,67 +35,64 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * This action exists to demonstrate specifically the functionality of notation
- *  semantic procedures when changes happen to the logic semantic elements. More
- *  specifically, we would like for the notation view to be destroyed whenever
- *  a LED semantic element is destroyed.
- *  
+ * semantic procedures when changes happen to the logic semantic elements. More
+ * specifically, we would like for the notation view to be destroyed whenever a
+ * LED semantic element is destroyed.
+ *
  */
-public class DeleteSemanticAction
-	extends DiagramAction
-	implements LogicActionIds {
+public class DeleteSemanticAction extends DiagramAction implements LogicActionIds {
 
 	public DeleteSemanticAction(IWorkbenchPage workbenchPage) {
 		super(workbenchPage);
 	}
 
+	@Override
 	public void init() {
 		super.init();
 		setText("Delete Semantic Element"); //$NON-NLS-1$
 	}
 
+	@Override
 	protected Request createTargetRequest() {
 		return new Request("deleteSemanticElement"); //$NON-NLS-1$
 	}
-	
+
+	@Override
 	protected void doRun(IProgressMonitor progressMonitor) {
 		super.doRun(progressMonitor);
-		
-        AbstractEMFOperation operation = new AbstractEMFOperation(
-			getDiagramEditPart().getEditingDomain(), getLabel()) {
 
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info)
-				throws ExecutionException {
+		AbstractEMFOperation operation = new AbstractEMFOperation(getDiagramEditPart().getEditingDomain(), getLabel()) {
 
-				for (Iterator i = getStructuredSelection().iterator(); i
-					.hasNext();) {
+			@Override
+			protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+
+				for (Iterator i = getStructuredSelection().iterator(); i.hasNext();) {
 					IGraphicalEditPart ep = (IGraphicalEditPart) i.next();
 					DestroyElementCommand.destroy(ep.getPrimaryView().getElement());
 
 				}
-				return new Status(IStatus.OK, LogicDiagramPlugin.getPluginId(),
-						LogicDiagramStatusCodes.OK, StringStatics.BLANK, null);
-			};
+				return new Status(IStatus.OK, LogicDiagramPlugin.getPluginId(), LogicDiagramStatusCodes.OK,
+						StringStatics.BLANK, null);
+			}
 		};
 
 		try {
-			getActionManager().getOperationHistory().execute(operation,
-				new NullProgressMonitor(), null);
+			getActionManager().getOperationHistory().execute(operation, new NullProgressMonitor(), null);
 		} catch (ExecutionException e) {
-			Trace.catching(LogicDiagramPlugin.getInstance(),
-				LogicDiagramDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-				"doRun", e); //$NON-NLS-1$
-			Log.error(LogicDiagramPlugin.getInstance(),
-				LogicDiagramStatusCodes.IGNORED_EXCEPTION_WARNING, e
-					.getLocalizedMessage(), e);
+			Trace.catching(LogicDiagramPlugin.getInstance(), LogicDiagramDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+					"doRun", e); //$NON-NLS-1$
+			Log.error(LogicDiagramPlugin.getInstance(), LogicDiagramStatusCodes.IGNORED_EXCEPTION_WARNING,
+					e.getLocalizedMessage(), e);
 		}
-		
+
 	}
 
+	@Override
 	protected boolean isSelectionListener() {
 		return true;
 	}
-	
+
+	@Override
 	protected boolean calculateEnabled() {
 		return true;
 	}

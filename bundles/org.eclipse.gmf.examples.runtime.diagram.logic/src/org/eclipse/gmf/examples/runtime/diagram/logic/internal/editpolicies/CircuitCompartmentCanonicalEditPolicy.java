@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies;
 
@@ -27,123 +27,143 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPo
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * CanonicalConnectionEditPolic implementation that synchronizes with the semantic 
- * contents of the Circuit element.
- * 
+ * CanonicalConnectionEditPolic implementation that synchronizes with the
+ * semantic contents of the Circuit element.
+ *
  * @author sshaw
  *
  */
 public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEditPolicy {
 
-	/* 
+	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#getSemanticChildrenList()
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#
+	 * getSemanticChildrenList()
 	 */
+	@Override
 	protected List getSemanticChildrenList() {
 		EObject modelRef = resolveSemanticElement();
-		
+
 		Circuit circuitElement = (Circuit) modelRef;
-		if (circuitElement==null)
+		if (circuitElement == null) {
 			return Collections.EMPTY_LIST;
+		}
 		List allChildren = circuitElement.getChildren();
 		List ledElements = new ArrayList();
-		
+
 		ListIterator li = allChildren.listIterator();
 		while (li.hasNext()) {
 			Object obj = li.next();
-			if (obj instanceof Element && !(obj instanceof Wire))
+			if (obj instanceof Element && !(obj instanceof Wire)) {
 				ledElements.add(obj);
+			}
 		}
-		
+
 		return ledElements;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy#getSemanticConnectionsList()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy
+	 * #getSemanticConnectionsList()
 	 */
+	@Override
 	protected List getSemanticConnectionsList() {
 		EObject modelRef = resolveSemanticElement();
-		
+
 		Circuit circuitElement = (Circuit) modelRef;
-		if (circuitElement==null)
+		if (circuitElement == null) {
 			return Collections.EMPTY_LIST;
+		}
 		List allChildren = circuitElement.getChildren();
 		ListIterator li = allChildren.listIterator();
 		UniqueEList wires = new UniqueEList();
 		while (li.hasNext()) {
 			Object obj = li.next();
 			if (obj instanceof Wire) {
-				Wire wire = (Wire)obj;
-                if (isWirePartOfContainer(circuitElement, wire))
-                	//checks if the wire maps to the same circuit
-                	if (! (wire.getSource().eContainer().equals(circuitElement)
-                		&& (wire.getTarget().eContainer().equals(circuitElement)))){               	
-                		wires.add(wire);                		
-                	}
+				Wire wire = (Wire) obj;
+				if (isWirePartOfContainer(circuitElement, wire)) {
+					// checks if the wire maps to the same circuit
+					if (!(wire.getSource().eContainer().equals(circuitElement)
+							&& (wire.getTarget().eContainer().equals(circuitElement)))) {
+						wires.add(wire);
+					}
+				}
 			}
 		}
-		
+
 		return wires;
 	}
-    
-    private boolean isWirePartOfContainer(Circuit circuitElement, Wire wire) {
-        if (EcoreUtil.isAncestor(circuitElement, wire.getSource()) &&
-                EcoreUtil.isAncestor(circuitElement, wire.getTarget())) {
-                return true;
-            }
-            else {
-                if ((!wire.getSource().eContainer().equals(circuitElement) && 
-                    EcoreUtil.isAncestor(circuitElement, wire.getSource().eContainer())) ||
-                    (!wire.getTarget().eContainer().equals(circuitElement) &&
-                    EcoreUtil.isAncestor(circuitElement, wire.getTarget().eContainer()))) {
-                    return true;
-                }
-            }
-        
-        return false;
-    }
 
+	private boolean isWirePartOfContainer(Circuit circuitElement, Wire wire) {
+		if (EcoreUtil.isAncestor(circuitElement, wire.getSource())
+				&& EcoreUtil.isAncestor(circuitElement, wire.getTarget())) {
+			return true;
+		} else {
+			if ((!wire.getSource().eContainer().equals(circuitElement)
+					&& EcoreUtil.isAncestor(circuitElement, wire.getSource().eContainer()))
+					|| (!wire.getTarget().eContainer().equals(circuitElement)
+							&& EcoreUtil.isAncestor(circuitElement, wire.getTarget().eContainer()))) {
+				return true;
+			}
+		}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#shouldDeleteView(org.eclipse.gmf.runtime.notation.View)
-	 */
-	protected boolean shouldDeleteView(View view) {
-	    EObject modelRef = resolveSemanticElement(); 
-        Circuit circuitElement = (Circuit) modelRef;
-        
-        EObject semEl = ViewUtil.resolveSemanticElement(view);
-        if (semEl != null) {
-            if (semEl instanceof Wire) {
-                Wire wire = (Wire)semEl;
-                if (wire.eContainer().equals(circuitElement) &&
-                    isWirePartOfContainer(circuitElement, wire))
-                    return true;
-            }
-            else if (semEl instanceof Element) {
-                return true;
-            }
-        }
-        
 		return false;
 	}
-	
-	/* 
+
+	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy#getSourceElement(org.eclipse.emf.ecore.EObject)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#
+	 * shouldDeleteView(org.eclipse.gmf.runtime.notation.View)
 	 */
+	@Override
+	protected boolean shouldDeleteView(View view) {
+		EObject modelRef = resolveSemanticElement();
+		Circuit circuitElement = (Circuit) modelRef;
+
+		EObject semEl = ViewUtil.resolveSemanticElement(view);
+		if (semEl != null) {
+			if (semEl instanceof Wire) {
+				Wire wire = (Wire) semEl;
+				if (wire.eContainer().equals(circuitElement) && isWirePartOfContainer(circuitElement, wire)) {
+					return true;
+				}
+			} else if (semEl instanceof Element) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy
+	 * #getSourceElement(org.eclipse.emf.ecore.EObject)
+	 */
+	@Override
 	protected EObject getSourceElement(EObject relationship) {
-		Wire wire = (Wire)relationship;
+		Wire wire = (Wire) relationship;
 		return wire.getSource();
 	}
 
-	/* 
+	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy#getTargetElement(org.eclipse.emf.ecore.EObject)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy
+	 * #getTargetElement(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	protected EObject getTargetElement(EObject relationship) {
-		Wire wire = (Wire)relationship;
+		Wire wire = (Wire) relationship;
 		return wire.getTarget();
 	}
-	
+
 }

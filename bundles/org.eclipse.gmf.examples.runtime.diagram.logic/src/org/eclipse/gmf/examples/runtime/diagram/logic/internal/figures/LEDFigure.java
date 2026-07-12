@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures;
@@ -31,16 +31,13 @@ import org.eclipse.swt.graphics.RGB;
 /*
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
-public class LEDFigure
-	extends NodeFigure
-	implements HandleBounds
-{
+public class LEDFigure extends NodeFigure implements HandleBounds {
 	private Color fontColor;
-	
+
 	/**
 	 * Color of the shadow around the LEDFigure's display
 	 */
-	public static final Color DISPLAY_SHADOW = new Color(57, 117, 90); 
+	public static final Color DISPLAY_SHADOW = new Color(57, 117, 90);
 
 	/**
 	 * Color of the LEDFigure's displayed value
@@ -48,8 +45,9 @@ public class LEDFigure
 	public static final Color DISPLAY_TEXT = new Color(255, 199, 16);
 
 	protected String value;
-	
+
 	private Dimension prefSize;
+
 	/**
 	 * Creates a new LEDFigure
 	 */
@@ -58,10 +56,11 @@ public class LEDFigure
 		getBounds().height = prefSize.height;
 		this.prefSize = new Dimension(prefSize);
 	}
-	
+
 	/**
 	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
 	 */
+	@Override
 	public Dimension getPreferredSize(int wHint, int hHint) {
 		return new Dimension(prefSize);
 	}
@@ -69,6 +68,7 @@ public class LEDFigure
 	/**
 	 * @see org.eclipse.draw2d.Figure#paintFigure(Graphics)
 	 */
+	@Override
 	protected void paintFigure(Graphics g) {
 		IMapMode mm = MapModeUtil.getMapMode(this);
 		Rectangle displayRectangle = new Rectangle(mm.DPtoLP(15), mm.DPtoLP(11), mm.DPtoLP(31), mm.DPtoLP(25));
@@ -78,46 +78,46 @@ public class LEDFigure
 
 		int Y1 = mm.DPtoLP(0);
 		int Y2 = mm.DPtoLP(44);
-		
+
 		Rectangle r = getBounds().getCopy();
-		
+
 		g.translate(r.getLocation());
-		g.fillRectangle(mm.DPtoLP(0), mm.DPtoLP(0), r.width, r.height /*- MapMode.DPtoLP(4)*/);	
+		g.fillRectangle(mm.DPtoLP(0), mm.DPtoLP(0), r.width, r.height /*- MapMode.DPtoLP(4)*/);
 		int right = r.width - 1;
 		g.drawLine(mm.DPtoLP(0), Y1, right, Y1);
 		g.drawLine(mm.DPtoLP(0), Y1, mm.DPtoLP(0), Y2);
-	
+
 		g.drawLine(mm.DPtoLP(0), Y2, right, Y2);
 		g.drawLine(right, Y1, right, Y2);
 
 		// Draw the display
 		RGB whiteColor = ColorConstants.white.getRGB();
 		RGB backgroundColor = getBackgroundColor().getRGB();
-		RGB newHightlightRGB = new RGB((whiteColor.red + backgroundColor.red)/2 , (whiteColor.green + backgroundColor.green)/2 , (whiteColor.blue + backgroundColor.blue)/2 );
-		g.setBackgroundColor( DiagramColorRegistry.getInstance()
-			.getColor(newHightlightRGB));
+		RGB newHightlightRGB = new RGB((whiteColor.red + backgroundColor.red) / 2,
+				(whiteColor.green + backgroundColor.green) / 2, (whiteColor.blue + backgroundColor.blue) / 2);
+		g.setBackgroundColor(DiagramColorRegistry.getInstance().getColor(newHightlightRGB));
 		g.fillRectangle(displayHighlight);
 		RGB blackColor = ColorConstants.black.getRGB();
-		RGB newShadowRGB = new RGB((blackColor.red + backgroundColor.red)/2 , (blackColor.green + backgroundColor.green)/2 , (blackColor.blue + backgroundColor.blue)/2 );
-		g.setBackgroundColor( DiagramColorRegistry.getInstance()
-			.getColor(newShadowRGB));
+		RGB newShadowRGB = new RGB((blackColor.red + backgroundColor.red) / 2,
+				(blackColor.green + backgroundColor.green) / 2, (blackColor.blue + backgroundColor.blue) / 2);
+		g.setBackgroundColor(DiagramColorRegistry.getInstance().getColor(newShadowRGB));
 		g.fillRectangle(displayShadow);
-		
+
 		g.setBackgroundColor(ColorConstants.black);
 		g.fillRectangle(displayRectangle);
-	
+
 		// Draw the value
 		g.setForegroundColor(getFontColor());
 		g.drawText(value, valuePoint);
 	}
-	
+
 	/**
-	 * @return font color 
+	 * @return font color
 	 */
 	public Color getFontColor() {
 		return fontColor;
 	}
-	
+
 	/**
 	 * @param c set the font color
 	 */
@@ -128,20 +128,22 @@ public class LEDFigure
 
 	/**
 	 * Sets the value of the LEDFigure to val.
-	 * 
+	 *
 	 * @param val The value to set on this LEDFigure
 	 */
 	public void setValue(int val) {
 		value = String.valueOf(val);
-		if (val < 10)
-			value = "0" + value;	//$NON-NLS-1$
+		if (val < 10) {
+			value = "0" + value; //$NON-NLS-1$
+		}
 		repaint();
 	}
 
 	/**
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return "LEDFigure"; //$NON-NLS-1$
 	}

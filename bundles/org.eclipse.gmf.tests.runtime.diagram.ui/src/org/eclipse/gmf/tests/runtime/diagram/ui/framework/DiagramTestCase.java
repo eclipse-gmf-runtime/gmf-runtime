@@ -7,11 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
-
 package org.eclipse.gmf.tests.runtime.diagram.ui.framework;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
@@ -41,52 +43,43 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * This is an Abstract base class for Diagram testcases
- * 
+ *
  * @author Jody Schofield
  */
-public abstract class DiagramTestCase extends TestCase {
+public abstract class DiagramTestCase {
 
 	private IProject project = null;
 	private IDiagramWorkbenchPart diagramWorkbenchPart = null;
 	private IFile diagramFile = null;
-    private Diagram diagramView;
-    private TransactionalEditingDomain editingDomain;
-    private Resource resource;
-
+	private Diagram diagramView;
+	private TransactionalEditingDomain editingDomain;
+	private Resource resource;
 
 	/**
 	 * Constructs a Diagram TestCase with a given name
-	 * 
+	 *
 	 * @param name Name of the diagram test case
 	 */
-	public DiagramTestCase(String name) {
-		super(name);
-	}
-
 	/**
-	 * Sets up the fixture.  The default setup includes:
-	 * - creating the project
-	 * - creating a diagram
-	 * - opening the diagram
-	 * - adding shapes
-	 * - adding connectors
-	 * 
+	 * Sets up the fixture. The default setup includes: - creating the project -
+	 * creating a diagram - opening the diagram - adding shapes - adding connectors
+	 *
 	 * This method is called before each test method is executed.
 	 */
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 
 		// Create a project
 		createProject();
 
 		// Create and open a diagram
 		setDiagramFile(createDiagram());
-        createResource();
+		createResource();
 		openDiagram();
 
 		// Allow the OS to process editor related events
@@ -94,46 +87,48 @@ public abstract class DiagramTestCase extends TestCase {
 
 		createShapesAndConnectors();
 	}
-	
+
 	/**
 	 * Will delete the project that was used for the test and removed all the
 	 * resources in it.
 	 */
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() {
 
 		// Allow the OS to process editor related events
 		flushEventQueue();
 
 		// Close the diagram
 		closeDiagram();
-        diagramView = null;
-        
-        // unload the resource
-        resource.unload();
-        resource = null;
+		diagramView = null;
+
+		// unload the resource
+		resource.unload();
+		resource = null;
 
 		// Close and delete the project
-		closeProject();		
+		closeProject();
 	}
 
 	protected IFile getDiagramFile() {
 		return diagramFile;
 	}
-    
-    protected Diagram getDiagram() {
-        return diagramView;
-    }
-    
-    protected void setDiagram(Diagram diagram) {
-        this.diagramView = diagram;
-    }
-	
+
+	protected Diagram getDiagram() {
+		return diagramView;
+	}
+
+	protected void setDiagram(Diagram diagram) {
+		this.diagramView = diagram;
+	}
+
 	protected void setDiagramFile(IFile theFile) {
 		diagramFile = theFile;
 	}
+
 	/**
 	 * Get the name for the project to be created
-	 * 
+	 *
 	 * @return project name
 	 */
 	protected String getProjectName() {
@@ -141,9 +136,8 @@ public abstract class DiagramTestCase extends TestCase {
 	}
 
 	/**
-	 * Get the project.  The project is created in the
-	 * createProject method.
-	 * 
+	 * Get the project. The project is created in the createProject method.
+	 *
 	 * @return the project that was created
 	 */
 	protected IProject getProject() {
@@ -154,14 +148,13 @@ public abstract class DiagramTestCase extends TestCase {
 	 * Creates a project to be used for the test.
 	 */
 	protected void createProject() throws Exception {
-		
+
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot wsroot = workspace.getRoot();
-		
-		project = wsroot.getProject( getProjectName() );
-		
-		IProjectDescription desc =
-			workspace.newProjectDescription(project.getName());
+
+		project = wsroot.getProject(getProjectName());
+
+		IProjectDescription desc = workspace.newProjectDescription(project.getName());
 
 		// Create the project if it doesn't exist
 		if (!project.exists()) {
@@ -173,61 +166,58 @@ public abstract class DiagramTestCase extends TestCase {
 			project.open(null);
 		}
 	}
-    
-    /**
-     * Creates the editing domain and resource and adds the diagram to
-     * that resource.
-     */
-    protected void createResource() {
-        
-        IFile file = getDiagramFile();
-        
-        if (file != null) {
-            String filePath = file.getLocation().toOSString();
-            resource = getEditingDomain().loadResource(filePath);
-
-        } else {
-            resource = getEditingDomain()
-                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
-        }
-
-        final Diagram d = getDiagram();  
-        
-        if (d != null) {
-
-            AbstractEMFOperation operation = new AbstractEMFOperation(
-            	getEditingDomain(), "AbstractPresentationTestFixture setup") { //$NON-NLS-1$
-
-                protected IStatus doExecute(IProgressMonitor monitor,
-                        IAdaptable info)
-                    throws ExecutionException {
-
-                    resource.getContents().add(getDiagram());
-                    return Status.OK_STATUS;
-                };
-            };
-
-            try {
-                operation.execute(new NullProgressMonitor(), null);
-            } catch (ExecutionException ie) {
-                fail("createResource failed: " + ie.getLocalizedMessage()); //$NON-NLS-1$
-            }
-        }
-    }
 
 	/**
-     * Close and delete the project
-     */
+	 * Creates the editing domain and resource and adds the diagram to that
+	 * resource.
+	 */
+	protected void createResource() {
+
+		IFile file = getDiagramFile();
+
+		if (file != null) {
+			String filePath = file.getLocation().toOSString();
+			resource = getEditingDomain().loadResource(filePath);
+
+		} else {
+			resource = getEditingDomain().createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
+		}
+
+		final Diagram d = getDiagram();
+
+		if (d != null) {
+
+			AbstractEMFOperation operation = new AbstractEMFOperation(getEditingDomain(),
+					"AbstractPresentationTestFixture setup") { //$NON-NLS-1$
+
+				@Override
+				protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+
+					resource.getContents().add(getDiagram());
+					return Status.OK_STATUS;
+				}
+			};
+
+			try {
+				operation.execute(new NullProgressMonitor(), null);
+			} catch (ExecutionException ie) {
+				fail("createResource failed: " + ie.getLocalizedMessage()); //$NON-NLS-1$
+			}
+		}
+	}
+
+	/**
+	 * Close and delete the project
+	 */
 	protected void closeProject() {
-	
+
 		try {
 			project.delete(true, true, null);
 		} catch (CoreException e) {
-			
-			Log.error(TestsPlugin.getDefault(),
-				IStatus.ERROR, "Failed to delete project", e); //$NON-NLS-1$
+
+			Log.error(TestsPlugin.getDefault(), IStatus.ERROR, "Failed to delete project", e); //$NON-NLS-1$
 		} finally {
-			
+
 			project = null;
 		}
 	}
@@ -251,13 +241,11 @@ public abstract class DiagramTestCase extends TestCase {
 	/**
 	 * Close the diagram
 	 */
-	protected void closeDiagram() {	
+	protected void closeDiagram() {
 		if (getDiagramWorkbenchPart() instanceof IEditorPart) {
 			IWorkbenchPage page = getDiagramWorkbenchPart().getSite().getPage();
-			
-			page.closeEditor(
-					(IEditorPart) getDiagramWorkbenchPart(),
-					false);
+
+			page.closeEditor((IEditorPart) getDiagramWorkbenchPart(), false);
 		}
 		setDiagramWorkbenchPart(null);
 		setDiagramFile(null);
@@ -272,10 +260,10 @@ public abstract class DiagramTestCase extends TestCase {
 			// do nothing
 		}
 	}
-	
+
 	/**
 	 * Returns the editor.
-	 * 
+	 *
 	 * @return IDiagramWorkbenchPart
 	 */
 	public IDiagramWorkbenchPart getDiagramWorkbenchPart() {
@@ -284,9 +272,8 @@ public abstract class DiagramTestCase extends TestCase {
 
 	/**
 	 * Sets the diagramWorkbenchPart.
-	 * 
-	 * @param diagramWorkbenchPart
-	 *            The editorPart to set
+	 *
+	 * @param diagramWorkbenchPart The editorPart to set
 	 */
 	protected void setDiagramWorkbenchPart(IDiagramWorkbenchPart diagramWorkbenchPart) {
 		this.diagramWorkbenchPart = diagramWorkbenchPart;
@@ -298,12 +285,13 @@ public abstract class DiagramTestCase extends TestCase {
 	 * @return The DiagramEditPart for the diagram being tested
 	 */
 	public DiagramEditPart getDiagramEditPart() {
-		assertNotNull(getDiagramWorkbenchPart());		
+		assertNotNull(getDiagramWorkbenchPart());
 		return getDiagramWorkbenchPart().getDiagramEditPart();
 	}
 
 	/**
 	 * Returns the Workbench page for the current Diagram Workbench Part
+	 * 
 	 * @return IWorkbenchPage for the current Diagram
 	 */
 	protected IWorkbenchPage getWorkbenchPage() {
@@ -312,41 +300,40 @@ public abstract class DiagramTestCase extends TestCase {
 
 	/**
 	 * Implement to create the diagram and the diagram file for which the test
-	 * should run under.  This method should return the file for the diagram.
+	 * should run under. This method should return the file for the diagram.
+	 * 
 	 * @return the file for the diagram
 	 */
 	protected abstract IFile createDiagram() throws Exception;
 
 	/**
 	 * Implement to open the diagram.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	protected void openDiagram() throws Exception {
 
-		if( getDiagramFile() == null)
+		if (getDiagramFile() == null) {
 			return;
+		}
 
-		IWorkbenchPage page =
-			PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage();
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
-		setDiagramWorkbenchPart((IDiagramWorkbenchPart)IDE.openEditor(page, getDiagramFile(), true));
+		setDiagramWorkbenchPart((IDiagramWorkbenchPart) IDE.openEditor(page, getDiagramFile(), true));
 	}
 
 	/**
-	 * Implement this to creates the shapes and the connectors for the tests.
-	 * Will set the connect view if there is one needed for the test.
+	 * Implement this to creates the shapes and the connectors for the tests. Will
+	 * set the connect view if there is one needed for the test.
 	 */
 	protected abstract void createShapesAndConnectors() throws Exception;
 
-    public TransactionalEditingDomain getEditingDomain() {
-    	if (editingDomain == null) {
-    		editingDomain = DiagramEditingDomainFactory.getInstance().createEditingDomain();
-    	}
-        return editingDomain;
-    }
+	public TransactionalEditingDomain getEditingDomain() {
+		if (editingDomain == null) {
+			editingDomain = DiagramEditingDomainFactory.getInstance().createEditingDomain();
+		}
+		return editingDomain;
+	}
 
 	//
 //	protected boolean isDirty() {
@@ -381,7 +368,7 @@ public abstract class DiagramTestCase extends TestCase {
 //	 * <p>
 //	 * The command is executed within an UndoInterval and WriteAction model
 //	 * operation.
-//	 * 
+//	 *
 //	 * @throws <AssertFailError>
 //	 *             if the command did not run successfully
 //	 * @author choang
@@ -398,7 +385,7 @@ public abstract class DiagramTestCase extends TestCase {
 //	 * <p>
 //	 * The command is executed within an UndoInterval and WriteAction model
 //	 * operation.
-//	 * 
+//	 *
 //	 * @throws <AssertFailError>
 //	 *             if the command did not run successfully
 //	 * @author choang
@@ -455,10 +442,10 @@ public abstract class DiagramTestCase extends TestCase {
 //	 * method will test if the action implements the Disposable interface from
 //	 * GEF If it does it will call the dispose() method on the action. Callers
 //	 * should not call it themselves
-//	 * 
+//	 *
 //	 * @throws <AssertFailError>
 //	 *             if the command did not run successfully
-//	 *  
+//	 *
 //	 */
 //	protected void testAction(IAction action, ITestActionCallback callback) {
 //		flushEventQueue();
@@ -479,10 +466,10 @@ public abstract class DiagramTestCase extends TestCase {
 //	 * diagrameditorpart of the diagram and then call the init() method before
 //	 * running the action. At the end, it will call the dispose() method on the
 //	 * action. Callers should not call these two methods themselves themselves
-//	 * 
+//	 *
 //	 * @throws <AssertFailError>
 //	 *             if the command did not run successfully
-//	 *  
+//	 *
 //	 */
 //	protected void testAction(
 //		IDisposableAction action,
@@ -505,7 +492,7 @@ public abstract class DiagramTestCase extends TestCase {
 //	/**
 //	 * Does the same as <code>testAction</code> but also does an undo and
 //	 * redo afterwards and compares the diagram state.
-//	 * 
+//	 *
 //	 * @param action
 //	 * @param callback
 //	 */
@@ -529,17 +516,17 @@ public abstract class DiagramTestCase extends TestCase {
 //			callback.onRunExecution();
 //
 //		DiagramState state2 = getDiagramState();
-//		assertTrue("testActionAndUndoRedo: Action cannot be undone.", getCommandStack().canUndo()); //$NON-NLS-1$
+//		assertTrue(getCommandStack().canUndo(), "testActionAndUndoRedo: Action cannot be undone."); //$NON-NLS-1$
 //		getCommandStack().undo();
-//		assertTrue("diagram state different after undo of action", state1.equals(getDiagramState())); //$NON-NLS-1$
+//		assertTrue(state1.equals(getDiagramState()), "diagram state different after undo of action"); //$NON-NLS-1$
 //		getCommandStack().redo();
-//		assertTrue("diagram state different after redo of action", state2.equals(getDiagramState())); //$NON-NLS-1$
+//		assertTrue(state2.equals(getDiagramState()), "diagram state different after redo of action"); //$NON-NLS-1$
 //	}
 //
 //	/**
 //	 * Method testProperty. Generic method for testing a property change in a
 //	 * view.
-//	 * 
+//	 *
 //	 * @param view
 //	 *            IView to set the property value in
 //	 * @param property
@@ -553,19 +540,19 @@ public abstract class DiagramTestCase extends TestCase {
 //		final Object expectedValue) {
 //
 //		DiagramEditPart diagramEP = getDiagramEditPart();
-//		assertNotNull("The DiagramEditPart is null", diagramEP); //$NON-NLS-1$
+//		assertNotNull(diagramEP, "The DiagramEditPart is null"); //$NON-NLS-1$
 //
 //		RootEditPart rootEP = diagramEP.getRoot();
-//		assertNotNull("The RootEditPart is null", rootEP); //$NON-NLS-1$
+//		assertNotNull(rootEP, "The RootEditPart is null"); //$NON-NLS-1$
 //
 //		EditPartViewer viewer = rootEP.getViewer();
-//		assertNotNull("The EditPartViewer is null", viewer); //$NON-NLS-1$
+//		assertNotNull(viewer, "The EditPartViewer is null"); //$NON-NLS-1$
 //
 //		Map epRegistry = viewer.getEditPartRegistry();
-//		assertNotNull("The EditPartRegistery is null", epRegistry); //$NON-NLS-1$
+//		assertNotNull(epRegistry, "The EditPartRegistery is null"); //$NON-NLS-1$
 //
 //		final IGraphicalEditPart ep = (IGraphicalEditPart) epRegistry.get(view);
-//		assertNotNull("Couldn't find the GraphicalEditPart in the Registery", ep); //$NON-NLS-1$
+//		assertNotNull(ep, "Couldn't find the GraphicalEditPart in the Registery"); //$NON-NLS-1$
 //
 //		Request request =
 //			new ChangePropertyValueRequest(
@@ -598,7 +585,7 @@ public abstract class DiagramTestCase extends TestCase {
 //
 //	/**
 //	 * Return the figure in which elements are being added to.
-//	 * 
+//	 *
 //	 * @return <code>getDiagramEditPart().getFigure()</code>.
 //	 */
 //	protected IFigure getDrawSurfaceFigure() {
@@ -607,7 +594,7 @@ public abstract class DiagramTestCase extends TestCase {
 //
 //	/**
 //	 * Return the editpart in which elements are being added to.
-//	 * 
+//	 *
 //	 * @return <code>getDiagramEditPart()</code>.
 //	 */
 //	protected IGraphicalEditPart getDrawSurfaceEditPart() {
@@ -637,7 +624,7 @@ public abstract class DiagramTestCase extends TestCase {
 //
 //	/**
 //	 * Method getCommandStack.
-//	 * 
+//	 *
 //	 * @return CommandStack Command stack for the diagram editor
 //	 */
 //	public CommandStack getCommandStack() {

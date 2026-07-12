@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders;
 
@@ -17,20 +17,19 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * An element selection provider used by the tests.
- * 
+ *
  * @author Anthony Hunter
  */
-public class RedTestElementSectionProvider
-    extends AbstractTestElementSelectionProvider {
+public class RedTestElementSectionProvider extends AbstractTestElementSelectionProvider {
 
-    protected String getTestElementComponent() {
-        return "Red";//$NON-NLS-1$;
-    }
+	@Override
+	protected String getTestElementComponent() {
+		return "Red";//$NON-NLS-1$ ;
+	}
 
-    protected Image getTestElementImage() {
-        return PlatformUI
-        .getWorkbench().getSharedImages().getImage(
-            ISharedImages.IMG_OBJS_ERROR_TSK);
-    }
+	@Override
+	protected Image getTestElementImage() {
+		return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+	}
 
 }

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers;
 
@@ -23,12 +23,12 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Base test icon provider.
- * 
+ *
  * @author wdiu, Wayne Diu
  */
-public class TestNoExceptionsIconProvider
-	implements IIconProvider {
+public class TestNoExceptionsIconProvider implements IIconProvider {
 
+	@Override
 	public boolean provides(IOperation operation) {
 		if (operation instanceof GetIconOperation) {
 			if (((IIconOperation) operation).getHint() instanceof TestAdaptable) {
@@ -38,16 +38,19 @@ public class TestNoExceptionsIconProvider
 		return false;
 	}
 
+	@Override
 	public Image getIcon(IAdaptable hint, int flags) {
 		return new Image(Display.getDefault(), 10, 10);
 	}
 
+	@Override
 	public void addProviderChangeListener(IProviderChangeListener listener) {
-		//do nothing
+		// do nothing
 	}
 
+	@Override
 	public void removeProviderChangeListener(IProviderChangeListener listener) {
-		//do nothing
+		// do nothing
 	}
 
 }

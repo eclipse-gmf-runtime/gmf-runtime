@@ -7,10 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -35,199 +39,174 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
-import junit.framework.TestCase;
+public class AbstractEMFTypeTest {
 
-public class AbstractEMFTypeTest
-    extends TestCase {
+	private TransactionalEditingDomain editingDomain;
 
-    private TransactionalEditingDomain editingDomain;
+	private Resource defaultResource;
 
-    private Resource defaultResource;
-    
-    private Resource resourceWithContext;
+	private Resource resourceWithContext;
 
-    private EmployeePackage employeePkg;
+	private EmployeePackage employeePkg;
 
-    private EmployeeFactory employeeFactory;
+	private EmployeeFactory employeeFactory;
 
-    protected AbstractEMFTypeTest(String name) {
-        super(name);
-    }
+	@BeforeEach
+	public void setUp() throws Exception {
+		employeePkg = EmployeePackage.eINSTANCE;
+		employeeFactory = (EmployeeFactory) employeePkg.getEFactoryInstance();
 
-    protected void setUp()
-        throws Exception {
-        super.setUp();
+		editingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain();
+		TransactionalEditingDomain.Registry.INSTANCE.add("org.eclipse.gmf.tests.runtime.emf.type.core.EditingDomain", //$NON-NLS-1$
+				editingDomain);
 
-        employeePkg = EmployeePackage.eINSTANCE;
-        employeeFactory = (EmployeeFactory) employeePkg.getEFactoryInstance();
+		defaultResource = editingDomain.getResourceSet()
+				.createResource(URI.createURI("null://org.eclipse.gmf.tests.runtime.emf.type.core")); //$NON-NLS-1$
 
-        editingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain();
-        TransactionalEditingDomain.Registry.INSTANCE
-				.add(
-						"org.eclipse.gmf.tests.runtime.emf.type.core.EditingDomain", editingDomain); //$NON-NLS-1$
-        
-        defaultResource = editingDomain
-            .getResourceSet()
-            .createResource(
-                URI
-                    .createURI("null://org.eclipse.gmf.tests.runtime.emf.type.core")); //$NON-NLS-1$
-        
-        resourceWithContext = editingDomain
-        .getResourceSet()
-        .createResource(
-            URI
-                .createURI("null://org.eclipse.gmf.tests.runtime.emf.type.core.context")); //$NON-NLS-1$
-    
-        RecordingCommand command = new RecordingCommand(editingDomain) {
+		resourceWithContext = editingDomain.getResourceSet()
+				.createResource(URI.createURI("null://org.eclipse.gmf.tests.runtime.emf.type.core.context")); //$NON-NLS-1$
 
-            protected void doExecute() {
-                doModelSetup(defaultResource);
-                doModelSetupWithContext(resourceWithContext);
-            };
-        };
+		RecordingCommand command = new RecordingCommand(editingDomain) {
 
-        try {
-            ((TransactionalCommandStack) editingDomain.getCommandStack()).execute(command,
-                null);
+			@Override
+			protected void doExecute() {
+				doModelSetup(defaultResource);
+				doModelSetupWithContext(resourceWithContext);
+			}
+		};
 
-        } catch (RollbackException e) {
-            fail("setUp() failed:" + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
-    }
+		try {
+			((TransactionalCommandStack) editingDomain.getCommandStack()).execute(command, null);
 
-    protected void tearDown()
-        throws Exception {
-        super.tearDown();
-        
-        employeeFactory = null;
-        employeePkg = null;
-        defaultResource.unload();
-        resourceWithContext.unload();
-        editingDomain.dispose();
-    }
+		} catch (RollbackException e) {
+			fail("setUp() failed:" + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+	}
 
-    protected void doModelSetup(Resource resource) {
-        // Do nothing.
-    }
-    
-    protected void doModelSetupWithContext(Resource resource) {
-        // Do nothing.
-    }
+	@AfterEach
+	public void tearDown() {
+		employeeFactory = null;
+		employeePkg = null;
+		defaultResource.unload();
+		resourceWithContext.unload();
+		editingDomain.dispose();
+	}
 
-    protected TransactionalEditingDomain getEditingDomain() {
-        return editingDomain;
-    }
+	protected void doModelSetup(Resource resource) {
+		// Do nothing.
+	}
 
-    protected EmployeePackage getEmployeePackage() {
-        return employeePkg;
-    }
+	protected void doModelSetupWithContext(Resource resource) {
+		// Do nothing.
+	}
 
-    protected Resource getResource() {
-        return defaultResource;
-    }
-    
-    protected Resource getResourceWithContext() {
-        return resourceWithContext;
-    }
+	protected TransactionalEditingDomain getEditingDomain() {
+		return editingDomain;
+	}
 
-    protected EmployeeFactory getEmployeeFactory() {
-        return employeeFactory;
-    }
-    
-    protected IStatus execute(ICommand command) {
-    	assertTrue(command.canExecute());
-    	
-    	try {
-    		IStatus result = command.execute(new NullProgressMonitor(), null);
-    		assertTrue(result.isOK());
-    		return result;
-    	} catch (Exception e) {
-    		fail("Command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
-    		return Status.CANCEL_STATUS;  // won't get past fail() call
-    	}
-    }
-    
-    protected IStatus undo(ICommand command) {
-    	assertTrue(command.canUndo());
-    	
-    	try {
-    		IStatus result = command.undo(new NullProgressMonitor(), null);
-    		assertTrue(result.isOK());
-    		return result;
-    	} catch (Exception e) {
-    		fail("Command undo failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
-    		return Status.CANCEL_STATUS;  // won't get past fail() call
-    	}
-    }
-    
-    protected IStatus redo(ICommand command) {
-    	assertTrue(command.canRedo());
-    	
-    	try {
-    		IStatus result = command.redo(new NullProgressMonitor(), null);
-    		assertTrue(result.isOK());
-    		return result;
-    	} catch (Exception e) {
-    		fail("Command redo failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
-    		return Status.CANCEL_STATUS;  // won't get past fail() call
-    	}
-    }
-    
+	protected EmployeePackage getEmployeePackage() {
+		return employeePkg;
+	}
+
+	protected Resource getResource() {
+		return defaultResource;
+	}
+
+	protected Resource getResourceWithContext() {
+		return resourceWithContext;
+	}
+
+	protected EmployeeFactory getEmployeeFactory() {
+		return employeeFactory;
+	}
+
+	protected IStatus execute(ICommand command) {
+		assertTrue(command.canExecute());
+
+		try {
+			IStatus result = command.execute(new NullProgressMonitor(), null);
+			assertTrue(result.isOK());
+			return result;
+		} catch (Exception e) {
+			fail("Command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			return Status.CANCEL_STATUS; // won't get past fail() call
+		}
+	}
+
+	protected IStatus undo(ICommand command) {
+		assertTrue(command.canUndo());
+
+		try {
+			IStatus result = command.undo(new NullProgressMonitor(), null);
+			assertTrue(result.isOK());
+			return result;
+		} catch (Exception e) {
+			fail("Command undo failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			return Status.CANCEL_STATUS; // won't get past fail() call
+		}
+	}
+
+	protected IStatus redo(ICommand command) {
+		assertTrue(command.canRedo());
+
+		try {
+			IStatus result = command.redo(new NullProgressMonitor(), null);
+			assertTrue(result.isOK());
+			return result;
+		} catch (Exception e) {
+			fail("Command redo failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			return Status.CANCEL_STATUS; // won't get past fail() call
+		}
+	}
+
 	protected IEditHelperAdvice[] getWildcardAdvice(IClientContext clientContext) {
 		// get wildcard advices by finding advices on the default element type
-		//     (which can only have wildcard advice)
-		IElementType dflt = ElementTypeRegistry.getInstance().getType(
-				"org.eclipse.gmf.runtime.emf.type.core.default"); //$NON-NLS-1$
+		// (which can only have wildcard advice)
+		IElementType dflt = ElementTypeRegistry.getInstance().getType("org.eclipse.gmf.runtime.emf.type.core.default"); //$NON-NLS-1$
 		assertNotNull(dflt);
 		return ElementTypeRegistry.getInstance().getEditHelperAdvice(dflt, clientContext);
 	}
-	
+
 	protected IEditHelperAdvice[] getNonWildcardAdvice(IElementType type) {
-		IClientContext context = ClientContextManager.getInstance().getBinding(
-				type);
+		IClientContext context = ClientContextManager.getInstance().getBinding(type);
 		return getNonWildcardAdvice(type, context);
 	}
-	
+
 	protected IEditHelperAdvice[] getNonWildcardAdvice(IElementType type, IClientContext context) {
-		
+
 		LinkedHashSet result = new LinkedHashSet();
-		
-		result.addAll(Arrays.asList(ElementTypeRegistry.getInstance()
-				.getEditHelperAdvice(type, context)));
+
+		result.addAll(Arrays.asList(ElementTypeRegistry.getInstance().getEditHelperAdvice(type, context)));
 		result.removeAll(Arrays.asList(getWildcardAdvice(context)));
 
-		return (IEditHelperAdvice[]) result
-				.toArray(new IEditHelperAdvice[result.size()]);
+		return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[result.size()]);
 	}
-	
+
 	protected IEditHelperAdvice[] getNonWildcardAdvice(IEditHelperContext context) {
-		
+
 		LinkedHashSet result = new LinkedHashSet();
-		
-		result.addAll(Arrays.asList(ElementTypeRegistry.getInstance()
-				.getEditHelperAdvice(context)));
+
+		result.addAll(Arrays.asList(ElementTypeRegistry.getInstance().getEditHelperAdvice(context)));
 		result.removeAll(Arrays.asList(getWildcardAdvice(context.getClientContext())));
 
-		return (IEditHelperAdvice[]) result
-				.toArray(new IEditHelperAdvice[result.size()]);
+		return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[result.size()]);
 	}
 
 	protected IEditHelperAdvice[] getNonWildcardAdvice(EObject element) {
-		IClientContext context = ClientContextManager.getInstance()
-				.getClientContextFor(element);
+		IClientContext context = ClientContextManager.getInstance().getClientContextFor(element);
 		return getNonWildcardAdvice(element, context);
 	}
-	
+
 	protected IEditHelperAdvice[] getNonWildcardAdvice(EObject element, IClientContext context) {
-		
+
 		LinkedHashSet result = new LinkedHashSet();
-		
-		result.addAll(Arrays.asList(ElementTypeRegistry.getInstance()
-				.getEditHelperAdvice(element, context)));
+
+		result.addAll(Arrays.asList(ElementTypeRegistry.getInstance().getEditHelperAdvice(element, context)));
 		result.removeAll(Arrays.asList(getWildcardAdvice(context)));
 
-		return (IEditHelperAdvice[]) result
-				.toArray(new IEditHelperAdvice[result.size()]);
+		return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[result.size()]);
 	}
 }

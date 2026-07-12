@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl;
 
@@ -30,15 +30,17 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object
+ * '<em><b>Element</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl.ElementImpl#getTerminals <em>Terminals</em>}</li>
- *   <li>{@link org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl.ElementImpl#getOutputTerminals <em>Output Terminals</em>}</li>
- *   <li>{@link org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl.ElementImpl#getInputTerminals <em>Input Terminals</em>}</li>
+ * <li>{@link org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl.ElementImpl#getTerminals
+ * <em>Terminals</em>}</li>
+ * <li>{@link org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl.ElementImpl#getOutputTerminals
+ * <em>Output Terminals</em>}</li>
+ * <li>{@link org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl.ElementImpl#getInputTerminals
+ * <em>Input Terminals</em>}</li>
  * </ul>
  * </p>
  *
@@ -46,9 +48,9 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
  */
 public abstract class ElementImpl extends EObjectImpl implements Element {
 	/**
-	 * The cached value of the '{@link #getTerminals() <em>Terminals</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTerminals() <em>Terminals</em>}'
+	 * containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTerminals()
 	 * @generated
 	 * @ordered
@@ -56,8 +58,8 @@ public abstract class ElementImpl extends EObjectImpl implements Element {
 	protected EList terminals = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ElementImpl() {
@@ -65,19 +67,21 @@ public abstract class ElementImpl extends EObjectImpl implements Element {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return SemanticPackage.Literals.ELEMENT;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public EList getTerminals() {
 		if (terminals == null) {
 			terminals = new EObjectContainmentEList(Terminal.class, this, SemanticPackage.ELEMENT__TERMINALS);
@@ -86,113 +90,120 @@ public abstract class ElementImpl extends EObjectImpl implements Element {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public EList getOutputTerminals() {
 		ArrayList outputTerminals = new ArrayList();
-		for (Iterator iter = getTerminals().iterator(); iter.hasNext(); ) {
-			Terminal terminal = (Terminal)iter.next();
-			if (terminal instanceof OutputTerminal)
+		for (Iterator iter = getTerminals().iterator(); iter.hasNext();) {
+			Terminal terminal = (Terminal) iter.next();
+			if (terminal instanceof OutputTerminal) {
 				outputTerminals.add(terminal);
+			}
 		}
-		return new EcoreEList.UnmodifiableEList(this,
-						SemanticPackage.eINSTANCE.getElement_InputTerminals(),
-						outputTerminals.size(), outputTerminals.toArray());
+		return new EcoreEList.UnmodifiableEList(this, SemanticPackage.eINSTANCE.getElement_InputTerminals(),
+				outputTerminals.size(), outputTerminals.toArray());
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public EList getInputTerminals() {
 		ArrayList inputTerminals = new ArrayList();
-		for (Iterator iter = getTerminals().iterator(); iter.hasNext(); ) {
-			Terminal terminal = (Terminal)iter.next();
-			if (terminal instanceof InputTerminal)
+		for (Iterator iter = getTerminals().iterator(); iter.hasNext();) {
+			Terminal terminal = (Terminal) iter.next();
+			if (terminal instanceof InputTerminal) {
 				inputTerminals.add(terminal);
+			}
 		}
-		return new EcoreEList.UnmodifiableEList(this,
-						SemanticPackage.eINSTANCE.getElement_InputTerminals(),
-						inputTerminals.size(), inputTerminals.toArray());
+		return new EcoreEList.UnmodifiableEList(this, SemanticPackage.eINSTANCE.getElement_InputTerminals(),
+				inputTerminals.size(), inputTerminals.toArray());
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case SemanticPackage.ELEMENT__TERMINALS:
-				return ((InternalEList)getTerminals()).basicRemove(otherEnd, msgs);
+		case SemanticPackage.ELEMENT__TERMINALS:
+			return ((InternalEList) getTerminals()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SemanticPackage.ELEMENT__TERMINALS:
-				return getTerminals();
-			case SemanticPackage.ELEMENT__OUTPUT_TERMINALS:
-				return getOutputTerminals();
-			case SemanticPackage.ELEMENT__INPUT_TERMINALS:
-				return getInputTerminals();
+		case SemanticPackage.ELEMENT__TERMINALS:
+			return getTerminals();
+		case SemanticPackage.ELEMENT__OUTPUT_TERMINALS:
+			return getOutputTerminals();
+		case SemanticPackage.ELEMENT__INPUT_TERMINALS:
+			return getInputTerminals();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SemanticPackage.ELEMENT__TERMINALS:
-				getTerminals().clear();
-				getTerminals().addAll((Collection)newValue);
-				return;
+		case SemanticPackage.ELEMENT__TERMINALS:
+			getTerminals().clear();
+			getTerminals().addAll((Collection) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SemanticPackage.ELEMENT__TERMINALS:
-				getTerminals().clear();
-				return;
+		case SemanticPackage.ELEMENT__TERMINALS:
+			getTerminals().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SemanticPackage.ELEMENT__TERMINALS:
-				return terminals != null && !terminals.isEmpty();
-			case SemanticPackage.ELEMENT__OUTPUT_TERMINALS:
-				return !getOutputTerminals().isEmpty();
-			case SemanticPackage.ELEMENT__INPUT_TERMINALS:
-				return !getInputTerminals().isEmpty();
+		case SemanticPackage.ELEMENT__TERMINALS:
+			return terminals != null && !terminals.isEmpty();
+		case SemanticPackage.ELEMENT__OUTPUT_TERMINALS:
+			return !getOutputTerminals().isEmpty();
+		case SemanticPackage.ELEMENT__INPUT_TERMINALS:
+			return !getInputTerminals().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //ElementImpl
+} // ElementImpl

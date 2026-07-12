@@ -7,37 +7,36 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.emf.clipboard.transfer;
 
 import java.io.UnsupportedEncodingException;
-
 
 /**
  * Clipboard transfer data type for the clipboard example.
  */
 public final class EmfTransferType {
 	private String string;
-	
+
 	/**
 	 * Initializes me.
-	 * 
+	 *
 	 * @param string the string form of a user selection of
-	 *     {@link org.eclipse.emf.ecore.EObject}s.  Must not be <code>null</code>
+	 *               {@link org.eclipse.emf.ecore.EObject}s. Must not be
+	 *               <code>null</code>
 	 */
 	public EmfTransferType(String string) {
 		assert string != null;
-		
+
 		this.string = string;
 	}
-	
+
 	/**
-	 * Gets the string representation of the
-	 * {@link org.eclipse.emf.ecore.EObject}s retrieved from the clipboard.
-	 * 
+	 * Gets the string representation of the {@link org.eclipse.emf.ecore.EObject}s
+	 * retrieved from the clipboard.
+	 *
 	 * @return the string (will not be <code>null</code>)
 	 */
 	public String getString() {
@@ -46,7 +45,7 @@ public final class EmfTransferType {
 
 	/**
 	 * Converts my data to bytes for the clipboard.
-	 * 
+	 *
 	 * @return the bytes
 	 */
 	byte[] toBytes() {
@@ -57,10 +56,10 @@ public final class EmfTransferType {
 			throw new Error("UTF-8 encoding not supported by String class", e); //$NON-NLS-1$
 		}
 	}
-	
+
 	/**
 	 * Converts bytes from the clipboard to my data.
-	 * 
+	 *
 	 * @param bytes the bytes
 	 * @return the transfer type
 	 */

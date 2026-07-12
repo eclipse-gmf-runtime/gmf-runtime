@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal;
@@ -18,15 +18,14 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Logic Diagram Plug-in
- * 
+ *
  * @author qili
  */
-public class LogicDiagramPlugin
-	extends AbstractUIPlugin {
+public class LogicDiagramPlugin extends AbstractUIPlugin {
 
 	/**
-	 * The logic diagram editor ID. This matches the id used in this plugin's
-	 * XML for the editor extension point.
+	 * The logic diagram editor ID. This matches the id used in this plugin's XML
+	 * for the editor extension point.
 	 */
 	public static final String EDITOR_ID = "LogicEditor"; //$NON-NLS-1$
 
@@ -45,7 +44,7 @@ public class LogicDiagramPlugin
 
 	/**
 	 * Returns the shared instance.
-	 * 
+	 *
 	 * @return the plugin instance
 	 */
 	public static LogicDiagramPlugin getInstance() {
@@ -54,7 +53,7 @@ public class LogicDiagramPlugin
 
 	/**
 	 * Retrieves the unique identifier of this plug-in.
-	 * 
+	 *
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
@@ -64,12 +63,11 @@ public class LogicDiagramPlugin
 	/**
 	 * Starts up this wizards plug-in.
 	 */
-	public void start(BundleContext context)
-		throws Exception {
+	@Override
+	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
-		PreferencesHint.registerPreferenceStore(
-			new PreferencesHint(EDITOR_ID), getPreferenceStore());
+
+		PreferencesHint.registerPreferenceStore(new PreferencesHint(EDITOR_ID), getPreferenceStore());
 	}
 
 }

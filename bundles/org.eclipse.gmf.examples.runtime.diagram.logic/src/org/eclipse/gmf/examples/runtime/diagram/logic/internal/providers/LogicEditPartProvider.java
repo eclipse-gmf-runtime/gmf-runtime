@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
@@ -31,80 +31,87 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Editpart provider for the logic diagram.
- * 
+ *
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
 
-public class LogicEditPartProvider extends AbstractEditPartProvider {	
-	
+public class LogicEditPartProvider extends AbstractEditPartProvider {
+
 	/** list of supported shape editparts. */
-	private Map<EClass, Class> shapeMap = new HashMap<EClass, Class>();
+	private Map<EClass, Class> shapeMap = new HashMap<>();
 	{
-		shapeMap.put( SemanticPackage.eINSTANCE.getLED(), LEDEditPart.class );
-		shapeMap.put( SemanticPackage.eINSTANCE.getFlowContainer(), LogicFlowContainerEditPart.class );
-		shapeMap.put( SemanticPackage.eINSTANCE.getCircuit(), CircuitEditPart.class );
-		shapeMap.put( SemanticPackage.eINSTANCE.getOrGate(), LogicGateEditPart.class );
-		shapeMap.put( SemanticPackage.eINSTANCE.getAndGate(), LogicGateEditPart.class );
-		shapeMap.put( SemanticPackage.eINSTANCE.getXORGate(), LogicGateEditPart.class );
-		shapeMap.put( SemanticPackage.eINSTANCE.getInputTerminal(), TerminalEditPart.class );
-		shapeMap.put( SemanticPackage.eINSTANCE.getOutputTerminal(), TerminalEditPart.class );
-		shapeMap.put( SemanticPackage.eINSTANCE.getInputOutputTerminal(), TerminalEditPart.class );
+		shapeMap.put(SemanticPackage.eINSTANCE.getLED(), LEDEditPart.class);
+		shapeMap.put(SemanticPackage.eINSTANCE.getFlowContainer(), LogicFlowContainerEditPart.class);
+		shapeMap.put(SemanticPackage.eINSTANCE.getCircuit(), CircuitEditPart.class);
+		shapeMap.put(SemanticPackage.eINSTANCE.getOrGate(), LogicGateEditPart.class);
+		shapeMap.put(SemanticPackage.eINSTANCE.getAndGate(), LogicGateEditPart.class);
+		shapeMap.put(SemanticPackage.eINSTANCE.getXORGate(), LogicGateEditPart.class);
+		shapeMap.put(SemanticPackage.eINSTANCE.getInputTerminal(), TerminalEditPart.class);
+		shapeMap.put(SemanticPackage.eINSTANCE.getOutputTerminal(), TerminalEditPart.class);
+		shapeMap.put(SemanticPackage.eINSTANCE.getInputOutputTerminal(), TerminalEditPart.class);
 	}
-	
+
 	/** list of supported connector editparts. */
-	private Map<EClass, Class> connectorMap = new HashMap<EClass, Class>();
+	private Map<EClass, Class> connectorMap = new HashMap<>();
 	{
-		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), WireEditPart.class );
+		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), WireEditPart.class);
 	}
-	
+
 	/** list of supported shape compartment editparts */
-	private Map<String, Class> shapeCompartmentMap = new HashMap<String, Class>();
+	private Map<String, Class> shapeCompartmentMap = new HashMap<>();
 	{
-		shapeCompartmentMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentEditPart.class); 
+		shapeCompartmentMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentEditPart.class);
 	}
-	
+
 	/** list of supported list compartment editparts */
-	private Map<String, Class> listCompartmentMap = new HashMap<String, Class>();
+	private Map<String, Class> listCompartmentMap = new HashMap<>();
 	{
-		listCompartmentMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, LogicFlowCompartmentEditPart.class); 
+		listCompartmentMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, LogicFlowCompartmentEditPart.class);
 	}
 
 	/**
-	 * Gets a diagram's editpart class.
-	 * This method should be overridden by a provider if it wants to provide this service. 
+	 * Gets a diagram's editpart class. This method should be overridden by a
+	 * provider if it wants to provide this service.
+	 * 
 	 * @param view the view to be <i>controlled</code> by the created editpart
 	 */
-	protected Class getDiagramEditPartClass(View view ) {
+	@Override
+	protected Class getDiagramEditPartClass(View view) {
 		if (view.getType().equals("logic")) { //$NON-NLS-1$
-            return(DiagramEditPart.class);
-        }
+			return (DiagramEditPart.class);
+		}
 		return null;
 	}
-	
+
 	/**
-	 * Set the editpart class to the editpart mapped to the supplied view's semantic hint.
+	 * Set the editpart class to the editpart mapped to the supplied view's semantic
+	 * hint.
+	 * 
 	 * @see org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider#setConnectorEditPartClass(org.eclipse.gmf.runtime.diagram.ui.internal.view.IConnectorView)
 	 */
+	@Override
 	protected Class getEdgeEditPartClass(View view) {
 		return connectorMap.get(getReferencedElementEClass(view));
 	}
 
 	/**
-	 * Gets a Node's editpart class.
-	 * This method should be overridden by a provider if it wants to provide this service. 
+	 * Gets a Node's editpart class. This method should be overridden by a provider
+	 * if it wants to provide this service.
+	 * 
 	 * @param view the view to be <i>controlled</code> by the created editpart
 	 */
+	@Override
 	protected Class getNodeEditPartClass(View view) {
 		Class clazz = null;
 		String semanticHint = view.getType();
 		EClass eClass = getReferencedElementEClass(view);
 		clazz = listCompartmentMap.get(semanticHint);
-		if(clazz != null) {
+		if (clazz != null) {
 			return clazz;
 		}
 		clazz = shapeCompartmentMap.get(semanticHint);
-		if(clazz != null) {
+		if (clazz != null) {
 			return clazz;
 		}
 		clazz = shapeMap.get(eClass);

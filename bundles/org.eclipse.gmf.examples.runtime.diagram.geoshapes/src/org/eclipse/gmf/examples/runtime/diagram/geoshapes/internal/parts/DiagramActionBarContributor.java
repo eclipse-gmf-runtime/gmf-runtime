@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.parts;
@@ -18,13 +18,11 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor.FileDiagra
  * The geoshapes diagram editor action bar contributor. This allows the
  * geoshapes diagram to inherit the Diagram main menu and the toolbar from the
  * basic diagram editor.
- * 
+ *
  * @author cmahoney
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.geoshapes.*
  */
-public class DiagramActionBarContributor
-	extends
-	org.eclipse.gmf.runtime.diagram.ui.parts.DiagramActionBarContributor {
+public class DiagramActionBarContributor extends org.eclipse.gmf.runtime.diagram.ui.parts.DiagramActionBarContributor {
 
 	/**
 	 * The geoshapes diagram editor ID.
@@ -34,6 +32,7 @@ public class DiagramActionBarContributor
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramActionBarContributor#getEditorClass()
 	 */
+	@Override
 	protected Class getEditorClass() {
 		return FileDiagramEditorWithFlyoutPalette.class;
 	}
@@ -41,6 +40,7 @@ public class DiagramActionBarContributor
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramActionBarContributor#getEditorId()
 	 */
+	@Override
 	protected String getEditorId() {
 		return ID;
 	}

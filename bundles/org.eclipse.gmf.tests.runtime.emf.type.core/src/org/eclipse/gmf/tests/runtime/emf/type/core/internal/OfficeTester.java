@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -18,17 +18,16 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 /**
  * @author ldamus
  */
-public class OfficeTester
-	extends PropertyTester {
+public class OfficeTester extends PropertyTester {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object,
-	 *      java.lang.String, java.lang.Object[], java.lang.Object)
+	 * java.lang.String, java.lang.Object[], java.lang.Object)
 	 */
-	public boolean test(Object receiver, String property, Object[] args,
-			Object expectedValue) {
+	@Override
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 
 		if (receiver instanceof Employee) {
 			Employee employee = (Employee) receiver;
@@ -39,8 +38,8 @@ public class OfficeTester
 				}
 
 			} else if (property.equals("officeWindowCount")) { //$NON-NLS-1$
-				return employee.getOffice() != null && employee.getOffice().getNumberOfWindows() == (Integer
-					.getInteger((String) expectedValue)).intValue();
+				return employee.getOffice() != null && employee.getOffice()
+						.getNumberOfWindows() == (Integer.getInteger((String) expectedValue)).intValue();
 			}
 		}
 		return false;

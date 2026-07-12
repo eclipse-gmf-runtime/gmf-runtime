@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
@@ -20,14 +20,15 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Office</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object
+ * '<em><b>Office</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.OfficeImpl#getNumberOfWindows <em>Number Of Windows</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.OfficeImpl#isHasDoor <em>Has Door</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.OfficeImpl#getNumberOfWindows
+ * <em>Number Of Windows</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.OfficeImpl#isHasDoor
+ * <em>Has Door</em>}</li>
  * </ul>
  * </p>
  *
@@ -35,9 +36,9 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
  */
 public class OfficeImpl extends EModelElementImpl implements Office {
 	/**
-	 * The default value of the '{@link #getNumberOfWindows() <em>Number Of Windows</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getNumberOfWindows() <em>Number Of
+	 * Windows</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getNumberOfWindows()
 	 * @generated
 	 * @ordered
@@ -45,9 +46,9 @@ public class OfficeImpl extends EModelElementImpl implements Office {
 	protected static final int NUMBER_OF_WINDOWS_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getNumberOfWindows() <em>Number Of Windows</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getNumberOfWindows() <em>Number Of
+	 * Windows</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getNumberOfWindows()
 	 * @generated
 	 * @ordered
@@ -56,8 +57,8 @@ public class OfficeImpl extends EModelElementImpl implements Office {
 
 	/**
 	 * The default value of the '{@link #isHasDoor() <em>Has Door</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isHasDoor()
 	 * @generated
 	 * @ordered
@@ -65,9 +66,9 @@ public class OfficeImpl extends EModelElementImpl implements Office {
 	protected static final boolean HAS_DOOR_EDEFAULT = false;
 
 	/**
-	 * The flag representing the value of the '{@link #isHasDoor() <em>Has Door</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The flag representing the value of the '{@link #isHasDoor() <em>Has
+	 * Door</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isHasDoor()
 	 * @generated
 	 * @ordered
@@ -75,8 +76,8 @@ public class OfficeImpl extends EModelElementImpl implements Office {
 	protected static final int HAS_DOOR_EFLAG = 1 << 8;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected OfficeImpl() {
@@ -84,127 +85,147 @@ public class OfficeImpl extends EModelElementImpl implements Office {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return EmployeePackage.Literals.OFFICE;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public int getNumberOfWindows() {
 		return numberOfWindows;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void setNumberOfWindows(int newNumberOfWindows) {
 		int oldNumberOfWindows = numberOfWindows;
 		numberOfWindows = newNumberOfWindows;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.OFFICE__NUMBER_OF_WINDOWS, oldNumberOfWindows, numberOfWindows));
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.OFFICE__NUMBER_OF_WINDOWS,
+					oldNumberOfWindows, numberOfWindows));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean isHasDoor() {
 		return (eFlags & HAS_DOOR_EFLAG) != 0;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void setHasDoor(boolean newHasDoor) {
 		boolean oldHasDoor = (eFlags & HAS_DOOR_EFLAG) != 0;
-		if (newHasDoor) eFlags |= HAS_DOOR_EFLAG; else eFlags &= ~HAS_DOOR_EFLAG;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.OFFICE__HAS_DOOR, oldHasDoor, newHasDoor));
+		if (newHasDoor) {
+			eFlags |= HAS_DOOR_EFLAG;
+		} else {
+			eFlags &= ~HAS_DOOR_EFLAG;
+		}
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.OFFICE__HAS_DOOR, oldHasDoor,
+					newHasDoor));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
-				return Integer.valueOf(getNumberOfWindows());
-			case EmployeePackage.OFFICE__HAS_DOOR:
-				return isHasDoor() ? Boolean.TRUE : Boolean.FALSE;
+		case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
+			return Integer.valueOf(getNumberOfWindows());
+		case EmployeePackage.OFFICE__HAS_DOOR:
+			return isHasDoor() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
-				setNumberOfWindows(((Integer)newValue).intValue());
-				return;
-			case EmployeePackage.OFFICE__HAS_DOOR:
-				setHasDoor(((Boolean)newValue).booleanValue());
-				return;
+		case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
+			setNumberOfWindows(((Integer) newValue).intValue());
+			return;
+		case EmployeePackage.OFFICE__HAS_DOOR:
+			setHasDoor(((Boolean) newValue).booleanValue());
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
-				setNumberOfWindows(NUMBER_OF_WINDOWS_EDEFAULT);
-				return;
-			case EmployeePackage.OFFICE__HAS_DOOR:
-				setHasDoor(HAS_DOOR_EDEFAULT);
-				return;
+		case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
+			setNumberOfWindows(NUMBER_OF_WINDOWS_EDEFAULT);
+			return;
+		case EmployeePackage.OFFICE__HAS_DOOR:
+			setHasDoor(HAS_DOOR_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
-				return numberOfWindows != NUMBER_OF_WINDOWS_EDEFAULT;
-			case EmployeePackage.OFFICE__HAS_DOOR:
-				return ((eFlags & HAS_DOOR_EFLAG) != 0) != HAS_DOOR_EDEFAULT;
+		case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
+			return numberOfWindows != NUMBER_OF_WINDOWS_EDEFAULT;
+		case EmployeePackage.OFFICE__HAS_DOOR:
+			return ((eFlags & HAS_DOOR_EFLAG) != 0) != HAS_DOOR_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy()) {
+			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (numberOfWindows: "); //$NON-NLS-1$
@@ -215,4 +236,4 @@ public class OfficeImpl extends EModelElementImpl implements Office {
 		return result.toString();
 	}
 
-} //OfficeImpl
+} // OfficeImpl

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.wizards;
@@ -18,32 +18,33 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorCre
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 
-
 /**
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.geoshapes.*
  *
- * Create Diagram Wizard
+ *              Create Diagram Wizard
  */
-public class DiagramCreationWizard extends EditorCreationWizard{
-	
+public class DiagramCreationWizard extends EditorCreationWizard {
+
 	/**
 	 * @see org.eclipse.jface.wizard.IWizard#addPages()
 	 */
+	@Override
 	public void addPages() {
 		super.addPages();
 
-		if (page == null)
+		if (page == null) {
 			page = new DiagramWizardPage(getWorkbench(), getSelection());
+		}
 
 		addPage(page);
 	}
-	
+
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection sel) {
 		super.init(workbench, sel);
 
-		setWindowTitle(ExampleDiagramGeoshapeMessages.
-				CreationWizard_New_Geoshape_Diagram);
+		setWindowTitle(ExampleDiagramGeoshapeMessages.CreationWizard_New_Geoshape_Diagram);
 		setDefaultPageImageDescriptor(ExampleDiagramGeoshapePluginImages.DESC_GEOSHAPES_WIZARD);
 		setNeedsProgressMonitor(true);
 	}

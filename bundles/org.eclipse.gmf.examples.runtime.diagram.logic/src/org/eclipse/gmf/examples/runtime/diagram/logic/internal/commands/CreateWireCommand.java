@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands;
@@ -23,17 +23,15 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 
 /**
  * Command to create a new wire element.
- * 
+ *
  * @author ldamus
  */
-public class CreateWireCommand
-	extends CreateRelationshipCommand {
+public class CreateWireCommand extends CreateRelationshipCommand {
 
 	/**
 	 * Constructs a new command to create a wire element.
-	 * 
-	 * @param request
-	 *            the create request
+	 *
+	 * @param request the create request
 	 */
 	public CreateWireCommand(CreateRelationshipRequest request) {
 		super(request);
@@ -43,9 +41,10 @@ public class CreateWireCommand
 	/**
 	 * Creates a wire and sets its source and target.
 	 */
+	@Override
 	protected EObject doDefaultElementCreation() {
-		Wire oWire = (Wire) EMFCoreUtil.create(getElementToEdit(),
-			getContainmentFeature(), getElementType().getEClass());
+		Wire oWire = (Wire) EMFCoreUtil.create(getElementToEdit(), getContainmentFeature(),
+				getElementType().getEClass());
 
 		oWire.setSource((OutputTerminal) getSource());
 		oWire.setTarget((InputTerminal) getTarget());
@@ -57,13 +56,13 @@ public class CreateWireCommand
 	 * A wire can only be created when the source is an output terminal and the
 	 * target is an input terminal.
 	 */
+	@Override
 	public boolean canExecute() {
 
-		if ((getSource() instanceof OutputTerminal &&
-			getTarget() instanceof InputTerminal)) {
+		if ((getSource() instanceof OutputTerminal && getTarget() instanceof InputTerminal)) {
 			return super.canExecute();
 		}
-		
+
 		return false;
 	}
 

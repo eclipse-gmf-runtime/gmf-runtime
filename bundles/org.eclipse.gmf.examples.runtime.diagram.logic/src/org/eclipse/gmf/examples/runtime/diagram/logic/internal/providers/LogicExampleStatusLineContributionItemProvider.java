@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
 
@@ -28,39 +28,35 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * A status line contribution item provider for the logic example.
- * 
+ *
  * @author Anthony Hunter
  */
-public class LogicExampleStatusLineContributionItemProvider extends
-		AbstractStatusLineContributionItemProvider implements LogicActionIds {
+public class LogicExampleStatusLineContributionItemProvider extends AbstractStatusLineContributionItemProvider
+		implements LogicActionIds {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.gmf.runtime.common.ui.services.statusline.
 	 * AbstractStatusLineContributionItemProvider
 	 * #getStatusLineContributionItems(org.eclipse.ui.IWorkbenchPage)
 	 */
-	public List<IContributionItem> getStatusLineContributionItems(
-			IWorkbenchPage workbenchPage) {
-		List<IContributionItem> contrItemList = new ArrayList<IContributionItem>();
+	@Override
+	public List<IContributionItem> getStatusLineContributionItems(IWorkbenchPage workbenchPage) {
+		List<IContributionItem> contrItemList = new ArrayList<>();
 
 		// add the icon and message contribution
 		contrItemList.add(new StatusLineMessageContributionItem());
 
 		// add the increment and decrement contribution if the selected element
 		// is an LED
-		ISelection selection = workbenchPage.getActiveEditor().getSite()
-				.getSelectionProvider().getSelection();
+		ISelection selection = workbenchPage.getActiveEditor().getSite().getSelectionProvider().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			if (!structuredSelection.isEmpty()) {
-				if (structuredSelection.size() == 1
-						&& structuredSelection.getFirstElement() instanceof LEDEditPart) {
-					contrItemList.add(new IncrementDecrementContributionItem(
-							workbenchPage, ACTION_INCREMENT_VALUE));
-					contrItemList.add(new IncrementDecrementContributionItem(
-							workbenchPage, ACTION_DECREMENT_VALUE));
+				if (structuredSelection.size() == 1 && structuredSelection.getFirstElement() instanceof LEDEditPart) {
+					contrItemList.add(new IncrementDecrementContributionItem(workbenchPage, ACTION_INCREMENT_VALUE));
+					contrItemList.add(new IncrementDecrementContributionItem(workbenchPage, ACTION_DECREMENT_VALUE));
 				}
 			}
 		}
@@ -69,15 +65,15 @@ public class LogicExampleStatusLineContributionItemProvider extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.gmf.runtime.common.ui.services.statusline.
 	 * AbstractStatusLineContributionItemProvider
 	 * #provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 	 */
+	@Override
 	public boolean provides(IOperation operation) {
 		if (operation instanceof GetStatusLineContributionOperation) {
-			IWorkbenchPage workbenchPage = ((GetStatusLineContributionOperation) operation)
-					.getWorkbenchPage();
+			IWorkbenchPage workbenchPage = ((GetStatusLineContributionOperation) operation).getWorkbenchPage();
 			if (workbenchPage.getActiveEditor() instanceof LogicNotationEditor) {
 				return true;
 			}

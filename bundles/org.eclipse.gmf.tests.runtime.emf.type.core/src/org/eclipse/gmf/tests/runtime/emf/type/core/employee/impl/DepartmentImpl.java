@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
@@ -28,16 +28,19 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Department</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object
+ * '<em><b>Department</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.DepartmentImpl#getNumber <em>Number</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.DepartmentImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.DepartmentImpl#getMembers <em>Members</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.DepartmentImpl#getManager <em>Manager</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.DepartmentImpl#getNumber
+ * <em>Number</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.DepartmentImpl#getName
+ * <em>Name</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.DepartmentImpl#getMembers
+ * <em>Members</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.DepartmentImpl#getManager
+ * <em>Manager</em>}</li>
  * </ul>
  * </p>
  *
@@ -46,8 +49,8 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 public class DepartmentImpl extends EModelElementImpl implements Department {
 	/**
 	 * The default value of the '{@link #getNumber() <em>Number</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getNumber()
 	 * @generated
 	 * @ordered
@@ -56,8 +59,8 @@ public class DepartmentImpl extends EModelElementImpl implements Department {
 
 	/**
 	 * The cached value of the '{@link #getNumber() <em>Number</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getNumber()
 	 * @generated
 	 * @ordered
@@ -65,9 +68,9 @@ public class DepartmentImpl extends EModelElementImpl implements Department {
 	protected int number = NUMBER_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -75,9 +78,9 @@ public class DepartmentImpl extends EModelElementImpl implements Department {
 	protected static final String NAME_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -85,9 +88,9 @@ public class DepartmentImpl extends EModelElementImpl implements Department {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getMembers()
 	 * @generated
 	 * @ordered
@@ -95,9 +98,9 @@ public class DepartmentImpl extends EModelElementImpl implements Department {
 	protected EList members = null;
 
 	/**
-	 * The cached value of the '{@link #getManager() <em>Manager</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getManager() <em>Manager</em>}' containment
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getManager()
 	 * @generated
 	 * @ordered
@@ -105,8 +108,8 @@ public class DepartmentImpl extends EModelElementImpl implements Department {
 	protected Employee manager = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected DepartmentImpl() {
@@ -114,231 +117,264 @@ public class DepartmentImpl extends EModelElementImpl implements Department {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return EmployeePackage.Literals.DEPARTMENT;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public int getNumber() {
 		return number;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void setNumber(int newNumber) {
 		int oldNumber = number;
 		number = newNumber;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.DEPARTMENT__NUMBER, oldNumber, number));
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.DEPARTMENT__NUMBER, oldNumber,
+					number));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.DEPARTMENT__NAME, oldName, name));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public EList getMembers() {
 		if (members == null) {
-			members = new EObjectContainmentWithInverseEList(Employee.class, this, EmployeePackage.DEPARTMENT__MEMBERS, EmployeePackage.EMPLOYEE__DEPARTMENT);
+			members = new EObjectContainmentWithInverseEList(Employee.class, this, EmployeePackage.DEPARTMENT__MEMBERS,
+					EmployeePackage.EMPLOYEE__DEPARTMENT);
 		}
 		return members;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Employee getManager() {
 		return manager;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetManager(Employee newManager, NotificationChain msgs) {
 		Employee oldManager = manager;
 		manager = newManager;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EmployeePackage.DEPARTMENT__MANAGER, oldManager, newManager);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					EmployeePackage.DEPARTMENT__MANAGER, oldManager, newManager);
+			if (msgs == null) {
+				msgs = notification;
+			} else {
+				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void setManager(Employee newManager) {
 		if (newManager != manager) {
 			NotificationChain msgs = null;
-			if (manager != null)
-				msgs = ((InternalEObject)manager).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - EmployeePackage.DEPARTMENT__MANAGER, null, msgs);
-			if (newManager != null)
-				msgs = ((InternalEObject)newManager).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - EmployeePackage.DEPARTMENT__MANAGER, null, msgs);
+			if (manager != null) {
+				msgs = ((InternalEObject) manager).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - EmployeePackage.DEPARTMENT__MANAGER, null, msgs);
+			}
+			if (newManager != null) {
+				msgs = ((InternalEObject) newManager).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - EmployeePackage.DEPARTMENT__MANAGER, null, msgs);
+			}
 			msgs = basicSetManager(newManager, msgs);
-			if (msgs != null) msgs.dispatch();
+			if (msgs != null) {
+				msgs.dispatch();
+			}
+		} else if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.DEPARTMENT__MANAGER, newManager,
+					newManager));
 		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.DEPARTMENT__MANAGER, newManager, newManager));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case EmployeePackage.DEPARTMENT__MEMBERS:
-				return ((InternalEList)getMembers()).basicAdd(otherEnd, msgs);
+		case EmployeePackage.DEPARTMENT__MEMBERS:
+			return ((InternalEList) getMembers()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case EmployeePackage.DEPARTMENT__MEMBERS:
-				return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
-			case EmployeePackage.DEPARTMENT__MANAGER:
-				return basicSetManager(null, msgs);
+		case EmployeePackage.DEPARTMENT__MEMBERS:
+			return ((InternalEList) getMembers()).basicRemove(otherEnd, msgs);
+		case EmployeePackage.DEPARTMENT__MANAGER:
+			return basicSetManager(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case EmployeePackage.DEPARTMENT__NUMBER:
-				return Integer.valueOf(getNumber());
-			case EmployeePackage.DEPARTMENT__NAME:
-				return getName();
-			case EmployeePackage.DEPARTMENT__MEMBERS:
-				return getMembers();
-			case EmployeePackage.DEPARTMENT__MANAGER:
-				return getManager();
+		case EmployeePackage.DEPARTMENT__NUMBER:
+			return Integer.valueOf(getNumber());
+		case EmployeePackage.DEPARTMENT__NAME:
+			return getName();
+		case EmployeePackage.DEPARTMENT__MEMBERS:
+			return getMembers();
+		case EmployeePackage.DEPARTMENT__MANAGER:
+			return getManager();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case EmployeePackage.DEPARTMENT__NUMBER:
-				setNumber(((Integer)newValue).intValue());
-				return;
-			case EmployeePackage.DEPARTMENT__NAME:
-				setName((String)newValue);
-				return;
-			case EmployeePackage.DEPARTMENT__MEMBERS:
-				getMembers().clear();
-				getMembers().addAll((Collection)newValue);
-				return;
-			case EmployeePackage.DEPARTMENT__MANAGER:
-				setManager((Employee)newValue);
-				return;
+		case EmployeePackage.DEPARTMENT__NUMBER:
+			setNumber(((Integer) newValue).intValue());
+			return;
+		case EmployeePackage.DEPARTMENT__NAME:
+			setName((String) newValue);
+			return;
+		case EmployeePackage.DEPARTMENT__MEMBERS:
+			getMembers().clear();
+			getMembers().addAll((Collection) newValue);
+			return;
+		case EmployeePackage.DEPARTMENT__MANAGER:
+			setManager((Employee) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case EmployeePackage.DEPARTMENT__NUMBER:
-				setNumber(NUMBER_EDEFAULT);
-				return;
-			case EmployeePackage.DEPARTMENT__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case EmployeePackage.DEPARTMENT__MEMBERS:
-				getMembers().clear();
-				return;
-			case EmployeePackage.DEPARTMENT__MANAGER:
-				setManager((Employee)null);
-				return;
+		case EmployeePackage.DEPARTMENT__NUMBER:
+			setNumber(NUMBER_EDEFAULT);
+			return;
+		case EmployeePackage.DEPARTMENT__NAME:
+			setName(NAME_EDEFAULT);
+			return;
+		case EmployeePackage.DEPARTMENT__MEMBERS:
+			getMembers().clear();
+			return;
+		case EmployeePackage.DEPARTMENT__MANAGER:
+			setManager((Employee) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case EmployeePackage.DEPARTMENT__NUMBER:
-				return number != NUMBER_EDEFAULT;
-			case EmployeePackage.DEPARTMENT__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case EmployeePackage.DEPARTMENT__MEMBERS:
-				return members != null && !members.isEmpty();
-			case EmployeePackage.DEPARTMENT__MANAGER:
-				return manager != null;
+		case EmployeePackage.DEPARTMENT__NUMBER:
+			return number != NUMBER_EDEFAULT;
+		case EmployeePackage.DEPARTMENT__NAME:
+			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+		case EmployeePackage.DEPARTMENT__MEMBERS:
+			return members != null && !members.isEmpty();
+		case EmployeePackage.DEPARTMENT__MANAGER:
+			return manager != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy()) {
+			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (number: "); //$NON-NLS-1$
@@ -349,4 +385,4 @@ public class DepartmentImpl extends EModelElementImpl implements Department {
 		return result.toString();
 	}
 
-} //DepartmentImpl
+} // DepartmentImpl

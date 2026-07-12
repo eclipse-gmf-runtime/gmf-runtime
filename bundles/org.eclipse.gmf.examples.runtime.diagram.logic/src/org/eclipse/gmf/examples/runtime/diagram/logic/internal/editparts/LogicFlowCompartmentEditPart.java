@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
@@ -31,23 +31,27 @@ import org.eclipse.gmf.runtime.notation.View;
 /**
  * @author qili
  *
- * Holds the EditPart signifying a ResizableCompartmentFigure
+ *         Holds the EditPart signifying a ResizableCompartmentFigure
  */
-public class LogicFlowCompartmentEditPart extends ListCompartmentEditPart{
-	
+public class LogicFlowCompartmentEditPart extends ListCompartmentEditPart {
+
 	/**
 	 * Constructor for LogicFlowCompartmentEditPart.
+	 * 
 	 * @param view the view <code>controlled</code> by this editpart.
 	 */
 	public LogicFlowCompartmentEditPart(View view) {
 		super(view);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
+	@Override
 	public IFigure createFigure() {
-		
+
 		ResizableCompartmentFigure rcf = (ResizableCompartmentFigure) super.createFigure();
 		FlowLayout layout = new FlowLayout();
 		layout.setMajorSpacing(getMapMode().DPtoLP(5));
@@ -55,42 +59,51 @@ public class LogicFlowCompartmentEditPart extends ListCompartmentEditPart{
 		rcf.getContentPane().setLayoutManager(layout);
 		return rcf;
 	}
-	
+
 	/**
-	 * In LogicCreationEditPolicy overwrite "getReparentCommand(ChangeBoundsRequest)" 
-	 * function and remove the assumption on SemanticElement
+	 * In LogicCreationEditPolicy overwrite
+	 * "getReparentCommand(ChangeBoundsRequest)" function and remove the assumption
+	 * on SemanticElement
 	 */
+	@Override
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
 		installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, new DragDropEditPolicy());
 		installEditPolicy(EditPolicy.NODE_ROLE, null);
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, null);
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new LogicFlowEditPolicy());	
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new LogicFlowEditPolicy());
 		installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE, new PopupBarEditPolicy());
 	}
-	
+
 	/**
 	 * Subclasses should override to return the compartment title
-	 * 
+	 *
 	 * @return The compartment title
 	 */
+	@Override
 	public String getCompartmentName() {
 		return ExampleDiagramLogicMessages.LogicFlowCompartmentEditPart_Title;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#hasModelChildrenChanged(java.beans.PropertyChangeEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#
+	 * hasModelChildrenChanged(java.beans.PropertyChangeEvent)
 	 */
 	protected boolean hasModelChildrenChanged(PropertyChangeEvent evt) {
 		return false;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#hasModelChildrenChanged(java.beans.PropertyChangeEvent)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#
+	 * hasModelChildrenChanged(java.beans.PropertyChangeEvent)
 	 */
+	@Override
 	protected boolean hasModelChildrenChanged(Notification evt) {
 		return false;
 	}
 }
-

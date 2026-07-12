@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.emf.clipboard.library;
 
@@ -17,14 +16,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-
 /**
  * Custom factory to create our custom resources.
- * 
+ *
  * @see LibraryResource
  */
-public class LibraryResourceFactory
-	extends XMIResourceFactoryImpl {
+public class LibraryResourceFactory extends XMIResourceFactoryImpl {
 
 	/**
 	 * Initializes me.
@@ -35,9 +32,10 @@ public class LibraryResourceFactory
 
 	/**
 	 * Creates a {@link LibraryResource}.
-	 * 
+	 *
 	 * @return a new {@link LibraryResource}
 	 */
+	@Override
 	public Resource createResource(URI uri) {
 		return new LibraryResource(uri);
 	}

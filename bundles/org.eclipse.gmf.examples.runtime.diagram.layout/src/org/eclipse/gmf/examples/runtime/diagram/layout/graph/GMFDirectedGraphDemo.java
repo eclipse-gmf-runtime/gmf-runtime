@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.layout.graph;
 
@@ -31,28 +31,27 @@ import org.eclipse.draw2d.graph.NodeList;
 
 public class GMFDirectedGraphDemo extends AbstractGMFGraphDemo {
 
+	@Override
 	protected String[] getGraphMethods() {
 		Method[] methods = GMFGraphTests.class.getMethods();
 		String[] methodNames = new String[methods.length];
-		
+
 		int nameIndex = 0;
-		for (int i = 0; i < methods.length; i++) {
-			if (methods[i].getReturnType().equals(DirectedGraph.class)) {
-				methodNames[nameIndex] = methods[i].getName();
+		for (Method method : methods) {
+			if (method.getReturnType().equals(DirectedGraph.class)) {
+				methodNames[nameIndex] = method.getName();
 				nameIndex++;
 			}
 		}
 		return methodNames;
 	}
 
+	@Override
 	protected IFigure getContents() {
 		DirectedGraph graph = null;
 		try {
-			graph =
-				(DirectedGraph) (GMFGraphTests
-					.class
-					.getMethod(graphMethod, (Class<?>[]) null)
-					.invoke(null, (Object[]) null));
+			graph = (DirectedGraph) (GMFGraphTests.class.getMethod(graphMethod, (Class<?>[]) null).invoke(null,
+					(Object[]) null));
 		} catch (Exception e) {
 			System.out.println("Could not build graph"); //$NON-NLS-1$
 			e.printStackTrace();
@@ -64,9 +63,10 @@ public class GMFDirectedGraphDemo extends AbstractGMFGraphDemo {
 	public static void main(String[] args) {
 		new GMFDirectedGraphDemo().run();
 	}
-	
+
 	/**
 	 * Builds the graph, creates Draw2d figures for all graph components.
+	 * 
 	 * @param graph the graph to build
 	 * @return the Figure representing the graph
 	 */
@@ -74,19 +74,19 @@ public class GMFDirectedGraphDemo extends AbstractGMFGraphDemo {
 		Figure contents = new Panel();
 		contents.setBackgroundColor(ColorConstants.white);
 		contents.setLayoutManager(new XYLayout());
-		
+
 		for (int i = 0; i < graph.nodes.size(); i++) {
 			Node node = graph.nodes.getNode(i);
 			buildNodeFigure(contents, node);
 		}
-		
+
 		for (int i = 0; i < graph.edges.size(); i++) {
 			Edge edge = graph.edges.getEdge(i);
 			buildEdgeFigure(contents, edge);
 		}
 		return contents;
 	}
-		
+
 	static void buildEdgeFigure(Figure contents, Edge edge) {
 		PolylineConnection conn = connection(edge);
 		conn.setForegroundColor(ColorConstants.gray);
@@ -95,7 +95,7 @@ public class GMFDirectedGraphDemo extends AbstractGMFGraphDemo {
 		conn.setPoints(edge.getPoints());
 		contents.add(conn);
 	}
-	
+
 	static PolylineConnection connection(Edge e) {
 		PolylineConnection conn = new PolylineConnection();
 		conn.setConnectionRouter(new BendpointConnectionRouter());

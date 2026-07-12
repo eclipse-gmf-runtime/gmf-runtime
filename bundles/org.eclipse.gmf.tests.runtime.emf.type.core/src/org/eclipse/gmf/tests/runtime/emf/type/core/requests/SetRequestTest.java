@@ -7,9 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.requests;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
@@ -17,30 +20,20 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.AbstractEMFTypeTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the SetRequest.
- * 
+ *
  * @author ldamus
  */
 public class SetRequestTest extends AbstractEMFTypeTest {
 
 	private Department department;
 
-	public SetRequestTest(String name) {
-		super(name);
-	}
-
-	public static Test suite() {
-		return new TestSuite(SetRequestTest.class);
-	}
-
+	@Override
 	protected void doModelSetup(Resource resource) {
-		department = (Department) getEmployeeFactory().create(
-				getEmployeePackage().getDepartment());
+		department = (Department) getEmployeeFactory().create(getEmployeePackage().getDepartment());
 		resource.getContents().add(department);
 	}
 
@@ -48,10 +41,10 @@ public class SetRequestTest extends AbstractEMFTypeTest {
 	 * Tests that a SetValueCommand can be instantiated with a SetRequest whose
 	 * elementToEdit is null.
 	 */
+	@Test
 	public void test_deferredElementToEdit_152302() {
 
-		SetRequest request = new SetRequest(getEditingDomain(), null,
-				EmployeePackage.eINSTANCE.getDepartment_Name(),
+		SetRequest request = new SetRequest(getEditingDomain(), null, EmployeePackage.eINSTANCE.getDepartment_Name(),
 				"test_deferredElementToEdit_152302"); //$NON-NLS-1$
 
 		try {

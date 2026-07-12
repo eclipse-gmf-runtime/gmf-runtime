@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
@@ -37,93 +37,93 @@ import org.eclipse.gmf.runtime.notation.View;
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  *
- * View provider for the logic diagram.
+ *              View provider for the logic diagram.
  */
-public class LogicViewProvider extends AbstractViewProvider { 
+public class LogicViewProvider extends AbstractViewProvider {
 
-	HashMap diagramMap = new HashMap(); 
+	HashMap diagramMap = new HashMap();
 	{
 		diagramMap.put("logic", StandardDiagramViewFactory.class);//$NON-NLS-1$
 	}
-	
+
 //	 Map to hold the Node Views
 	private Map nodeMap = new HashMap();
 	{
-		nodeMap.put( SemanticPackage.eINSTANCE.getLED(), LEDViewFactory.class );
-		nodeMap.put( SemanticPackage.eINSTANCE.getFlowContainer(), LogicFlowContainerViewFactory.class );
-		nodeMap.put( SemanticPackage.eINSTANCE.getCircuit(), CircuitViewFactory.class );
-		nodeMap.put( SemanticPackage.eINSTANCE.getAndGate(), AndGateViewFactory.class );
-		nodeMap.put( SemanticPackage.eINSTANCE.getOrGate(), OrGateViewFactory.class );
-		nodeMap.put( SemanticPackage.eINSTANCE.getXORGate(), XORGateViewFactory.class );
-		nodeMap.put( SemanticPackage.eINSTANCE.getInputTerminal(), ConnectionPointViewFactory.class );
-		nodeMap.put( SemanticPackage.eINSTANCE.getOutputTerminal(), ConnectionPointViewFactory.class );
-		nodeMap.put( SemanticPackage.eINSTANCE.getInputOutputTerminal(), ConnectionPointViewFactory.class );
-		
+		nodeMap.put(SemanticPackage.eINSTANCE.getLED(), LEDViewFactory.class);
+		nodeMap.put(SemanticPackage.eINSTANCE.getFlowContainer(), LogicFlowContainerViewFactory.class);
+		nodeMap.put(SemanticPackage.eINSTANCE.getCircuit(), CircuitViewFactory.class);
+		nodeMap.put(SemanticPackage.eINSTANCE.getAndGate(), AndGateViewFactory.class);
+		nodeMap.put(SemanticPackage.eINSTANCE.getOrGate(), OrGateViewFactory.class);
+		nodeMap.put(SemanticPackage.eINSTANCE.getXORGate(), XORGateViewFactory.class);
+		nodeMap.put(SemanticPackage.eINSTANCE.getInputTerminal(), ConnectionPointViewFactory.class);
+		nodeMap.put(SemanticPackage.eINSTANCE.getOutputTerminal(), ConnectionPointViewFactory.class);
+		nodeMap.put(SemanticPackage.eINSTANCE.getInputOutputTerminal(), ConnectionPointViewFactory.class);
+
 		// Shape Compartments
-		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, CompartmentViewFactory.class); 
+		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, CompartmentViewFactory.class);
 		// List Compartments
-		nodeMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, ListCompartmentViewFactory.class); 
+		nodeMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, ListCompartmentViewFactory.class);
 	}
-	
+
 	// Map to hold the Line/Connector Views
 	private Map connectorMap = new HashMap();
 	{
 		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), ConnectorViewFactory.class);
 	}
-	
+
 	/**
 	 * Returns the shape view class to instantiate based on the passed params
-	 * @param semanticAdapter
-	 * @param containerView
-	 * @param semanticHint
-	 * @return Class
-	 */
-	protected Class getNodeViewClass(
-		IAdaptable semanticAdapter,
-		View containerView,
-		String semanticHint) {
-		
-		Class clazz = null;
-		
-		if (semanticHint != null &&
-			semanticHint.length() > 0)
-			clazz = (Class)nodeMap.get(semanticHint);
-		
-		if (clazz == null)
-			clazz = (Class)nodeMap.get(getSemanticEClass(semanticAdapter));
-		
-		return clazz;
-	}
-	
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider#getDiagramViewClass(IAdaptable, java.lang.String)
-	 */
-	protected Class getDiagramViewClass(IAdaptable semanticAdapter, String diagramKind) {
-		return (Class) diagramMap.get(diagramKind);
-	}
-	
-	/**
-	 * Returns the connector view class to instantiate based on the passed
-	 * params
 	 * 
 	 * @param semanticAdapter
 	 * @param containerView
 	 * @param semanticHint
 	 * @return Class
 	 */
-	protected Class getEdgeViewClass(IAdaptable semanticAdapter,
-			View containerView, String semanticHint) {
+	@Override
+	protected Class getNodeViewClass(IAdaptable semanticAdapter, View containerView, String semanticHint) {
+
+		Class clazz = null;
+
+		if (semanticHint != null && semanticHint.length() > 0) {
+			clazz = (Class) nodeMap.get(semanticHint);
+		}
+
+		if (clazz == null) {
+			clazz = (Class) nodeMap.get(getSemanticEClass(semanticAdapter));
+		}
+
+		return clazz;
+	}
+
+	/**
+	 * @see org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider#getDiagramViewClass(IAdaptable,
+	 *      java.lang.String)
+	 */
+	@Override
+	protected Class getDiagramViewClass(IAdaptable semanticAdapter, String diagramKind) {
+		return (Class) diagramMap.get(diagramKind);
+	}
+
+	/**
+	 * Returns the connector view class to instantiate based on the passed params
+	 *
+	 * @param semanticAdapter
+	 * @param containerView
+	 * @param semanticHint
+	 * @return Class
+	 */
+	@Override
+	protected Class getEdgeViewClass(IAdaptable semanticAdapter, View containerView, String semanticHint) {
 		return (Class) connectorMap.get(getSemanticEClass(semanticAdapter));
 	}
-	
-	public static boolean isGateView(View view){
+
+	public static boolean isGateView(View view) {
 		EObject element = view.getElement();
 		EClass eClass = element.eClass();
-		if (eClass == SemanticPackage.eINSTANCE.getAndGate() ||
-			eClass == SemanticPackage.eINSTANCE.getOrGate() ||
-			eClass == SemanticPackage.eINSTANCE.getXORGate())
+		if (eClass == SemanticPackage.eINSTANCE.getAndGate() || eClass == SemanticPackage.eINSTANCE.getOrGate()
+				|| eClass == SemanticPackage.eINSTANCE.getXORGate()) {
 			return true;
+		}
 		return false;
 	}
 }
-

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences;
@@ -27,8 +27,7 @@ import org.eclipse.swt.graphics.Color;
  *
  * @author cmahoney
  */
-public class LogicAppearancePreferencePage
-	extends AppearancePreferencePage {
+public class LogicAppearancePreferencePage extends AppearancePreferencePage {
 
 	/**
 	 * Creates a new instance and initializes the preference store.
@@ -39,44 +38,28 @@ public class LogicAppearancePreferencePage
 	}
 
 	/**
-     * Initializes the default preference values 
-     * for this preference store.
-     * 
-     * @param store
-     */
-    public static void initDefaults(IPreferenceStore store) {
+	 * Initializes the default preference values for this preference store.
+	 *
+	 * @param store
+	 */
+	public static void initDefaults(IPreferenceStore store) {
 
-    	setDefaultFontPreference(store);
+		setDefaultFontPreference(store);
 
-        Color fontColor = ColorConstants.black;
-    	PreferenceConverter.setDefault(
-            store,
-            IPreferenceConstants.PREF_FONT_COLOR,
-            fontColor.getRGB());
+		Color fontColor = ColorConstants.black;
+		PreferenceConverter.setDefault(store, IPreferenceConstants.PREF_FONT_COLOR, fontColor.getRGB());
 
-        Color fillColor = LogicColorConstants.logicGreen;
-        PreferenceConverter.setDefault(
-            store,
-            IPreferenceConstants.PREF_FILL_COLOR,
-            fillColor.getRGB());
+		Color fillColor = LogicColorConstants.logicGreen;
+		PreferenceConverter.setDefault(store, IPreferenceConstants.PREF_FILL_COLOR, fillColor.getRGB());
 
-        Color lineColor = LogicColorConstants.connectorGreen;
-        PreferenceConverter.setDefault(
-            store,
-            IPreferenceConstants.PREF_LINE_COLOR,
-            lineColor.getRGB());
+		Color lineColor = LogicColorConstants.connectorGreen;
+		PreferenceConverter.setDefault(store, IPreferenceConstants.PREF_LINE_COLOR, lineColor.getRGB());
 
-        Color noteFillColor = DiagramColorConstants.diagramLightYellow;
-        PreferenceConverter.setDefault(
-            store,
-            IPreferenceConstants.PREF_NOTE_FILL_COLOR,
-			noteFillColor.getRGB());
+		Color noteFillColor = DiagramColorConstants.diagramLightYellow;
+		PreferenceConverter.setDefault(store, IPreferenceConstants.PREF_NOTE_FILL_COLOR, noteFillColor.getRGB());
 
-        Color noteLineColor = DiagramColorConstants.diagramDarkYellow;
-        PreferenceConverter.setDefault(
-            store,
-            IPreferenceConstants.PREF_NOTE_LINE_COLOR,
-			noteLineColor.getRGB());
-    }	
-	
+		Color noteLineColor = DiagramColorConstants.diagramDarkYellow;
+		PreferenceConverter.setDefault(store, IPreferenceConstants.PREF_NOTE_LINE_COLOR, noteLineColor.getRGB());
+	}
+
 }

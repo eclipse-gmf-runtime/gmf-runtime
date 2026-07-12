@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
@@ -24,24 +24,23 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 
 /**
  * Edit helper for logic circuit elements.
- * 
+ *
  * @author ldamus
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
-public class CircuitEditHelper
-	extends ContainerElementEditHelper {
+public class CircuitEditHelper extends ContainerElementEditHelper {
 
 	/**
 	 * Gets a command to configure a circuit.
 	 */
+	@Override
 	protected ICommand getConfigureCommand(final ConfigureRequest req) {
 
-		return new ConfigureLogicElementCommand(req, SemanticPackage.eINSTANCE
-			.getCircuit()) {
+		return new ConfigureLogicElementCommand(req, SemanticPackage.eINSTANCE.getCircuit()) {
 
-			protected CommandResult doExecuteWithResult(
-                    IProgressMonitor monitor, IAdaptable info)
-                throws ExecutionException {
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+					throws ExecutionException {
 
 				Circuit oCircuit = (Circuit) req.getElementToConfigure();
 

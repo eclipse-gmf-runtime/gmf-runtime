@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.common.service.providers;
 
@@ -23,20 +22,20 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 
 /**
  * Widget provider which provides for Widget order sizes between 50 and 5000.
- * 
+ *
  */
-public class WidgetProvider
-	extends AbstractProvider
-	implements IWidgetProvider {
+public class WidgetProvider extends AbstractProvider implements IWidgetProvider {
 
-	/** 
-	 * Returns <code>true</code> if the operation is a CreateWidgetOperation with
-	 * an order size between 50 and 5000 widgets.
+	/**
+	 * Returns <code>true</code> if the operation is a CreateWidgetOperation with an
+	 * order size between 50 and 5000 widgets.
+	 * 
 	 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 	 */
+	@Override
 	public boolean provides(IOperation operation) {
 		if (operation instanceof CreateWidgetOperation) {
-			int orderSize = ((CreateWidgetOperation)operation).getOrderSize();
+			int orderSize = ((CreateWidgetOperation) operation).getOrderSize();
 			return (orderSize >= 50 && orderSize <= 5000);
 		}
 		return false;
@@ -44,13 +43,15 @@ public class WidgetProvider
 
 	/**
 	 * Create the number of Widgets requested.
+	 * 
 	 * @see org.eclipse.gmf.examples.runtime.common.service.application.IWidgetProvider#createWidget(int)
 	 */
+	@Override
 	public Object createWidget(int orderSize) {
 		List widgets = new ArrayList(orderSize);
 		for (int i = 0; i < orderSize; i++) {
 			widgets.add(i, "Widget");//$NON-NLS-1$
 		}
-		return widgets;		
+		return widgets;
 	}
 }

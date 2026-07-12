@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures;
@@ -25,25 +25,24 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 /*
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
-public class LogicFlowFigure
-	extends NodeFigure
-	implements HandleBounds
-{
+public class LogicFlowFigure extends NodeFigure implements HandleBounds {
 	private Dimension prefSize;
-	
+
 	public LogicFlowFigure(Dimension size) {
 		super();
 		setOpaque(true);
 		prefSize = size;
 	}
- 
+
 	/**
 	 * @see org.eclipse.gef.handles.HandleBounds#getHandleBounds()
 	 */
+	@Override
 	public Rectangle getHandleBounds() {
-		return getBounds().getShrinked(new Insets(2,0,2,0));
+		return getBounds().getShrinked(new Insets(2, 0, 2, 0));
 	}
 
+	@Override
 	public Dimension getPreferredSize(int w, int h) {
 		Dimension newPrefSize = super.getPreferredSize(w, h);
 		newPrefSize.union(prefSize);
@@ -53,17 +52,22 @@ public class LogicFlowFigure
 	/**
 	 * @see org.eclipse.draw2d.Figure#paintFigure(Graphics)
 	 */
+	@Override
 	protected void paintFigure(Graphics graphics) {
 		Rectangle rect = getBounds().getCopy();
-		rect.shrink(new Insets(2,0,2,0));
+		rect.shrink(new Insets(2, 0, 2, 0));
 	}
 
+	@Override
 	public String toString() {
 		return "LogicFlowBoardFigure"; //$NON-NLS-1$
 	}
 
+	@Override
 	public void validate() {
-		if(isValid()) return;
+		if (isValid()) {
+			return;
+		}
 		super.validate();
 	}
 }

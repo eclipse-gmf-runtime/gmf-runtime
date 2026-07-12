@@ -7,10 +7,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -68,156 +73,157 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorSite;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Diagram tests for the logic diagram and general diagrams.
- * 
+ *
  * @author cmahoney
  */
-public class LogicDiagramTests
-	extends AbstractDiagramTests {
+public class LogicDiagramTests extends AbstractDiagramTests {
 
-	public LogicDiagramTests(String arg0) {
-		super(arg0);
-	}
-
-	public static Test suite() {
-		return new TestSuite(LogicDiagramTests.class);
-	}
-
+	@Override
 	protected void setTestFixture() {
 		testFixture = new LogicTestFixture();
 	}
 
 	/** Return <code>(LogicTestFixture)getTestFixture();</code> */
 	protected LogicTestFixture getLogicTestFixture() {
-		return (LogicTestFixture)getTestFixture();
+		return (LogicTestFixture) getTestFixture();
 	}
-	
-	protected void setUp() throws Exception {
+
+	@Override
+	@BeforeEach
+	public void setUp() throws Exception {
 		super.setUp();
-		
+
 		List children = getTestFixture().getDiagramEditPart().getChildren();
-		if (children.isEmpty())
+		if (children.isEmpty()) {
 			assertFalse(true);
-		
-		EditPart firstEP = (EditPart)children.get(0);
-		if (firstEP instanceof CircuitEditPart ) {
-			CircuitEditPart circuitEditPart = (CircuitEditPart)firstEP;
-			
+		}
+
+		EditPart firstEP = (EditPart) children.get(0);
+		if (firstEP instanceof CircuitEditPart) {
+			CircuitEditPart circuitEditPart = (CircuitEditPart) firstEP;
+
 			IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$
 			Point pos = circuitEditPart.getFigure().getBounds().getBottomRight();
 			circuitEditPart.getFigure().translateToAbsolute(pos);
 			pos.translate(100, 100);
-			LEDEditPart ledEP2 = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, pos, getDiagramEditPart());
-			
-			Terminal term1 = (Terminal)((Circuit)circuitEditPart.getNotationView().getElement()).getOutputTerminals().get(0);
+			LEDEditPart ledEP2 = (LEDEditPart) getLogicTestFixture().createShapeUsingTool(typeLED, pos,
+					getDiagramEditPart());
+
+			Terminal term1 = (Terminal) ((Circuit) circuitEditPart.getNotationView().getElement()).getOutputTerminals()
+					.get(0);
 			TerminalEditPart tep1 = null;
 			ListIterator li = circuitEditPart.getChildren().listIterator();
 			while (li.hasNext()) {
-				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
-				if (gep.getNotationView().getElement().equals(term1))
-					tep1 = (TerminalEditPart)gep;
+				IGraphicalEditPart gep = (IGraphicalEditPart) li.next();
+				if (gep.getNotationView().getElement().equals(term1)) {
+					tep1 = (TerminalEditPart) gep;
+				}
 			}
-			
-			Terminal term2 = (Terminal)((LED)ledEP2.getNotationView().getElement()).getInputTerminals().get(0);
+
+			Terminal term2 = (Terminal) ((LED) ledEP2.getNotationView().getElement()).getInputTerminals().get(0);
 			TerminalEditPart tep2 = null;
 			li = ledEP2.getChildren().listIterator();
 			while (li.hasNext()) {
-				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
-				if (gep.getNotationView().getElement().equals(term2))
-					tep2 = (TerminalEditPart)gep;
+				IGraphicalEditPart gep = (IGraphicalEditPart) li.next();
+				if (gep.getNotationView().getElement().equals(term2)) {
+					tep2 = (TerminalEditPart) gep;
+				}
 			}
-			
+
 			IElementType typeWire = ElementTypeRegistry.getInstance().getType("logic.wire"); //$NON-NLS-1$
-						
+
 			getLogicTestFixture().createConnectorUsingTool(tep1, tep2, typeWire);
-			
-			IGraphicalEditPart logicCompartment = circuitEditPart.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
-			
+
+			IGraphicalEditPart logicCompartment = circuitEditPart
+					.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+
 			Rectangle rect = new Rectangle(logicCompartment.getFigure().getBounds());
 			logicCompartment.getFigure().translateToAbsolute(rect);
-			
+
 			CreateRequest request = getLogicTestFixture().getCreationRequest(typeLED);
 			request.setLocation(rect.getCenter());
 			Command cmd = logicCompartment.getCommand(request);
 
 			getCommandStack().execute(cmd);
-			
-			assertEquals( "Unexpected LED count.", 1, logicCompartment.getChildren().size() );//$NON-NLS-1$
+
+			assertEquals(1, logicCompartment.getChildren().size(), "Unexpected LED count.");//$NON-NLS-1$
 		}
 	}
 
+	@Test
 	public void testZoomDoesntDirtyDiagram() throws Exception {
 		getTestFixture().openDiagram();
 
-	       ZoomManager zoomManager = getZoomManager();
-	       // Ensure the zoom manager exists
-	        assertTrue(zoomManager != null);
-	        
-	        this.saveDiagram();
-	        
-	        // Change to the another zoom level
-	        if (zoomManager.canZoomIn()) {
-	            zoomManager.setZoom(zoomManager.getNextZoomLevel());
-	        } else {
-	            zoomManager.setZoom(zoomManager.getPreviousZoomLevel());
-	        }
-	        
-	        assertTrue(false == isDirty());                               
+		ZoomManager zoomManager = getZoomManager();
+		// Ensure the zoom manager exists
+		assertTrue(zoomManager != null);
+
+		this.saveDiagram();
+
+		// Change to the another zoom level
+		if (zoomManager.canZoomIn()) {
+			zoomManager.setZoom(zoomManager.getNextZoomLevel());
+		} else {
+			zoomManager.setZoom(zoomManager.getPreviousZoomLevel());
 		}
 
+		assertTrue(!isDirty());
+	}
+
+	@Test
 	public void testSelectAllInContext() throws Exception {
 		List children = getTestFixture().getDiagramEditPart().getChildren();
-		if (children.isEmpty())
+		if (children.isEmpty()) {
 			assertFalse(true);
-		
+		}
+
 		CircuitEditPart circuitEP = null;
 		ListIterator li = children.listIterator();
 		while (li.hasNext()) {
-			EditPart ep = (EditPart)li.next();
-			if (ep instanceof CircuitEditPart ) {
-				circuitEP = (CircuitEditPart)ep;
-				
+			EditPart ep = (EditPart) li.next();
+			if (ep instanceof CircuitEditPart) {
+				circuitEP = (CircuitEditPart) ep;
+
 				// select the logic compartment as a target
-				IGraphicalEditPart logicCompartment = circuitEP.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
-				
+				IGraphicalEditPart logicCompartment = circuitEP
+						.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+
 				final List shapes = getSelectableShapesIn(logicCompartment);
 				final List all = new ArrayList();
 				all.addAll(shapes);
-				
+
 				selectAll(logicCompartment, shapes);
 			}
 		}
-		
+
 		final List connectors = getConnectors();
 		final List shapes = getSelectableShapesIn(getDrawSurfaceEditPart());
 		final List all = new ArrayList();
 		all.addAll(connectors);
 		all.addAll(shapes);
-		
+
 		selectAll(circuitEP, all);
 	}
 
 	/**
-	 * Tests the initial enablement of the zoom toolbar entry. See Bugzilla
-	 * 110815.
-	 * 
+	 * Tests the initial enablement of the zoom toolbar entry. See Bugzilla 110815.
+	 *
 	 * @throws Exception
 	 */
-	public void testZoomToolbarEnablement()
-		throws Exception {
+	@Test
+	public void testZoomToolbarEnablement() throws Exception {
 
 		getTestFixture().openDiagram();
 
-		IContributionItem[] items = ((IEditorSite) getDiagramWorkbenchPart()
-			.getSite()).getActionBars().getToolBarManager().getItems();
+		IContributionItem[] items = ((IEditorSite) getDiagramWorkbenchPart().getSite()).getActionBars()
+				.getToolBarManager().getItems();
 		boolean foundIt = false;
-		for (int i = 0; i < items.length; i++) {
-			IContributionItem item = items[i];
+		for (IContributionItem item : items) {
 			if (item instanceof ZoomContributionItem) {
 				foundIt = true;
 				assertTrue(item.isEnabled());
@@ -225,26 +231,24 @@ public class LogicDiagramTests
 		}
 		assertTrue(foundIt);
 	}
-	
+
 	/**
-	 * Tests the CTRL-D keystroke which initiates a delete from model action.
-	 * See Bugzilla 115108.
+	 * Tests the CTRL-D keystroke which initiates a delete from model action. See
+	 * Bugzilla 115108.
 	 */
-	public void testDeleteFromModel()
-		throws Exception {
+	@Test
+	public void testDeleteFromModel() throws Exception {
 
 		getTestFixture().openDiagram();
-		
-		LEDEditPart editPartToDelete = (LEDEditPart) getLogicTestFixture()
-				.createShapeUsingTool(LogicSemanticType.LED, new Point(0,0),
-						getDiagramEditPart());
-		
+
+		LEDEditPart editPartToDelete = (LEDEditPart) getLogicTestFixture().createShapeUsingTool(LogicSemanticType.LED,
+				new Point(0, 0), getDiagramEditPart());
+
 		List primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
-		
+
 		assertTrue(primaryEditParts.contains(editPartToDelete));
-		
-		EObject semanticElement = (EObject) editPartToDelete
-			.getAdapter(EObject.class);
+
+		EObject semanticElement = (EObject) editPartToDelete.getAdapter(EObject.class);
 		EObject semanticContainer = semanticElement.eContainer();
 
 		// Select the edit part to be deleted.
@@ -253,9 +257,8 @@ public class LogicDiagramTests
 		rootViewer.select(editPartToDelete);
 
 		// Set the preference to not confirm the element deletion.
-		((IPreferenceStore) getDiagramEditPart().getDiagramPreferencesHint()
-			.getPreferenceStore()).setValue(
-			IPreferenceConstants.PREF_PROMPT_ON_DEL_FROM_MODEL, false);
+		((IPreferenceStore) getDiagramEditPart().getDiagramPreferencesHint().getPreferenceStore())
+				.setValue(IPreferenceConstants.PREF_PROMPT_ON_DEL_FROM_MODEL, false);
 
 		// Create the CTRL-D event
 		Event e = new Event();
@@ -266,23 +269,20 @@ public class LogicDiagramTests
 
 		// Simulate the CTRL-D keystroke
 		SelectionTool tool = new SelectionTool();
-		tool.setEditDomain((EditDomain) getDiagramWorkbenchPart()
-			.getDiagramEditDomain());
+		tool.setEditDomain((EditDomain) getDiagramWorkbenchPart().getDiagramEditDomain());
 		tool.activate();
 		tool.keyDown(new KeyEvent(e), rootViewer);
 
 		// Verify that the edit part and the semantic element have been deleted.
 		primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
 
-		assertFalse(
-			"Primary edit part not deleted.", primaryEditParts.contains(editPartToDelete)); //$NON-NLS-1$
+		assertFalse(primaryEditParts.contains(editPartToDelete), "Primary edit part not deleted."); //$NON-NLS-1$
 
-		assertFalse(
-			"Semantic element not deleted.", semanticContainer.eContents().contains(semanticElement)); //$NON-NLS-1$
+		assertFalse(semanticContainer.eContents().contains(semanticElement), "Semantic element not deleted."); //$NON-NLS-1$
 	}
 
-	public void testCopyToImageActionEnablement()
-		throws Exception {
+	@Test
+	public void testCopyToImageActionEnablement() throws Exception {
 
 		getTestFixture().openDiagram();
 
@@ -314,94 +314,86 @@ public class LogicDiagramTests
 
 	}
 
-    /**
-     * Performs a <code>DropObjectsRequest</code> in a modal context thread.
-     * Verifies that the diagram refreshes on the UI thread.
-     * 
-     * @throws Exception
-     *             if an unexpected exception occurs
-     */
-    public void test_drop_modalContextThread()
-        throws Exception {
+	/**
+	 * Performs a <code>DropObjectsRequest</code> in a modal context thread.
+	 * Verifies that the diagram refreshes on the UI thread.
+	 *
+	 * @throws Exception if an unexpected exception occurs
+	 */
+	@Test
+	public void test_drop_modalContextThread() throws Exception {
 
-        // Open the test fixture diagram
-        getTestFixture().openDiagram();
-        final DiagramEditPart diagramEditPart = getDiagramEditPart();
+		// Open the test fixture diagram
+		getTestFixture().openDiagram();
+		final DiagramEditPart diagramEditPart = getDiagramEditPart();
 
-        //Create an AND gate in the semantic model
-        ICommand andCommand = new AbstractTransactionalCommand(getTestFixture()
-            .getEditingDomain(), "Create AND Gate", null) { //$NON-NLS-1$
+		// Create an AND gate in the semantic model
+		ICommand andCommand = new AbstractTransactionalCommand(getTestFixture().getEditingDomain(), "Create AND Gate", //$NON-NLS-1$
+				null) {
 
-            protected CommandResult doExecuteWithResult(
-                    IProgressMonitor monitor, IAdaptable info)
-                throws ExecutionException {
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+					throws ExecutionException {
 
-                AndGate newElement = (AndGate) SemanticPackage.eINSTANCE
-                    .getEFactoryInstance().create(
-                        SemanticPackage.eINSTANCE.getAndGate());
+				AndGate newElement = (AndGate) SemanticPackage.eINSTANCE.getEFactoryInstance()
+						.create(SemanticPackage.eINSTANCE.getAndGate());
 
-                ContainerElement semanticElement = (ContainerElement) diagramEditPart
-                    .resolveSemanticElement();
+				ContainerElement semanticElement = (ContainerElement) diagramEditPart.resolveSemanticElement();
 
-                semanticElement.getChildren().add(newElement);
-                return CommandResult.newOKCommandResult(newElement);
-            }
-        };
+				semanticElement.getChildren().add(newElement);
+				return CommandResult.newOKCommandResult(newElement);
+			}
+		};
 
-        andCommand.execute(new NullProgressMonitor(), null);
-        AndGate andGate = (AndGate) andCommand.getCommandResult()
-            .getReturnValue();
+		andCommand.execute(new NullProgressMonitor(), null);
+		AndGate andGate = (AndGate) andCommand.getCommandResult().getReturnValue();
 
-        // Get the initial number of edit parts on the diagram
-        List primaryEditParts = diagramEditPart.getPrimaryEditParts();
-        int initialEditPartCount = primaryEditParts.size();
+		// Get the initial number of edit parts on the diagram
+		List primaryEditParts = diagramEditPart.getPrimaryEditParts();
+		int initialEditPartCount = primaryEditParts.size();
 
-        // Get the command to drop the AND gate onto the diagram
-        Point dropLocation = ICanonicalShapeCompartmentLayout.UNDEFINED
-            .getLocation();
-        DropObjectsRequest request = new DropObjectsRequest();
-        request.setObjects(Collections.singletonList(andGate));
-        request.setAllowedDetail(DND.DROP_COPY);
-        request.setLocation(dropLocation);
+		// Get the command to drop the AND gate onto the diagram
+		Point dropLocation = ICanonicalShapeCompartmentLayout.UNDEFINED.getLocation();
+		DropObjectsRequest request = new DropObjectsRequest();
+		request.setObjects(Collections.singletonList(andGate));
+		request.setAllowedDetail(DND.DROP_COPY);
+		request.setLocation(dropLocation);
 
-        Command command = diagramEditPart.getCommand(request);
-        final CommandProxy proxy = new CommandProxy(command);
+		Command command = diagramEditPart.getCommand(request);
+		final CommandProxy proxy = new CommandProxy(command);
 
-        //Execute the command in a forking progress monitor dialog
-        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+		// Execute the command in a forking progress monitor dialog
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
-            public void run(IProgressMonitor monitor)
-                throws InvocationTargetException, InterruptedException {
-                
-                try {
-                    OperationHistoryFactory.getOperationHistory().execute(
-                        proxy, monitor, null);
+			@Override
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-                } catch (ExecutionException e) {
-                    throw new InvocationTargetException(e);
-                }
-            }
-        };
+				try {
+					OperationHistoryFactory.getOperationHistory().execute(proxy, monitor, null);
 
-        new ProgressMonitorDialog(null).run(true, true, runnable);
+				} catch (ExecutionException e) {
+					throw new InvocationTargetException(e);
+				}
+			}
+		};
 
-        // Verify that a new edit part has been added to the diagram for the AND gate
-        primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
+		new ProgressMonitorDialog(null).run(true, true, runnable);
 
-        assertTrue(
-            "Size of primary edit parts should have increased.", primaryEditParts.size() > initialEditPartCount); //$NON-NLS-1$
+		// Verify that a new edit part has been added to the diagram for the AND gate
+		primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
 
-        IGraphicalEditPart andGateEditPart = null;
-        for (Iterator i = primaryEditParts.iterator(); i.hasNext();) {
-            IGraphicalEditPart nextEditPart = (IGraphicalEditPart) i.next();
+		assertTrue(primaryEditParts.size() > initialEditPartCount, "Size of primary edit parts should have increased."); //$NON-NLS-1$
 
-            if (andGate.equals(nextEditPart.resolveSemanticElement())) {
-                andGateEditPart = nextEditPart;
-                break;
-            }
-        }
-        assertNotNull(
-            "Expected a new edit part for the AND gate", andGateEditPart); //$NON-NLS-1$
-    }
+		IGraphicalEditPart andGateEditPart = null;
+		for (Iterator i = primaryEditParts.iterator(); i.hasNext();) {
+			IGraphicalEditPart nextEditPart = (IGraphicalEditPart) i.next();
+
+			if (andGate.equals(nextEditPart.resolveSemanticElement())) {
+				andGateEditPart = nextEditPart;
+				break;
+			}
+		}
+		assertNotNull(andGateEditPart, "Expected a new edit part for the AND gate"); //$NON-NLS-1$
+	}
 
 }

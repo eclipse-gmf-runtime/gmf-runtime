@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.label;
@@ -17,17 +17,18 @@ import org.eclipse.gmf.runtime.emf.type.core.AbstractElementTypeEnumerator;
 
 /**
  * Element types for notation elements defined in the Diagram UI plugin.
- * 
+ *
  * @author crevells
  */
-public class LabelNotationType
-    extends AbstractElementTypeEnumerator {
+public class LabelNotationType extends AbstractElementTypeEnumerator {
 
-    public static final INotationType GEFLABEL_NOTE = (INotationType) getElementType(LabelConstants.ID_GEFLABEL);
+	public static final INotationType GEFLABEL_NOTE = (INotationType) getElementType(LabelConstants.ID_GEFLABEL);
 
-    public static final INotationType WRAPPINGLABEL_NOTE = (INotationType) getElementType(LabelConstants.ID_WRAPPINGLABEL);
+	public static final INotationType WRAPPINGLABEL_NOTE = (INotationType) getElementType(
+			LabelConstants.ID_WRAPPINGLABEL);
 
-    public static final INotationType OLDWRAPLABEL_NOTE = (INotationType) getElementType(LabelConstants.ID_OLDWRAPLABEL);
+	public static final INotationType OLDWRAPLABEL_NOTE = (INotationType) getElementType(
+			LabelConstants.ID_OLDWRAPLABEL);
 
-    public static final INotationType WRAPLABEL_NOTE = (INotationType) getElementType(LabelConstants.ID_WRAPLABEL);
+	public static final INotationType WRAPLABEL_NOTE = (INotationType) getElementType(LabelConstants.ID_WRAPLABEL);
 }

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences;
@@ -18,25 +18,27 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * Initializes the preferences pages for the Logic Diagram Editor.
- * 
+ *
  * @author cmahoney
  */
-public class LogicPreferencesInitializer
-	extends DiagramPreferenceInitializer {
+public class LogicPreferencesInitializer extends DiagramPreferenceInitializer {
 
+	@Override
 	public void initializeDefaultPreferences() {
 		super.initializeDefaultPreferences();
-		
-		// Resetting appearance settings in the logic preference store 
-		IPreferenceStore store = getPreferenceStore();	
+
+		// Resetting appearance settings in the logic preference store
+		IPreferenceStore store = getPreferenceStore();
 		LogicAppearancePreferencePage.initDefaults(store);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.preferences.DiagramPreferenceInitializer#getPreferenceStore()
+	 *
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.preferences.
+	 * DiagramPreferenceInitializer#getPreferenceStore()
 	 */
+	@Override
 	protected IPreferenceStore getPreferenceStore() {
 		return LogicDiagramPlugin.getInstance().getPreferenceStore();
 	}

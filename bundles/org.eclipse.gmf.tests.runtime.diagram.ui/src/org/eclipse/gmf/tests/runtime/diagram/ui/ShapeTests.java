@@ -7,34 +7,22 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.diagram.ui;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 
 /**
  * @author sshaw
  *
- * Shape Tests
+ *         Shape Tests
  */
 public class ShapeTests extends AbstractShapeTests {
 
 	/**
 	 * @param arg0
 	 */
-	public ShapeTests(String arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
-	
+	@Override
 	protected void setTestFixture() {
 		testFixture = new DiagramTestFixture();
-	}
-	
-	public static Test suite() {
-		return new TestSuite(ShapeTests.class);
 	}
 }

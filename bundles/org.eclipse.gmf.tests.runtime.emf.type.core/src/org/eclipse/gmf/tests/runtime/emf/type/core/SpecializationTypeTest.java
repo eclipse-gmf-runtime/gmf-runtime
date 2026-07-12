@@ -7,37 +7,23 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+public class SpecializationTypeTest {
 
+	/**
+	 * Tests that isSpecializationOf() does not throw a null pointer exception.
+	 */
+	@Test
+	public void test_isSpecializationOf_120765() {
 
-public class SpecializationTypeTest extends TestCase {
-
-	public SpecializationTypeTest(String name) {
-		super(name);
+		assertTrue(EmployeeType.MANAGER.isSpecializationOf(EmployeeType.EMPLOYEE));
 	}
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(SpecializationTypeTest.class);
-	}
-
-    /**
-     * Tests that isSpecializationOf() does not throw a null pointer exception.
-     */
-    public void test_isSpecializationOf_120765() {
-
-        assertTrue(EmployeeType.MANAGER.isSpecializationOf(EmployeeType.EMPLOYEE));
-    }
 }

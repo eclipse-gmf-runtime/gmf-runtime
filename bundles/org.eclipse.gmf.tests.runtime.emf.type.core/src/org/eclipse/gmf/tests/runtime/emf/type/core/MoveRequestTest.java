@@ -7,10 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,273 +29,227 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+public class MoveRequestTest extends AbstractEMFTypeTest {
 
-public class MoveRequestTest
-    extends AbstractEMFTypeTest {
+	private MoveRequest fixture;
 
-    private MoveRequest fixture;
+	private Department department1;
 
-    private Department department1;
+	private Department department2;
 
-    private Department department2;
+	private Employee employee1;
 
-    private Employee employee1;
+	private Employee employee2;
 
-    private Employee employee2;
+	private Employee manager;
 
-    private Employee manager;
+	@Override
+	protected void doModelSetup(Resource resource) {
 
-    public MoveRequestTest(String name) {
-        super(name);
-    }
+		department1 = (Department) getEmployeeFactory().create(getEmployeePackage().getDepartment());
+		department1.setName("Department1"); //$NON-NLS-1$
+		resource.getContents().add(department1);
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+		department2 = (Department) getEmployeeFactory().create(getEmployeePackage().getDepartment());
+		department2.setName("Department2"); //$NON-NLS-1$
+		resource.getContents().add(department2);
 
-    public static Test suite() {
-        return new TestSuite(MoveRequestTest.class);
-    }
+		employee1 = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
+		department1.getMembers().add(employee1);
 
-    protected void doModelSetup(Resource resource) {
+		employee2 = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
+		department1.getMembers().add(employee2);
 
-        department1 = (Department) getEmployeeFactory().create(
-            getEmployeePackage().getDepartment());
-        department1.setName("Department1"); //$NON-NLS-1$
-        resource.getContents().add(department1);
+		manager = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
+		department1.setManager(manager);
+	}
 
-        department2 = (Department) getEmployeeFactory().create(
-            getEmployeePackage().getDepartment());
-        department2.setName("Department2"); //$NON-NLS-1$
-        resource.getContents().add(department2);
+	protected MoveRequest getFixture() {
+		return fixture;
+	}
 
-        employee1 = (Employee) getEmployeeFactory().create(
-            getEmployeePackage().getEmployee());
-        department1.getMembers().add(employee1);
+	protected void setFixture(MoveRequest fixture) {
+		this.fixture = fixture;
+	}
 
-        employee2 = (Employee) getEmployeeFactory().create(
-            getEmployeePackage().getEmployee());
-        department1.getMembers().add(employee2);
+	@Test
+	public void test_move_singleElement_noFeature() {
 
-        manager = (Employee) getEmployeeFactory().create(
-            getEmployeePackage().getEmployee());
-        department1.setManager(manager);
-    }
+		assertSame(department1, employee1.eContainer());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee1.eContainmentFeature());
 
-    protected MoveRequest getFixture() {
-        return fixture;
-    }
+		setFixture(new MoveRequest(getEditingDomain(), department2, employee1));
 
-    protected void setFixture(MoveRequest fixture) {
-        this.fixture = fixture;
-    }
+		IElementType elementType = ElementTypeRegistry.getInstance()
+				.getElementType(getFixture().getEditHelperContext());
 
-    public void test_move_singleElement_noFeature() {
+		ICommand command = elementType.getEditCommand(getFixture());
+		try {
+			command.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
 
-        assertSame(department1, employee1.eContainer());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee1
-            .eContainmentFeature());
+		assertSame(department2, employee1.eContainer());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee1.eContainmentFeature());
+	}
 
-        setFixture(new MoveRequest(getEditingDomain(), department2, employee1));
+	@Test
+	public void test_move_singleElement_differentFeatureInSameContainer() {
 
-        IElementType elementType = ElementTypeRegistry.getInstance()
-            .getElementType(getFixture().getEditHelperContext());
+		assertSame(department1, employee1.eContainer());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee1.eContainmentFeature());
 
-        ICommand command = elementType.getEditCommand(getFixture());
-        try {
-            command.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
+		setFixture(new MoveRequest(getEditingDomain(), department1, getEmployeePackage().getDepartment_Manager(),
+				employee1));
 
-        assertSame(department2, employee1.eContainer());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee1
-            .eContainmentFeature());
-    }
+		IElementType elementType = ElementTypeRegistry.getInstance()
+				.getElementType(getFixture().getEditHelperContext());
 
-    public void test_move_singleElement_differentFeatureInSameContainer() {
+		ICommand command = elementType.getEditCommand(getFixture());
+		try {
+			command.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
 
-        assertSame(department1, employee1.eContainer());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee1
-            .eContainmentFeature());
+		assertSame(department1, employee1.eContainer());
+		assertSame(getEmployeePackage().getDepartment_Manager(), employee1.eContainmentFeature());
+	}
 
-        setFixture(new MoveRequest(getEditingDomain(), department1,
-            getEmployeePackage().getDepartment_Manager(), employee1));
+	@Test
+	public void test_move_singleElement_featureInNewContainer() {
 
-        IElementType elementType = ElementTypeRegistry.getInstance()
-            .getElementType(getFixture().getEditHelperContext());
+		assertSame(department1, employee1.eContainer());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee1.eContainmentFeature());
 
-        ICommand command = elementType.getEditCommand(getFixture());
-        try {
-            command.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-
-        assertSame(department1, employee1.eContainer());
-        assertSame(getEmployeePackage().getDepartment_Manager(), employee1
-            .eContainmentFeature());
-    }
-
-    public void test_move_singleElement_featureInNewContainer() {
-
-        assertSame(department1, employee1.eContainer());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee1
-            .eContainmentFeature());
-
-        setFixture(new MoveRequest(getEditingDomain(), department2,
-            getEmployeePackage().getDepartment_Manager(), employee1));
-
-        IElementType elementType = ElementTypeRegistry.getInstance()
-            .getElementType(getFixture().getEditHelperContext());
-
-        ICommand command = elementType.getEditCommand(getFixture());
-        try {
-            command.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-
-        assertSame(department2, employee1.eContainer());
-        assertSame(getEmployeePackage().getDepartment_Manager(), employee1
-            .eContainmentFeature());
-    }
-
-    public void test_move_manyElements_noFeatures() {
-
-        assertSame(department1, employee1.eContainer());
-        assertSame(department1, employee2.eContainer());
-        assertSame(department1, manager.eContainer());
-
-        assertSame(getEmployeePackage().getDepartment_Members(), employee1
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee2
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Manager(), manager
-            .eContainmentFeature());
-
-        List elementsToMove = new ArrayList();
-        elementsToMove.add(employee1);
-        elementsToMove.add(employee2);
-        elementsToMove.add(manager);
-
-        setFixture(new MoveRequest(getEditingDomain(), department2,
-            elementsToMove));
-
-        IElementType elementType = ElementTypeRegistry.getInstance()
-            .getElementType(getFixture().getEditHelperContext());
-
-        ICommand command = elementType.getEditCommand(getFixture());
-        try {
-            command.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-
-        assertSame(department2, employee1.eContainer());
-        assertSame(department2, employee2.eContainer());
-        assertSame(department2, manager.eContainer());
-
-        assertSame(getEmployeePackage().getDepartment_Members(), employee1
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee2
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Manager(), manager
-            .eContainmentFeature());
-    }
-
-    public void test_move_manyElements_someFeatures() {
-
-        assertSame(department1, employee1.eContainer());
-        assertSame(department1, employee2.eContainer());
-        assertSame(department1, manager.eContainer());
-
-        assertSame(getEmployeePackage().getDepartment_Members(), employee1
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee2
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Manager(), manager
-            .eContainmentFeature());
-
-        Map elementsToMove = new HashMap();
-        elementsToMove.put(employee1, getEmployeePackage()
-            .getDepartment_Manager());
-        elementsToMove.put(employee2, null);
-        elementsToMove.put(manager, getEmployeePackage()
-            .getDepartment_Members());
-
-        setFixture(new MoveRequest(getEditingDomain(), department2,
-            elementsToMove));
-
-        IElementType elementType = ElementTypeRegistry.getInstance()
-            .getElementType(getFixture().getEditHelperContext());
-
-        ICommand command = elementType.getEditCommand(getFixture());
-        try {
-            command.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-
-        assertSame(department2, employee1.eContainer());
-        assertSame(department2, employee2.eContainer());
-        assertSame(department2, manager.eContainer());
-
-        assertSame(getEmployeePackage().getDepartment_Manager(), employee1
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee2
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Members(), manager
-            .eContainmentFeature());
-    }
-
-    public void test_move_manyElements_featuresInNewContainer() {
-
-        assertSame(department1, employee1.eContainer());
-        assertSame(department1, employee2.eContainer());
-        assertSame(department1, manager.eContainer());
-
-        assertSame(getEmployeePackage().getDepartment_Members(), employee1
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee2
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Manager(), manager
-            .eContainmentFeature());
-
-        Map elementsToMove = new HashMap();
-        elementsToMove.put(employee1, getEmployeePackage()
-            .getDepartment_Manager());
-        elementsToMove.put(employee2, getEmployeePackage()
-            .getDepartment_Members());
-        elementsToMove.put(manager, getEmployeePackage()
-            .getDepartment_Members());
-
-        setFixture(new MoveRequest(getEditingDomain(), department2,
-            elementsToMove));
-
-        IElementType elementType = ElementTypeRegistry.getInstance()
-            .getElementType(getFixture().getEditHelperContext());
-
-        ICommand command = elementType.getEditCommand(getFixture());
-        try {
-            command.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-
-        assertSame(department2, employee1.eContainer());
-        assertSame(department2, employee2.eContainer());
-        assertSame(department2, manager.eContainer());
-
-        assertSame(getEmployeePackage().getDepartment_Manager(), employee1
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Members(), employee2
-            .eContainmentFeature());
-        assertSame(getEmployeePackage().getDepartment_Members(), manager
-            .eContainmentFeature());
-    }
+		setFixture(new MoveRequest(getEditingDomain(), department2, getEmployeePackage().getDepartment_Manager(),
+				employee1));
+
+		IElementType elementType = ElementTypeRegistry.getInstance()
+				.getElementType(getFixture().getEditHelperContext());
+
+		ICommand command = elementType.getEditCommand(getFixture());
+		try {
+			command.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+
+		assertSame(department2, employee1.eContainer());
+		assertSame(getEmployeePackage().getDepartment_Manager(), employee1.eContainmentFeature());
+	}
+
+	@Test
+	public void test_move_manyElements_noFeatures() {
+
+		assertSame(department1, employee1.eContainer());
+		assertSame(department1, employee2.eContainer());
+		assertSame(department1, manager.eContainer());
+
+		assertSame(getEmployeePackage().getDepartment_Members(), employee1.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee2.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Manager(), manager.eContainmentFeature());
+
+		List elementsToMove = new ArrayList();
+		elementsToMove.add(employee1);
+		elementsToMove.add(employee2);
+		elementsToMove.add(manager);
+
+		setFixture(new MoveRequest(getEditingDomain(), department2, elementsToMove));
+
+		IElementType elementType = ElementTypeRegistry.getInstance()
+				.getElementType(getFixture().getEditHelperContext());
+
+		ICommand command = elementType.getEditCommand(getFixture());
+		try {
+			command.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+
+		assertSame(department2, employee1.eContainer());
+		assertSame(department2, employee2.eContainer());
+		assertSame(department2, manager.eContainer());
+
+		assertSame(getEmployeePackage().getDepartment_Members(), employee1.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee2.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Manager(), manager.eContainmentFeature());
+	}
+
+	@Test
+	public void test_move_manyElements_someFeatures() {
+
+		assertSame(department1, employee1.eContainer());
+		assertSame(department1, employee2.eContainer());
+		assertSame(department1, manager.eContainer());
+
+		assertSame(getEmployeePackage().getDepartment_Members(), employee1.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee2.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Manager(), manager.eContainmentFeature());
+
+		Map elementsToMove = new HashMap();
+		elementsToMove.put(employee1, getEmployeePackage().getDepartment_Manager());
+		elementsToMove.put(employee2, null);
+		elementsToMove.put(manager, getEmployeePackage().getDepartment_Members());
+
+		setFixture(new MoveRequest(getEditingDomain(), department2, elementsToMove));
+
+		IElementType elementType = ElementTypeRegistry.getInstance()
+				.getElementType(getFixture().getEditHelperContext());
+
+		ICommand command = elementType.getEditCommand(getFixture());
+		try {
+			command.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+
+		assertSame(department2, employee1.eContainer());
+		assertSame(department2, employee2.eContainer());
+		assertSame(department2, manager.eContainer());
+
+		assertSame(getEmployeePackage().getDepartment_Manager(), employee1.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee2.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Members(), manager.eContainmentFeature());
+	}
+
+	@Test
+	public void test_move_manyElements_featuresInNewContainer() {
+
+		assertSame(department1, employee1.eContainer());
+		assertSame(department1, employee2.eContainer());
+		assertSame(department1, manager.eContainer());
+
+		assertSame(getEmployeePackage().getDepartment_Members(), employee1.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee2.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Manager(), manager.eContainmentFeature());
+
+		Map elementsToMove = new HashMap();
+		elementsToMove.put(employee1, getEmployeePackage().getDepartment_Manager());
+		elementsToMove.put(employee2, getEmployeePackage().getDepartment_Members());
+		elementsToMove.put(manager, getEmployeePackage().getDepartment_Members());
+
+		setFixture(new MoveRequest(getEditingDomain(), department2, elementsToMove));
+
+		IElementType elementType = ElementTypeRegistry.getInstance()
+				.getElementType(getFixture().getEditHelperContext());
+
+		ICommand command = elementType.getEditCommand(getFixture());
+		try {
+			command.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+
+		assertSame(department2, employee1.eContainer());
+		assertSame(department2, employee2.eContainer());
+		assertSame(department2, manager.eContainer());
+
+		assertSame(getEmployeePackage().getDepartment_Manager(), employee1.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Members(), employee2.eContainmentFeature());
+		assertSame(getEmployeePackage().getDepartment_Members(), manager.eContainmentFeature());
+	}
 }

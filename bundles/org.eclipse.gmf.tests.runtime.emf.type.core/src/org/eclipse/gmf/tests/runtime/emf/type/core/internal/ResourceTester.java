@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -24,15 +24,15 @@ import org.eclipse.emf.ecore.resource.Resource;
  * <dd>string-valued property denoting the URI of the resource in which the
  * EObjec is found.</dd>
  * </dl>
- * 
+ *
  * @author ldamus
  */
 public class ResourceTester extends PropertyTester {
 
 	private static final String RESOURCE_URI_PROPERTY = "resourceURI"; //$NON-NLS-1$
 
-	public boolean test(Object receiver, String property, Object[] args,
-			Object expectedValue) {
+	@Override
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 
 		EObject eObject = (EObject) receiver;
 

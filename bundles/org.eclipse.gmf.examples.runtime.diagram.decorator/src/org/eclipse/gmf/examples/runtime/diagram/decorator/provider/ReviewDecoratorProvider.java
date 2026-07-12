@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.decorator.provider;
@@ -20,19 +20,17 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 import org.eclipse.gmf.runtime.notation.Node;
 
-
 /**
  * @author sshaw
  *
- * Decorator provider for the review decorator class
+ *         Decorator provider for the review decorator class
  */
-public class ReviewDecoratorProvider
-	extends AbstractProvider
-	implements IDecoratorProvider {
+public class ReviewDecoratorProvider extends AbstractProvider implements IDecoratorProvider {
 
 	/** The key used for the mood decoration */
 	public static final String REVIEW = "Review_Decorator"; //$NON-NLS-1$
-	
+
+	@Override
 	public void createDecorators(IDecoratorTarget decoratorTarget) {
 		Node node = ReviewDecorator.getDecoratorTargetNode(decoratorTarget);
 		if (node != null) {
@@ -40,9 +38,14 @@ public class ReviewDecoratorProvider
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.internal.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.common.core.internal.service.IProvider#provides(org.
+	 * eclipse.gmf.runtime.common.core.service.IOperation)
 	 */
+	@Override
 	public boolean provides(IOperation operation) {
 		Assert.isNotNull(operation);
 
@@ -50,8 +53,7 @@ public class ReviewDecoratorProvider
 			return false;
 		}
 
-		IDecoratorTarget decoratorTarget = ((CreateDecoratorsOperation) operation)
-			.getDecoratorTarget();
+		IDecoratorTarget decoratorTarget = ((CreateDecoratorsOperation) operation).getDecoratorTarget();
 		return ReviewDecorator.getDecoratorTargetNode(decoratorTarget) != null;
 	}
 

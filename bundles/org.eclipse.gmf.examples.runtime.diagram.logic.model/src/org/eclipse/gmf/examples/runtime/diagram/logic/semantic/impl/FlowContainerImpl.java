@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl;
 
@@ -16,9 +16,8 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.FlowContainer;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Flow Container</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Flow
+ * Container</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
@@ -26,8 +25,8 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
  */
 public class FlowContainerImpl extends ContainerElementImpl implements FlowContainer {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected FlowContainerImpl() {
@@ -35,12 +34,13 @@ public class FlowContainerImpl extends ContainerElementImpl implements FlowConta
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return SemanticPackage.Literals.FLOW_CONTAINER;
 	}
 
-} //FlowContainerImpl
+} // FlowContainerImpl

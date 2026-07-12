@@ -7,12 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
-import java.util.Iterator;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -39,73 +40,69 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractShapeTests;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+import org.junit.jupiter.api.Test;
 
 public class LogicShapeTests extends AbstractShapeTests {
 
-	public LogicShapeTests(String arg0) {
-		super(arg0);
-	}
-
-	public static Test suite() {
-		return new TestSuite(LogicShapeTests.class);
-	}
-
+	@Override
 	protected void setTestFixture() {
 		testFixture = new LogicTestFixture();
 	}
-	
+
 	/** Return <code>(CanonicalTestFixture)getTestFixture();</code> */
 	protected LogicTestFixture getLogicTestFixture() {
-		return (LogicTestFixture)getTestFixture();
+		return (LogicTestFixture) getTestFixture();
 	}
-	
+
 	/**
 	 * Test to verify that copy appearance properties is working properly
+	 * 
 	 * @throws Exception
 	 */
-	public void testCopyAppearanceProperties()
-		throws Exception {
-		
+	@Test
+	public void testCopyAppearanceProperties() throws Exception {
+
 		Rectangle rect = new Rectangle(getDiagramEditPart().getFigure().getBounds());
 		getDiagramEditPart().getFigure().translateToAbsolute(rect);
 		IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$
-		
+
 		Point createPt = new Point(100, 100);
-		final LEDEditPart ledEP1 = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, createPt, getDiagramEditPart());
+		final LEDEditPart ledEP1 = (LEDEditPart) getLogicTestFixture().createShapeUsingTool(typeLED, createPt,
+				getDiagramEditPart());
 		createPt.getTranslated(ledEP1.getFigure().getSize().getExpanded(100, 100));
-		
-		final LEDEditPart ledEP2 = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, createPt, getDiagramEditPart());
+
+		final LEDEditPart ledEP2 = (LEDEditPart) getLogicTestFixture().createShapeUsingTool(typeLED, createPt,
+				getDiagramEditPart());
 		final Color red = new Color(255, 0, 0);
 		final int fontHeight = 10;
-		
-		getLogicTestFixture().execute(new AbstractTransactionalCommand(getLogicTestFixture().getEditingDomain(), "", null) { //$NON-NLS-1$
-			protected CommandResult doExecuteWithResult(
-                        IProgressMonitor progressMonitor, IAdaptable info)
-                    throws ExecutionException {
-				View ledView = ledEP2.getNotationView();
-				ShapeStyle shapeStyle = (ShapeStyle)ledView.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
-				shapeStyle.setFillColor((FigureUtilities.colorToInteger(red)).intValue());
-				shapeStyle.setLineColor((FigureUtilities.colorToInteger(red)).intValue());
-				shapeStyle.setFontColor((FigureUtilities.colorToInteger(red)).intValue());
-				shapeStyle.setFontHeight(fontHeight);
-				return CommandResult.newOKCommandResult();
-			}
-		});
-		
-		ApplyAppearancePropertiesRequest request = new ApplyAppearancePropertiesRequest();;
+
+		getLogicTestFixture()
+				.execute(new AbstractTransactionalCommand(getLogicTestFixture().getEditingDomain(), "", null) { //$NON-NLS-1$
+					@Override
+					protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+							throws ExecutionException {
+						View ledView = ledEP2.getNotationView();
+						ShapeStyle shapeStyle = (ShapeStyle) ledView
+								.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
+						shapeStyle.setFillColor((FigureUtilities.colorToInteger(red)).intValue());
+						shapeStyle.setLineColor((FigureUtilities.colorToInteger(red)).intValue());
+						shapeStyle.setFontColor((FigureUtilities.colorToInteger(red)).intValue());
+						shapeStyle.setFontHeight(fontHeight);
+						return CommandResult.newOKCommandResult();
+					}
+				});
+
+		ApplyAppearancePropertiesRequest request = new ApplyAppearancePropertiesRequest();
 		request.setViewToCopyFrom(ledEP2.getNotationView());
 		Command cmd = ledEP1.getCommand(request);
 		getCommandStack().execute(cmd);
 		flushEventQueue();
-		
-		ledEP1.getEditingDomain().runExclusive( new Runnable() {
+
+		ledEP1.getEditingDomain().runExclusive(new Runnable() {
+			@Override
 			public void run() {
 				View ledView = ledEP1.getNotationView();
-				ShapeStyle shapeStyle = (ShapeStyle)ledView.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
+				ShapeStyle shapeStyle = (ShapeStyle) ledView.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
 				assertTrue(shapeStyle.getFillColor() == ((FigureUtilities.colorToInteger(red)).intValue()));
 				assertTrue(shapeStyle.getLineColor() == ((FigureUtilities.colorToInteger(red)).intValue()));
 				assertTrue(shapeStyle.getFontColor() == ((FigureUtilities.colorToInteger(red)).intValue()));
@@ -113,52 +110,46 @@ public class LogicShapeTests extends AbstractShapeTests {
 			}
 		});
 	}
-	
+
 	/**
 	 * Tests <code>ISurfaceEditPart.getPrimaryEditParts()</code> by creating a
 	 * half-adder.
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public void testGetPrimaryEditParts()
-		throws Exception {
+	@Test
+	public void testGetPrimaryEditParts() throws Exception {
 
-		Rectangle rect = new Rectangle(getDiagramEditPart().getFigure()
-			.getBounds());
+		Rectangle rect = new Rectangle(getDiagramEditPart().getFigure().getBounds());
 		getDiagramEditPart().getFigure().translateToAbsolute(rect);
-		IElementType typeHalfAdder = ElementTypeRegistry.getInstance().getType(
-			"logic.halfAdder"); //$NON-NLS-1$
+		IElementType typeHalfAdder = ElementTypeRegistry.getInstance().getType("logic.halfAdder"); //$NON-NLS-1$
 
 		Point createPt = new Point(100, 100);
-		CircuitEditPart circuitEP = (CircuitEditPart) getLogicTestFixture()
-			.createShapeUsingTool(typeHalfAdder, createPt, getDiagramEditPart());
+		CircuitEditPart circuitEP = (CircuitEditPart) getLogicTestFixture().createShapeUsingTool(typeHalfAdder,
+				createPt, getDiagramEditPart());
 
 		ISurfaceEditPart logicCompartmentEP = (ISurfaceEditPart) circuitEP
-			.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+				.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
 		assertEquals(8, logicCompartmentEP.getPrimaryEditParts().size());
 	}
-	
+
 	public void disabledM6testPropertiesSetStyle() throws Exception {
-		IElementType typeLED = ElementTypeRegistry.getInstance().getType(
-				"logic.led"); //$NON-NLS-1$
+		IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$
 
 		Point createPt = new Point(200, 200);
-		LEDEditPart ledEP = (LEDEditPart) getLogicTestFixture()
-				.createShapeUsingTool(typeLED, createPt, getDiagramEditPart());
+		LEDEditPart ledEP = (LEDEditPart) getLogicTestFixture().createShapeUsingTool(typeLED, createPt,
+				getDiagramEditPart());
 		Request request = new Request(StringConstants.PORTSCOLOR_REQUEST);
 		Integer color = FigureUtilities.RGBToInteger(new RGB(100, 100, 100));
-		request.getExtendedData().put(
-				StringConstants.PORTS_COLOR_PROPERTY_NAME, color);
+		request.getExtendedData().put(StringConstants.PORTS_COLOR_PROPERTY_NAME, color);
 		Command cmd = ledEP.getCommand(request);
 		getCommandStack().execute(cmd);
 		flushEventQueue();
 
-		for (Iterator itr = ledEP.getChildren().iterator(); itr.hasNext();) {
-			Object obj = itr.next();
+		for (Object obj : ledEP.getChildren()) {
 			if (obj instanceof TerminalEditPart) {
 				Integer currentColor = FigureUtilities
-						.colorToInteger(((TerminalEditPart) obj).getFigure()
-								.getBackgroundColor());
+						.colorToInteger(((TerminalEditPart) obj).getFigure().getBackgroundColor());
 				assertEquals(color, currentColor);
 			}
 		}

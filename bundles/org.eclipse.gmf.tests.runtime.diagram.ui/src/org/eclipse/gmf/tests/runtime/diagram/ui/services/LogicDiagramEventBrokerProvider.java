@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.services;
@@ -17,14 +17,16 @@ import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractDiagramEventBrokerProvider;
 import org.eclipse.gmf.runtime.diagram.core.services.eventbroker.CreateDiagramEventBrokerOperation;
 
-
 public class LogicDiagramEventBrokerProvider extends AbstractDiagramEventBrokerProvider {
 
-    public DiagramEventBroker createDiagramEventBroker(TransactionalEditingDomain editingDomain) {
-        return new LogicDiagramEventBroker(editingDomain);
-    }
+	@Override
+	public DiagramEventBroker createDiagramEventBroker(TransactionalEditingDomain editingDomain) {
+		return new LogicDiagramEventBroker(editingDomain);
+	}
 
-    public boolean provides(CreateDiagramEventBrokerOperation operation) {
-        return operation.getEditingDomain().getID().equals("org.eclipse.gmf.examples.runtime.diagram.logicEditingDomain"); //$NON-NLS-1$
-    }
+	@Override
+	public boolean provides(CreateDiagramEventBrokerOperation operation) {
+		return operation.getEditingDomain().getID()
+				.equals("org.eclipse.gmf.examples.runtime.diagram.logicEditingDomain"); //$NON-NLS-1$
+	}
 }

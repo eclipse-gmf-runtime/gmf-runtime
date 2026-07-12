@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.label;
@@ -24,32 +24,29 @@ import org.eclipse.jface.viewers.IFilter;
 /**
  * Filter to display a property section if the selection is a shape editpart
  * that has text compartment editpart children.
- * 
+ *
  * @author crevells
  */
-public class TextLabelPropertySectionFilter
-    implements IFilter {
+public class TextLabelPropertySectionFilter implements IFilter {
 
-    public boolean select(Object object) {
-        if (object instanceof ShapeEditPart) {
-            ShapeEditPart shapeEP = (ShapeEditPart) object;
-            return !getNestedTextCompartmentEditParts(shapeEP).isEmpty();
-        }
-        return false;
-    }
+	@Override
+	public boolean select(Object object) {
+		if (object instanceof ShapeEditPart) {
+			ShapeEditPart shapeEP = (ShapeEditPart) object;
+			return !getNestedTextCompartmentEditParts(shapeEP).isEmpty();
+		}
+		return false;
+	}
 
-    private Collection getNestedTextCompartmentEditParts(
-            IGraphicalEditPart containerEP) {
-        HashSet textCompartmentEPs = new HashSet();
-        for (Iterator iterator = containerEP.getChildren().iterator(); iterator
-            .hasNext();) {
-            IGraphicalEditPart childEP = (IGraphicalEditPart) iterator.next();
-            if (childEP instanceof TextCompartmentEditPart) {
-                textCompartmentEPs.add(childEP);
-            }
-            textCompartmentEPs
-                .addAll(getNestedTextCompartmentEditParts(childEP));
-        }
-        return textCompartmentEPs;
-    }
+	private Collection getNestedTextCompartmentEditParts(IGraphicalEditPart containerEP) {
+		HashSet textCompartmentEPs = new HashSet();
+		for (Iterator iterator = containerEP.getChildren().iterator(); iterator.hasNext();) {
+			IGraphicalEditPart childEP = (IGraphicalEditPart) iterator.next();
+			if (childEP instanceof TextCompartmentEditPart) {
+				textCompartmentEPs.add(childEP);
+			}
+			textCompartmentEPs.addAll(getNestedTextCompartmentEditParts(childEP));
+		}
+		return textCompartmentEPs;
+	}
 }

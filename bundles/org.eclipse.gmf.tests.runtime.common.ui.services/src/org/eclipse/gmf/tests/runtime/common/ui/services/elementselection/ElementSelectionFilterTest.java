@@ -7,9 +7,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.elementselection;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -20,81 +22,68 @@ import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelect
 import org.eclipse.gmf.tests.runtime.common.ui.services.dialogs.TestElementSelectionProviderContext;
 import org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.TestMatchingObject;
 import org.eclipse.jface.viewers.IFilter;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for the filter for the element selection service, the filter being
  * the programatic filter at the application level to filter specific element
  * types.
- * 
+ *
  * @author Anthony Hunter
  */
-public class ElementSelectionFilterTest
-    extends TestCase {
+public class ElementSelectionFilterTest {
 
-    private AbstractElementSelectionInput input;
+	private AbstractElementSelectionInput input;
 
-    protected void setUp()
-        throws Exception {
-        super.setUp();
-        if (input == null) {
-    		// There is an issue when running the tests, run no tests for now.
-        	return;
-        }
-        ElementSelectionScope scope = ElementSelectionScope.VISIBLE;
-        IAdaptable context = new TestElementSelectionProviderContext();
-        IFilter filter = new IFilter() {
+	@BeforeEach
+	public void setUp() throws Exception {
+		if (input == null) {
+			// There is an issue when running the tests, run no tests for now.
+			return;
+		}
+		ElementSelectionScope scope = ElementSelectionScope.VISIBLE;
+		IAdaptable context = new TestElementSelectionProviderContext();
+		IFilter filter = new IFilter() {
 
-            public boolean select(Object toTest) {
-                return true;
-            }
+			@Override
+			public boolean select(Object toTest) {
+				return true;
+			}
 
-        };
-        input = new AbstractElementSelectionInput(filter, context, scope, "t");//$NON-NLS-1$
-    }
+		};
+		input = new AbstractElementSelectionInput(filter, context, scope, "t");//$NON-NLS-1$
+	}
 
-    protected void tearDown()
-        throws Exception {
-        super.tearDown();
-        input = null;
-    }
+	@AfterEach
+	public void tearDown() {
+		input = null;
+	}
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	public void ignoreAllElementsFilter() {
+		List matches = ElementSelectionService.getInstance().getMatchingObjects(input);
+		assertTrue(matches.size() == 6);
+	}
 
-    public static Test suite() {
-        return new TestSuite(ElementSelectionFilterTest.class);
-    }
+	public void ignoreBlueElementsFilter() {
+		input.setFilter(new IFilter() {
 
-    public void ignoreAllElementsFilter() {
-        List matches = ElementSelectionService.getInstance()
-        .getMatchingObjects(input);
-        assertTrue(matches.size() == 6);
-    }
+			@Override
+			public boolean select(Object element) {
+				if (element instanceof TestMatchingObject) {
+					if (((TestMatchingObject) element).getComponent().equals("Blue")) {//$NON-NLS-1$
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+		List matches = ElementSelectionService.getInstance().getMatchingObjects(input);
+		assertTrue(matches.size() == 2);
+	}
 
-    public void ignoreBlueElementsFilter() {
-        input.setFilter(new IFilter() {
-
-            public boolean select(Object element) {
-                if (element instanceof TestMatchingObject) {
-                    if (((TestMatchingObject) element).getComponent().equals(
-                        "Blue")) {//$NON-NLS-1$
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-        List matches = ElementSelectionService.getInstance()
-            .getMatchingObjects(input);
-        assertTrue(matches.size() == 2);
-    }
-
+	@Test
 	public void test_testNothing() {
 		// There is an issue when running the tests, run no tests for now.
 	}

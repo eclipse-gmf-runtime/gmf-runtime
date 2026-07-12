@@ -7,11 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
-
 package org.eclipse.gmf.tests.runtime.draw2d.ui;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.geometry.Point;
@@ -19,73 +21,78 @@ import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-
-import junit.framework.TestCase;
-
-
+import org.junit.jupiter.api.Test;
 
 /**
  * This TestCase is designed to test the functionality of the MapMode
- * translations.  (i.e. HiMetrics)
+ * translations. (i.e. HiMetrics)
  *
  * @author jschofie / sshaw
  */
-public class MapModeUtilTest  extends TestCase {
+public class MapModeUtilTest {
 
+	@Test
 	public void testTranslationDefault() {
 		verifyMapMode(MapModeUtil.getMapMode());
 	}
 
+	@Test
 	public void testTranslationHiMetric() {
 		verifyMapMode(MapModeTypes.HIMETRIC_MM);
 	}
-	
+
+	@Test
 	public void testTranslationIdentity() {
 		verifyMapMode(MapModeTypes.IDENTITY_MM);
 	}
-	
+
 	static class MapModeFigure extends Figure implements IMapMode {
 
+		@Override
 		public int DPtoLP(int deviceUnit) {
 			return MapModeTypes.DEFAULT_MM.DPtoLP(deviceUnit);
 		}
 
+		@Override
 		public Translatable DPtoLP(Translatable t) {
 			return MapModeTypes.DEFAULT_MM.DPtoLP(t);
 		}
 
+		@Override
 		public int LPtoDP(int logicalUnit) {
 			return MapModeTypes.DEFAULT_MM.LPtoDP(logicalUnit);
 		}
 
+		@Override
 		public Translatable LPtoDP(Translatable t) {
 			return MapModeTypes.DEFAULT_MM.LPtoDP(t);
 		}
 	}
-	
+
+	@Test
 	public void testTranslationFromFigure() {
 		MapModeFigure mmFig = new MapModeFigure();
 		verifyMapMode(MapModeUtil.getMapMode(mmFig));
-		
+
 		Figure fig = new Figure();
 		fig.setParent(mmFig);
 		verifyMapMode(MapModeUtil.getMapMode(fig));
-		
+
 		verifyMapMode(MapModeUtil.getMapMode(null));
 	}
-	
+
 	private void verifyMapMode(IMapMode mm) {
-		for( int index = 0; index < 1000; index++ ) {
+		for (int index = 0; index < 1000; index++) {
 			int val1 = index;
-			
+
 			int val2 = mm.DPtoLP(index);
-			Point ptLP = (Point)mm.DPtoLP(new Point(index, 0));
+			Point ptLP = (Point) mm.DPtoLP(new Point(index, 0));
 			assertEquals(val2, ptLP.x);
-			
+
 			int val3 = mm.LPtoDP(val2);
-			Point ptDP = (Point)mm.LPtoDP(new Point(val2, 0));
+			Point ptDP = (Point) mm.LPtoDP(new Point(val2, 0));
 			assertEquals(val3, ptDP.x);
-			
+
 			assertTrue(Math.abs(val1 - val3) <= 1);
 		}
 	}

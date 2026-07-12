@@ -7,9 +7,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.core.util;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
 
@@ -23,34 +25,22 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.resources.IExtendedResourceFactory;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.tests.runtime.emf.core.BaseTests;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for <code>EMFCoreUtil</code>.
- * 
+ *
  * @author ldamus
  */
 public class EMFCoreUtilTests extends BaseTests {
 
 	public static String EMF_CORE_UTIL_TESTS_PROXY_ID = "EMFCoreUtilTests_proxyID";
 
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(EMFCoreUtilTests.class,
-				"EMFCoreUtilTests Test Suite"); //$NON-NLS-1$
-	}
-
 	/**
-	 * Tests that when a resource factory override is registered for a proxy in
-	 * the <code>extensionToFactoryMap</code>, it will be used to provide the
-	 * proxy ID.
+	 * Tests that when a resource factory override is registered for a proxy in the
+	 * <code>extensionToFactoryMap</code>, it will be used to provide the proxy ID.
 	 */
+	@Test
 	public void test_getProxyID_288303() {
 
 		// Make the class element a proxy
@@ -59,45 +49,45 @@ public class EMFCoreUtilTests extends BaseTests {
 
 		// Check the default proxy ID
 		String result = EMFCoreUtil.getProxyID(clazz);
-		assertEquals("Unexpected Proxy ID", "//class", result);
+		assertEquals(result, "//class", "Unexpected Proxy ID");
 
 		// Register a custom resource factory
 		ResourceSet resourceSet = domain.getResourceSet();
-		Map<String, Object> extensionToFactoryMap = resourceSet
-				.getResourceFactoryRegistry().getExtensionToFactoryMap();
-		Object original = extensionToFactoryMap
-				.get(Resource.Factory.Registry.DEFAULT_EXTENSION);
-		extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-				new EMFCoreUtilTestsResourceFactory());
+		Map<String, Object> extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
+		Object original = extensionToFactoryMap.get(Resource.Factory.Registry.DEFAULT_EXTENSION);
+		extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, new EMFCoreUtilTestsResourceFactory());
 
 		// Check the custom proxy ID
 		result = EMFCoreUtil.getProxyID(clazz);
-		assertEquals("Unexpected Proxy ID", EMF_CORE_UTIL_TESTS_PROXY_ID, result);
+		assertEquals(EMF_CORE_UTIL_TESTS_PROXY_ID, result, "Unexpected Proxy ID");
 
 		// Restore the original resource factory
-		extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-				original);
+		extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, original);
 	}
 
-	protected class EMFCoreUtilTestsResourceFactory extends ResourceFactoryImpl
-			implements IExtendedResourceFactory {
+	protected class EMFCoreUtilTestsResourceFactory extends ResourceFactoryImpl implements IExtendedResourceFactory {
 
+		@Override
 		public String getProxyClassID(EObject proxy) {
 			return null;
 		}
 
+		@Override
 		public String getProxyID(EObject proxy) {
 			return EMF_CORE_UTIL_TESTS_PROXY_ID;
 		}
 
+		@Override
 		public String getProxyName(EObject proxy) {
 			return null;
 		}
 
+		@Override
 		public String getProxyQualifiedName(EObject proxy) {
 			return null;
 		}
 
+		@Override
 		public EObject resolve(TransactionalEditingDomain domain, EObject proxy) {
 			return null;
 		}

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
@@ -16,9 +16,8 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.HighSchoolStudent;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>High School Student</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>High
+ * School Student</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
@@ -26,8 +25,8 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.HighSchoolStudent;
  */
 public class HighSchoolStudentImpl extends StudentImpl implements HighSchoolStudent {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected HighSchoolStudentImpl() {
@@ -35,12 +34,13 @@ public class HighSchoolStudentImpl extends StudentImpl implements HighSchoolStud
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return EmployeePackage.Literals.HIGH_SCHOOL_STUDENT;
 	}
 
-} //HighSchoolStudentImpl
+} // HighSchoolStudentImpl

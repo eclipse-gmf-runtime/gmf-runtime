@@ -7,14 +7,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.Test;
 
 /**
  * The org.eclipse.gmf.tests.runtime.common.ui.services.provider tests plug-in
@@ -25,17 +22,8 @@ import junit.textui.TestRunner;
  * This AllTestsTest simply is a place holder if someone does try to run the
  * plug-in as a tests plug-in.
  */
-public class AllTestsTest
-	extends TestCase {
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(AllTestsTest.class);
-	}
-
+public class AllTestsTest {
+	@Test
 	public void test_testNothing() {
 		// the test is successful
 	}

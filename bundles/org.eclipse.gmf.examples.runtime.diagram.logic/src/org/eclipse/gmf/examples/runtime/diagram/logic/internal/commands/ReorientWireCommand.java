@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands;
@@ -22,14 +22,14 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Wire;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.type.core.commands.EditElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ReorientRelationshipRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.ReorientRequest;
 
 /**
  * Command to change the source or target of a wire.
- * 
+ *
  * @author ldamus
  */
-public class ReorientWireCommand
-	extends EditElementCommand {
+public class ReorientWireCommand extends EditElementCommand {
 
 	/**
 	 * The reorient direction.
@@ -43,9 +43,8 @@ public class ReorientWireCommand
 
 	/**
 	 * Constructs a new command.
-	 * 
-	 * @param request
-	 *            the reorient relationship request
+	 *
+	 * @param request the reorient relationship request
 	 */
 	public ReorientWireCommand(ReorientRelationshipRequest request) {
 		super(request.getLabel(), request.getRelationship(), request);
@@ -56,33 +55,28 @@ public class ReorientWireCommand
 	/**
 	 * Reorients the wire.
 	 */
-	protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
-            IAdaptable info)
-        throws ExecutionException {
+	@Override
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
 		Wire wire = (Wire) getElementToEdit();
-		if (reorientDirection == ReorientRelationshipRequest.REORIENT_SOURCE) {
+		if (reorientDirection == ReorientRequest.REORIENT_SOURCE) {
 			wire.setSource((OutputTerminal) newEnd);
 
-		} else if (reorientDirection == ReorientRelationshipRequest.REORIENT_TARGET) {
+		} else if (reorientDirection == ReorientRequest.REORIENT_TARGET) {
 			wire.setTarget((InputTerminal) newEnd);
 		}
 		return CommandResult.newOKCommandResult(wire);
 	}
 
 	/**
-	 * The source can be changed to a new output terminal. The target can be
-	 * changed to a new target terminal.
+	 * The source can be changed to a new output terminal. The target can be changed
+	 * to a new target terminal.
 	 */
+	@Override
 	public boolean canExecute() {
 
-		if (reorientDirection == ReorientRelationshipRequest.REORIENT_SOURCE
-			&& !(newEnd instanceof OutputTerminal)) {
-			return false;
-		}
-
-		if (reorientDirection == ReorientRelationshipRequest.REORIENT_TARGET
-			&& !(newEnd instanceof InputTerminal)) {
+		if ((reorientDirection == ReorientRequest.REORIENT_SOURCE && !(newEnd instanceof OutputTerminal))
+				|| (reorientDirection == ReorientRequest.REORIENT_TARGET && !(newEnd instanceof InputTerminal))) {
 			return false;
 		}
 		return super.canExecute();

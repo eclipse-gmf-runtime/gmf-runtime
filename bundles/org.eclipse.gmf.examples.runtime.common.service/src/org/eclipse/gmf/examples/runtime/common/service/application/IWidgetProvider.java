@@ -7,22 +7,20 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.common.service.application;
 
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**
- * The interface for Widget providers.  Defines the messages between the WidgetService and 
- * Widget providers.
- * 
+ * The interface for Widget providers. Defines the messages between the
+ * WidgetService and Widget providers.
+ *
  */
-public interface IWidgetProvider
-	extends IProvider {
-	
-	Object createWidget(int orderSize);	
+public interface IWidgetProvider extends IProvider {
+
+	Object createWidget(int orderSize);
 
 }

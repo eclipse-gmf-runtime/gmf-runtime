@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 
@@ -30,16 +30,16 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.ReorientRelationshipReques
 
 /**
  * Edit helper for logic wire elements.
- * 
+ *
  * @author ldamus
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
-public class WireEditHelper
-	extends LogicElementEditHelper {
+public class WireEditHelper extends LogicElementEditHelper {
 
 	/**
 	 * Gets a command to determine the container for a new wire element.
 	 */
+	@Override
 	protected ICommand getEditContextCommand(final GetEditContextRequest req) {
 
 		IEditCommandRequest editRequest = req.getEditCommandRequest();
@@ -50,19 +50,19 @@ public class WireEditHelper
 			if (hasValidSourceAndTarget(createRelationshipRequest)) {
 
 				// Get the nearest common container element to own the new wire.
-				List<Terminal> terminals = new ArrayList<Terminal>();
-				
+				List<Terminal> terminals = new ArrayList<>();
+
 				EObject source = createRelationshipRequest.getSource();
 				if (source != null) {
-					terminals.add((Terminal)source);
+					terminals.add((Terminal) source);
 				}
 				EObject target = createRelationshipRequest.getTarget();
 				if (target != null) {
-					terminals.add((Terminal)target);
+					terminals.add((Terminal) target);
 				}
-				
-				EObject container = EMFCoreUtil.getLeastCommonContainer(
-						terminals, SemanticPackage.eINSTANCE.getContainerElement());
+
+				EObject container = EMFCoreUtil.getLeastCommonContainer(terminals,
+						SemanticPackage.eINSTANCE.getContainerElement());
 
 				GetEditContextCommand result = new GetEditContextCommand(req);
 				result.setEditContext(container);
@@ -71,19 +71,17 @@ public class WireEditHelper
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Checks the source and target elements in
-	 * <code>createRelationshipRequest</code>. Wires can only be created from
-	 * an <code>OutputTerminal</code> to and <code>InputTerminal</code>.
-	 * 
-	 * @param createRelationshipRequest
-	 *            the request
+	 * <code>createRelationshipRequest</code>. Wires can only be created from an
+	 * <code>OutputTerminal</code> to and <code>InputTerminal</code>.
+	 *
+	 * @param createRelationshipRequest the request
 	 * @return <code>true</code> if the source and target are valid,
 	 *         <code>false</code> otherwise.
 	 */
-	private boolean hasValidSourceAndTarget(
-			CreateRelationshipRequest createRelationshipRequest) {
+	private boolean hasValidSourceAndTarget(CreateRelationshipRequest createRelationshipRequest) {
 
 		// If source is specified, it must be an output terminal.
 		EObject source = createRelationshipRequest.getSource();
@@ -96,15 +94,15 @@ public class WireEditHelper
 		if (target != null && !(target instanceof InputTerminal)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	/**
 	 * Gets a command to change the source or target of a wire.
 	 */
-	protected ICommand getReorientRelationshipCommand(
-			ReorientRelationshipRequest req) {
+	@Override
+	protected ICommand getReorientRelationshipCommand(ReorientRelationshipRequest req) {
 
 		return new ReorientWireCommand(req);
 	}

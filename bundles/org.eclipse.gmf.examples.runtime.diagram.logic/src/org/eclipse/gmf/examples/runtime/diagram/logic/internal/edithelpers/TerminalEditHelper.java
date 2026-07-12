@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
@@ -22,28 +22,24 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
 
 /**
  * Edit helper for logic terminal elements.
- * 
+ *
  * @author Christian W. Damus (cdamus)
  */
-public class TerminalEditHelper
-	extends LogicElementEditHelper {
-	
+public class TerminalEditHelper extends LogicElementEditHelper {
+
 	/**
 	 * References from wires to terminals.
 	 */
 	private static final EReference[] WIRE_TERMINAL_REFERENCES = new EReference[] {
-		SemanticPackage.eINSTANCE.getWire_Source(),
-		SemanticPackage.eINSTANCE.getWire_Target(),
-	};
+			SemanticPackage.eINSTANCE.getWire_Source(), SemanticPackage.eINSTANCE.getWire_Target(), };
 
 	/**
 	 * Gets a command to destroy the dependents of the terminal that is being
-	 * destroyed.  These will be wires.
+	 * destroyed. These will be wires.
 	 */
+	@Override
 	protected ICommand getDestroyDependentsCommand(DestroyDependentsRequest request) {
-		Collection wires = EMFCoreUtil.getReferencers(
-				request.getElementToDestroy(),
-				WIRE_TERMINAL_REFERENCES);
+		Collection wires = EMFCoreUtil.getReferencers(request.getElementToDestroy(), WIRE_TERMINAL_REFERENCES);
 
 		return request.getDestroyDependentsCommand(wires);
 	}

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies;
 
@@ -22,36 +22,40 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 
 /**
  * Edit policy responsible for handling ports color change requests
- * 
+ *
  * @author aboyko
- * 
+ *
  */
 public class PortsColorEditPolicy extends ComponentEditPolicy {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy#getCommand(org.eclipse.gef.Request)
+	 *
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy#
+	 * getCommand(org.eclipse.gef.Request)
 	 */
+	@Override
 	public Command getCommand(Request request) {
 		if (StringConstants.PORTSCOLOR_REQUEST.equals(request.getType())) {
 			IGraphicalEditPart host = (IGraphicalEditPart) getHost();
-			Integer color = (Integer) request.getExtendedData().get(
-					StringConstants.PORTS_COLOR_PROPERTY_NAME);
-			return new ICommandProxy(new ModifyPortsColorCommand(host
-					.getEditingDomain(), host, color));
+			Integer color = (Integer) request.getExtendedData().get(StringConstants.PORTS_COLOR_PROPERTY_NAME);
+			return new ICommandProxy(new ModifyPortsColorCommand(host.getEditingDomain(), host, color));
 		}
 		return super.getCommand(request);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.editpolicies.AbstractEditPolicy#getTargetEditPart(org.eclipse.gef.Request)
+	 *
+	 * @see
+	 * org.eclipse.gef.editpolicies.AbstractEditPolicy#getTargetEditPart(org.eclipse
+	 * .gef.Request)
 	 */
+	@Override
 	public EditPart getTargetEditPart(Request request) {
-		if (StringConstants.PORTSCOLOR_REQUEST.equals(request.getType()))
+		if (StringConstants.PORTSCOLOR_REQUEST.equals(request.getType())) {
 			return getHost();
+		}
 		return null;
 	}
 }

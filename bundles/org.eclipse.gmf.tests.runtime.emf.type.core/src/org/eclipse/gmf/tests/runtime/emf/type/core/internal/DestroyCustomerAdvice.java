@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -25,11 +25,11 @@ public class DestroyCustomerAdvice extends AbstractEditHelperAdvice {
 
 	public static String AFTER = "org.eclipse.gmf.tests.runtime.emf.type.core.after"; //$NON-NLS-1$
 
-	protected ICommand getBeforeDestroyElementCommand(
-			DestroyElementRequest request) {
+	@Override
+	protected ICommand getBeforeDestroyElementCommand(DestroyElementRequest request) {
 
 		List before = (List) request.getParameter(BEFORE);
-		
+
 		if (before != null && request.getElementToDestroy() instanceof Customer) {
 			before.add(request.getElementToDestroy());
 		}
@@ -37,11 +37,11 @@ public class DestroyCustomerAdvice extends AbstractEditHelperAdvice {
 		return null;
 	}
 
-	protected ICommand getAfterDestroyElementCommand(
-			DestroyElementRequest request) {
+	@Override
+	protected ICommand getAfterDestroyElementCommand(DestroyElementRequest request) {
 
 		List after = (List) request.getParameter(AFTER);
-		
+
 		if (after != null && request.getElementToDestroy() instanceof Customer) {
 			after.add(request.getElementToDestroy());
 		}

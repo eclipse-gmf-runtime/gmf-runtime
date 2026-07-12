@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile;
@@ -28,213 +28,187 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.AbstractTranscoder;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.EMFTranscoder;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.WMFTranscoder;
-import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Bundle;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 /**
  * @author dhabib
  */
-public class Metafile2SvgTest
-    extends TestCase {
+public class Metafile2SvgTest {
 
-    /**
-     * Indicates whether or not we are re-generating the SVG files from the EMF
-     * files Check out .svg files to be updated so they are writable, flip this
-     * bit to 'true' and run the test to regenerate the svg files. If a .svg
-     * file is not writable, it is skipped.
-     */
-    private static final boolean GENERATE_SVG_FILES = false;
+	/**
+	 * Indicates whether or not we are re-generating the SVG files from the EMF
+	 * files Check out .svg files to be updated so they are writable, flip this bit
+	 * to 'true' and run the test to regenerate the svg files. If a .svg file is not
+	 * writable, it is skipped.
+	 */
+	private static final boolean GENERATE_SVG_FILES = false;
 
-    private Bundle bundle;
+	private Bundle bundle;
 
-    public Metafile2SvgTest(String name) {
-        super(name);
-    }
+	@BeforeEach
+	public void setUp() throws Exception {
+		// Initialize the path the the resources.
+		bundle = Platform.getBundle("org.eclipse.gmf.tests.runtime.draw2d.ui.render");//$NON-NLS-1$
+	}
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	@AfterEach
+	public void tearDown() {
+	}
 
-    public static Test suite() {
-        return new TestSuite(Metafile2SvgTest.class);
-    }
+	@Test
+	public void testEmf2Svg() throws Exception {
+		// Enumerate all the *.emf files in the source directory.
+		String rootDir = "resources/metafiles/"; //$NON-NLS-1$
+		Enumeration enumFiles = bundle.getEntryPaths(rootDir);
 
-    protected void setUp()
-        throws Exception {
-        super.setUp();
+		Vector failures = new Vector();
 
-        // Initialize the path the the resources.
-        bundle = Platform
-            .getBundle("org.eclipse.gmf.tests.runtime.draw2d.ui.render");//$NON-NLS-1$
-    }
+		while (enumFiles.hasMoreElements()) {
+			String metafileName = (String) enumFiles.nextElement();
+			IPath filePath = new Path(metafileName);
+			if (filePath != null && metafileName.endsWith("emf") || //$NON-NLS-1$
+					metafileName.endsWith("wmf")) { //$NON-NLS-1$
+				// Get the svg file to write/compare with.
+				String svgFilename = metafileName.substring(0, metafileName.length() - 3) + "svg"; //$NON-NLS-1$
+				URL url = FileLocator.find(bundle, filePath, null);
+				InputStream metafileInputStream = url.openStream();
 
-    protected void tearDown()
-        throws Exception {
-        super.tearDown();
-    }
+				try {
+					if (GENERATE_SVG_FILES) {
+						URL pluginURL = bundle.getEntry("/"); //$NON-NLS-1$
+						String pluginPath = FileLocator.resolve(pluginURL).getPath().substring(1);
+						File svgFile = new File(pluginPath + svgFilename);
 
-    public void testEmf2Svg()
-        throws Exception {
-        // Enumerate all the *.emf files in the source directory.
-        String rootDir = "resources/metafiles/"; //$NON-NLS-1$
-        Enumeration enumFiles = bundle.getEntryPaths(rootDir);
+						if (svgFile.exists()) {
+							if (!svgFile.canWrite()) {
+								// File is read only, skip it (probably not
+								// checked out)
+								continue;
+							}
+							svgFile.delete();
+						}
 
-        Vector failures = new Vector();
+						svgFile.createNewFile();
 
-        while (enumFiles.hasMoreElements()) {
-            String metafileName = (String) enumFiles.nextElement();
-            IPath filePath = new Path(metafileName);
-            if (filePath != null && metafileName.endsWith("emf") || //$NON-NLS-1$
-                metafileName.endsWith("wmf")) { //$NON-NLS-1$
-                // Get the svg file to write/compare with.
-                String svgFilename = metafileName.substring(0, metafileName
-                    .length() - 3)
-                    + "svg"; //$NON-NLS-1$
-                URL url = FileLocator.find(bundle, filePath, null);
-                InputStream metafileInputStream = url.openStream();
+						FileOutputStream svgOutputStream = new FileOutputStream(svgFile);
 
-                try {
-                    if (GENERATE_SVG_FILES) {
-                        URL pluginURL = bundle.getEntry("/"); //$NON-NLS-1$ 
-                        String pluginPath = FileLocator.resolve( pluginURL ).getPath().substring(1);
-                        File svgFile = new File(pluginPath + svgFilename);
+						// Translate the metafile to SVG.
+						AbstractTranscoder tc;
 
-                        if (svgFile.exists()) {
-                            if (!svgFile.canWrite()) {
-                                // File is read only, skip it (probably not
-                                // checked out)
-                                continue;
-                            }
-                            svgFile.delete();
-                        }
+						if (metafileName.endsWith(".emf")) //$NON-NLS-1$
+						{
+							tc = new EMFTranscoder();
+						} else {
+							tc = new WMFTranscoder();
+						}
 
-                        svgFile.createNewFile();
+						tc.transcode(metafileInputStream, svgOutputStream, svgFile.getAbsolutePath());
 
-                        FileOutputStream svgOutputStream = new FileOutputStream(
-                            svgFile);
+						// Close the output stream.
+						svgOutputStream.flush();
+						svgOutputStream.close();
+					} else {
+						// Create an outputstream to hold the generated svg
+						// data.
+						ByteArrayOutputStream svgOutputStream = new ByteArrayOutputStream(10000);
 
-                        // Translate the metafile to SVG.
-                        AbstractTranscoder tc;
+						// Translate the metafile to SVG.
+						AbstractTranscoder tc;
 
-                        if (metafileName.endsWith(".emf")) //$NON-NLS-1$
-                        {
-                            tc = new EMFTranscoder();
-                        } else {
-                            tc = new WMFTranscoder();
-                        }
+						if (metafileName.endsWith(".emf")) //$NON-NLS-1$
+						{
+							tc = new EMFTranscoder();
+						} else {
+							tc = new WMFTranscoder();
+						}
 
-                        tc.transcode(metafileInputStream, svgOutputStream, svgFile.getAbsolutePath());
+						URL svgUrl = FileLocator.find(bundle, new Path(svgFilename), null);
+						tc.transcode(metafileInputStream, svgOutputStream, svgUrl.toString());
 
-                        // Close the output stream.
-                        svgOutputStream.flush();
-                        svgOutputStream.close();
-                    } else {
-                        // Create an outputstream to hold the generated svg
-                        // data.
-                        ByteArrayOutputStream svgOutputStream = new ByteArrayOutputStream(
-                            10000);
+						// Compare the generated SVG data to the file
 
-                        // Translate the metafile to SVG.
-                        AbstractTranscoder tc;
+						// read the svg file on the disk.
+						InputStream svgInputStream = svgUrl.openStream();
+						byte[] fileBytes = new byte[svgInputStream.available()];
 
-                        if (metafileName.endsWith(".emf")) //$NON-NLS-1$
-                        {
-                            tc = new EMFTranscoder();
-                        } else {
-                            tc = new WMFTranscoder();
-                        }
+						svgInputStream.read(fileBytes);
+						svgInputStream.close();
 
-                        URL svgUrl = FileLocator.find(bundle, new Path(
-                                svgFilename), null);
-                        tc.transcode(metafileInputStream, svgOutputStream, svgUrl.toString());
+						// Read the output stream.
+						svgOutputStream.flush();
+						svgOutputStream.close();
+						byte[] generatedBytes = svgOutputStream.toByteArray();
 
-                        // Compare the generated SVG data to the file
+						if (fileBytes.length != generatedBytes.length) {
+							String errorMessage = "Data sizes are not equal: " + svgFilename + //$NON-NLS-1$
+									" Expected: " + fileBytes.length + //$NON-NLS-1$
+									" Received: " + generatedBytes.length + "\n"; //$NON-NLS-2$//$NON-NLS-1$
+							failures.add(errorMessage);
+							// Write the generated data out.
+							writeErrorFile(svgFilename, generatedBytes);
+							continue;
+						}
 
-                        // read the svg file on the disk.
-                        InputStream svgInputStream = svgUrl.openStream();
-                        byte[] fileBytes = new byte[svgInputStream.available()];
+						for (int i = 0; i < fileBytes.length; i++) {
+							if (fileBytes[i] != generatedBytes[i]) {
+								String errorMessage = "Data is different in file \'" + svgFilename + "\' at byte " + i //$NON-NLS-1$//$NON-NLS-2$
+										+ "\n"; //$NON-NLS-1$
+								failures.add(errorMessage);
+								// Write the generated data out.
+								writeErrorFile(svgFilename, generatedBytes);
+								break;
+							}
+						}
+					}
 
-                        svgInputStream.read(fileBytes);
-                        svgInputStream.close();
+					metafileInputStream.close();
+				} catch (Exception e) {
+					String errorMessage = "Caught exception while processing file " + metafileName + //$NON-NLS-1$
+							"\n" + e.toString(); //$NON-NLS-1$
 
-                        // Read the output stream.
-                        svgOutputStream.flush();
-                        svgOutputStream.close();
-                        byte[] generatedBytes = svgOutputStream.toByteArray();
+					failures.add(errorMessage);
+				}
+			}
+		}
 
-                        if (fileBytes.length != generatedBytes.length) {
-                            String errorMessage = "Data sizes are not equal: " + svgFilename + //$NON-NLS-1$
-                                " Expected: " + fileBytes.length + //$NON-NLS-1$
-                                " Received: " + generatedBytes.length + "\n"; //$NON-NLS-2$//$NON-NLS-1$
-                            failures.add(errorMessage);
-                            // Write the generated data out.
-                            writeErrorFile(svgFilename, generatedBytes);
-                            continue;
-                        }
+		if (failures.size() > 0) {
+			String failureString = ""; //$NON-NLS-1$
+			for (Object failure : failures) {
+				failureString = failureString + (String) failure;
+			}
+			Assertions.assertEquals(0, failures.size(), "Found failures:\n" + failureString); //$NON-NLS-1$
+		}
+	}
 
-                        for (int i = 0; i < fileBytes.length; i++) {
-                            if (fileBytes[i] != generatedBytes[i]) {
-                                String errorMessage = "Data is different in file \'" + svgFilename + "\' at byte " + i + "\n"; //$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
-                                failures.add(errorMessage);
-                                // Write the generated data out.
-                                writeErrorFile(svgFilename, generatedBytes);
-                                break;
-                            }
-                        }
-                    }
+	/**
+	 * Writes out a svg error file based on the specified filename. Filename is
+	 * appended with _failed.svg and the specified data is written to it.
+	 *
+	 * @param svgFilename
+	 * @param data
+	 * @throws IOException
+	 */
+	private void writeErrorFile(String svgFilename, byte[] data) throws IOException {
+		String filename = svgFilename.substring(0, svgFilename.length() - 4) + "_failed.svg"; //$NON-NLS-1$
 
-                    metafileInputStream.close();
-                } catch (Exception e) {
-                    String errorMessage = "Caught exception while processing file " + metafileName + //$NON-NLS-1$
-                        "\n" + e.toString(); //$NON-NLS-1$
+		File errorFile = new File(filename);
 
-                    failures.add(errorMessage);
-                }
-            }
-        }
+		if (errorFile.exists()) {
+			if (!errorFile.canWrite()) {
+				return;
+			}
+			errorFile.delete();
+		}
 
-        if (failures.size() > 0) {
-            String failureString = ""; //$NON-NLS-1$
-            for (int index = 0; index < failures.size(); index++) {
-                failureString = failureString + (String) failures.get(index);
-            }
-            Assert.assertEquals(
-                "Found failures:\n" + failureString, 0, failures.size()); //$NON-NLS-1$
-        }
-    }
+		errorFile.createNewFile();
 
-    /**
-     * Writes out a svg error file based on the specified filename. Filename is
-     * appended with _failed.svg and the specified data is written to it.
-     * 
-     * @param svgFilename
-     * @param data
-     * @throws IOException
-     */
-    private void writeErrorFile(String svgFilename, byte[] data)
-        throws IOException {
-        String filename = svgFilename.substring(0, svgFilename.length() - 4)
-            + "_failed.svg"; //$NON-NLS-1$
-
-        File errorFile = new File(filename);
-
-        if (errorFile.exists()) {
-            if (!errorFile.canWrite()) {
-                return;
-            }
-            errorFile.delete();
-        }
-
-        errorFile.createNewFile();
-
-        FileOutputStream svgOutputStream = new FileOutputStream(errorFile);
-        svgOutputStream.write(data);
-        svgOutputStream.flush();
-        svgOutputStream.close();
-    }
+		FileOutputStream svgOutputStream = new FileOutputStream(errorFile);
+		svgOutputStream.write(data);
+		svgOutputStream.flush();
+		svgOutputStream.close();
+	}
 }

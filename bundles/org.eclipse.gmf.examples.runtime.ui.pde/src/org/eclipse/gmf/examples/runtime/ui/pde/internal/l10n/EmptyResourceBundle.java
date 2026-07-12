@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.ui.pde.internal.l10n;
@@ -22,17 +22,18 @@ import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesStatusCodes;
 import org.eclipse.gmf.examples.runtime.ui.pde.util.Log;
 
 /**
- * The EmptyResourceBundle represents a resource bundle object that is always empty.
- * This object is used as a deafult return value whenever the loading of a resource bundle
- * has failed. The object keeps error logging every attempt to access to.
- * 
+ * The EmptyResourceBundle represents a resource bundle object that is always
+ * empty. This object is used as a deafult return value whenever the loading of
+ * a resource bundle has failed. The object keeps error logging every attempt to
+ * access to.
+ *
  * @author Natalia Balaba
  * @canBeSeenBy %partners
  */
 public final class EmptyResourceBundle extends ResourceBundle {
 
 	// --------------------------------------------------------------------//
-	// ------------  STATIC VARIABLES BEGIN -------------------------------//
+	// ------------ STATIC VARIABLES BEGIN -------------------------------//
 	// --------------------------------------------------------------------//
 
 	/**
@@ -46,81 +47,77 @@ public final class EmptyResourceBundle extends ResourceBundle {
 	private static String INVALID_ACCESS_MESSAGE = "Attempt to access resource in missing bundle ({0})."; //$NON-NLS-1$
 
 	// --------------------------------------------------------------------//
-	// ------------  STATIC VARIABLES END ---------------------------------//
+	// ------------ STATIC VARIABLES END ---------------------------------//
 	// --------------------------------------------------------------------//
 
 	// --------------------------------------------------------------------//
-	// ------------  INSTANCE VARIABLES BEGIN -----------------------------//
+	// ------------ INSTANCE VARIABLES BEGIN -----------------------------//
 	// --------------------------------------------------------------------//
 
 	/**
-	 * name of the bundle that failed to load - will be used for exception 
-	 * messages
+	 * name of the bundle that failed to load - will be used for exception messages
 	 */
 	private String bundleName = null;
 
 	/**
-	 * collection of  bundle keys - always empty
+	 * collection of bundle keys - always empty
 	 */
 	private Vector keys = new Vector();
 
 	// --------------------------------------------------------------------//
-	// ------------  INSTANCE VARIABLES END -------------------------------//
+	// ------------ INSTANCE VARIABLES END -------------------------------//
 	// --------------------------------------------------------------------//
 
 	// --------------------------------------------------------------------//
-	// ------------  CONSTRUCTORS BEGIN -----------------------------------//
+	// ------------ CONSTRUCTORS BEGIN -----------------------------------//
 	// --------------------------------------------------------------------//
 
 	/**
-	 * Create an instance of EmptyResourceBundle and log the error to the log 
-	 * file.
-	 * 
+	 * Create an instance of EmptyResourceBundle and log the error to the log file.
+	 *
 	 * @param bundleName name of the bundle
 	 */
 	public EmptyResourceBundle(String bundleName) {
 		super();
 		this.bundleName = bundleName;
-		Log.warning(
-			GmfExamplesPlugin.getDefault(),
-			GmfExamplesStatusCodes.L10N_FAILURE,
-			MessageFormat.format(
-				MISSING_BUNDLE_MESSAGE,
-				new Object[] { getBundleName()}));
+		Log.warning(GmfExamplesPlugin.getDefault(), GmfExamplesStatusCodes.L10N_FAILURE,
+				MessageFormat.format(MISSING_BUNDLE_MESSAGE, new Object[] { getBundleName() }));
 	}
 
 	// --------------------------------------------------------------------//
-	// ------------  CONSTRUCTORS END -------------------------------------//
+	// ------------ CONSTRUCTORS END -------------------------------------//
 	// --------------------------------------------------------------------//
 
 	// --------------------------------------------------------------------//
-	// ------------  INSTANCE METHODS BEGIN -------------------------------//
+	// ------------ INSTANCE METHODS BEGIN -------------------------------//
 	// --------------------------------------------------------------------//
 
-	/* This method always returns null  - since there is not associated value
+	/*
+	 * This method always returns null - since there is not associated value
+	 * 
 	 * @see java.util.ResourceBundle#handleGetObject(String)
 	 */
+	@Override
 	protected Object handleGetObject(String key) {
 		return null;
 	}
 
-	/* 
+	/*
 	 * Return empty keys enumeration
+	 * 
 	 * @see java.util.ResourceBundle#getKeys()
 	 */
+	@Override
 	public Enumeration getKeys() {
-		Log.warning(
-			GmfExamplesPlugin.getDefault(),
-			GmfExamplesStatusCodes.L10N_FAILURE,
-			MessageFormat.format(
-				INVALID_ACCESS_MESSAGE,
-				new Object[] { getBundleName()}));
+		Log.warning(GmfExamplesPlugin.getDefault(), GmfExamplesStatusCodes.L10N_FAILURE,
+				MessageFormat.format(INVALID_ACCESS_MESSAGE, new Object[] { getBundleName() }));
 
 		return keys.elements();
 	}
 
 	/**
 	 * Returns the bundleName.
+	 * 
 	 * @return java.lang.String - name of the missing resource bundle
 	 */
 	private String getBundleName() {
@@ -128,7 +125,7 @@ public final class EmptyResourceBundle extends ResourceBundle {
 	}
 
 	// --------------------------------------------------------------------//
-	// ------------  INSTANCE METHODS END ---------------------------------//
+	// ------------ INSTANCE METHODS END ---------------------------------//
 	// --------------------------------------------------------------------//
 
 }

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
@@ -28,18 +28,17 @@ import org.eclipse.gmf.runtime.notation.View;
 /**
  * @author qili
  *
- * Holds the EditPart signifying a LogicFlowFigure
+ *         Holds the EditPart signifying a LogicFlowFigure
  */
-public class LogicFlowContainerEditPart 
-	extends ShapeNodeEditPart 
-{
+public class LogicFlowContainerEditPart extends ShapeNodeEditPart {
 	/**
 	 * @param view
 	 */
 	public LogicFlowContainerEditPart(View view) {
 		super(view);
 	}
-	
+
+	@Override
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicy.NODE_ROLE, null);
@@ -49,26 +48,25 @@ public class LogicFlowContainerEditPart
 	/**
 	 * Overwrite createNodeFigure() in super class
 	 */
+	@Override
 	protected NodeFigure createNodeFigure() {
-		LogicFlowFigure logicFlowFigure = new LogicFlowFigure(new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100)));
-        Dimension borderSize = new Dimension(getMapMode()
-                .DPtoLP(20), getMapMode().DPtoLP(18));
-        logicFlowFigure.setBorder(new LogicFlowBorder(borderSize));
+		LogicFlowFigure logicFlowFigure = new LogicFlowFigure(
+				new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100)));
+		Dimension borderSize = new Dimension(getMapMode().DPtoLP(20), getMapMode().DPtoLP(18));
+		logicFlowFigure.setBorder(new LogicFlowBorder(borderSize));
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 		layout.setStretchMinorAxis(true);
 		logicFlowFigure.setLayoutManager(layout);
 		return logicFlowFigure;
-	} 
-    
-    public Object getPreferredValue(EStructuralFeature feature) {
-        if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
-            return FigureUtilities
-                .colorToInteger(LogicColorConstants.logicGreen);
-        } else if (feature == NotationPackage.eINSTANCE
-            .getLineStyle_LineColor()) {
-            return FigureUtilities
-                .colorToInteger(LogicColorConstants.logicBlack);
-        }
-        return super.getPreferredValue(feature);
-    }
+	}
+
+	@Override
+	public Object getPreferredValue(EStructuralFeature feature) {
+		if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
+			return FigureUtilities.colorToInteger(LogicColorConstants.logicGreen);
+		} else if (feature == NotationPackage.eINSTANCE.getLineStyle_LineColor()) {
+			return FigureUtilities.colorToInteger(LogicColorConstants.logicBlack);
+		}
+		return super.getPreferredValue(feature);
+	}
 }

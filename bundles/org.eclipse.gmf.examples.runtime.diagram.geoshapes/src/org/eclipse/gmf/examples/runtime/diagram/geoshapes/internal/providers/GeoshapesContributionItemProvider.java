@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers;
@@ -22,11 +22,10 @@ import org.eclipse.jface.action.IAction;
 /**
  * A contribution item provider for the Geoshapes Example that adds support for
  * print preview.
- * 
+ *
  * @author Wayne Diu, wdiu
  */
-public class GeoshapesContributionItemProvider
-	extends AbstractContributionItemProvider {
+public class GeoshapesContributionItemProvider extends AbstractContributionItemProvider {
 
 	/**
 	 * The constructor
@@ -35,11 +34,15 @@ public class GeoshapesContributionItemProvider
 		super();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider#createAction(java.lang.String, org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.
+	 * AbstractContributionItemProvider#createAction(java.lang.String,
+	 * org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor)
 	 */
-	protected IAction createAction(String actionId,
-			IWorkbenchPartDescriptor partDescriptor) {
+	@Override
+	protected IAction createAction(String actionId, IWorkbenchPartDescriptor partDescriptor) {
 
 		if (actionId.equals(PrintPreviewAction.ID)) {
 			return new RenderedPrintPreviewAction(new EnhancedPrintActionHelper());

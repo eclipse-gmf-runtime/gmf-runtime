@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.emf.type.core; singleton:=true
-Bundle-Version: 1.9.0.qualifier
+Bundle-Version: 1.10.0.qualifier
 Bundle-Activator: org.eclipse.gmf.tests.runtime.emf.type.core.TestPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.emf.ecore;bundle-version="[2.5.0,3.0.0)",
  org.eclipse.gmf.runtime.emf.type.core;bundle-version="[1.2.0,2.0.0)",
  org.eclipse.gmf.runtime.common.core;bundle-version="[1.2.0,2.0.0)",
- org.junit;bundle-version="[3.8.0,5.0.0)"
+ junit-jupiter-api,
+ junit-platform-suite-api
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.gmf.tests.runtime.emf.type.core

@@ -7,13 +7,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.PositionConstants;
@@ -31,30 +33,28 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestActionCallback;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractDiagramTests extends AbstractTestBase {
 
 	/**
-	 * 
+	 *
 	 * @param TestName name for the test
 	 */
-	public AbstractDiagramTests(String arg0) {
-		super(arg0);
-	}
-
 	protected ZoomManager getZoomManager() {
 		RootEditPart root = getDiagramEditPart().getViewer().getRootEditPart();
 		if (root instanceof DiagramRootEditPart) {
-			return ((DiagramRootEditPart)root).getZoomManager();
+			return ((DiagramRootEditPart) root).getZoomManager();
 		}
-		
+
 		return null;
 	}
-	
+
+	@Test
 	public void testZoom() throws Exception {
 		getTestFixture().openDiagram();
 
-		assertNotNull("no drawing surface", getDrawSurfaceEditPart()); //$NON-NLS-1$
+		assertNotNull(getDrawSurfaceEditPart(), "no drawing surface"); //$NON-NLS-1$
 		ZoomManager zoomManager = getZoomManager();
 		// Ensure the zoom manager exists
 		assertTrue(zoomManager != null);
@@ -79,22 +79,23 @@ public abstract class AbstractDiagramTests extends AbstractTestBase {
 		// Zoom to fit
 		zoomManager.zoomTo(getDrawSurfaceFigure().getBounds());
 	}
-	
+
+	@Test
 	public void testZoomToolFunctionality() throws Exception {
 		getTestFixture().openDiagram();
 
 		RootEditPart root = getDiagramEditPart().getViewer().getRootEditPart();
-		DiagramRootEditPart dgrmRoot = (DiagramRootEditPart)root;
+		DiagramRootEditPart dgrmRoot = (DiagramRootEditPart) root;
 		double currentZoom = dgrmRoot.getZoomManager().getZoom();
 		dgrmRoot.zoomIn(new Point(200, 200));
 		double newZoom = dgrmRoot.getZoomManager().getZoom();
 		assertTrue(newZoom > currentZoom);
-		
+
 		currentZoom = newZoom;
 		dgrmRoot.zoomOut(new Point(300, 300));
 		newZoom = dgrmRoot.getZoomManager().getZoom();
 		assertTrue(newZoom < currentZoom);
-		
+
 		currentZoom = newZoom;
 		dgrmRoot.zoomTo(new Rectangle(20, 20, 500, 500));
 		newZoom = dgrmRoot.getZoomManager().getZoom();
@@ -105,19 +106,19 @@ public abstract class AbstractDiagramTests extends AbstractTestBase {
 	protected List getSelectableShapesIn(IGraphicalEditPart parent) {
 		assertNotNull(parent);
 		List shapes = new ArrayList();
-		
-		Iterator it = parent.getChildren().iterator();
-		while (it.hasNext()) {
-			Object child = it.next();
+
+		for (Object child : parent.getChildren()) {
 			if (child instanceof ShapeNodeEditPart) {
-				if (((ShapeNodeEditPart)child).isSelectable())
+				if (((ShapeNodeEditPart) child).isSelectable()) {
 					shapes.add(child);
+				}
 			}
-			shapes.addAll(getSelectableShapesIn((IGraphicalEditPart)child));
+			shapes.addAll(getSelectableShapesIn((IGraphicalEditPart) child));
 		}
 		return shapes;
 	}
-	
+
+	@Test
 	public void testSelect() throws Exception {
 		getTestFixture().openDiagram();
 
@@ -126,64 +127,54 @@ public abstract class AbstractDiagramTests extends AbstractTestBase {
 		final List all = new ArrayList();
 		all.addAll(connectors);
 		all.addAll(shapes);
-		
+
 		selectAll(getDrawSurfaceEditPart(), all);
 	}
-	
+
 	/**
-	 * @param currentSelection <code>EditPart</code> to that will be given the current
-	 * selection before the action executes.  Can be <code>null</code> indicating no current 
-	 * selection.
+	 * @param currentSelection <code>EditPart</code> to that will be given the
+	 *                         current selection before the action executes. Can be
+	 *                         <code>null</code> indicating no current selection.
 	 * @throws Exception
 	 */
 	protected void selectAll(final IGraphicalEditPart currentSelection, final List shouldSelect) throws Exception {
-		assertNotNull("no drawing surface", getDrawSurfaceEditPart()); //$NON-NLS-1$
+		assertNotNull(getDrawSurfaceEditPart(), "no drawing surface"); //$NON-NLS-1$
 
 		// test select all
 		//
 		// prime the selection action to perform the selection within currentSelection
 		if (currentSelection != null) {
-			getDiagramEditPart().getViewer().setSelection(
-				new StructuredSelection(currentSelection));
+			getDiagramEditPart().getViewer().setSelection(new StructuredSelection(currentSelection));
 		}
-		SelectAllAction selectAction =
-			SelectAllAction.createSelectAllAction(getWorkbenchPage());
+		SelectAllAction selectAction = SelectAllAction.createSelectAllAction(getWorkbenchPage());
 
 		testAction(selectAction, new ITestActionCallback() {
+			@Override
 			public void onRunExecution() {
 
-				List selectedParts = getDiagramEditPart().getViewer()
-					.getSelectedEditParts();
+				List selectedParts = getDiagramEditPart().getViewer().getSelectedEditParts();
 				if (!shouldSelect.isEmpty()) {
-					assertTrue(
-						shouldSelect.containsAll(selectedParts)
-							&& selectedParts.containsAll(shouldSelect));
-				}
-				else {
-					assertTrue( selectedParts.contains(currentSelection));
+					assertTrue(shouldSelect.containsAll(selectedParts) && selectedParts.containsAll(shouldSelect));
+				} else {
+					assertTrue(selectedParts.contains(currentSelection));
 				}
 			}
 		});
 	}
 
+	@Test
 	public void testAlignment() throws Exception {
 
 		getTestFixture().openDiagram();
 
-		assertNotNull("no drawing surface", getDrawSurfaceEditPart()); //$NON-NLS-1$
+		assertNotNull(getDrawSurfaceEditPart(), "no drawing surface"); //$NON-NLS-1$
 
-		AlignAction a1 =
-			new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_LEFT, PositionConstants.LEFT);
-		AlignAction a2 =
-			new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_RIGHT, PositionConstants.RIGHT);
-		AlignAction a3 =
-			new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_TOP, PositionConstants.TOP);
-		AlignAction a4 =
-			new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_BOTTOM, PositionConstants.BOTTOM);
-		AlignAction a5 =
-			new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_CENTER, PositionConstants.CENTER);
-		AlignAction a6 =
-			new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_MIDDLE, PositionConstants.MIDDLE);
+		AlignAction a1 = new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_LEFT, PositionConstants.LEFT);
+		AlignAction a2 = new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_RIGHT, PositionConstants.RIGHT);
+		AlignAction a3 = new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_TOP, PositionConstants.TOP);
+		AlignAction a4 = new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_BOTTOM, PositionConstants.BOTTOM);
+		AlignAction a5 = new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_CENTER, PositionConstants.CENTER);
+		AlignAction a6 = new AlignAction(getWorkbenchPage(), GEFActionConstants.ALIGN_MIDDLE, PositionConstants.MIDDLE);
 
 		EditPartViewer viewer = getDiagramEditPart().getRoot().getViewer();
 
@@ -191,40 +182,46 @@ public abstract class AbstractDiagramTests extends AbstractTestBase {
 		viewer.deselectAll();
 
 		List shapeChildren = getDrawSurfaceEditPart().getChildren();
-		for (int i = 0; i < shapeChildren.size(); i++) {
-			viewer.appendSelection((EditPart) shapeChildren.get(i));
+		for (Object shapeChild : shapeChildren) {
+			viewer.appendSelection((EditPart) shapeChild);
 		}
 
 		testAction(a1, new ITestActionCallback() {
+			@Override
 			public void onRunExecution() {
 				// empty block
 			}
 		});
 		testAction(a2, new ITestActionCallback() {
+			@Override
 			public void onRunExecution() {
-				//empty block
+				// empty block
 			}
 		});
 		testAction(a3, new ITestActionCallback() {
+			@Override
 			public void onRunExecution() {
 				// empty block
 			}
 		});
 		testAction(a4, new ITestActionCallback() {
+			@Override
 			public void onRunExecution() {
 				// emtpy block
 			}
 		});
 		testAction(a5, new ITestActionCallback() {
+			@Override
 			public void onRunExecution() {
 				// empty block
 			}
 		});
 		testAction(a6, new ITestActionCallback() {
+			@Override
 			public void onRunExecution() {
 				// empty block
 			}
 		});
 	}
-	
+
 }

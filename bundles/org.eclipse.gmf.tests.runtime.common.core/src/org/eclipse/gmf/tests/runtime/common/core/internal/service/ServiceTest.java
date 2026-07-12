@@ -7,10 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.core.internal.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,168 +28,137 @@ import org.eclipse.gmf.runtime.common.core.service.IProviderPolicy;
 import org.eclipse.gmf.runtime.common.core.service.ProviderChangeEvent;
 import org.eclipse.gmf.runtime.common.core.service.ProviderPriority;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+public class ServiceTest {
 
-public class ServiceTest extends TestCase {
+	protected static class Fixture extends Service {
 
-    protected static class Fixture extends Service {
+		protected static class ProviderDescriptor extends Service.ProviderDescriptor {
 
-        protected static class ProviderDescriptor
-            extends Service.ProviderDescriptor {
+			protected ProviderDescriptor(IProvider provider) {
+				super(null);
 
-            protected ProviderDescriptor(IProvider provider) {
-                super(null);
+				this.provider = provider;
+				provider.addProviderChangeListener(this);
+			}
 
-                this.provider = provider;
-                provider.addProviderChangeListener(this);
-            }
+			@Override
+			public IProvider getProvider() {
+				return provider;
+			}
 
-            public IProvider getProvider() {
-                return provider;
-            }
+			@Override
+			protected IProviderPolicy getPolicy() {
+				return null;
+			}
 
-            protected IProviderPolicy getPolicy() {
-                return null;
-            }
+		}
 
-        }
+		protected Fixture() {
+			super(true);
+		}
 
-        protected Fixture() {
-            super(true);
-        }
+		protected List getFixtureProviders(ExecutionStrategy strategy, ProviderPriority priority,
+				IOperation operation) {
+			return super.getProviders(strategy, priority, operation);
+		}
 
-        protected List getFixtureProviders(
-            ExecutionStrategy strategy,
-            ProviderPriority priority,
-            IOperation operation) {
-            return super.getProviders(strategy, priority, operation);
-        }
+		protected void addFixtureProvider(ProviderPriority priority, Service.ProviderDescriptor provider) {
+			super.addProvider(priority, provider);
+		}
 
-        protected void addFixtureProvider(
-            ProviderPriority priority,
-            Service.ProviderDescriptor provider) {
-            super.addProvider(priority, provider);
-        }
+		protected void removeFixtureProvider(Service.ProviderDescriptor provider) {
+			super.removeProvider(provider);
+		}
 
-        protected void removeFixtureProvider(
-            Service.ProviderDescriptor provider) {
-            super.removeProvider(provider);
-        }
+	}
 
-    }
+	private Fixture fixture = null;
 
-    private Fixture fixture = null;
+	protected Fixture getFixture() {
+		return fixture;
+	}
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	private void setFixture(Fixture fixture) {
+		this.fixture = fixture;
+	}
 
-    public static Test suite() {
-        return new TestSuite(ServiceTest.class);
-    }
+	@BeforeEach
+	public void setUp() {
+		setFixture(new Fixture());
+	}
 
-    public ServiceTest(String name) {
-        super(name);
-    }
+	@Test
+	public void test_providerChanged() {
+		getFixture().addProviderChangeListener(new IProviderChangeListener() {
+			@Override
+			public final void providerChanged(ProviderChangeEvent event) {
+				assertEquals(getFixture(), event.getSource());
+				throw new RuntimeException();
+			}
+		});
 
-    protected Fixture getFixture() {
-        return fixture;
-    }
+		try {
+			getFixture().providerChanged(new ProviderChangeEvent(getFixture()));
+			fail();
+		} catch (Exception e) {
+			// Nothing to do
+		}
+	}
 
-    private void setFixture(Fixture fixture) {
-        this.fixture = fixture;
-    }
+	@Test
+	public void test_provides() {
+		ExecutionStrategy strategy = new ExecutionStrategy("Dummy") {//$NON-NLS-1$
 
-    protected void setUp() {
-        setFixture(new Fixture());
-    }
+			private static final long serialVersionUID = 1L;
 
-    public void test_providerChanged() {
-        getFixture().addProviderChangeListener(new IProviderChangeListener() {
-            public final void providerChanged(ProviderChangeEvent event) {
-                assertEquals(getFixture(), event.getSource());
-                throw new RuntimeException();
-            }
-        });
+			@Override
+			public List execute(Service service, IOperation operation) {
+				return Collections.EMPTY_LIST;
+			}
+		};
 
-        try {
-            getFixture().providerChanged(new ProviderChangeEvent(getFixture()));
-            fail();
-        } catch (Exception e) {
-        	// Nothing to do
-        }
-    }
+		IOperation operation = new IOperation() {
+			@Override
+			public Object execute(IProvider provider) {
+				return null;
+			}
+		};
+		assertTrue(!getFixture().provides(operation));
 
-    public void test_provides() {
-        ExecutionStrategy strategy = new ExecutionStrategy("Dummy") {//$NON-NLS-1$
-        	
-        	private static final long serialVersionUID = 1L;
+		IProvider trueProvider = new AbstractProvider() {
+			@Override
+			public boolean provides(IOperation op) {
+				return true;
+			}
+		};
+		Fixture.ProviderDescriptor trueProviderDescriptor = new Fixture.ProviderDescriptor(trueProvider);
+		getFixture().addFixtureProvider(ProviderPriority.MEDIUM, trueProviderDescriptor);
+		assertTrue(getFixture().provides(operation));
 
-    		public List execute(Service service, IOperation operation) {
-                return Collections.EMPTY_LIST;
-            }
-        };
+		List cachedProviders = getFixture().getFixtureProviders(strategy, ProviderPriority.MEDIUM, operation);
+		assertTrue(trueProvider == cachedProviders.get(0));
 
-        IOperation operation = new IOperation() {
-            public Object execute(IProvider provider) {
-                return null;
-            }
-        };
-        assertTrue(!getFixture().provides(operation));
+		IProvider falseProvider = new AbstractProvider() {
+			@Override
+			public boolean provides(IOperation op) {
+				return false;
+			}
+		};
+		Fixture.ProviderDescriptor falseProviderDescriptor = new Fixture.ProviderDescriptor(falseProvider);
+		getFixture().addFixtureProvider(ProviderPriority.MEDIUM, falseProviderDescriptor);
+		assertTrue(getFixture().provides(operation));
+		assertTrue(cachedProviders != getFixture().getFixtureProviders(strategy, ProviderPriority.MEDIUM, operation));
+		assertTrue(
+				trueProvider == getFixture().getFixtureProviders(strategy, ProviderPriority.MEDIUM, operation).get(0));
 
-        IProvider trueProvider = new AbstractProvider() {
-            public boolean provides(IOperation op) {
-                return true;
-            }
-        };
-        Fixture.ProviderDescriptor trueProviderDescriptor =
-            new Fixture.ProviderDescriptor(trueProvider);
-        getFixture().addFixtureProvider(
-            ProviderPriority.MEDIUM,
-            trueProviderDescriptor);
-        assertTrue(getFixture().provides(operation));
+		getFixture().removeFixtureProvider(trueProviderDescriptor);
+		assertTrue(!getFixture().provides(operation));
 
-        List cachedProviders =
-            getFixture().getFixtureProviders(
-            	strategy,
-                ProviderPriority.MEDIUM,
-                operation);
-        assertTrue(trueProvider == cachedProviders.get(0));
-
-        IProvider falseProvider = new AbstractProvider() {
-            public boolean provides(IOperation op) {
-                return false;
-            }
-        };
-        Fixture.ProviderDescriptor falseProviderDescriptor =
-            new Fixture.ProviderDescriptor(falseProvider);
-        getFixture().addFixtureProvider(
-            ProviderPriority.MEDIUM,
-            falseProviderDescriptor);
-        assertTrue(getFixture().provides(operation));
-        assertTrue(
-            cachedProviders
-                != getFixture().getFixtureProviders(
-                	strategy,
-                    ProviderPriority.MEDIUM,
-                    operation));
-        assertTrue(
-            trueProvider
-                == getFixture().getFixtureProviders(
-                	strategy,
-                    ProviderPriority.MEDIUM,
-                    operation).get(
-                    0));
-
-        getFixture().removeFixtureProvider(trueProviderDescriptor);
-        assertTrue(!getFixture().provides(operation));
-
-        getFixture().removeFixtureProvider(falseProviderDescriptor);
-        assertTrue(!getFixture().provides(operation));
-    }
+		getFixture().removeFixtureProvider(falseProviderDescriptor);
+		assertTrue(!getFixture().provides(operation));
+	}
 
 }

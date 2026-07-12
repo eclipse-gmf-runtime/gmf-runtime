@@ -7,34 +7,19 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.SpecializationTypeDescriptor;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-
-public class SpecializationTypeDescriptorTest extends TestCase {
+public class SpecializationTypeDescriptorTest {
 
 	private SpecializationTypeDescriptor fixture;
-
-	public SpecializationTypeDescriptorTest(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(SpecializationTypeDescriptorTest.class);
-	}
 
 	protected SpecializationTypeDescriptor getFixture() {
 		return fixture;
@@ -44,15 +29,17 @@ public class SpecializationTypeDescriptorTest extends TestCase {
 		this.fixture = fixture;
 	}
 
+	@Test
 	public void test_specializationTypeConstructor() {
 
 		setFixture(new SpecializationTypeDescriptor(EmployeeType.MANAGER));
-		
+
 		assertEquals(EmployeeType.MANAGER.getDisplayName(), getFixture().getName());
 		assertEquals(EmployeeType.MANAGER.getId(), getFixture().getId());
 		assertEquals(EmployeeType.MANAGER.getIconURL(), getFixture().getIconURL());
 		assertEquals(EmployeeType.MANAGER.getEContainerDescriptor(), getFixture().getContainerDescriptor());
-		assertEquals(EmployeeType.MANAGER.getEditHelperAdvice(), getFixture().getEditHelperAdviceDescriptor().getEditHelperAdvice());
+		assertEquals(EmployeeType.MANAGER.getEditHelperAdvice(),
+				getFixture().getEditHelperAdviceDescriptor().getEditHelperAdvice());
 		assertEquals(EmployeeType.MANAGER.getEditHelperAdvice(), getFixture().getEditHelperAdvice());
 		assertEquals(EmployeeType.MANAGER, getFixture().getElementType());
 		assertEquals(EmployeeType.MANAGER.getMatcher(), getFixture().getMatcher());

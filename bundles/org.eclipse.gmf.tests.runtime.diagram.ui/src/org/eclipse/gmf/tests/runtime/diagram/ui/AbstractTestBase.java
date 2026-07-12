@@ -7,13 +7,16 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +50,6 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectionsRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
@@ -58,95 +60,112 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestCommandCallback;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author choang
- * 
- * The abstract base class should be used by any tests that we write for the shapes team
- * It provides a framework for which the tests will run.
- * 
- * It contains implementation of some ulitiy helper methods also.
- * 
- * what's left for you to do?
- * <p>1.  Implement the following abstract methods
- * 	<p>a.  createConnectorViews - which setups up the diagram with the common shapes and connectors that will be used for your tests
- * 	<p>b.  setDefaultDiagramExt - sets the diagram extension type which will be used for the tests.  Based on the ext given
- * 		the diagram manager will use that as a hint to determine which DiagramEditor class to use to manuipulate the diagram.
- * 	<p>c.  public static suite() - to return the Test that will be our Action Menus will run.  Note this is not defined as an abstract
- * 		method here because it needs to be a static method in your test class.
- *     d.   setTestFixtureLogic() - which sets the <code>org.eclipse.gmf.tests.runtime.diagram.ui.util.IPresentataionTestFixtureLogic</code> class
- * 			that will be responsible for creating the fixture(i.e test data) for this test.
- * <p>2.  Add your tests methods
- *		You need to name your tests method like test*.  The Junit framework will  run all the methods that start with test*.  For each test
- * in you class the Junit framework will first run the setup(), then your testName1() method and the tearDown().
- * 
- * 
+ *
+ *         The abstract base class should be used by any tests that we write for
+ *         the shapes team It provides a framework for which the tests will run.
+ *
+ *         It contains implementation of some ulitiy helper methods also.
+ *
+ *         what's left for you to do?
+ *         <p>
+ *         1. Implement the following abstract methods
+ *         <p>
+ *         a. createConnectorViews - which setups up the diagram with the common
+ *         shapes and connectors that will be used for your tests
+ *         <p>
+ *         b. setDefaultDiagramExt - sets the diagram extension type which will
+ *         be used for the tests. Based on the ext given the diagram manager
+ *         will use that as a hint to determine which DiagramEditor class to use
+ *         to manuipulate the diagram.
+ *         <p>
+ *         c. public static suite() - to return the Test that will be our Action
+ *         Menus will run. Note this is not defined as an abstract method here
+ *         because it needs to be a static method in your test class. d.
+ *         setTestFixtureLogic() - which sets the
+ *         <code>org.eclipse.gmf.tests.runtime.diagram.ui.util.IPresentataionTestFixtureLogic</code>
+ *         class that will be responsible for creating the fixture(i.e test
+ *         data) for this test.
+ *         <p>
+ *         2. Add your tests methods You need to name your tests method like
+ *         test*. The Junit framework will run all the methods that start with
+ *         test*. For each test in you class the Junit framework will first run
+ *         the setup(), then your testName1() method and the tearDown().
+ *
+ *
  */
-public abstract class AbstractTestBase extends TestCase { 
+public abstract class AbstractTestBase {
 
 	protected IPresentationTestFixture testFixture = null;
-	
+
 	/** Verbose system property. */
 	public static final String SYSPROP_VERBOSE = "presentation.test.verbose";//$NON-NLS-1$
-	
+
 	/** verbose flag. */
 	private static boolean _verbose = Boolean.getBoolean(SYSPROP_VERBOSE);
-	
+
 	/**
 	 * Constructor for AbstractTestBase.
+	 * 
 	 * @param TestName
 	 */
-	public AbstractTestBase(String arg0) {
-		super(arg0);
+	protected AbstractTestBase() {
 		setTestFixture();
 	}
 
 	/**
-	 * Enable verbose mode.  If enabled, {@link junit.framework.Assert#fail(java.lang.String)} 
-	 * will print the supplied string; otherwise the string is ignored.
+	 * Enable verbose mode. If enabled,
+	 * {@link junit.framework.Assert#fail(java.lang.String)} will print the supplied
+	 * string; otherwise the string is ignored.
+	 *
+	 * Verbose mode can also be enabled using the {@link #SYSPROP_VERBOSE} system
+	 * property.
 	 * 
-	 * Verbose mode can also be enabled using the {@link #SYSPROP_VERBOSE} system property.
 	 * @param enabled boolean flag
 	 */
-	protected final void enableVerbose( boolean enabled ) {
+	protected final void enableVerbose(boolean enabled) {
 		_verbose = enabled;
 	}
-	
+
 	/** Return the verbose mode. */
 	public final boolean isVerbose() {
 		return _verbose;
-		
+
 	}
-		
+
 	/** Calls <code>System.out.println(msg)</code> if in verbose mode. */
-	public static final void println( Object msg ) {
-		if ( _verbose ) {
+	public static final void println(Object msg) {
+		if (_verbose) {
 			System.out.println(msg);
 		}
 	}
-	
+
 	/** Calls <code>System.out.print(msg)</code> if in verbose mode. */
-	public static final void print( Object msg ) {
-		if ( _verbose ) {
+	public static final void print(Object msg) {
+		if (_verbose) {
 			System.out.print(msg);
 		}
 	}
-	
+
 	/**
 	 * Method getCommandStack.
-	 * @return CommandStack  Command stack for the diagram editor
+	 * 
+	 * @return CommandStack Command stack for the diagram editor
 	 */
 	protected CommandStack getCommandStack() {
 		return getTestFixture().getCommandStack();
 	}
+
 	/**
 	 * Method setTestFixtureLogic.
 	 *
-	 * Sets the fixture logic for the tests.  A fixture is the set of "data" that the test will run against
-	 * Typically many tests will use the same fixture.
-	 * 
+	 * Sets the fixture logic for the tests. A fixture is the set of "data" that the
+	 * test will run against Typically many tests will use the same fixture.
+	 *
 	 */
 	protected abstract void setTestFixture();
 
@@ -189,16 +208,16 @@ public abstract class AbstractTestBase extends TestCase {
 	protected DiagramState getDiagramState() {
 
 		try {
-			return (DiagramState) TransactionUtil
-				.getEditingDomain(getDiagram()).runExclusive(
-					new RunnableWithResult.Impl() {
+			return (DiagramState) TransactionUtil.getEditingDomain(getDiagram())
+					.runExclusive(new RunnableWithResult.Impl() {
 
-					public void run() {
+						@Override
+						public void run() {
 
-						setResult(new DiagramState(getDiagramEditPart()));
+							setResult(new DiagramState(getDiagramEditPart()));
 
-					}
-				});
+						}
+					});
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			assertTrue(false);
@@ -208,29 +227,33 @@ public abstract class AbstractTestBase extends TestCase {
 	}
 
 	/**
-	 * Description:  Will execute the <code>Command</code> and then the <code>ITestCommandCallBack</code>, which 
-	 * has the logic to verify that the command executed successful.
-	 * <p>The command is executed within an UndoInterval and WriteAction model operation.
-	 * @throws <AssertFailError> if the command did not run successfully 
+	 * Description: Will execute the <code>Command</code> and then the
+	 * <code>ITestCommandCallBack</code>, which has the logic to verify that the
+	 * command executed successful.
+	 * <p>
+	 * The command is executed within an UndoInterval and WriteAction model
+	 * operation.
+	 * 
+	 * @throws <AssertFailError> if the command did not run successfully
 	 * @author choang
 	 */
-	protected void testCommand(
-		final ICommand command,
-		final ITestCommandCallback callback) {
+	protected void testCommand(final ICommand command, final ITestCommandCallback callback) {
 		testCommand(new ICommandProxy(command), callback);
 	}
-	
+
 	/**
-	 * Description:  Will execute the <code>Command</code> and then the <code>ITestCommandCallBack</code>, which 
-	 * has the logic to verify that the command executed successful.
-	 * <p>The command is executed within an UndoInterval and WriteAction model operation.
-	 * @throws <AssertFailError> if the command did not run successfully 
+	 * Description: Will execute the <code>Command</code> and then the
+	 * <code>ITestCommandCallBack</code>, which has the logic to verify that the
+	 * command executed successful.
+	 * <p>
+	 * The command is executed within an UndoInterval and WriteAction model
+	 * operation.
+	 * 
+	 * @throws <AssertFailError> if the command did not run successfully
 	 * @author choang
 	 */
-	protected void testCommand(
-		final Command command,
-		final ITestCommandCallback callback) {
-		
+	protected void testCommand(final Command command, final ITestCommandCallback callback) {
+
 		assertNotNull(command);
 
 		// Had to wrap each command in separate model operations
@@ -244,8 +267,8 @@ public abstract class AbstractTestBase extends TestCase {
 		flushEventQueue();
 
 		try {
-			TransactionUtil.getEditingDomain(getDiagram()).runExclusive(
-				new Runnable() {
+			TransactionUtil.getEditingDomain(getDiagram()).runExclusive(new Runnable() {
+				@Override
 				public void run() {
 					callback.onCommandExecution();
 				}
@@ -254,7 +277,7 @@ public abstract class AbstractTestBase extends TestCase {
 			e.printStackTrace();
 			assertTrue(false);
 		}
-		
+
 		DiagramState state2 = getDiagramState();
 
 		// checking if the command stack is in an undoable state first
@@ -279,55 +302,61 @@ public abstract class AbstractTestBase extends TestCase {
 	}
 
 	/**
-	 * Description:  Will execute the <code>Action</code> and then the <code>ITestCommandCallBack</code>, which 
-	 * has the logic to verify that the command executed successful.
-	 * This method will test if the action implements the Disposable interface from GEF
-	 * If it does it will call the dispose() method on the action. Callers should not 
-	 * call it themselves
-	 * @throws <AssertFailError> if the command did not run successfully 
+	 * Description: Will execute the <code>Action</code> and then the
+	 * <code>ITestCommandCallBack</code>, which has the logic to verify that the
+	 * command executed successful. This method will test if the action implements
+	 * the Disposable interface from GEF If it does it will call the dispose()
+	 * method on the action. Callers should not call it themselves
 	 * 
+	 * @throws <AssertFailError> if the command did not run successfully
+	 *
 	 */
 	protected void testAction(IAction action, ITestActionCallback callback) {
 		flushEventQueue();
 		assertTrue(action.isEnabled());
 		action.run();
 		flushEventQueue();
-		if (action instanceof Disposable)
+		if (action instanceof Disposable) {
 			((Disposable) action).dispose();
-		if (callback != null)
+		}
+		if (callback != null) {
 			callback.onRunExecution();
+		}
 	}
 
 	/**
-	 * Description:  Will execute the <code>Action</code> and then the <code>ITestCommandCallBack</code>, which 
-	 * has the logic to verify that the command executed successful.
-	 * This method will test if the action implements the IDisposableAction interface from common.ui
-	 * If it does it will first set active the diagrameditorpart of the diagram and then call the init() method before running the action. At the end,
-	 * it will call the dispose() method on the action. Callers should not 
-	 * call these two methods themselves themselves
-	 * @throws <AssertFailError> if the command did not run successfully 
+	 * Description: Will execute the <code>Action</code> and then the
+	 * <code>ITestCommandCallBack</code>, which has the logic to verify that the
+	 * command executed successful. This method will test if the action implements
+	 * the IDisposableAction interface from common.ui If it does it will first set
+	 * active the diagrameditorpart of the diagram and then call the init() method
+	 * before running the action. At the end, it will call the dispose() method on
+	 * the action. Callers should not call these two methods themselves themselves
 	 * 
+	 * @throws <AssertFailError> if the command did not run successfully
+	 *
 	 */
 	protected void testAction(IDisposableAction action, ITestActionCallback callback) {
 
 		getWorkbenchPage().activate(getDiagramWorkbenchPart());
 		action.init();
 
-		if( action.isEnabled() ) {
-		
+		if (action.isEnabled()) {
+
 			action.run();
 			flushEventQueue();
 		}
 
 		action.dispose();
-		if (callback != null)
+		if (callback != null) {
 			callback.onRunExecution();
+		}
 	}
-	
+
 	/**
-	 * Does the same as <code>testAction</code> but also does an undo and
-	 * redo afterwards and compares the diagram state.
-	 * 
+	 * Does the same as <code>testAction</code> but also does an undo and redo
+	 * afterwards and compares the diagram state.
+	 *
 	 * @param action
 	 * @param callback
 	 */
@@ -338,62 +367,58 @@ public abstract class AbstractTestBase extends TestCase {
 		getWorkbenchPage().activate(getDiagramWorkbenchPart());
 		action.init();
 
-		if( action.isEnabled() ) {
-		
+		if (action.isEnabled()) {
+
 			action.run();
 			flushEventQueue();
 		}
 
 		action.dispose();
-		if (callback != null)
+		if (callback != null) {
 			callback.onRunExecution();
-		
+		}
+
 		DiagramState state2 = getDiagramState();
-		assertTrue("testActionAndUndoRedo: Action cannot be undone.", getCommandStack().canUndo()); //$NON-NLS-1$
+		assertTrue(getCommandStack().canUndo(), "testActionAndUndoRedo: Action cannot be undone."); //$NON-NLS-1$
 		getCommandStack().undo();
-		assertTrue("diagram state different after undo of action", state1.equals(getDiagramState())); //$NON-NLS-1$
+		assertTrue(state1.equals(getDiagramState()), "diagram state different after undo of action"); //$NON-NLS-1$
 		getCommandStack().redo();
-		assertTrue("diagram state different after redo of action", state2.equals(getDiagramState())); //$NON-NLS-1$
+		assertTrue(state2.equals(getDiagramState()), "diagram state different after redo of action"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Method testProperty.
-	 * Generic method for testing a property change in a view.
-	 * 
-	 * @param view IView to set the property value in
-	 * @param property String ID of the property to test
+	 * Method testProperty. Generic method for testing a property change in a view.
+	 *
+	 * @param view          IView to set the property value in
+	 * @param property      String ID of the property to test
 	 * @param expectedValue Object that is the value of the property to test
 	 */
-	protected void testProperty(
-		final View view,
-		final String property,
-		final Object expectedValue) {
-		
-		DiagramEditPart diagramEP = getDiagramEditPart();
-		assertNotNull( "The DiagramEditPart is null", diagramEP ); //$NON-NLS-1$
-		
-		RootEditPart rootEP = diagramEP.getRoot();
-		assertNotNull( "The RootEditPart is null", rootEP ); //$NON-NLS-1$
-		
-		EditPartViewer viewer = rootEP.getViewer();
-		assertNotNull( "The EditPartViewer is null", viewer ); //$NON-NLS-1$
-		
-		Map epRegistry = viewer.getEditPartRegistry();
-		assertNotNull( "The EditPartRegistery is null", epRegistry ); //$NON-NLS-1$
-		
-		final IGraphicalEditPart ep = (IGraphicalEditPart) epRegistry.get(view);
-		assertNotNull( "Couldn't find the GraphicalEditPart in the Registery", ep ); //$NON-NLS-1$
+	protected void testProperty(final View view, final String property, final Object expectedValue) {
 
-		Request request = new ChangePropertyValueRequest(
-				StringStatics.BLANK,
-				property,
-				expectedValue );
-		
-		Command cmd = ep.getCommand( request );
+		DiagramEditPart diagramEP = getDiagramEditPart();
+		assertNotNull(diagramEP, "The DiagramEditPart is null"); //$NON-NLS-1$
+
+		RootEditPart rootEP = diagramEP.getRoot();
+		assertNotNull(rootEP, "The RootEditPart is null"); //$NON-NLS-1$
+
+		EditPartViewer viewer = rootEP.getViewer();
+		assertNotNull(viewer, "The EditPartViewer is null"); //$NON-NLS-1$
+
+		Map epRegistry = viewer.getEditPartRegistry();
+		assertNotNull(epRegistry, "The EditPartRegistery is null"); //$NON-NLS-1$
+
+		final IGraphicalEditPart ep = (IGraphicalEditPart) epRegistry.get(view);
+		assertNotNull(ep, "Couldn't find the GraphicalEditPart in the Registery"); //$NON-NLS-1$
+
+		Request request = new ChangePropertyValueRequest(StringStatics.BLANK, property, expectedValue);
+
+		Command cmd = ep.getCommand(request);
 
 		testCommand(cmd, new ITestCommandCallback() {
+			@Override
 			public void onCommandExecution() {
-					assertEquals( expectedValue, ep.getStructuralFeatureValue((EStructuralFeature)PackageUtil.getElement(property)) );
+				assertEquals(expectedValue,
+						ep.getStructuralFeatureValue((EStructuralFeature) PackageUtil.getElement(property)));
 			}
 		});
 	}
@@ -401,28 +426,30 @@ public abstract class AbstractTestBase extends TestCase {
 	/**
 	 * @see TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	public void setUp() throws Exception {
 		getTestFixture().setup();
 	}
 
 	/**
-	 * Clears the display's event queue.
-	 * Same as calling <code>getTestFixture().flushEventQueue()</code>
+	 * Clears the display's event queue. Same as calling
+	 * <code>getTestFixture().flushEventQueue()</code>
 	 */
 	protected void flushEventQueue() {
 		getTestFixture().flushEventQueue();
 	}
 
-	/** Same as calling <code>getTestFixture().tearDown()</code>. */
-	protected void tearDown() throws Exception {
-
+	/** Same as calling <code>getTestFixture().tearDown()</code>. 
+	 * @throws Exception */
+	@AfterEach
+	public void tearDown() throws Exception {
 		flushEventQueue();
 		getTestFixture().tearDown();
 	}
 
 	/**
 	 * Creates a new shape view as a child of the diagram at the given location
+	 * 
 	 * @param editor
 	 * @param semanticElement
 	 * @param location
@@ -430,97 +457,82 @@ public abstract class AbstractTestBase extends TestCase {
 	 * @deprecated use createShapeView(IDiagramWorkbenchPart,Eobject,Point)
 	 */
 	/*
-	protected IShapeView createShapeView(
-		IDiagramWorkbenchPart editor,
-		IElement semanticElement,
-		Point location) {
-
-		CompoundCommand cc = new CompoundCommand();
-
-		CreateViewRequest request =	new CreateViewRequest(semanticElement);
-		request.setLocation(location);
-
-		cc.add(editor.getDiagramEditPart().getCommand(request));
-
-		RefreshConnectorsRequest rcRequest =
-			new RefreshConnectorsRequest(request.getNewObject());
-		cc.add(
-			getDiagramWorkbenchPart().getDiagramEditPart().getCommand(
-				rcRequest));
-
-		getCommandStack().execute(cc);
-
-		return (IShapeView)
-			((IAdaptable) (request.getNewObject()).get(0)).getAdapter(
-			IShapeView.class);
-	}
-	*/
+	 * protected IShapeView createShapeView( IDiagramWorkbenchPart editor, IElement
+	 * semanticElement, Point location) {
+	 * 
+	 * CompoundCommand cc = new CompoundCommand();
+	 * 
+	 * CreateViewRequest request = new CreateViewRequest(semanticElement);
+	 * request.setLocation(location);
+	 * 
+	 * cc.add(editor.getDiagramEditPart().getCommand(request));
+	 * 
+	 * RefreshConnectorsRequest rcRequest = new
+	 * RefreshConnectorsRequest(request.getNewObject()); cc.add(
+	 * getDiagramWorkbenchPart().getDiagramEditPart().getCommand( rcRequest));
+	 * 
+	 * getCommandStack().execute(cc);
+	 * 
+	 * return (IShapeView) ((IAdaptable)
+	 * (request.getNewObject()).get(0)).getAdapter( IShapeView.class); }
+	 */
 
 	/**
 	 * Creates a new shape view as a child of the diagram at the given location
+	 * 
 	 * @param editor
 	 * @param semanticElement
 	 * @param location
 	 * @return IShapeView
 	 */
-	protected View createShapeView(
-		DiagramEditPart diagramEP,
-		EObject semanticElement,
-		Point location) {
+	protected View createShapeView(DiagramEditPart diagramEP, EObject semanticElement, Point location) {
 
 		CompoundCommand cc = new CompoundCommand();
 
-		CreateViewRequest request = new CreateViewRequest(semanticElement,
-			getTestFixture().getPreferencesHint());
+		CreateViewRequest request = new CreateViewRequest(semanticElement, getTestFixture().getPreferencesHint());
 		request.setLocation(location);
 
 		cc.add(diagramEP.getCommand(request));
 
-		RefreshConnectionsRequest rcRequest =
-			new RefreshConnectionsRequest((List)request.getNewObject());
+		RefreshConnectionsRequest rcRequest = new RefreshConnectionsRequest((List) request.getNewObject());
 		cc.add(getDiagramEditPart().getCommand(rcRequest));
 
 		getCommandStack().execute(cc);
 
-		return (View)
-			((IAdaptable) ((List)request.getNewObject()).get(0)).getAdapter(
-			View.class);
+		return (View) ((IAdaptable) ((List) request.getNewObject()).get(0)).getAdapter(View.class);
 	}
 
 	protected void clearDiagram() {
 		testAction(SelectAllAction.createSelectAllAction(getWorkbenchPage()), null);
 
-		testAction(
-			GlobalActionManager.getInstance().createActionHandler(
-				getWorkbenchPage(),
-				GlobalActionId.DELETE), null);
+		testAction(GlobalActionManager.getInstance().createActionHandler(getWorkbenchPage(), GlobalActionId.DELETE),
+				null);
 	}
-	
-	/** 
-	 * Return the figure in which elements are being added to. 
+
+	/**
+	 * Return the figure in which elements are being added to.
+	 * 
 	 * @return <code>getDiagramEditPart().getFigure()</code>.
 	 */
 	protected IFigure getDrawSurfaceFigure() {
 		return getDiagramEditPart().getFigure();
 	}
-	
-	/** 
+
+	/**
 	 * Return the editpart in which elements are being added to.
+	 * 
 	 * @return <code>getDiagramEditPart()</code>.
 	 */
 	protected IGraphicalEditPart getDrawSurfaceEditPart() {
 		return getDiagramEditPart();
 	}
-	
-	
+
 	/** Return the supplied editpart's {@link ShapeNodeEditPart}children. */
 	protected List getShapesIn(IGraphicalEditPart parent) {
 		assertNotNull(parent);
 		List shapes = new ArrayList();
-		
-		Iterator it = parent.getChildren().iterator();
-		while (it.hasNext()) {
-			Object child = it.next();
+
+		for (Object child : parent.getChildren()) {
 			if (child instanceof ShapeNodeEditPart) {
 				shapes.add(child);
 			}
@@ -532,87 +544,68 @@ public abstract class AbstractTestBase extends TestCase {
 	protected List getConnectors() {
 		return getDiagramEditPart().getConnections();
 	}
-	
-	/* Will run teardown if the setup fails.
+
+	/*
+	 * Will run teardown if the setup fails.
+	 * 
 	 * @see junit.framework.TestCase#runBare()
 	 */
-	public void runBare()
-		throws Throwable {
-		
-		try {
-			setUp();
-			runTest();
+
+	/**
+	 * Reorients the connection to a new target.
+	 *
+	 * @param connectionEditPart the connection editpart to be reoriented
+	 * @param targetEditPart     the new target editpart
+	 * @param supported          should this gesture be supported?
+	 * @return the command that was executed
+	 */
+	protected Command reorientConnectionTarget(final ConnectionEditPart connectionEditPart,
+			final IGraphicalEditPart targetEditPart, boolean supported) {
+		ReconnectRequest reconnectReq = new ReconnectRequest(org.eclipse.gef.RequestConstants.REQ_RECONNECT_TARGET);
+		reconnectReq.setConnectionEditPart(connectionEditPart);
+		reconnectReq.setTargetEditPart(targetEditPart);
+		reconnectReq.setLocation(targetEditPart.getFigure().getBounds().getTopRight());
+		Command cmd = targetEditPart.getCommand(reconnectReq);
+		if (supported) {
+			testCommand(cmd, new ITestCommandCallback() {
+
+				@Override
+				public void onCommandExecution() {
+					assertTrue(connectionEditPart.getTarget() == targetEditPart);
+				}
+			});
+		} else {
+			assertTrue(cmd == null || !cmd.canExecute());
 		}
-		finally {
-			tearDown();
-		}
+		return cmd;
 	}
-    
-    /**
-     * Reorients the connection to a new target.
-     * 
-     * @param connectionEditPart
-     *            the connection editpart to be reoriented
-     * @param targetEditPart
-     *            the new target editpart
-     * @param supported
-     *            should this gesture be supported?
-     * @return the command that was executed
-     */
-    protected Command reorientConnectionTarget(
-            final ConnectionEditPart connectionEditPart,
-            final IGraphicalEditPart targetEditPart, boolean supported) {
-        ReconnectRequest reconnectReq = new ReconnectRequest(
-            RequestConstants.REQ_RECONNECT_TARGET);
-        reconnectReq.setConnectionEditPart(connectionEditPart);
-        reconnectReq.setTargetEditPart(targetEditPart);
-        reconnectReq.setLocation(targetEditPart.getFigure().getBounds()
-            .getTopRight());
-        Command cmd = targetEditPart.getCommand(reconnectReq);
-        if (supported) {
-            testCommand(cmd, new ITestCommandCallback() {
 
-                public void onCommandExecution() {
-                    assertTrue(connectionEditPart.getTarget() == targetEditPart);
-                }
-            });
-        } else {
-            assertTrue(cmd == null || !cmd.canExecute());
-        }
-        return cmd;
-    }
+	/**
+	 * Reorients the connection to a new source.
+	 *
+	 * @param connectionEditPart the connection editpart to be reoriented
+	 * @param sourceEditPart     the new source editpart
+	 * @param supported          should this gesture be supported?
+	 * @return the command that was executed
+	 */
+	protected Command reorientConnectionSource(final ConnectionEditPart connectionEditPart,
+			final IGraphicalEditPart sourceEditPart, boolean supported) {
+		ReconnectRequest reconnectReq = new ReconnectRequest(org.eclipse.gef.RequestConstants.REQ_RECONNECT_SOURCE);
+		reconnectReq.setConnectionEditPart(connectionEditPart);
+		reconnectReq.setTargetEditPart(sourceEditPart);
+		reconnectReq.setLocation(sourceEditPart.getFigure().getBounds().getTopRight());
+		Command cmd = sourceEditPart.getCommand(reconnectReq);
+		if (supported) {
+			testCommand(cmd, new ITestCommandCallback() {
 
-    /**
-     * Reorients the connection to a new source.
-     * 
-     * @param connectionEditPart
-     *            the connection editpart to be reoriented
-     * @param sourceEditPart
-     *            the new source editpart
-     * @param supported
-     *            should this gesture be supported?
-     * @return the command that was executed
-     */
-    protected Command reorientConnectionSource(
-            final ConnectionEditPart connectionEditPart,
-            final IGraphicalEditPart sourceEditPart, boolean supported) {
-        ReconnectRequest reconnectReq = new ReconnectRequest(
-            RequestConstants.REQ_RECONNECT_SOURCE);
-        reconnectReq.setConnectionEditPart(connectionEditPart);
-        reconnectReq.setTargetEditPart(sourceEditPart);
-        reconnectReq.setLocation(sourceEditPart.getFigure().getBounds()
-            .getTopRight());
-        Command cmd = sourceEditPart.getCommand(reconnectReq);
-        if (supported) {
-            testCommand(cmd, new ITestCommandCallback() {
-
-                public void onCommandExecution() {
-                    assertTrue(connectionEditPart.getSource() == sourceEditPart);
-                }
-            });
-        } else {
-            assertTrue(cmd == null || !cmd.canExecute());
-        }
-        return cmd;
-    }
+				@Override
+				public void onCommandExecution() {
+					assertTrue(connectionEditPart.getSource() == sourceEditPart);
+				}
+			});
+		} else {
+			assertTrue(cmd == null || !cmd.canExecute());
+		}
+		return cmd;
+	}
 }

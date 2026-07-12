@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.services;
@@ -27,153 +27,172 @@ import org.eclipse.gmf.runtime.diagram.core.listener.NotificationPreCommitListen
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+public class LogicDiagramEventBroker extends DiagramEventBroker {
 
-public class LogicDiagramEventBroker
-    extends DiagramEventBroker {
-    
-    static private boolean isCreated = false;
-    static private boolean isMethodInvoked = false;
-    
-    public LogicDiagramEventBroker(){
-        isCreated = true;
-    }
-    
-    static public boolean isCreated() {
-        return isCreated;
-    }
-    
-    static public boolean isMethodInvoked() {
-        return isMethodInvoked;
-    }
-    
-    WeakReference editingDomainRef;
-    
-    public LogicDiagramEventBroker(TransactionalEditingDomain editingDomain) {
-        super();
-        isCreated = true;
-        editingDomainRef = new WeakReference(editingDomain);
-    }
+	static private boolean isCreated = false;
+	static private boolean isMethodInvoked = false;
 
-    /* (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker#resourceSetChanged(org.eclipse.emf.transaction.ResourceSetChangeEvent)
-     */
-    public void resourceSetChanged(ResourceSetChangeEvent event) {
-        isMethodInvoked = true;
-        if (shouldSynchronizeWithMainThread(event)) {
-            // force synchronization with the main thread
-            final ResourceSetChangeEvent eventToHandle = event;
-            TransactionalEditingDomain editingDomain = (TransactionalEditingDomain)editingDomainRef.get();
-            if (editingDomain != null) {
-                PlatformUI.getWorkbench().getDisplay().syncExec(editingDomain.createPrivilegedRunnable(new Runnable() { 
-                    public void run() {
-                        internal_resourceSetChanged(eventToHandle);
-                    }
-                }));
-                    
-                return;
-            }
-        }
-        
-        super.resourceSetChanged(event);
-    }
-    
-    private boolean shouldSynchronizeWithMainThread(ResourceSetChangeEvent event) {
-        if (Display.getCurrent() == null)
-            return true;
-        
-        return false;
-    }
-    
-    private void internal_resourceSetChanged(ResourceSetChangeEvent event) {
-        super.resourceSetChanged(event);
-    }
+	public LogicDiagramEventBroker() {
+		isCreated = true;
+	}
 
-    public void addNotificationListener(EObject target, EStructuralFeature key, NotificationListener listener) {
-        isMethodInvoked = true;
-        super.addNotificationListener(target, key, listener);
-    }
+	static public boolean isCreated() {
+		return isCreated;
+	}
 
-    public void addNotificationListener(EObject target, EStructuralFeature key, NotificationPreCommitListener listener) {
-        isMethodInvoked = true;
-        super.addNotificationListener(target, key, listener);
-    }
+	static public boolean isMethodInvoked() {
+		return isMethodInvoked;
+	}
 
-    public void addNotificationListener(EObject target, NotificationListener listener) {
-        isMethodInvoked = true;
-        super.addNotificationListener(target, listener);
-    }
+	WeakReference editingDomainRef;
 
-    public void addNotificationListener(EObject target, NotificationPreCommitListener listener) {
-        isMethodInvoked = true;
-        super.addNotificationListener(target, listener);
-    }
+	public LogicDiagramEventBroker(TransactionalEditingDomain editingDomain) {
+		super();
+		isCreated = true;
+		editingDomainRef = new WeakReference(editingDomain);
+	}
 
-    protected void fireNotification(Notification event) {
-        isMethodInvoked = true;
-        super.fireNotification(event);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker#
+	 * resourceSetChanged(org.eclipse.emf.transaction.ResourceSetChangeEvent)
+	 */
+	@Override
+	public void resourceSetChanged(ResourceSetChangeEvent event) {
+		isMethodInvoked = true;
+		if (shouldSynchronizeWithMainThread(event)) {
+			// force synchronization with the main thread
+			final ResourceSetChangeEvent eventToHandle = event;
+			TransactionalEditingDomain editingDomain = (TransactionalEditingDomain) editingDomainRef.get();
+			if (editingDomain != null) {
+				PlatformUI.getWorkbench().getDisplay().syncExec(editingDomain.createPrivilegedRunnable(new Runnable() {
+					@Override
+					public void run() {
+						internal_resourceSetChanged(eventToHandle);
+					}
+				}));
 
-    protected Set getInterestedNotificationListeners(Notification event, NotifierToKeyToListenersSetMap listeners) {
-        isMethodInvoked = true;
-        return super.getInterestedNotificationListeners(event, listeners);
-    }
+				return;
+			}
+		}
 
-    protected NotifierToKeyToListenersSetMap getPostCommitListenersMap() {
-        isMethodInvoked = true;
-        return super.getPostCommitListenersMap();
-    }
+		super.resourceSetChanged(event);
+	}
 
-    protected NotifierToKeyToListenersSetMap getPreCommitListenersMap() {
-        isMethodInvoked = true;
-        return super.getPreCommitListenersMap();
-    }
+	private boolean shouldSynchronizeWithMainThread(ResourceSetChangeEvent event) {
+		if (Display.getCurrent() == null) {
+			return true;
+		}
 
-    protected void handleNotificationOnDeletedElement(ResourceSetChangeEvent event) {
-        isMethodInvoked = true;
-        super.handleNotificationOnDeletedElement(event);
-    }
+		return false;
+	}
 
-    public boolean isAggregatePrecommitListener() {
-        isMethodInvoked = true;
-        return super.isAggregatePrecommitListener();
-    }
+	private void internal_resourceSetChanged(ResourceSetChangeEvent event) {
+		super.resourceSetChanged(event);
+	}
 
-    protected boolean isDeleted(Set deletedObjects, EObject notifier) {
-        isMethodInvoked = true;
-        return super.isDeleted(deletedObjects, notifier);
-    }
+	@Override
+	public void addNotificationListener(EObject target, EStructuralFeature key, NotificationListener listener) {
+		isMethodInvoked = true;
+		super.addNotificationListener(target, key, listener);
+	}
 
-    public void removeNotificationListener(EObject target, NotificationListener listener) {
-        isMethodInvoked = true;
-        super.removeNotificationListener(target, listener);
-    }
+	@Override
+	public void addNotificationListener(EObject target, EStructuralFeature key,
+			NotificationPreCommitListener listener) {
+		isMethodInvoked = true;
+		super.addNotificationListener(target, key, listener);
+	}
 
-    public void removeNotificationListener(EObject target, NotificationPreCommitListener listener) {
-        isMethodInvoked = true;
-        super.removeNotificationListener(target, listener);
-    }
+	@Override
+	public void addNotificationListener(EObject target, NotificationListener listener) {
+		isMethodInvoked = true;
+		super.addNotificationListener(target, listener);
+	}
 
-    public void removeNotificationListener(EObject target, Object key, NotificationListener listener) {
-        isMethodInvoked = true;
-        super.removeNotificationListener(target, key, listener);
-    }
+	@Override
+	public void addNotificationListener(EObject target, NotificationPreCommitListener listener) {
+		isMethodInvoked = true;
+		super.addNotificationListener(target, listener);
+	}
 
-    public void removeNotificationListener(EObject target, Object key, NotificationPreCommitListener listener) {
-        isMethodInvoked = true;
-        super.removeNotificationListener(target, key, listener);
-    }
+	@Override
+	protected void fireNotification(Notification event) {
+		isMethodInvoked = true;
+		super.fireNotification(event);
+	}
 
-   
-    protected boolean shouldIgnoreNotification(Notification notification) {
-        isMethodInvoked = true;
-        return super.shouldIgnoreNotification(notification);
-    }
+	@Override
+	protected Set getInterestedNotificationListeners(Notification event, NotifierToKeyToListenersSetMap listeners) {
+		isMethodInvoked = true;
+		return super.getInterestedNotificationListeners(event, listeners);
+	}
 
-    public Command transactionAboutToCommit(ResourceSetChangeEvent event) {
-        isMethodInvoked = true;
-        return super.transactionAboutToCommit(event);
-    }
-    
-    
+	@Override
+	protected NotifierToKeyToListenersSetMap getPostCommitListenersMap() {
+		isMethodInvoked = true;
+		return super.getPostCommitListenersMap();
+	}
+
+	@Override
+	protected NotifierToKeyToListenersSetMap getPreCommitListenersMap() {
+		isMethodInvoked = true;
+		return super.getPreCommitListenersMap();
+	}
+
+	@Override
+	protected void handleNotificationOnDeletedElement(ResourceSetChangeEvent event) {
+		isMethodInvoked = true;
+		super.handleNotificationOnDeletedElement(event);
+	}
+
+	@Override
+	public boolean isAggregatePrecommitListener() {
+		isMethodInvoked = true;
+		return super.isAggregatePrecommitListener();
+	}
+
+	@Override
+	protected boolean isDeleted(Set deletedObjects, EObject notifier) {
+		isMethodInvoked = true;
+		return super.isDeleted(deletedObjects, notifier);
+	}
+
+	@Override
+	public void removeNotificationListener(EObject target, NotificationListener listener) {
+		isMethodInvoked = true;
+		super.removeNotificationListener(target, listener);
+	}
+
+	@Override
+	public void removeNotificationListener(EObject target, NotificationPreCommitListener listener) {
+		isMethodInvoked = true;
+		super.removeNotificationListener(target, listener);
+	}
+
+	@Override
+	public void removeNotificationListener(EObject target, Object key, NotificationListener listener) {
+		isMethodInvoked = true;
+		super.removeNotificationListener(target, key, listener);
+	}
+
+	@Override
+	public void removeNotificationListener(EObject target, Object key, NotificationPreCommitListener listener) {
+		isMethodInvoked = true;
+		super.removeNotificationListener(target, key, listener);
+	}
+
+	@Override
+	protected boolean shouldIgnoreNotification(Notification notification) {
+		isMethodInvoked = true;
+		return super.shouldIgnoreNotification(notification);
+	}
+
+	@Override
+	public Command transactionAboutToCommit(ResourceSetChangeEvent event) {
+		isMethodInvoked = true;
+		return super.transactionAboutToCommit(event);
+	}
 
 }

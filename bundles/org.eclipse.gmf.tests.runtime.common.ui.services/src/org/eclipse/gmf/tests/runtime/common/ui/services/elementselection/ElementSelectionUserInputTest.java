@@ -7,9 +7,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.elementselection;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -20,94 +22,76 @@ import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelect
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelectionService;
 import org.eclipse.gmf.tests.runtime.common.ui.services.dialogs.TestElementSelectionProviderContext;
 import org.eclipse.jface.viewers.IFilter;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for the user input for the element selection service.
- * 
+ *
  * @author Anthony Hunter
  */
-public class ElementSelectionUserInputTest
-    extends TestCase {
+public class ElementSelectionUserInputTest {
 
-    private AbstractElementSelectionInput input;
+	private AbstractElementSelectionInput input;
 
-    protected void setUp()
-        throws Exception {
-        super.setUp();
-        ElementSelectionScope scope = ElementSelectionScope.VISIBLE;
-        IAdaptable context = new TestElementSelectionProviderContext();
-        IFilter filter = new IFilter() {
+	@BeforeEach
+	public void setUp() throws Exception {
+		ElementSelectionScope scope = ElementSelectionScope.VISIBLE;
+		IAdaptable context = new TestElementSelectionProviderContext();
+		IFilter filter = new IFilter() {
 
-            public boolean select(Object toTest) {
-                return true;
-            }
+			@Override
+			public boolean select(Object toTest) {
+				return true;
+			}
 
-        };
-        input = new AbstractElementSelectionInput(filter, context, scope,
-            StringStatics.BLANK);
-    }
+		};
+		input = new AbstractElementSelectionInput(filter, context, scope, StringStatics.BLANK);
+	}
 
-    protected void tearDown()
-        throws Exception {
-        super.tearDown();
-        input = null;
-    }
+	@AfterEach
+	public void tearDown() {
+		input = null;
+	}
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	public void ignoreBlankUserInput() {
+		input.setInput(StringStatics.BLANK);
+		List matches = ElementSelectionService.getInstance().getMatchingObjects(input);
+		assertTrue(matches.size() == 0);
+	}
 
-    public static Test suite() {
-        return new TestSuite(ElementSelectionUserInputTest.class);
-    }
+	public void ignoreFullNameUserInput() {
+		input.setInput("one");//$NON-NLS-1$
+		List matches = ElementSelectionService.getInstance().getMatchingObjects(input);
+		assertTrue(matches.size() == 3);
+	}
 
-    public void ignoreBlankUserInput() {
-        input.setInput(StringStatics.BLANK);
-        List matches = ElementSelectionService.getInstance()
-            .getMatchingObjects(input);
-        assertTrue(matches.size() == 0);
-    }
+	public void ignoreNamePrefixUserInput() {
+		input.setInput("t");//$NON-NLS-1$
+		List matches = ElementSelectionService.getInstance().getMatchingObjects(input);
+		assertTrue(matches.size() == 6);
+	}
 
-    public void ignoreFullNameUserInput() {
-        input.setInput("one");//$NON-NLS-1$
-        List matches = ElementSelectionService.getInstance()
-            .getMatchingObjects(input);
-        assertTrue(matches.size() == 3);
-    }
+	public void ignoreAnotherNamePrefixUserInput() {
+		input.setInput("th");//$NON-NLS-1$
+		List matches = ElementSelectionService.getInstance().getMatchingObjects(input);
+		assertTrue(matches.size() == 3);
+	}
 
-    public void ignoreNamePrefixUserInput() {
-        input.setInput("t");//$NON-NLS-1$
-        List matches = ElementSelectionService.getInstance()
-            .getMatchingObjects(input);
-        assertTrue(matches.size() == 6);
-    }
+	public void ignoreAnyStringUserInput() {
+		input.setInput("t*ee");//$NON-NLS-1$
+		List matches = ElementSelectionService.getInstance().getMatchingObjects(input);
+		assertTrue(matches.size() == 3);
+	}
 
-    public void ignoreAnotherNamePrefixUserInput() {
-        input.setInput("th");//$NON-NLS-1$
-        List matches = ElementSelectionService.getInstance()
-            .getMatchingObjects(input);
-        assertTrue(matches.size() == 3);
-    }
+	public void ignoreOnCharacterUserInput() {
+		input.setInput("t?ree");//$NON-NLS-1$
+		List matches = ElementSelectionService.getInstance().getMatchingObjects(input);
+		assertTrue(matches.size() == 3);
+	}
 
-    public void ignoreAnyStringUserInput() {
-        input.setInput("t*ee");//$NON-NLS-1$
-        List matches = ElementSelectionService.getInstance()
-            .getMatchingObjects(input);
-        assertTrue(matches.size() == 3);
-    }
-
-    public void ignoreOnCharacterUserInput() {
-        input.setInput("t?ree");//$NON-NLS-1$
-        List matches = ElementSelectionService.getInstance()
-            .getMatchingObjects(input);
-        assertTrue(matches.size() == 3);
-    }
-    
+	@Test
 	public void test_testNothing() {
 		// There is an issue when running the tests, run no tests for now.
 	}

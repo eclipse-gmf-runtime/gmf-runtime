@@ -7,10 +7,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.internal.action;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,261 +23,263 @@ import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManagerChangeEvent;
 import org.eclipse.gmf.runtime.common.ui.action.IActionManagerChangeListener;
 import org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author khussey
  */
-public class ActionManagerTest extends TestCase {
+public class ActionManagerTest {
 
-    protected static class RepeatableAction implements IActionWithProgress {
+	protected static class RepeatableAction implements IActionWithProgress {
 
-        private final String label;
+		private final String label;
 
-        private final boolean runnable;
+		private final boolean runnable;
 
-        public RepeatableAction(
-            String label,
-            boolean runnable) {
-            super();
+		public RepeatableAction(String label, boolean runnable) {
+			super();
 
-            this.label = label;
-            this.runnable = runnable;
-        }
+			this.label = label;
+			this.runnable = runnable;
+		}
 
-        public String getLabel() {
-            return label;
-        }
+		@Override
+		public String getLabel() {
+			return label;
+		}
 
-        public boolean isRunnable() {
-            return runnable;
-        }
+		@Override
+		public boolean isRunnable() {
+			return runnable;
+		}
 
-        public void refresh() {/*Empty block*/}
+		@Override
+		public void refresh() {
+			/* Empty block */}
 
-        public void run(IProgressMonitor progressMonitor) {/*Empty block*/}
+		@Override
+		public void run(IProgressMonitor progressMonitor) {
+			/* Empty block */}
 
-        public WorkIndicatorType getWorkIndicatorType() {
-            return WorkIndicatorType.NONE;
-        }
-        
-		/* (non-Javadoc)
+		@Override
+		public WorkIndicatorType getWorkIndicatorType() {
+			return WorkIndicatorType.NONE;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#setup()
 		 */
+		@Override
 		public boolean setup() {
 			return true;
 		}
-    }
+	}
 
-    protected static class Fixture extends ActionManager {
+	protected static class Fixture extends ActionManager {
 
-        public Fixture() {
-            super(OperationHistoryFactory.getOperationHistory());
-        }
+		public Fixture() {
+			super(OperationHistoryFactory.getOperationHistory());
+		}
 
-        protected IActionWithProgress getFixtureAction() {
-            return super.getAction();
-        }
+		protected IActionWithProgress getFixtureAction() {
+			return super.getAction();
+		}
 
-        protected void setFixtureAction(IActionWithProgress action) {
-            super.setAction(action);
-        }
+		protected void setFixtureAction(IActionWithProgress action) {
+			super.setAction(action);
+		}
 
-        protected void fireActionManagerChange(ActionManagerChangeEvent event) {
-            super.fireActionManagerChange(event);
-        }
+		@Override
+		protected void fireActionManagerChange(ActionManagerChangeEvent event) {
+			super.fireActionManagerChange(event);
+		}
 
-    }
+	}
 
-    private ActionManagerChangeEvent actionManagerChangeEvent = null;
+	private ActionManagerChangeEvent actionManagerChangeEvent = null;
 
-    private Exception exception = null;
+	private Exception exception = null;
 
-    private Fixture fixture = null;
+	private Fixture fixture = null;
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	protected ActionManagerChangeEvent getActionManagerChangeEvent() {
+		return actionManagerChangeEvent;
+	}
 
-    public static Test suite() {
-        return new TestSuite(ActionManagerTest.class);
-    }
+	protected void setActionManagerChangeEvent(ActionManagerChangeEvent actionManagerChangeEvent) {
+		this.actionManagerChangeEvent = actionManagerChangeEvent;
+	}
 
-    public ActionManagerTest(String name) {
-        super(name);
-    }
+	protected Exception getException() {
+		return exception;
+	}
 
-    protected ActionManagerChangeEvent getActionManagerChangeEvent() {
-        return actionManagerChangeEvent;
-    }
+	protected void setException(Exception exception) {
+		this.exception = exception;
+	}
 
-    protected void setActionManagerChangeEvent(ActionManagerChangeEvent actionManagerChangeEvent) {
-        this.actionManagerChangeEvent = actionManagerChangeEvent;
-    }
+	protected Fixture getFixture() {
+		return fixture;
+	}
 
-    protected Exception getException() {
-        return exception;
-    }
+	protected void setFixture(Fixture fixture) {
+		this.fixture = fixture;
+	}
 
-    protected void setException(Exception exception) {
-        this.exception = exception;
-    }
+	@BeforeEach
+	public void setUp() {
+		setFixture(new Fixture());
+	}
 
-    protected Fixture getFixture() {
-        return fixture;
-    }
+	@Test
+	public void test_add_remove_ActionManagerChangeListener() {
+		IActionManagerChangeListener listener = new IActionManagerChangeListener() {
+			@Override
+			public void actionManagerChanged(ActionManagerChangeEvent event) {
+				setActionManagerChangeEvent(event);
+			}
+		};
 
-    protected void setFixture(Fixture fixture) {
-        this.fixture = fixture;
-    }
+		assertNull(getActionManagerChangeEvent());
 
-    protected void setUp() {
-        setFixture(new Fixture());
-    }
+		getFixture().addActionManagerChangeListener(listener);
+		getFixture().fireActionManagerChange(new ActionManagerChangeEvent(getFixture()));
 
-    public void test_add_remove_ActionManagerChangeListener() {
-        IActionManagerChangeListener listener =
-            new IActionManagerChangeListener() {
-            public void actionManagerChanged(ActionManagerChangeEvent event) {
-                setActionManagerChangeEvent(event);
-            }
-        };
+		assertNotNull(getActionManagerChangeEvent());
+		assertSame(getFixture(), getActionManagerChangeEvent().getSource());
 
-        assertNull(getActionManagerChangeEvent());
+		setActionManagerChangeEvent(null);
+		getFixture().removeActionManagerChangeListener(listener);
+		getFixture().fireActionManagerChange(new ActionManagerChangeEvent(getFixture()));
 
-        getFixture().addActionManagerChangeListener(listener);
-        getFixture().fireActionManagerChange(
-            new ActionManagerChangeEvent(getFixture()));
+		assertNull(getActionManagerChangeEvent());
+	}
 
-        assertNotNull(getActionManagerChangeEvent());
-        assertSame(getFixture(), getActionManagerChangeEvent().getSource());
+	@Test
+	public void test_fireActionManagerChange() {
+		final int count = 99;
 
-        setActionManagerChangeEvent(null);
-        getFixture().removeActionManagerChangeListener(listener);
-        getFixture().fireActionManagerChange(
-            new ActionManagerChangeEvent(getFixture()));
+		final IActionManagerChangeListener[] listeners = new IActionManagerChangeListener[count];
 
-        assertNull(getActionManagerChangeEvent());
-    }
+		for (int i = 0; i < count; i++) {
+			listeners[i] = new IActionManagerChangeListener() {
+				@Override
+				public void actionManagerChanged(ActionManagerChangeEvent event) {
+					/* Empty block */}
+			};
+		}
 
-    public void test_fireActionManagerChange() {
-        final int count = 99;
+		Thread addThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = 0; i < count; i++) {
+					getFixture().addActionManagerChangeListener(listeners[i]);
 
-        final IActionManagerChangeListener[] listeners =
-            new IActionManagerChangeListener[count];
+					if (null != getException()) {
+						break;
+					}
+				}
+			}
+		});
+		addThread.start();
 
-        for (int i = 0; i < count; i++) {
-            listeners[i] = new IActionManagerChangeListener() {
-                public void actionManagerChanged(ActionManagerChangeEvent event) {/*Empty block*/}
-            };
-        }
+		Thread fireThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActionManagerChangeEvent event = new ActionManagerChangeEvent(getFixture());
 
-        Thread addThread = new Thread(new Runnable() {
-            public void run() {
-                for (int i = 0; i < count; i++) {
-                    getFixture().addActionManagerChangeListener(listeners[i]);
+				try {
+					for (int i = 0; i < count; i++) {
+						getFixture().fireActionManagerChange(event);
 
-                    if (null != getException()) {
-                        break;
-                    }
-                }
-            }
-        });
-        addThread.start();
+						try {
+							Thread.sleep(1);
+						} catch (InterruptedException ie) {
+							/* Empty block */}
 
-        Thread fireThread = new Thread(new Runnable() {
-            public void run() {
-                ActionManagerChangeEvent event =
-                    new ActionManagerChangeEvent(getFixture());
+					}
+				} catch (Exception e) {
+					setException(e);
+				}
+			}
+		});
+		fireThread.start();
 
-                try {
-                    for (int i = 0; i < count; i++) {
-                        getFixture().fireActionManagerChange(event);
+		Thread removeThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = 0; i < count; i++) {
+					getFixture().removeActionManagerChangeListener(listeners[i]);
 
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException ie) {/*Empty block*/}
+					if (null != getException()) {
+						break;
+					}
+				}
+			}
+		});
+		removeThread.start();
 
-                    }
-                } catch (Exception e) {
-                    setException(e);
-                }
-            }
-        });
-        fireThread.start();
+		try {
+			fireThread.join();
+		} catch (InterruptedException ie) {
+			setException(ie);
+		}
 
-        Thread removeThread = new Thread(new Runnable() {
-            public void run() {
-                for (int i = 0; i < count; i++) {
-                    getFixture().removeActionManagerChangeListener(
-                        listeners[i]);
+		if (null != getException()) {
+			fail();
+		}
+	}
 
-                    if (null != getException()) {
-                        break;
-                    }
-                }
-            }
-        });
-        removeThread.start();
+	@Test
+	public void test_clear() {
+		assertNull(getFixture().getFixtureAction());
 
-        try {
-            fireThread.join();
-        } catch (InterruptedException ie) {
-            setException(ie);
-        }
+		getFixture().setFixtureAction(new RepeatableAction(getName(), true));
+		assertNotNull(getFixture().getFixtureAction());
 
-        if (null != getException()) {
-            fail();
-        }
-    }
+		getFixture().clear();
+		assertNull(getFixture().getFixtureAction());
+	}
 
-    public void test_clear() {
-        assertNull(getFixture().getFixtureAction());
+	@Test
+	public void test_run() {
+		assertNull(getFixture().getFixtureAction());
 
-        getFixture().setFixtureAction(
-            new RepeatableAction(getName(), true));
-        assertNotNull(getFixture().getFixtureAction());
+		try {
+			getFixture().run(new RepeatableAction(getName(), false));
+			fail();
+		} catch (UnsupportedOperationException uoe) {
+			assertNull(getFixture().getFixtureAction());
+		}
 
-        getFixture().clear();
-        assertNull(getFixture().getFixtureAction());
-    }
+		IActionWithProgress action = new RepeatableAction(getName(), true);
+		try {
+			getFixture().run(action);
+			assertSame(action, getFixture().getFixtureAction());
+		} catch (UnsupportedOperationException uoe) {
+			fail();
+		}
 
-    public void test_run() {
-        assertNull(getFixture().getFixtureAction());
+		try {
+			getFixture().run(new RepeatableAction(getName(), false));
+			fail();
+		} catch (UnsupportedOperationException uoe) {
+			assertSame(action, getFixture().getFixtureAction());
+		}
 
-        try {
-            getFixture().run(new RepeatableAction(getName(), false));
-            fail();
-        } catch (UnsupportedOperationException uoe) {
-            assertNull(getFixture().getFixtureAction());
-        }
+		action = new RepeatableAction(getName(), true);
+		try {
+			getFixture().run(action);
+			assertSame(action, getFixture().getFixtureAction());
+		} catch (Exception e) {
+			fail();
+		}
+	}
 
-        IActionWithProgress action = new RepeatableAction(getName(), true);
-        try {
-            getFixture().run(action);
-            assertSame(action, getFixture().getFixtureAction());
-        } catch (UnsupportedOperationException uoe) {
-            fail();
-        }
-
-        try {
-            getFixture().run(new RepeatableAction(getName(), false));
-            fail();
-        } catch (UnsupportedOperationException uoe) {
-            assertSame(action, getFixture().getFixtureAction());
-        }
-
-        action = new RepeatableAction(getName(), true);
-        try {
-            getFixture().run(action);
-            assertSame(action, getFixture().getFixtureAction());
-        } catch (Exception e) {
-            fail();
-        }
-    }
-
+	protected String getName() {
+		return this.getClass().getSimpleName();
+	}
 }

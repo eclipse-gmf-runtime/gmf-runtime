@@ -7,23 +7,22 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal;
 
 /**
  * A list of status codes for this plug-in.
- * 
+ *
  * @author ldamus
  *
  */
 public final class LogicDiagramStatusCodes {
 
 	/**
-	 * This class should not be instantiated since it is a static constant
-	 * class.
-	 * 
+	 * This class should not be instantiated since it is a static constant class.
+	 *
 	 */
 	private LogicDiagramStatusCodes() {
 		/* private constructor */
@@ -40,9 +39,9 @@ public final class LogicDiagramStatusCodes {
 	public static final int COMMAND_FAILURE = 4;
 
 	/**
-	 * Status code warning that an exception was ignored.
-	 * Set to 9 to be consistent with CommonUIStatusCodes.
+	 * Status code warning that an exception was ignored. Set to 9 to be consistent
+	 * with CommonUIStatusCodes.
 	 */
 	public static final int IGNORED_EXCEPTION_WARNING = 9;
-	
+
 }

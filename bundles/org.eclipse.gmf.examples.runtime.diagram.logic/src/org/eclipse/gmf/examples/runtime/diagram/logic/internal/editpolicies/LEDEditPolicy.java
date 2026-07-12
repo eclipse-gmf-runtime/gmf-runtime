@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies;
@@ -28,75 +28,88 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.View;
 
-
 /**
  * @author qili
  *
- * 
+ *
  */
-public class LEDEditPolicy extends ComponentEditPolicy{
-	
-	private static final String
-	INCREMENT_REQUEST = "Increment", //$NON-NLS-1$
-	DECREMENT_REQUEST = "Decrement"; //$NON-NLS-1$
+public class LEDEditPolicy extends ComponentEditPolicy {
 
-public Command getCommand(Request request) {
-	if (INCREMENT_REQUEST.equals(request.getType()))
-		return getIncrementDecrementCommand(true);
-	if (DECREMENT_REQUEST.equals(request.getType()))
-		return getIncrementDecrementCommand(false);
-	return super.getCommand(request);
-}
+	private static final String INCREMENT_REQUEST = "Increment", //$NON-NLS-1$
+			DECREMENT_REQUEST = "Decrement"; //$NON-NLS-1$
 
-protected Command getIncrementDecrementCommand(boolean type){
-	IncrementDecrementCommand command = new IncrementDecrementCommand(((IGraphicalEditPart)getHost()).getEditingDomain(), type);
-	command.setChild(((View)(getHost().getModel())).getElement());
-	return new ICommandProxy(command);
-}
-
-/* (non-Javadoc)
- * @see org.eclipse.gef.EditPolicy#getTargetEditPart(org.eclipse.gef.Request)
- */
-public EditPart getTargetEditPart(Request request) {
-	if (INCREMENT_REQUEST.equals(request.getType())
-			|| DECREMENT_REQUEST.equals(request.getType()))
-		return getHost();
-	return null;
-}
-	
-static class IncrementDecrementCommand 
-	extends AbstractTransactionalCommand {
-	
-	boolean isIncrement = true;
-	LED child = null;
-	
-	public IncrementDecrementCommand(TransactionalEditingDomain editingDomain, boolean increment){
-		super(editingDomain, "Logic Value Change", null); //$NON-NLS-1$
-		isIncrement=increment;
-	}
-	
-	public void setChild(EObject child){
-		this.child=(LED)child;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#doExecuteWithResult(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
-	 */
-	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-		throws ExecutionException {
-		
-		int value = child.getValue();
-		if(isIncrement){
-			if(value==15)value=-1;
-			child.setValue(value+1);
-		}else{
-			if(value==0)value=16;
-			child.setValue(value-1);
+	@Override
+	public Command getCommand(Request request) {
+		if (INCREMENT_REQUEST.equals(request.getType())) {
+			return getIncrementDecrementCommand(true);
 		}
-		
-		return CommandResult.newOKCommandResult();
+		if (DECREMENT_REQUEST.equals(request.getType())) {
+			return getIncrementDecrementCommand(false);
+		}
+		return super.getCommand(request);
 	}
 
-}
+	protected Command getIncrementDecrementCommand(boolean type) {
+		IncrementDecrementCommand command = new IncrementDecrementCommand(
+				((IGraphicalEditPart) getHost()).getEditingDomain(), type);
+		command.setChild(((View) (getHost().getModel())).getElement());
+		return new ICommandProxy(command);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.EditPolicy#getTargetEditPart(org.eclipse.gef.Request)
+	 */
+	@Override
+	public EditPart getTargetEditPart(Request request) {
+		if (INCREMENT_REQUEST.equals(request.getType()) || DECREMENT_REQUEST.equals(request.getType())) {
+			return getHost();
+		}
+		return null;
+	}
+
+	static class IncrementDecrementCommand extends AbstractTransactionalCommand {
+
+		boolean isIncrement = true;
+		LED child = null;
+
+		public IncrementDecrementCommand(TransactionalEditingDomain editingDomain, boolean increment) {
+			super(editingDomain, "Logic Value Change", null); //$NON-NLS-1$
+			isIncrement = increment;
+		}
+
+		public void setChild(EObject child) {
+			this.child = (LED) child;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.gmf.runtime.emf.commands.core.command.
+		 * AbstractTransactionalCommand#doExecuteWithResult(org.eclipse.core.runtime.
+		 * IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
+		 */
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+				throws ExecutionException {
+
+			int value = child.getValue();
+			if (isIncrement) {
+				if (value == 15) {
+					value = -1;
+				}
+				child.setValue(value + 1);
+			} else {
+				if (value == 0) {
+					value = 16;
+				}
+				child.setValue(value - 1);
+			}
+
+			return CommandResult.newOKCommandResult();
+		}
+
+	}
 
 }

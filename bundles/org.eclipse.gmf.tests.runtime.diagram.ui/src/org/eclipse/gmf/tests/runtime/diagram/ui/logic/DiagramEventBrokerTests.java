@@ -7,10 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,9 +50,7 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractShapeTests;
 import org.eclipse.swt.widgets.Display;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 public class DiagramEventBrokerTests extends AbstractShapeTests {
 
@@ -65,39 +66,36 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 			return receivedTypeEvent;
 		}
 
+		@Override
 		protected Diagram getDiagramView() {
 			return diagremEditPart.getDiagramView();
 		}
 
-		public TestListenningEditPart(DiagramEditPart dEP,
-				DiagramEventBroker eventBroker, EObject model) {
+		public TestListenningEditPart(DiagramEditPart dEP, DiagramEventBroker eventBroker, EObject model) {
 			super(model);
 			this.eventBroker = eventBroker;
 			this.diagremEditPart = dEP;
-			addListenerFilter(
-					"Type", this, model, NotationPackage.eINSTANCE.getView_Type()); //$NON-NLS-1$
+			addListenerFilter("Type", this, model, NotationPackage.eINSTANCE.getView_Type()); //$NON-NLS-1$
 		}
 
+		@Override
 		public IFigure createFigure() {
 			return null;
 		}
 
 		/**
-		 * Adds a listener filter by adding the given listener to a passed
-		 * notifier
-		 * 
-		 * @param filterId
-		 *            A unique filter id (within the same editpart instance)
-		 * @param listener
-		 *            A listener instance
-		 * @param element
-		 *            An element to add the listener to
+		 * Adds a listener filter by adding the given listener to a passed notifier
+		 *
+		 * @param filterId A unique filter id (within the same editpart instance)
+		 * @param listener A listener instance
+		 * @param element  An element to add the listener to
 		 */
-		protected void addListenerFilter(String filterId,
-				NotificationListener listener, EObject element,
+		@Override
+		protected void addListenerFilter(String filterId, NotificationListener listener, EObject element,
 				EStructuralFeature feature) {
-			if (element == null)
+			if (element == null) {
 				return;
+			}
 			Assert.isNotNull(filterId);
 			Assert.isNotNull(listener);
 			eventBroker.addNotificationListener(element, feature, listener);
@@ -105,9 +103,8 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 
 		/**
 		 * Create an instance.
-		 * 
-		 * @param model
-		 *            the underlying model.
+		 *
+		 * @param model the underlying model.
 		 */
 		public TestListenningEditPart(EObject model) {
 			super(model);
@@ -115,44 +112,38 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 
 		/**
 		 * Handles the property changed event
-		 * 
-		 * @param event
-		 *            the property changed event
+		 *
+		 * @param event the property changed event
 		 */
+		@Override
 		protected void handleNotificationEvent(Notification event) {
-			if (NotationPackage.eINSTANCE.getView_Type().equals(
-					event.getFeature()))
+			if (NotationPackage.eINSTANCE.getView_Type().equals(event.getFeature())) {
 				receivedTypeEvent = true;
+			}
 		}
 
 		/**
 		 * indicates if this edit part's model is a view or not
-		 * 
+		 *
 		 * @return <code>true</code> or <code>false</code>
 		 */
+		@Override
 		public boolean hasNotationView() {
 			return false;
 		}
 
 		/**
-		 * This method adds all listeners to the semantic world
-		 * (IUMLElement...etc) Override this method to add more semantic
-		 * listeners down the hierarchy This method is called only if the
-		 * semantic element is resolvable
+		 * This method adds all listeners to the semantic world (IUMLElement...etc)
+		 * Override this method to add more semantic listeners down the hierarchy This
+		 * method is called only if the semantic element is resolvable
 		 */
+		@Override
 		protected void addSemanticListeners() {
 			// do not add any thing
 		}
 	}
 
-	public DiagramEventBrokerTests(String arg0) {
-		super(arg0);
-	}
-
-	public static Test suite() {
-		return new TestSuite(DiagramEventBrokerTests.class);
-	}
-
+	@Override
 	protected void setTestFixture() {
 		testFixture = new LogicTestFixture();
 	}
@@ -164,11 +155,10 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 
 	/**
 	 * Gets the diagram event broker from the editing domain.
-	 * 
+	 *
 	 * @return the diagram event broker
 	 */
-	public DiagramEventBroker getDiagramEventBroker(
-			TransactionalEditingDomain theEditingDomain) {
+	public DiagramEventBroker getDiagramEventBroker(TransactionalEditingDomain theEditingDomain) {
 		if (theEditingDomain != null) {
 			return DiagramEventBroker.getInstance(theEditingDomain);
 		}
@@ -177,9 +167,10 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 
 	/**
 	 * Test to verify that copy appearance properties is working properly
-	 * 
+	 *
 	 * @throws Exception
 	 */
+	@Test
 	public void testDiagramEventBroker() throws Exception {
 		final View view = getDiagramEditPart().getNotationView();
 		DiagramEditPart diagramEP = getDiagramEditPart();
@@ -189,17 +180,15 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 
 		final TransactionalEditingDomain editingDomain = ep.getEditingDomain();
 		ep.activate();
-		AbstractEMFOperation operation = new AbstractEMFOperation(
-				editingDomain, "") { //$NON-NLS-1$
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+		AbstractEMFOperation operation = new AbstractEMFOperation(editingDomain, "") { //$NON-NLS-1$
+			@Override
+			protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 				view.setType("ddd"); //$NON-NLS-1$
 				return Status.OK_STATUS;
-			};
+			}
 		};
 		try {
-			OperationHistoryFactory.getOperationHistory().execute(operation,
-					new NullProgressMonitor(), null);
+			OperationHistoryFactory.getOperationHistory().execute(operation, new NullProgressMonitor(), null);
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 			assertFalse(false);
@@ -208,20 +197,19 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 		assertTrue(ep.receivedTypeEvent());
 	}
 
+	@Test
 	public void testBlockingUI_Protected() {
 		DiagramEditPart diagramEP = getDiagramEditPart();
-		final TransactionalEditingDomain editingDomain = diagramEP
-				.getEditingDomain();
+		final TransactionalEditingDomain editingDomain = diagramEP.getEditingDomain();
 
 		final Boolean result[] = new Boolean[2];
 		result[0] = Boolean.FALSE;
 
-		final AbstractTransactionalCommand command = new AbstractTransactionalCommand(
-				editingDomain, StringStatics.BLANK, null,
-				new ArrayList()) {
+		final AbstractTransactionalCommand command = new AbstractTransactionalCommand(editingDomain,
+				StringStatics.BLANK, null, new ArrayList()) {
 
-			protected CommandResult doExecuteWithResult(
-					IProgressMonitor monitor, IAdaptable info)
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 					throws ExecutionException {
 				try {
 					result[0] = Boolean.TRUE;
@@ -237,6 +225,7 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 		};
 
 		final Thread transactionThread = new Thread(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					command.execute(new NullProgressMonitor(), null);
@@ -257,8 +246,7 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 		}
 
 		// try to access the UI while the transaction is running
-		ArrangeRequest arrRequest = new ArrangeRequest(
-				RequestConstants.REQ_ARRANGE_DEFERRED, LayoutType.DEFAULT);
+		ArrangeRequest arrRequest = new ArrangeRequest(RequestConstants.REQ_ARRANGE_DEFERRED, LayoutType.DEFAULT);
 
 		arrRequest.setViewAdaptersToArrange(new ArrayList());
 		Command arrCmd = getDiagramEditPart().getCommand(arrRequest);
@@ -271,10 +259,10 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 		transactionThread.stop();
 	}
 
+	@Test
 	public void testBlockingUI_Unprotected() {
 		DiagramEditPart diagramEP = getDiagramEditPart();
-		final TransactionalEditingDomain editingDomain = diagramEP
-				.getEditingDomain();
+		final TransactionalEditingDomain editingDomain = diagramEP.getEditingDomain();
 
 		final Map unchecked_options = new HashMap();
 		unchecked_options.put(Transaction.OPTION_NO_UNDO, Boolean.TRUE);
@@ -284,24 +272,22 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 		result[0] = Boolean.FALSE;
 		result[1] = Boolean.FALSE;
 
-		final AbstractTransactionalCommand command = new AbstractTransactionalCommand(
-				editingDomain, StringStatics.BLANK, unchecked_options,
-				new ArrayList()) {
+		final AbstractTransactionalCommand command = new AbstractTransactionalCommand(editingDomain,
+				StringStatics.BLANK, unchecked_options, new ArrayList()) {
 
-			protected CommandResult doExecuteWithResult(
-					IProgressMonitor monitor, IAdaptable info)
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 					throws ExecutionException {
 				final Thread accessCommandThread = new Thread(new Runnable() {
+					@Override
 					public void run() {
 						// try to access the UI while the transaction is running
-						ArrangeRequest arrRequest = new ArrangeRequest(
-								RequestConstants.REQ_ARRANGE_DEFERRED,
+						ArrangeRequest arrRequest = new ArrangeRequest(RequestConstants.REQ_ARRANGE_DEFERRED,
 								LayoutType.DEFAULT);
 
 						arrRequest.setViewAdaptersToArrange(new ArrayList());
-						Command arrCmd = getDiagramEditPart().getCommand(
-								arrRequest);
-						
+						Command arrCmd = getDiagramEditPart().getCommand(arrRequest);
+
 						result[0] = Boolean.valueOf(arrCmd == null || !arrCmd.canExecute());
 						result[1] = Boolean.TRUE;
 					}
@@ -316,7 +302,7 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 			}
 
 		};
-		
+
 		try {
 			command.execute(new NullProgressMonitor(), null);
 		} catch (ExecutionException e) {

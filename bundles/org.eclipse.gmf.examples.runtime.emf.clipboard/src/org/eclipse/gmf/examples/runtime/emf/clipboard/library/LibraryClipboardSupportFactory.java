@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.emf.clipboard.library;
 
@@ -17,15 +16,13 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupportFactory;
 
-
 /**
  * Factory to create {@link LibraryClipboardSupport}s.
  */
-public class LibraryClipboardSupportFactory
-	implements IClipboardSupportFactory {
+public class LibraryClipboardSupportFactory implements IClipboardSupportFactory {
 
 	private final IClipboardSupport support = new LibraryClipboardSupport();
-	
+
 	/**
 	 * Initializes me.
 	 */
@@ -33,6 +30,7 @@ public class LibraryClipboardSupportFactory
 		super();
 	}
 
+	@Override
 	public IClipboardSupport newClipboardSupport(EPackage ePackage) {
 		// I only register support for the one Library EPackage
 		return support;

@@ -7,10 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.ui.action;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -42,15 +45,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.operations.UndoActionHandler;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the AbstractModelActionDelegate.
- * 
+ *
  * @author ldamus
  */
-public class AbstractModelActionDelegateTest extends TestCase {
+public class AbstractModelActionDelegateTest {
 
 	private IProject project;
 
@@ -62,19 +67,19 @@ public class AbstractModelActionDelegateTest extends TestCase {
 
 	private IWorkbenchPartSite site;
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
+		// Avoid UI prompting from validator.
+		// With the move to JUnit 5 and the corresponding runner, this is invoked in a proper OSGi context,
+		// and thus *after* CommonUIPlugin has already set the default to UIModificationValidator, so
+		// reflection is needed to override that.
+		var field = FileModificationValidator.class.getDeclaredField("validator");
+		field.setAccessible(true);
+		field.set(null, new BaseModificationValidator());
 
-		super.setUp();
+		site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
 
-		// avoid UI prompting from validator
-		FileModificationValidator
-				.setModificationValidator(new BaseModificationValidator());
-
-		site = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().getActivePart().getSite();
-
-		editingDomain = TransactionalEditingDomain.Factory.INSTANCE
-				.createEditingDomain();
+		editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain();
 		history = OperationHistoryFactory.getOperationHistory();
 
 		try {
@@ -94,10 +99,8 @@ public class AbstractModelActionDelegateTest extends TestCase {
 		}
 	}
 
-	protected void tearDown() throws Exception {
-
-		super.tearDown();
-
+	@AfterEach
+	public void tearDown() throws Exception {
 		file.delete(true, new NullProgressMonitor());
 		project.close(new NullProgressMonitor());
 		project.delete(true, true, new NullProgressMonitor());
@@ -108,13 +111,12 @@ public class AbstractModelActionDelegateTest extends TestCase {
 
 	private void fail(Exception e) {
 		e.printStackTrace();
-		fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		Assertions.fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
 	}
 
 	private void setReadOnly(boolean b) {
 		try {
-			ResourceAttributes resourceAttributes = file
-					.getResourceAttributes();
+			ResourceAttributes resourceAttributes = file.getResourceAttributes();
 			resourceAttributes.setReadOnly(b);
 			file.setResourceAttributes(resourceAttributes);
 
@@ -124,17 +126,17 @@ public class AbstractModelActionDelegateTest extends TestCase {
 	}
 
 	/**
-	 * Tests that validation is done for file modification when commands that
-	 * change the model are executed through an AbstractModelActionDelegate.
+	 * Tests that validation is done for file modification when commands that change
+	 * the model are executed through an AbstractModelActionDelegate.
 	 */
+	@Test
 	public void test_fileModificationValidation_155418() {
 
 		TestModelActionDelegate action = new TestModelActionDelegate();
 
 		// create an undo action handler for the undo context so that we can
 		// test that the history is flushed correctly
-		UndoActionHandler undoAction = new UndoActionHandler(site, action
-				.getUndoContext());
+		UndoActionHandler undoAction = new UndoActionHandler(site, action.getUndoContext());
 		undoAction.setPruneHistory(true);
 
 		// execute fails when file is read-only
@@ -153,8 +155,7 @@ public class AbstractModelActionDelegateTest extends TestCase {
 		// undo fails and history flushed when file is read-only
 		setReadOnly(true);
 		try {
-			history.undo(action.getUndoContext(), new NullProgressMonitor(),
-					null);
+			history.undo(action.getUndoContext(), new NullProgressMonitor(), null);
 		} catch (ExecutionException e) {
 			fail(e);
 		}
@@ -187,10 +188,12 @@ public class AbstractModelActionDelegateTest extends TestCase {
 			});
 		}
 
+		@Override
 		protected TransactionalEditingDomain getEditingDomain() {
 			return editingDomain;
 		}
 
+		@Override
 		protected void doRun(IProgressMonitor progressMonitor) {
 			execute(getCommand(), progressMonitor, null);
 		}
@@ -226,22 +229,22 @@ public class AbstractModelActionDelegateTest extends TestCase {
 					Collections.singletonList(file));
 		}
 
-		protected CommandResult doExecuteWithResult(
-				IProgressMonitor progressMonitor, IAdaptable info)
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info)
 				throws ExecutionException {
 			this.executed = true;
 			return CommandResult.newOKCommandResult();
 		}
 
-		protected CommandResult doRedoWithResult(
-				IProgressMonitor progressMonitor, IAdaptable info)
+		@Override
+		protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
 				throws ExecutionException {
 			this.undone = true;
 			return CommandResult.newOKCommandResult();
 		}
 
-		protected CommandResult doUndoWithResult(
-				IProgressMonitor progressMonitor, IAdaptable info)
+		@Override
+		protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
 				throws ExecutionException {
 			return CommandResult.newOKCommandResult();
 		}

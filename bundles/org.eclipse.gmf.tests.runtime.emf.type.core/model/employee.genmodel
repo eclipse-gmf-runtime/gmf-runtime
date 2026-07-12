@@ -6,7 +6,6 @@
     modelPluginID="org.eclipse.gmf.tests.runtime.emf.type.core" runtimeJar="true"
     modelName="Employee" editPluginClass="Employee.provider.EmployeeEditPlugin" editorPluginClass="Employee.presentation.EmployeeEditorPlugin"
     nonNLSMarkers="true" testsDirectory="/org.eclipse.gmf.tests.runtime.emf.type.core/src"
-    testSuiteClass="org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeAllTests"
     booleanFlagsField="eFlags" booleanFlagsReservedBits="8" importerID="org.eclipse.emf.importer.ecore">
   <foreignModel>Employee.ecore</foreignModel>
   <genPackages prefix="Employee" basePackage="org.eclipse.gmf.tests.runtime.emf.type.core"

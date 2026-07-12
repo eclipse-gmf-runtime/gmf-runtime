@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions;
@@ -24,21 +24,19 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 
-public class CreateLogicElementActionDelegate extends AbstractActionDelegate
-		implements IObjectActionDelegate {
+public class CreateLogicElementActionDelegate extends AbstractActionDelegate implements IObjectActionDelegate {
 
+	@Override
 	protected void doRun(IProgressMonitor progressMonitor) {
 
 		// Action ID corresponds to the ID of the element type to be created
 		String actionId = getAction().getId();
-		IElementType elementType = ElementTypeRegistry.getInstance().getType(
-				actionId);
+		IElementType elementType = ElementTypeRegistry.getInstance().getType(actionId);
 
 		if (elementType == null) {
 			// Problem in the Action contribution XML
 			throw new IllegalArgumentException("Action id '" //$NON-NLS-1$
-					+ actionId
-					+ "' does not correspond to an existing element type ID."); //$NON-NLS-1$
+					+ actionId + "' does not correspond to an existing element type ID."); //$NON-NLS-1$
 		}
 
 		// Get the selected edit part
@@ -54,9 +52,8 @@ public class CreateLogicElementActionDelegate extends AbstractActionDelegate
 		IGraphicalEditPart container = (IGraphicalEditPart) selection;
 
 		// Get the command to create the new element and its view
-		CreateViewRequest createRequest = CreateViewRequestFactory
-				.getCreateShapeRequest(elementType, container
-						.getDiagramPreferencesHint());
+		CreateViewRequest createRequest = CreateViewRequestFactory.getCreateShapeRequest(elementType,
+				container.getDiagramPreferencesHint());
 
 		Command command = container.getCommand(createRequest);
 
@@ -67,8 +64,7 @@ public class CreateLogicElementActionDelegate extends AbstractActionDelegate
 		}
 
 		// Create the new element
-		DiagramCommandStack commandStack = container.getDiagramEditDomain()
-				.getDiagramCommandStack();
+		DiagramCommandStack commandStack = container.getDiagramEditDomain().getDiagramCommandStack();
 		commandStack.execute(command);
 	}
 }
