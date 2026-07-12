@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.common.core
-Bundle-Version: 1.7.0.qualifier
+Bundle-Version: 1.8.0.qualifier
 Bundle-Activator: org.eclipse.gmf.tests.runtime.common.core.Activator
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
@@ -11,7 +11,8 @@ Export-Package: org.eclipse.gmf.tests.runtime.common.core;x-internal:=true,
  org.eclipse.gmf.tests.runtime.common.core.internal.service;x-internal:=true,
  org.eclipse.gmf.tests.runtime.common.core.internal.util;x-friends:="org.eclipse.gmf.tests.runtime.emf.ui,org.eclipse.gmf.tests.runtime.diagram.ui"
 Require-Bundle: org.eclipse.gmf.runtime.common.core;bundle-version="[1.7.0,2.0.0)",
- org.junit;bundle-version="[3.8.0,5.0.0)"
+ junit-jupiter-api,
+ junit-platform-suite-api
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.gmf.tests.runtime.common.core

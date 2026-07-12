@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories;
@@ -24,11 +24,11 @@ import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * The LogicFlowContainerView Factory class 
+ * The LogicFlowContainerView Factory class
+ * 
  * @author mmostafa
  */
-public class LogicFlowContainerViewFactory
-	extends ShapeViewFactory {
+public class LogicFlowContainerViewFactory extends ShapeViewFactory {
 
 	/**
 	 * @param semanticAdapter
@@ -37,10 +37,10 @@ public class LogicFlowContainerViewFactory
 	 * @param index
 	 * @param persisted
 	 */
-	public View createView(IAdaptable semanticAdapter, View containerView,
-			String semanticHint, int index, boolean persisted, final PreferencesHint preferencesHint) {
-		View view =  super.createView(semanticAdapter, containerView, semanticHint,
-			index, persisted, preferencesHint);
+	@Override
+	public View createView(IAdaptable semanticAdapter, View containerView, String semanticHint, int index,
+			boolean persisted, final PreferencesHint preferencesHint) {
+		View view = super.createView(semanticAdapter, containerView, semanticHint, index, persisted, preferencesHint);
 		return view;
 	}
 
@@ -48,15 +48,14 @@ public class LogicFlowContainerViewFactory
 	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.view.AbstractNodeView#decorateView(org.eclipse.gmf.runtime.diagram.ui.internal.view.IContainerView,
 	 *      org.eclipse.core.runtime.IAdaptable, java.lang.String, int, boolean)
 	 */
-	protected void decorateView(View containerView, View view,
-			IAdaptable semanticAdapter, String semanticHint, int index,
-			boolean persisted) {
-		super.decorateView(containerView, view, semanticAdapter, semanticHint,
-			index, persisted);
-        ShapeStyle style = (ShapeStyle)view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
-        style.setFillColor((FigureUtilities.colorToInteger(LogicColorConstants.logicGreen)).intValue());
-        style.setLineColor((FigureUtilities.colorToInteger(LogicColorConstants.logicBlack)).intValue());
-		getViewService().createNode(semanticAdapter, view,
-			LogicConstants.LOGIC_FLOW_COMPARTMENT, ViewUtil.APPEND, getPreferencesHint());	
+	@Override
+	protected void decorateView(View containerView, View view, IAdaptable semanticAdapter, String semanticHint,
+			int index, boolean persisted) {
+		super.decorateView(containerView, view, semanticAdapter, semanticHint, index, persisted);
+		ShapeStyle style = (ShapeStyle) view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
+		style.setFillColor((FigureUtilities.colorToInteger(LogicColorConstants.logicGreen)).intValue());
+		style.setLineColor((FigureUtilities.colorToInteger(LogicColorConstants.logicBlack)).intValue());
+		getViewService().createNode(semanticAdapter, view, LogicConstants.LOGIC_FLOW_COMPARTMENT, ViewUtil.APPEND,
+				getPreferencesHint());
 	}
 }

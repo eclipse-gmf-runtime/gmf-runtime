@@ -7,10 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.internal.resources;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,28 +25,26 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.gmf.runtime.common.ui.internal.resources.FileChangeEventType;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
- * 
- * 
- * @author Anthony Hunter 
- * <a href="mailto:ahunter@rational.com">ahunter@rational.com</a>
+ *
+ *
+ * @author Anthony Hunter
+ *         <a href="mailto:ahunter@rational.com">ahunter@rational.com</a>
  */
-public class FileChangeEventTypeTest extends TestCase {
-	
+public class FileChangeEventTypeTest {
+
 	protected static class Fixture extends FileChangeEventType {
 
 		private static final long serialVersionUID = 1;
-		
+
 		protected Fixture() {
 			super("Fixture", 0); //$NON-NLS-1$
 		}
 
+		@Override
 		protected List getValues() {
 			return super.getValues();
 		}
@@ -51,18 +52,6 @@ public class FileChangeEventTypeTest extends TestCase {
 	}
 
 	private Fixture fixture = null;
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(FileChangeEventTypeTest.class);
-	}
-
-	public FileChangeEventTypeTest(String name) {
-		super(name);
-	}
 
 	protected Fixture getFixture() {
 		return fixture;
@@ -72,10 +61,12 @@ public class FileChangeEventTypeTest extends TestCase {
 		this.fixture = fixture;
 	}
 
-	protected void setUp() {
+	@BeforeEach
+	public void setUp() {
 		setFixture(new Fixture());
 	}
 
+	@Test
 	public void test_readResolve() {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -83,19 +74,13 @@ public class FileChangeEventTypeTest extends TestCase {
 		ObjectInput input = null;
 		try {
 			output = new ObjectOutputStream(stream);
-			for (Iterator i = getFixture().getValues().iterator();
-				i.hasNext();
-				) {
+			for (Iterator i = getFixture().getValues().iterator(); i.hasNext();) {
 				output.writeObject(i.next());
 			}
 			output.flush();
 
-			input =
-				new ObjectInputStream(
-					new ByteArrayInputStream(stream.toByteArray()));
-			for (Iterator i = getFixture().getValues().iterator();
-				i.hasNext();
-				) {
+			input = new ObjectInputStream(new ByteArrayInputStream(stream.toByteArray()));
+			for (Iterator i = getFixture().getValues().iterator(); i.hasNext();) {
 				assertSame(i.next(), input.readObject());
 			}
 		} catch (Exception e) {
@@ -104,7 +89,8 @@ public class FileChangeEventTypeTest extends TestCase {
 			try {
 				output.close();
 				input.close();
-			} catch (Exception e) {/*Empty block*/}
+			} catch (Exception e) {
+				/* Empty block */}
 		}
 	}
 }

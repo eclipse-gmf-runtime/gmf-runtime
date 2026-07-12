@@ -7,10 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.internal.resources;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -38,18 +40,15 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.gmf.runtime.common.ui.internal.resources.FileChangeEvent;
 import org.eclipse.gmf.runtime.common.ui.internal.resources.FileChangeEventType;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for FileChangeEvent.
- * 
- * @author Anthony Hunter 
+ *
+ * @author Anthony Hunter
  */
-public class FileChangeEventTest extends TestCase {
+public class FileChangeEventTest {
 
 	protected class File implements IFile {
 
@@ -59,58 +58,48 @@ public class FileChangeEventTest extends TestCase {
 			this.path = path;
 		}
 
-		public void appendContents(
-			InputStream source,
-			boolean force,
-			boolean keepHistory,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void appendContents(InputStream source, boolean force, boolean keepHistory, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void setCharset(String newCharset, IProgressMonitor monitor)
-			throws CoreException {
+		@Override
+		public void setCharset(String newCharset, IProgressMonitor monitor) throws CoreException {
 			// blank
 
 		}
-		public void appendContents(
-			InputStream source,
-			int updateFlags,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+
+		@Override
+		public void appendContents(InputStream source, int updateFlags, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void create(
-			InputStream source,
-			boolean force,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void create(InputStream source, boolean force, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void create(
-			InputStream source,
-			int updateFlags,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void create(InputStream source, int updateFlags, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void createLink(
-			IPath localLocation,
-			int updateFlags,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void createLink(IPath localLocation, int updateFlags, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void delete(
-			boolean force,
-			boolean keepHistory,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void delete(boolean force, boolean keepHistory, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
+		@Override
 		public InputStream getContents() throws CoreException {
 			return null;
 		}
 
+		@Override
 		public InputStream getContents(boolean force) throws CoreException {
 			return null;
 		}
@@ -119,212 +108,203 @@ public class FileChangeEventTest extends TestCase {
 		 * @see org.eclipse.core.resources.IFile#getEncoding()
 		 * @deprecated
 		 */
+		@Deprecated
+		@Override
 		public int getEncoding() throws CoreException {
 			return 0;
 		}
 
+		@Override
 		public IPath getFullPath() {
 			return null;
 		}
 
-		public IFileState[] getHistory(IProgressMonitor monitor)
-			throws CoreException {
+		@Override
+		public IFileState[] getHistory(IProgressMonitor monitor) throws CoreException {
 			return null;
 		}
 
+		@Override
 		public String getName() {
 			return null;
 		}
 
+		@Override
 		public boolean isReadOnly() {
 			return false;
 		}
 
-		public void move(
-			IPath destination,
-			boolean force,
-			boolean keepHistory,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void move(IPath destination, boolean force, boolean keepHistory, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void setContents(
-			IFileState source,
-			boolean force,
-			boolean keepHistory,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void setContents(IFileState source, boolean force, boolean keepHistory, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void setContents(
-			IFileState source,
-			int updateFlags,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void setContents(IFileState source, int updateFlags, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void setContents(
-			InputStream source,
-			boolean force,
-			boolean keepHistory,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void setContents(InputStream source, boolean force, boolean keepHistory, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void setContents(
-			InputStream source,
-			int updateFlags,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void setContents(InputStream source, int updateFlags, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void accept(IResourceProxyVisitor visitor, int memberFlags)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void accept(IResourceProxyVisitor visitor, int memberFlags) throws CoreException {/* Empty block */
 		}
 
-		public void accept(
-			IResourceVisitor visitor,
-			int depth,
-			boolean includePhantoms)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void accept(IResourceVisitor visitor, int depth, boolean includePhantoms)
+				throws CoreException {/* Empty block */
 		}
 
-		public void accept(
-			IResourceVisitor visitor,
-			int depth,
-			int memberFlags)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void accept(IResourceVisitor visitor, int depth, int memberFlags) throws CoreException {/* Empty block */
 		}
 
+		@Override
 		public void accept(IResourceVisitor visitor) throws CoreException {
-			/*Empty block*/
+			/* Empty block */
 		}
 
-		public void clearHistory(IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void clearHistory(IProgressMonitor monitor) throws CoreException {/* Empty block */
 		}
 
-		public void copy(
-			IPath destination,
-			boolean force,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void copy(IPath destination, boolean force, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void copy(
-			IPath destination,
-			int updateFlags,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void copy(IPath destination, int updateFlags, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void copy(
-			IProjectDescription description,
-			boolean force,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void copy(IProjectDescription description, boolean force, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void copy(
-			IProjectDescription description,
-			int updateFlags,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void copy(IProjectDescription description, int updateFlags, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
+		@Override
 		public IMarker createMarker(String type) throws CoreException {
 			return null;
 		}
 
-		public void delete(boolean force, IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void delete(boolean force, IProgressMonitor monitor) throws CoreException {/* Empty block */
 		}
 
-		public void delete(int updateFlags, IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void delete(int updateFlags, IProgressMonitor monitor) throws CoreException {/* Empty block */
 		}
 
-		public void deleteMarkers(
-			String type,
-			boolean includeSubtypes,
-			int depth)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void deleteMarkers(String type, boolean includeSubtypes, int depth)
+				throws CoreException {/* Empty block */
 		}
 
+		@Override
 		public boolean exists() {
 			return false;
 		}
 
+		@Override
 		public IMarker findMarker(long id) throws CoreException {
 			return null;
 		}
 
-		public IMarker[] findMarkers(
-			String type,
-			boolean includeSubtypes,
-			int depth)
-			throws CoreException {
+		@Override
+		public IMarker[] findMarkers(String type, boolean includeSubtypes, int depth) throws CoreException {
 			return null;
 		}
 
+		@Override
 		public String getFileExtension() {
 			return null;
 		}
 
+		@Override
 		public IPath getLocation() {
 			return path;
 		}
 
+		@Override
 		public IMarker getMarker(long id) {
 			return null;
 		}
 
+		@Override
 		public long getModificationStamp() {
 			return 0;
 		}
 
+		@Override
 		public IContainer getParent() {
 			return null;
 		}
 
-		public String getPersistentProperty(QualifiedName key)
-			throws CoreException {
+		@Override
+		public String getPersistentProperty(QualifiedName key) throws CoreException {
 			return null;
 		}
 
+		@Override
 		public IProject getProject() {
 			return null;
 		}
 
+		@Override
 		public IPath getProjectRelativePath() {
 			return null;
 		}
 
+		@Override
 		public IPath getRawLocation() {
 			return null;
 		}
 
-		public Object getSessionProperty(QualifiedName key)
-			throws CoreException {
+		@Override
+		public Object getSessionProperty(QualifiedName key) throws CoreException {
 			return null;
 		}
 
+		@Override
 		public int getType() {
 			return 0;
 		}
 
+		@Override
 		public IWorkspace getWorkspace() {
 			return null;
 		}
 
+		@Override
 		public boolean isAccessible() {
 			return false;
 		}
 
+		@Override
 		public boolean isDerived() {
 			return false;
 		}
 
+		@Override
 		public boolean isLinked() {
 			return false;
 		}
@@ -333,88 +313,91 @@ public class FileChangeEventTest extends TestCase {
 		 * @see org.eclipse.core.resources.IResource#isLocal(int)
 		 * @deprecated
 		 */
+		@Deprecated
+		@Override
 		public boolean isLocal(int depth) {
 			return false;
 		}
 
+		@Override
 		public boolean isPhantom() {
 			return false;
 		}
 
+		@Override
 		public boolean isSynchronized(int depth) {
 			return false;
 		}
 
+		@Override
 		public boolean isTeamPrivateMember() {
 			return false;
 		}
 
-		public void move(
-			IPath destination,
-			boolean force,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void move(IPath destination, boolean force, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void move(
-			IPath destination,
-			int updateFlags,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void move(IPath destination, int updateFlags, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void move(
-			IProjectDescription description,
-			boolean force,
-			boolean keepHistory,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void move(IProjectDescription description, boolean force, boolean keepHistory, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void move(
-			IProjectDescription description,
-			int updateFlags,
-			IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void move(IProjectDescription description, int updateFlags, IProgressMonitor monitor)
+				throws CoreException {/* Empty block */
 		}
 
-		public void refreshLocal(int depth, IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void refreshLocal(int depth, IProgressMonitor monitor) throws CoreException {/* Empty block */
 		}
 
-		public void setDerived(boolean isDerived) throws CoreException {/*Empty block*/
+		@Override
+		public void setDerived(boolean isDerived) throws CoreException {/* Empty block */
 		}
 
 		/**
-		 * @see org.eclipse.core.resources.IResource#setLocal(boolean, int, org.eclipse.core.runtime.IProgressMonitor)
+		 * @see org.eclipse.core.resources.IResource#setLocal(boolean, int,
+		 *      org.eclipse.core.runtime.IProgressMonitor)
 		 * @deprecated
 		 */
-		public void setLocal(boolean flag, int depth, IProgressMonitor monitor)
-			throws CoreException {/*Empty block*/
+		@Deprecated
+		@Override
+		public void setLocal(boolean flag, int depth, IProgressMonitor monitor) throws CoreException {/* Empty block */
 		}
 
-		public void setPersistentProperty(QualifiedName key, String value)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void setPersistentProperty(QualifiedName key, String value) throws CoreException {/* Empty block */
 		}
 
 		/**
 		 * @see org.eclipse.core.resources.IResource#setReadOnly(boolean)
 		 * @deprecated
 		 */
-		public void setReadOnly(boolean readOnly) {/*Empty block*/
+		@Deprecated
+		@Override
+		public void setReadOnly(boolean readOnly) {/* Empty block */
 		}
 
-		public void setSessionProperty(QualifiedName key, Object value)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void setSessionProperty(QualifiedName key, Object value) throws CoreException {/* Empty block */
 		}
 
-		public void setTeamPrivateMember(boolean isTeamPrivate)
-			throws CoreException {/*Empty block*/
+		@Override
+		public void setTeamPrivateMember(boolean isTeamPrivate) throws CoreException {/* Empty block */
 		}
 
-		public void touch(IProgressMonitor monitor) throws CoreException {/*Empty block*/
+		@Override
+		public void touch(IProgressMonitor monitor) throws CoreException {/* Empty block */
 		}
 
+		@Override
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
@@ -422,6 +405,7 @@ public class FileChangeEventTest extends TestCase {
 		/**
 		 * @see org.eclipse.core.resources.IResource#getLocalTimeStamp()
 		 */
+		@Override
 		public long getLocalTimeStamp() {
 			return 0;
 		}
@@ -429,6 +413,7 @@ public class FileChangeEventTest extends TestCase {
 		/**
 		 * @see org.eclipse.core.resources.IResource#setLocalTimeStamp(long)
 		 */
+		@Override
 		public long setLocalTimeStamp(long value) throws CoreException {
 			return 0;
 		}
@@ -436,6 +421,7 @@ public class FileChangeEventTest extends TestCase {
 		/**
 		 * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
 		 */
+		@Override
 		public boolean contains(ISchedulingRule rule) {
 			return false;
 		}
@@ -443,12 +429,13 @@ public class FileChangeEventTest extends TestCase {
 		/**
 		 * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
 		 */
+		@Override
 		public boolean isConflicting(ISchedulingRule rule) {
 			return false;
 		}
-		
-		public String getCharset() throws CoreException
-		{
+
+		@Override
+		public String getCharset() throws CoreException {
 			return null;
 		}
 
@@ -456,78 +443,93 @@ public class FileChangeEventTest extends TestCase {
 		 * @see org.eclipse.core.resources.IFile#setCharset(java.lang.String)
 		 * @deprecated
 		 */
-		public void setCharset(String newCharset)
-			throws CoreException {/*Empty block*/
+		@Deprecated
+		@Override
+		public void setCharset(String newCharset) throws CoreException {/* Empty block */
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.core.resources.IFile#getCharset(boolean)
 		 */
-		public String getCharset(boolean checkImplicit)
-			throws CoreException {
+		@Override
+		public String getCharset(boolean checkImplicit) throws CoreException {
 			return null;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.core.resources.IFile#getContentDescription()
 		 */
-		public IContentDescription getContentDescription()
-			throws CoreException {
+		@Override
+		public IContentDescription getContentDescription() throws CoreException {
 			return null;
 		}
 
+		@Override
 		public String getCharsetFor(Reader reader) throws CoreException {
 			return null;
 		}
 
+		@Override
 		public ResourceAttributes getResourceAttributes() {
 			return null;
 		}
 
+		@Override
 		public void revertModificationStamp(long value) throws CoreException {
-			/*Empty block*/
+			/* Empty block */
 		}
 
+		@Override
 		public void setResourceAttributes(ResourceAttributes attributes) throws CoreException {
-			/*Empty block*/
+			/* Empty block */
 		}
 
+		@Override
 		public URI getLocationURI() {
 			return null;
 		}
 
+		@Override
 		public void createLink(URI location, int updateFlags, IProgressMonitor monitor) throws CoreException {
-			/*Empty block*/
+			/* Empty block */
 		}
 
+		@Override
 		public URI getRawLocationURI() {
 			return null;
 		}
 
+		@Override
 		public boolean isLinked(int options) {
 			return false;
 		}
 
+		@Override
 		public IResourceProxy createProxy() {
 			return null;
 		}
 
-        public int findMaxProblemSeverity(String type, boolean includeSubtypes,
-                int depth)
-            throws CoreException {
-            return 0;
-        }
+		@Override
+		public int findMaxProblemSeverity(String type, boolean includeSubtypes, int depth) throws CoreException {
+			return 0;
+		}
 
-        /*
-         * @see org.eclipse.core.resources.IResource#isHidden()
-         */
-        public boolean isHidden() {
+		/*
+		 * @see org.eclipse.core.resources.IResource#isHidden()
+		 */
+		@Override
+		public boolean isHidden() {
 			return false;
 		}
 
-        /*
-         * @see org.eclipse.core.resources.IResource#setHidden(boolean)
-         */
+		/*
+		 * @see org.eclipse.core.resources.IResource#setHidden(boolean)
+		 */
+		@Override
 		public void setHidden(boolean isHidden) throws CoreException {
 			/* not implemented */
 		}
@@ -535,6 +537,7 @@ public class FileChangeEventTest extends TestCase {
 		/*
 		 * @see org.eclipse.core.resources.IResource#isDerived(int)
 		 */
+		@Override
 		public boolean isDerived(int arg0) {
 			return false;
 		}
@@ -542,22 +545,23 @@ public class FileChangeEventTest extends TestCase {
 		/*
 		 * @see org.eclipse.core.resources.IResource#getPersistentProperties()
 		 */
-        public Map getPersistentProperties()
-            throws CoreException {
-            return null;
-        }
+		@Override
+		public Map getPersistentProperties() throws CoreException {
+			return null;
+		}
 
-        /*
-         * @see org.eclipse.core.resources.IResource#getSessionProperties()
-         */
-        public Map getSessionProperties()
-            throws CoreException {
-            return null;
-        }
+		/*
+		 * @see org.eclipse.core.resources.IResource#getSessionProperties()
+		 */
+		@Override
+		public Map getSessionProperties() throws CoreException {
+			return null;
+		}
 
-        /*
-         * @see org.eclipse.core.resources.IResource#isHidden(int)
-         */
+		/*
+		 * @see org.eclipse.core.resources.IResource#isHidden(int)
+		 */
+		@Override
 		public boolean isHidden(int arg0) {
 			return false;
 		}
@@ -565,6 +569,7 @@ public class FileChangeEventTest extends TestCase {
 		/*
 		 * @see org.eclipse.core.resources.IResource#isTeamPrivateMember(int)
 		 */
+		@Override
 		public boolean isTeamPrivateMember(int arg0) {
 			return false;
 		}
@@ -584,32 +589,35 @@ public class FileChangeEventTest extends TestCase {
 		}
 
 		/*
-		 * @see org.eclipse.core.resources.IResource#setDerived(boolean, org.eclipse.core.runtime.IProgressMonitor)
+		 * @see org.eclipse.core.resources.IResource#setDerived(boolean,
+		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */
-		public void setDerived(boolean isDerived, IProgressMonitor monitor)
-				throws CoreException {
+		@Override
+		public void setDerived(boolean isDerived, IProgressMonitor monitor) throws CoreException {
 			//
 		}
 
 		/*
-		 * @see org.eclipse.core.resources.IResource#setLinkLocation(java.net.URI, int, org.eclipse.core.runtime.IProgressMonitor)
+		 * @see org.eclipse.core.resources.IResource#setLinkLocation(java.net.URI, int,
+		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */
-		public void setLinkLocation(URI location, int updateFlags,
-				IProgressMonitor monitor) throws CoreException {
-			// 
+		public void setLinkLocation(URI location, int updateFlags, IProgressMonitor monitor) throws CoreException {
+			//
 		}
 
 		/*
-		 * @see org.eclipse.core.resources.IResource#setLinkLocation(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
+		 * @see
+		 * org.eclipse.core.resources.IResource#setLinkLocation(org.eclipse.core.runtime
+		 * .IPath, int, org.eclipse.core.runtime.IProgressMonitor)
 		 */
-		public void setLinkLocation(IPath location, int updateFlags,
-				IProgressMonitor monitor) throws CoreException {
+		public void setLinkLocation(IPath location, int updateFlags, IProgressMonitor monitor) throws CoreException {
 			//
 		}
 
 		/*
 		 * @see org.eclipse.core.resources.IResource#isVirtual()
 		 */
+		@Override
 		public boolean isVirtual() {
 			return false;
 		}
@@ -617,6 +625,7 @@ public class FileChangeEventTest extends TestCase {
 		/*
 		 * @see org.eclipse.core.resources.IResource#getPathVariableManager()
 		 */
+		@Override
 		public IPathVariableManager getPathVariableManager() {
 			return null;
 		}
@@ -628,65 +637,54 @@ public class FileChangeEventTest extends TestCase {
 			return false;
 		}
 
-		public void accept(IResourceProxyVisitor visitor, int depth,
-				int memberFlags) throws CoreException {
+		@Override
+		public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags) throws CoreException {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
-	
-	public static void main(String[] args) {
-		TestRunner.run(suite());
+
+	@BeforeEach
+	public void setUp() {/* Empty block */
 	}
 
-	public static Test suite() {
-		return new TestSuite(FileChangeEventTest.class);
-	}
-
-	public FileChangeEventTest(String name) {
-		super(name);
-	}
-
-	protected void setUp() {/*Empty block*/
-	}
-
+	@Test
 	public void test_deleteFileChangeEvent() {
 		IPath path = new Path("c:\\test.txt"); //$NON-NLS-1$
 		IFile file = new File(path);
-		FileChangeEvent event =
-			new FileChangeEvent(FileChangeEventType.DELETED, file);
+		FileChangeEvent event = new FileChangeEvent(FileChangeEventType.DELETED, file);
 		assertTrue(event.getEventType() == FileChangeEventType.DELETED);
 		assertTrue(event.getFile().equals(file));
 	}
 
+	@Test
 	public void test_changeFileChangeEvent() {
 		IPath oldPath = new Path("c:\\test.txt"); //$NON-NLS-1$
 		IFile file = new File(oldPath);
-		FileChangeEvent event =
-			new FileChangeEvent(FileChangeEventType.CHANGED, file);
+		FileChangeEvent event = new FileChangeEvent(FileChangeEventType.CHANGED, file);
 		assertTrue(event.getEventType() == FileChangeEventType.CHANGED);
 		assertTrue(event.getFile().equals(file));
 	}
-	
+
+	@Test
 	public void test_moveFileChangeEvent() {
 		IPath oldPath = new Path("c:\\folder\\test.txt"); //$NON-NLS-1$
 		IFile oldFile = new File(oldPath);
 		IPath path = new Path("c:\\test.txt"); //$NON-NLS-1$
 		IFile file = new File(path);
-		FileChangeEvent event =
-			new FileChangeEvent(FileChangeEventType.MOVED, oldFile, file);
+		FileChangeEvent event = new FileChangeEvent(FileChangeEventType.MOVED, oldFile, file);
 		assertTrue(event.getEventType() == FileChangeEventType.MOVED);
 		assertTrue(event.getFile().equals(file));
 		assertTrue(event.getOldFile().equals(oldFile));
 	}
 
+	@Test
 	public void test_renameFileChangeEvent() {
 		IPath oldPath = new Path("c:\\oldtest.txt"); //$NON-NLS-1$
 		IFile oldFile = new File(oldPath);
 		IPath path = new Path("c:\\test.txt"); //$NON-NLS-1$
 		IFile file = new File(path);
-		FileChangeEvent event =
-			new FileChangeEvent(FileChangeEventType.RENAMED, oldFile, file);
+		FileChangeEvent event = new FileChangeEvent(FileChangeEventType.RENAMED, oldFile, file);
 		assertTrue(event.getEventType() == FileChangeEventType.RENAMED);
 		assertTrue(event.getFile().equals(file));
 		assertTrue(event.getOldFile().equals(oldFile));

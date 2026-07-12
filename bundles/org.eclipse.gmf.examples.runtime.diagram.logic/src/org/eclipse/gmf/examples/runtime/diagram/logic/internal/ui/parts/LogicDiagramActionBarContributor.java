@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.ui.parts;
@@ -19,15 +19,15 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor.FileDiagra
 /**
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
- * 
- * Contribiute logic diagram action bar
+ *
+ *              Contribiute logic diagram action bar
  */
-public class LogicDiagramActionBarContributor
-	extends DiagramActionBarContributor {
+public class LogicDiagramActionBarContributor extends DiagramActionBarContributor {
 
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramActionBarContributor#getEditorClass()
 	 */
+	@Override
 	protected Class getEditorClass() {
 		return FileDiagramEditorWithFlyoutPalette.class;
 	}
@@ -35,6 +35,7 @@ public class LogicDiagramActionBarContributor
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramActionBarContributor#getEditorId()
 	 */
+	@Override
 	protected String getEditorId() {
 		return LogicDiagramPlugin.EDITOR_ID;
 	}

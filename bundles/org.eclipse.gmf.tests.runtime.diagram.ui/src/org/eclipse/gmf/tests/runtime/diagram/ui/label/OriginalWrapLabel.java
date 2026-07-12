@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.label;
@@ -37,29 +37,26 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.Image;
 
-
 /**
  * An extended label that has the following extra features:
- * 
+ *
  * 1- It is capable of showing selection and focus feedback (primary or
  * secondary) 2- It is capable of optionally underlining the label's text 3- It
  * is capable of wrapping the label's text at a given width with a given
  * alignment 4- It is capable of supporting multiple label icons (temporary
  * feature)
- * 
- * This class was originally deriving off Draw2d's <code>Label</code> class
- * but with the introduction of the auto-wrapping feature, a copy had to be made
+ *
+ * This class was originally deriving off Draw2d's <code>Label</code> class but
+ * with the introduction of the auto-wrapping feature, a copy had to be made
  * overriding was not straightforward. Hopefully, this extended version can be
  * pushed to opensource
- * 
+ *
  * <p>
  * Code taken from Eclipse reference bugzilla #98820
- * 
+ *
  * @author melaasar
  */
-public class OriginalWrapLabel
-	extends Figure
-	implements PositionConstants {	
+public class OriginalWrapLabel extends Figure implements PositionConstants {
 
 	private static final String _ellipse = "..."; //$NON-NLS-1$
 
@@ -99,8 +96,7 @@ public class OriginalWrapLabel
 				IMapMode mapMode = (IMapMode) mapModeRef.get();
 				d = FigureUtilities.getTextExtents(_ellipse, f);
 				d.height = FigureUtilities.getFontMetrics(f).getHeight();
-				d = new Dimension(mapMode.DPtoLP(d.width), mapMode
-					.DPtoLP(d.height));
+				d = new Dimension(mapMode.DPtoLP(d.width), mapMode.DPtoLP(d.height));
 				fontToEllipseTextSize.put(f, d);
 			}
 			return d;
@@ -160,7 +156,7 @@ public class OriginalWrapLabel
 	private String subStringText;
 
 	/** the size of text */
-	private Dimension textSize;	
+	private Dimension textSize;
 
 	private Dimension ellipseTextSize;
 
@@ -178,19 +174,18 @@ public class OriginalWrapLabel
 	private static abstract class IconInfo {
 		/**
 		 * Gets the icon at the index location.
-		 * 
-		 * @param i
-		 *            the index to retrieve the icon of
+		 *
+		 * @param i the index to retrieve the icon of
 		 * @return <code>Image</code> that corresponds to the given index.
 		 */
 		public abstract Image getIcon(int i);
-		
+
 		/**
 		 * Gets the icon size of the icon at the given index.
-		 * 
+		 *
 		 * @param i
-		 * @return the <code>Dimension</code> that is the size of the icon at
-		 *         the given index.
+		 * @return the <code>Dimension</code> that is the size of the icon at the given
+		 *         index.
 		 */
 		public abstract Dimension getIconSize(IMapMode mapMode, int i);
 
@@ -198,36 +193,35 @@ public class OriginalWrapLabel
 		 * @return the number of icons
 		 */
 		public abstract int getNumberofIcons();
-		
+
 		/**
-		 * @return the <code>Dimension</code> that is the total size of all
-		 *         the icons.
+		 * @return the <code>Dimension</code> that is the total size of all the icons.
 		 */
 		public abstract Dimension getTotalIconSize(IMapMode mapMode);
 
 		public abstract void invalidate();
-		
+
 		/**
 		 * Sets the icon at the index location.
-		 * 
+		 *
 		 * @param icon
 		 * @param i
 		 */
 		public abstract void setIcon(Image icon, int i);
-		
+
 		/**
-		 * 
+		 *
 		 */
 		public abstract int getMaxIcons();
 
-	}	
+	}
 
-	private static class SingleIconInfo
-		extends IconInfo {	
+	private static class SingleIconInfo extends IconInfo {
 
 		static int count;
-		
-		public static final SingleIconInfo NULL_INFO = new SingleIconInfo(){
+
+		public static final SingleIconInfo NULL_INFO = new SingleIconInfo() {
+			@Override
 			public int getNumberofIcons() {
 				return 0;
 			}
@@ -239,7 +233,7 @@ public class OriginalWrapLabel
 		private Dimension totalIconSize;
 
 		private SingleIconInfo() {
-			icon = null;//don't increment count, used only for NULL_INFO
+			icon = null;// don't increment count, used only for NULL_INFO
 		}
 
 		public SingleIconInfo(Image icon) {
@@ -247,11 +241,12 @@ public class OriginalWrapLabel
 			++count;
 		}
 
+		@Override
 		public final int getMaxIcons() {
 			return 1;
 		}
 
-		
+		@Override
 		public Image getIcon(int i) {
 			if (i == 0) {
 				return icon;
@@ -261,12 +256,12 @@ public class OriginalWrapLabel
 			throw new IndexOutOfBoundsException();
 		}
 
-		
+		@Override
 		public void setIcon(Image img, int i) {
 			throw new UnsupportedOperationException();
 		}
 
-		
+		@Override
 		public Dimension getIconSize(IMapMode mapMode, int i) {
 			if (i == 0) {
 				return getTotalIconSize(mapMode);
@@ -275,20 +270,20 @@ public class OriginalWrapLabel
 			throw new IndexOutOfBoundsException();
 		}
 
-		
+		@Override
 		public int getNumberofIcons() {
 			return 1;
 		}
 
-		
+		@Override
 		public Dimension getTotalIconSize(IMapMode mapMode) {
-			if (totalIconSize != null)
+			if (totalIconSize != null) {
 				return totalIconSize;
+			}
 
 			if (icon != null && !icon.isDisposed()) {
 				org.eclipse.swt.graphics.Rectangle imgBounds = icon.getBounds();
-				totalIconSize = new Dimension(mapMode.DPtoLP(imgBounds.width),
-					mapMode.DPtoLP(imgBounds.height));
+				totalIconSize = new Dimension(mapMode.DPtoLP(imgBounds.width), mapMode.DPtoLP(imgBounds.height));
 			} else {
 				totalIconSize = EMPTY_DIMENSION;
 			}
@@ -296,15 +291,14 @@ public class OriginalWrapLabel
 			return totalIconSize;
 		}
 
-		
+		@Override
 		public void invalidate() {
 			totalIconSize = null;
 		}
 
 	}
 
-	private static class MultiIconInfo
-		extends IconInfo {
+	private static class MultiIconInfo extends IconInfo {
 
 		/** the label icons */
 		private ArrayList icons = new ArrayList(2);
@@ -316,54 +310,59 @@ public class OriginalWrapLabel
 			super();
 		}
 
+		@Override
 		public int getMaxIcons() {
 			return -1;
 		}
 
 		/**
 		 * Gets the icon at the index location.
-		 * 
-		 * @param i
-		 *            the index to retrieve the icon of
+		 *
+		 * @param i the index to retrieve the icon of
 		 * @return <code>Image</code> that corresponds to the given index.
 		 */
+		@Override
 		public Image getIcon(int i) {
-			if (i >= icons.size())
+			if (i >= icons.size()) {
 				return null;
+			}
 
 			return (Image) icons.get(i);
 		}
 
 		/**
 		 * Sets the icon at the index location.
-		 * 
+		 *
 		 * @param icon
 		 * @param i
 		 */
+		@Override
 		public void setIcon(Image icon, int i) {
 			int size = icons.size();
 			if (i >= size) {
-				for (int j = size; j < i; j++)
+				for (int j = size; j < i; j++) {
 					icons.add(null);
+				}
 				icons.add(icon);
 				icons.trimToSize();
-			} else
+			} else {
 				icons.set(i, icon);
+			}
 		}
 
 		/**
 		 * Gets the icon size of the icon at the given index.
-		 * 
+		 *
 		 * @param i
-		 * @return the <code>Dimension</code> that is the size of the icon at
-		 *         the given index.
+		 * @return the <code>Dimension</code> that is the size of the icon at the given
+		 *         index.
 		 */
+		@Override
 		public Dimension getIconSize(IMapMode mapMode, int i) {
 			Image img = getIcon(i);
 			if (img != null && !img.isDisposed()) {
-				org.eclipse.swt.graphics.Rectangle imgBounds = img.getBounds();				
-				return new Dimension(mapMode.DPtoLP(imgBounds.width), mapMode
-					.DPtoLP(imgBounds.height));
+				org.eclipse.swt.graphics.Rectangle imgBounds = img.getBounds();
+				return new Dimension(mapMode.DPtoLP(imgBounds.width), mapMode.DPtoLP(imgBounds.height));
 			}
 			return EMPTY_DIMENSION;
 		}
@@ -371,17 +370,19 @@ public class OriginalWrapLabel
 		/**
 		 * @return the number of icons
 		 */
+		@Override
 		public int getNumberofIcons() {
 			return icons.size();
 		}
 
 		/**
-		 * @return the <code>Dimension</code> that is the total size of all
-		 *         the icons.
+		 * @return the <code>Dimension</code> that is the total size of all the icons.
 		 */
+		@Override
 		public Dimension getTotalIconSize(IMapMode mapMode) {
-			if (totalIconSize != null)
+			if (totalIconSize != null) {
 				return totalIconSize;
+			}
 			int iconNum = getNumberofIcons();
 			if (iconNum == 0) {
 				return totalIconSize = EMPTY_DIMENSION;
@@ -391,16 +392,18 @@ public class OriginalWrapLabel
 			for (int i = 0; i < iconNum; i++) {
 				Dimension iconSize = getIconSize(mapMode, i);
 				totalIconSize.width += iconSize.width;
-				if (iconSize.height > totalIconSize.height)
+				if (iconSize.height > totalIconSize.height) {
 					totalIconSize.height = iconSize.height;
+				}
 			}
 
 			return totalIconSize;
 		}
 
 		/**
-		 * 
+		 *
 		 */
+		@Override
 		public void invalidate() {
 			totalIconSize = null;
 		}
@@ -408,16 +411,14 @@ public class OriginalWrapLabel
 
 	private IconInfo iconInfo;
 
-	/** the cached hint used to calculate text size */	
+	/** the cached hint used to calculate text size */
 	private int cachedTextSizeHint_width;
 
 	private int cachedTextSizeHint_height;
-	
-	
-	
+
 	/**
 	 * Construct an empty Label.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public OriginalWrapLabel() {
@@ -432,7 +433,7 @@ public class OriginalWrapLabel
 
 	/**
 	 * Construct a Label with passed String as its text.
-	 * 
+	 *
 	 * @param s the label text
 	 * @since 2.0
 	 */
@@ -447,7 +448,7 @@ public class OriginalWrapLabel
 
 	/**
 	 * Construct a Label with passed Image as its icon.
-	 * 
+	 *
 	 * @param i the label image
 	 * @since 2.0
 	 */
@@ -457,9 +458,8 @@ public class OriginalWrapLabel
 	}
 
 	/**
-	 * Construct a Label with passed String as text and passed Image as its
-	 * icon.
-	 * 
+	 * Construct a Label with passed String as text and passed Image as its icon.
+	 *
 	 * @param s the label text
 	 * @param i the label image
 	 * @since 2.0
@@ -472,11 +472,10 @@ public class OriginalWrapLabel
 		}
 		iconInfo = new SingleIconInfo(i);
 	}
-	
+
 	/**
-	 * @return <code>IMapMode</code> used by this figure.
-	 *         <code>IMapMode</code> that allows for the coordinate mapping
-	 *         from device to logical units.
+	 * @return <code>IMapMode</code> used by this figure. <code>IMapMode</code> that
+	 *         allows for the coordinate mapping from device to logical units.
 	 */
 	private IMapMode getFigureMapMode() {
 		return (IMapMode) getMapModeConstants().mapModeRef.get();
@@ -488,8 +487,7 @@ public class OriginalWrapLabel
 			while (mapMode instanceof IMapModeHolder) {
 				mapMode = ((IMapModeHolder) mapMode).getMapMode();
 			}
-			mapModeConstants = (MapModeConstants) mapModeConstantsMap
-				.get(mapMode);
+			mapModeConstants = (MapModeConstants) mapModeConstantsMap.get(mapMode);
 			if (mapModeConstants == null) {
 				mapModeConstants = new MapModeConstants(mapMode);
 				mapModeConstantsMap.put(mapMode, mapModeConstants);
@@ -500,50 +498,49 @@ public class OriginalWrapLabel
 
 	private void alignOnHeight(Point loc, Dimension size, int alignment) {
 		switch (alignment) {
-			case TOP:
-				loc.y = getInsets().top;
-				break;
-			case BOTTOM:
-				loc.y = bounds.height - size.height - getInsets().bottom;
-				break;
-			default:
-				loc.y = (bounds.height - size.height) / 2;
+		case TOP:
+			loc.y = getInsets().top;
+			break;
+		case BOTTOM:
+			loc.y = bounds.height - size.height - getInsets().bottom;
+			break;
+		default:
+			loc.y = (bounds.height - size.height) / 2;
 		}
 	}
 
 	private void alignOnWidth(Point loc, Dimension size, int alignment) {
 		switch (alignment) {
-			case LEFT:
-				loc.x = getInsets().left;
-				break;
-			case RIGHT:
-				loc.x = bounds.width - size.width - getInsets().right;
-				break;
-			default:
-				loc.x = (bounds.width - size.width) / 2;
+		case LEFT:
+			loc.x = getInsets().left;
+			break;
+		case RIGHT:
+			loc.x = bounds.width - size.width - getInsets().right;
+			break;
+		default:
+			loc.x = (bounds.width - size.width) / 2;
 		}
 	}
 
 	private void calculateAlignment(Dimension iconSize, int textPlacement) {
 		switch (textPlacement) {
-			case EAST:
-			case WEST:
-				alignOnHeight(textLocation, getTextSize(), getTextAlignment());
-				alignOnHeight(getIconLocation(), iconSize, getIconAlignment());
-				break;
-			case NORTH:
-			case SOUTH:
-				alignOnWidth(textLocation, getSubStringTextSize(),
-					getTextAlignment());
-				alignOnWidth(getIconLocation(), iconSize, getIconAlignment());
-				break;
+		case EAST:
+		case WEST:
+			alignOnHeight(textLocation, getTextSize(), getTextAlignment());
+			alignOnHeight(getIconLocation(), iconSize, getIconAlignment());
+			break;
+		case NORTH:
+		case SOUTH:
+			alignOnWidth(textLocation, getSubStringTextSize(), getTextAlignment());
+			alignOnWidth(getIconLocation(), iconSize, getIconAlignment());
+			break;
 		}
 	}
 
 	/**
-	 * Calculates the size of the Label using the passed Dimension as the size
-	 * of the Label's text.
-	 * 
+	 * Calculates the size of the Label using the passed Dimension as the size of
+	 * the Label's text.
+	 *
 	 * @param txtSize the precalculated size of the label's text
 	 * @return the label's size
 	 * @since 2.0
@@ -555,15 +552,12 @@ public class OriginalWrapLabel
 		if (len == 0 && isEmpty) {
 			return new Dimension(txtSize.width, txtSize.height);
 		}
-		int gap = (len == 0 || isEmpty) ? 0
-			: getIconTextGap();
+		int gap = (len == 0 || isEmpty) ? 0 : getIconTextGap();
 		int placement = getTextPlacement();
 		if (placement == WEST || placement == EAST) {
-			return new Dimension(iconSize.width + gap + txtSize.width, Math
-				.max(iconSize.height, txtSize.height));
+			return new Dimension(iconSize.width + gap + txtSize.width, Math.max(iconSize.height, txtSize.height));
 		} else {
-			return new Dimension(Math.max(iconSize.width, txtSize.width),
-				iconSize.height + gap + txtSize.height);
+			return new Dimension(Math.max(iconSize.width, txtSize.width), iconSize.height + gap + txtSize.height);
 		}
 	}
 
@@ -576,8 +570,7 @@ public class OriginalWrapLabel
 		calculateAlignment(iconSize, textPlacement);
 		Rectangle r = getBounds();
 		Dimension ps = getPreferredSize(r.width, r.height);
-		int w = (r.width - ps.width)
-			+ (getTextSize().width - getSubStringTextSize().width);
+		int w = (r.width - ps.width) + (getTextSize().width - getSubStringTextSize().width);
 		int h = r.height - ps.height;
 		if (w == 0 && h == 0) {
 			return;
@@ -585,37 +578,37 @@ public class OriginalWrapLabel
 
 		Dimension offset = new Dimension(w, h);
 		switch (getLabelAlignment()) {
-			case CENTER:
-				offset.scale(0.5f);
-				break;
-			case LEFT:
-				offset.scale(0.0f);
-				break;
-			case RIGHT:
-				offset.scale(1.0f);
-				break;
-			case TOP:
-				offset.height = 0;
-				offset.scale(0.5f);
-				break;
-			case BOTTOM:
-				offset.height = offset.height * 2;
-				offset.scale(0.5f);
-				break;
-			default:
-				offset.scale(0.5f);
-				break;
+		case CENTER:
+			offset.scale(0.5f);
+			break;
+		case LEFT:
+			offset.scale(0.0f);
+			break;
+		case RIGHT:
+			offset.scale(1.0f);
+			break;
+		case TOP:
+			offset.height = 0;
+			offset.scale(0.5f);
+			break;
+		case BOTTOM:
+			offset.height = offset.height * 2;
+			offset.scale(0.5f);
+			break;
+		default:
+			offset.scale(0.5f);
+			break;
 		}
 
 		switch (textPlacement) {
-			case EAST:
-			case WEST:
-				offset.height = 0;
-				break;
-			case NORTH:
-			case SOUTH:
-				offset.width = 0;
-				break;
+		case EAST:
+		case WEST:
+			offset.height = 0;
+			break;
+		case NORTH:
+		case SOUTH:
+			offset.width = 0;
+			break;
 		}
 
 		textLocation.translate(offset);
@@ -623,48 +616,48 @@ public class OriginalWrapLabel
 	}
 
 	private void calculatePlacement(Dimension iconSize, int textPlacement) {
-		int gap = (getText().length() == 0 || (iconSize.width == 0 && iconSize.height == 0)) ? 0
-			: getIconTextGap();
+		int gap = (getText().length() == 0 || (iconSize.width == 0 && iconSize.height == 0)) ? 0 : getIconTextGap();
 		Insets insets = getInsets();
 		switch (textPlacement) {
-			case EAST:
-				iconLocation.x = insets.left;
-				textLocation.x = iconSize.width + gap + insets.left;
-				break;
-			case WEST:
-				textLocation.x = insets.left;
-				iconLocation.x = getSubStringTextSize().width + gap
-					+ insets.left;
-				break;
-			case NORTH:
-				textLocation.y = insets.top;
-				iconLocation.y = getTextSize().height + gap + insets.top;
-				break;
-			case SOUTH:
-				textLocation.y = iconSize.height + gap + insets.top;
-				iconLocation.y = insets.top;
+		case EAST:
+			iconLocation.x = insets.left;
+			textLocation.x = iconSize.width + gap + insets.left;
+			break;
+		case WEST:
+			textLocation.x = insets.left;
+			iconLocation.x = getSubStringTextSize().width + gap + insets.left;
+			break;
+		case NORTH:
+			textLocation.y = insets.top;
+			iconLocation.y = getTextSize().height + gap + insets.top;
+			break;
+		case SOUTH:
+			textLocation.y = iconSize.height + gap + insets.top;
+			iconLocation.y = insets.top;
 		}
 	}
+
 	/**
-	 * Calculates the size of the Label's text size. The text size calculated
-	 * takes into consideration if the Label's text is currently truncated. If
-	 * text size without considering current truncation is desired, use
+	 * Calculates the size of the Label's text size. The text size calculated takes
+	 * into consideration if the Label's text is currently truncated. If text size
+	 * without considering current truncation is desired, use
 	 * {@link #calculateTextSize(int, int)}.
-	 * 
+	 *
 	 * @return the size of the label's text, taking into account truncation
 	 * @since 2.0
 	 */
 	protected Dimension calculateSubStringTextSize() {
 		Font f = getFont();
-		return getTextExtents(getSubStringText(), f, getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight())); 
+		return getTextExtents(getSubStringText(), f,
+				getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight()));
 	}
 
 	/**
-	 * Calculates and returns the size of the Label's text. Note that this
-	 * Dimension is calculated using the Label's full text, regardless of
-	 * whether or not its text is currently truncated. If text size considering
-	 * current truncation is desired, use {@link #calculateSubStringTextSize()}.
-	 * 
+	 * Calculates and returns the size of the Label's text. Note that this Dimension
+	 * is calculated using the Label's full text, regardless of whether or not its
+	 * text is currently truncated. If text size considering current truncation is
+	 * desired, use {@link #calculateSubStringTextSize()}.
+	 *
 	 * @param wHint a width hint
 	 * @param hHint a height hint
 	 * @return the size of the label's text, ignoring truncation
@@ -672,7 +665,8 @@ public class OriginalWrapLabel
 	 */
 	protected Dimension calculateTextSize(int wHint, int hHint) {
 		Font f = getFont();
-		return getTextExtents(getWrappedText(wHint, hHint), f,getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight()));
+		return getTextExtents(getWrappedText(wHint, hHint), f,
+				getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight()));
 	}
 
 	private void clearLocations() {
@@ -681,7 +675,7 @@ public class OriginalWrapLabel
 
 	/**
 	 * Returns the Label's icon.
-	 * 
+	 *
 	 * @return the label icon
 	 * @since 2.0
 	 */
@@ -691,20 +685,21 @@ public class OriginalWrapLabel
 
 	/**
 	 * Gets the label's icon at the given index
-	 * 
+	 *
 	 * @param index The icon index
 	 * @return the <code>Image</code> that is the icon for the given index.
 	 */
 	public Image getIcon(int index) {
-		if (iconInfo == null)
+		if (iconInfo == null) {
 			return null;
+		}
 		return iconInfo.getIcon(index);
 	}
 
 	/**
 	 * Determines if there is any icons by checking if icon size is zeros.
-	 * 
-	 * @return true if icons are present, false otherwise 
+	 *
+	 * @return true if icons are present, false otherwise
 	 */
 	protected boolean hasIcons() {
 		return (getNumberofIcons() > 0);
@@ -713,7 +708,7 @@ public class OriginalWrapLabel
 	/**
 	 * Returns the current alignment of the Label's icon. The default is
 	 * {@link PositionConstants#CENTER}.
-	 * 
+	 *
 	 * @return the icon alignment
 	 * @since 2.0
 	 */
@@ -723,30 +718,30 @@ public class OriginalWrapLabel
 
 	/**
 	 * Returns the bounds of the Label's icon.
-	 * 
+	 *
 	 * @return the icon's bounds
 	 * @since 2.0
 	 */
 	public Rectangle getIconBounds() {
-		return new Rectangle(getBounds().getLocation().translate(
-			getIconLocation()), getTotalIconSize());
+		return new Rectangle(getBounds().getLocation().translate(getIconLocation()), getTotalIconSize());
 	}
 
 	/**
 	 * Returns the location of the Label's icon relative to the Label.
-	 * 
+	 *
 	 * @return the icon's location
 	 * @since 2.0
 	 */
 	protected Point getIconLocation() {
-		if (iconLocation == null)
+		if (iconLocation == null) {
 			calculateLocations();
+		}
 		return iconLocation;
 	}
 
 	/**
 	 * Returns the gap in pixels between the Label's icon and its text.
-	 * 
+	 *
 	 * @return the gap
 	 * @since 2.0
 	 */
@@ -757,17 +752,20 @@ public class OriginalWrapLabel
 	/**
 	 * @see IFigure#getMinimumSize(int, int)
 	 */
+	@Override
 	public Dimension getMinimumSize(int w, int h) {
-		if (minSize != null)
+		if (minSize != null) {
 			return minSize;
+		}
 		minSize = new Dimension();
 		LayoutManager layoutManager = getLayoutManager();
-		if (layoutManager != null)
+		if (layoutManager != null) {
 			minSize.setSize(layoutManager.getMinimumSize(this, w, h));
+		}
 		Font f = getFont();
 		Dimension d = getEllipseTextSize().getIntersected(
-			getTextExtents(getText(), f, getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight())));		
-		
+				getTextExtents(getText(), f, getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight())));
+
 		Dimension labelSize = calculateLabelSize(d);
 		Insets insets = getInsets();
 		labelSize.expand(insets.getWidth(), insets.getHeight());
@@ -775,10 +773,12 @@ public class OriginalWrapLabel
 		return minSize;
 	}
 
-	/* 
+	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.draw2d.IFigure#getPreferredSize(int, int)
 	 */
+	@Override
 	public Dimension getPreferredSize(int wHint, int hHint) {
 		if (prefSize == null || wHint != cachedPrefSizeHint_width || hHint != cachedPrefSizeHint_height) {
 			prefSize = calculateLabelSize(getTextSize(wHint, hHint));
@@ -786,8 +786,7 @@ public class OriginalWrapLabel
 			prefSize.expand(insets.getWidth(), insets.getHeight());
 			LayoutManager layoutManager = getLayoutManager();
 			if (layoutManager != null) {
-				prefSize.union(layoutManager.getPreferredSize(this, wHint,
-					hHint));
+				prefSize.union(layoutManager.getPreferredSize(this, wHint, hHint));
 			}
 			prefSize.union(getMinimumSize(wHint, hHint));
 			cachedPrefSizeHint_width = wHint;
@@ -796,38 +795,42 @@ public class OriginalWrapLabel
 		return prefSize;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.draw2d.IFigure#getMaximumSize()
 	 */
+	@Override
 	public Dimension getMaximumSize() {
 		// this assumes that getPreferredSize(wHint, hHint) is called before
-		return prefSize;   
+		return prefSize;
 	}
 
 	/**
 	 * Calculates the amount of the Label's current text will fit in the Label,
 	 * including an elipsis "..." if truncation is required.
-	 * 
+	 *
 	 * @return the substring
 	 * @since 2.0
 	 */
 	public String getSubStringText() {
-		if (subStringText != null)
+		if (subStringText != null) {
 			return subStringText;
-		
+		}
+
 		String theText = getText();
 		int textLen = theText.length();
 		if (textLen == 0) {
-			return subStringText = "";//$NON-NLS-1$;;
+			return subStringText = "";//$NON-NLS-1$ ;;
 		}
 		Dimension size = getSize();
 		Dimension shrink = getPreferredSize(size.width, size.height).getShrinked(size);
 		Dimension effectiveSize = getTextSize().getExpanded(-shrink.width, -shrink.height);
-		
+
 		if (effectiveSize.height == 0) {
-			return subStringText = "";//$NON-NLS-1$;
+			return subStringText = "";//$NON-NLS-1$ ;
 		}
-		
+
 		Font f = getFont();
 		FontMetrics metrics = FigureUtilities.getFontMetrics(f);
 		IMapMode mm = getFigureMapMode();
@@ -840,84 +843,85 @@ public class OriginalWrapLabel
 
 		StringBuffer accumlatedText = new StringBuffer();
 		StringBuffer remainingText = new StringBuffer(theText);
-		
+
 		int effectiveSizeWidth = effectiveSize.width;
-		int widthHint = Math.max(effectiveSizeWidth
-			- getEllipseTextSize().width, 0);
+		int widthHint = Math.max(effectiveSizeWidth - getEllipseTextSize().width, 0);
 		int i = 0, j = 0;
 		while (remainingText.length() > 0 && j++ < maxLines) {
 			i = getLineWrapPosition(remainingText.toString(), f, effectiveSizeWidth, fontHeight);
 
-			if (accumlatedText.length() > 0)
+			if (accumlatedText.length() > 0) {
 				accumlatedText.append('\n');
+			}
 
-			if (i == 0 || (remainingText.length() > i && j == maxLines)) {				
+			if (i == 0 || (remainingText.length() > i && j == maxLines)) {
 				i = getLargestSubstringConfinedTo(remainingText.toString(), f, widthHint, fontHeight, charAverageWidth);
 				accumlatedText.append(remainingText.substring(0, i));
 				accumlatedText.append(getEllipse());
-			} else
+			} else {
 				accumlatedText.append(remainingText.substring(0, i));
+			}
 			remainingText.delete(0, i);
 		}
 		return subStringText = accumlatedText.toString();
 	}
-	
-	
-	
-	
+
 	/**
-	 * Creates an equivalent text to that of the label's but with "\n"(s)
-	 * inserted at the wrapping positions. This method assumes unlimited
-	 * bounding box and is used by <code>calculateTextSize()</code> to
-	 * calculate the perfect size of the text with wrapping
-	 * 
+	 * Creates an equivalent text to that of the label's but with "\n"(s) inserted
+	 * at the wrapping positions. This method assumes unlimited bounding box and is
+	 * used by <code>calculateTextSize()</code> to calculate the perfect size of the
+	 * text with wrapping
+	 *
 	 * @return the wrapped text
-	 */	
+	 */
 	private String getWrappedText(int wHint, int hHint) {
-		String theText = getText();		
-		if (wHint == -1 || theText.length() == 0 || !isTextWrapped())
+		String theText = getText();
+		if (wHint == -1 || theText.length() == 0 || !isTextWrapped()) {
 			return theText;
+		}
 
 		Dimension iconSize = getTotalIconSize();
 		if (!(iconSize.width == 0 && iconSize.height == 0)) {
-			switch(getTextPlacement()) {
-				case EAST:
-				case WEST:
-					wHint -= iconSize.width + getIconTextGap();
-					break;
-				case NORTH:
-				case SOUTH:
-					if (hHint != -1)
-						hHint -= iconSize.height + getIconTextGap();
-					break;
+			switch (getTextPlacement()) {
+			case EAST:
+			case WEST:
+				wHint -= iconSize.width + getIconTextGap();
+				break;
+			case NORTH:
+			case SOUTH:
+				if (hHint != -1) {
+					hHint -= iconSize.height + getIconTextGap();
+				}
+				break;
 			}
 		}
-		
-		
-		if ((hHint == 0)||(wHint == 0)) {
-			return "";//$NON-NLS-1$;
+
+		if ((hHint == 0) || (wHint == 0)) {
+			return "";//$NON-NLS-1$ ;
 		}
-		
+
 		Font f = getFont();
 		int fontHeight = getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight());
 		int maxLines = Integer.MAX_VALUE;
-		if (hHint != -1) {			
+		if (hHint != -1) {
 			maxLines = (int) (hHint / (double) fontHeight);
 			if (maxLines == 0) {
-				return "";//$NON-NLS-1$;;
+				return "";//$NON-NLS-1$ ;;
 			}
-		}	
-		
+		}
+
 		StringBuffer accumlatedText = new StringBuffer();
 		StringBuffer remainingText = new StringBuffer(theText);
 		int i = 0, j = 0;
 
-		while (remainingText.length() > 0 && j++  < maxLines) {
-			if ((i = getLineWrapPosition(remainingText.toString(), f, wHint, fontHeight)) == 0)
+		while (remainingText.length() > 0 && j++ < maxLines) {
+			if ((i = getLineWrapPosition(remainingText.toString(), f, wHint, fontHeight)) == 0) {
 				break;
+			}
 
-			if (accumlatedText.length() > 0)
+			if (accumlatedText.length() > 0) {
 				accumlatedText.append('\n');
+			}
 			accumlatedText.append(remainingText.substring(0, i));
 			remainingText.delete(0, i);
 		}
@@ -928,26 +932,24 @@ public class OriginalWrapLabel
 	 * Returns the size of the Label's current text. If the text is currently
 	 * truncated, the truncated text with its ellipsis is used to calculate the
 	 * size.
-	 * 
+	 *
 	 * @return the size of this label's text, taking into account truncation
 	 * @since 2.0
 	 */
 	protected Dimension getSubStringTextSize() {
 		return calculateSubStringTextSize();
 	}
-	
+
 	/**
-	 * Returns the size of the String constant "..." the ellipse based on
-	 * the currently used Map mode
-	 * size.
-	 * 
+	 * Returns the size of the String constant "..." the ellipse based on the
+	 * currently used Map mode size.
+	 *
 	 * @return the size of ellipse text
-	 * 
+	 *
 	 */
 	private Dimension getEllipseTextSize() {
 		if (ellipseTextSize == null) {
-			ellipseTextSize = getMapModeConstants().getEllipseTextSize(
-				getFont());
+			ellipseTextSize = getMapModeConstants().getEllipseTextSize(getFont());
 		}
 		return ellipseTextSize;
 	}
@@ -955,9 +957,9 @@ public class OriginalWrapLabel
 	/**
 	 * Returns the text of the label. Note that this is the complete text of the
 	 * label, regardless of whether it is currently being truncated. Call
-	 * {@link #getSubStringText()}to return the label's current text contents
-	 * with truncation considered.
-	 * 
+	 * {@link #getSubStringText()}to return the label's current text contents with
+	 * truncation considered.
+	 *
 	 * @return the complete text of this label
 	 * @since 2.0
 	 */
@@ -966,9 +968,9 @@ public class OriginalWrapLabel
 	}
 
 	/**
-	 * Returns the current alignment of the Label's text. The default text
-	 * alignment is {@link PositionConstants#CENTER}.
-	 * 
+	 * Returns the current alignment of the Label's text. The default text alignment
+	 * is {@link PositionConstants#CENTER}.
+	 *
 	 * @return the text alignment
 	 */
 	public int getTextAlignment() {
@@ -978,43 +980,43 @@ public class OriginalWrapLabel
 	/**
 	 * Returns the current alignment of the entire Label. The default label
 	 * alignment is {@link PositionConstants#LEFT}.
-	 * 
+	 *
 	 * @return the label alignment
 	 */
 	int getLabelAlignment() {
 		return getAlignment(FLAG_LABEL_ALIGN);
 	}
-	
+
 	/**
-	 * Returns the bounds of the label's text. Note that the bounds are
-	 * calculated using the label's complete text regardless of whether the
-	 * label's text is currently truncated.
-	 * 
+	 * Returns the bounds of the label's text. Note that the bounds are calculated
+	 * using the label's complete text regardless of whether the label's text is
+	 * currently truncated.
+	 *
 	 * @return the bounds of this label's complete text
 	 * @since 2.0
 	 */
 	public Rectangle getTextBounds() {
-		return new Rectangle(getBounds().getLocation().translate(
-			getTextLocation()), getTextSize());
+		return new Rectangle(getBounds().getLocation().translate(getTextLocation()), getTextSize());
 	}
 
 	/**
 	 * Returns the location of the label's text relative to the label.
-	 * 
+	 *
 	 * @return the text location
 	 * @since 2.0
 	 */
 	protected Point getTextLocation() {
-		if (textLocation != null)
+		if (textLocation != null) {
 			return textLocation;
+		}
 		calculateLocations();
 		return textLocation;
 	}
 
 	/**
-	 * Returns the current placement of the label's text relative to its icon.
-	 * The default text placement is {@link PositionConstants#EAST}.
-	 * 
+	 * Returns the current placement of the label's text relative to its icon. The
+	 * default text placement is {@link PositionConstants#EAST}.
+	 *
 	 * @return the text placement
 	 * @since 2.0
 	 */
@@ -1025,10 +1027,10 @@ public class OriginalWrapLabel
 	/**
 	 * Returns the size of the label's complete text. Note that the text used to
 	 * make this calculation is the label's full text, regardless of whether the
-	 * label's text is currently being truncated and is displaying an ellipsis.
-	 * If the size considering current truncation is desired, call
+	 * label's text is currently being truncated and is displaying an ellipsis. If
+	 * the size considering current truncation is desired, call
 	 * {@link #getSubStringTextSize()}.
-	 * 
+	 *
 	 * @param wHint a width hint
 	 * @param hHint a height hint
 	 * @return the size of this label's complete text
@@ -1038,7 +1040,7 @@ public class OriginalWrapLabel
 		if (textSize == null || wHint != cachedTextSizeHint_width || hHint != cachedTextSizeHint_height) {
 			textSize = calculateTextSize(wHint, hHint);
 			cachedTextSizeHint_width = wHint;
-			cachedTextSizeHint_height= hHint;
+			cachedTextSizeHint_height = hHint;
 		}
 		return textSize;
 	}
@@ -1046,14 +1048,15 @@ public class OriginalWrapLabel
 	/**
 	 * Gets the text size given the current size as a width hint
 	 */
-	private final Dimension getTextSize() {		
+	private final Dimension getTextSize() {
 		Rectangle r = getBounds();
-		return getTextSize(r.width, r.height);		
+		return getTextSize(r.width, r.height);
 	}
-	
+
 	/**
 	 * @see IFigure#invalidate()
 	 */
+	@Override
 	public void invalidate() {
 		prefSize = null;
 		minSize = null;
@@ -1061,15 +1064,16 @@ public class OriginalWrapLabel
 		ellipseTextSize = null;
 		textSize = null;
 		subStringText = null;
-		if (iconInfo != null)
+		if (iconInfo != null) {
 			iconInfo.invalidate();
+		}
 		super.invalidate();
 	}
 
 	/**
-	 * Returns <code>true</code> if the label's text is currently truncated
-	 * and is displaying an ellipsis, <code>false</code> otherwise.
-	 * 
+	 * Returns <code>true</code> if the label's text is currently truncated and is
+	 * displaying an ellipsis, <code>false</code> otherwise.
+	 *
 	 * @return <code>true</code> if the label's text is truncated
 	 * @since 2.0
 	 */
@@ -1080,6 +1084,7 @@ public class OriginalWrapLabel
 	/**
 	 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
 	 */
+	@Override
 	public void paintFigure(Graphics graphics) {
 		if (isSelected()) {
 			graphics.pushState();
@@ -1096,13 +1101,15 @@ public class OriginalWrapLabel
 			graphics.drawFocus(getSelectionRectangle().resize(-1, -1));
 			graphics.popState();
 		}
-		if (isOpaque())
+		if (isOpaque()) {
 			super.paintFigure(graphics);
+		}
 
 		Rectangle figBounds = getBounds();
 		graphics.translate(figBounds.x, figBounds.y);
-		if (hasIcons())
+		if (hasIcons()) {
 			paintIcons(graphics);
+		}
 
 		String subString = getSubStringText();
 		if (subString.length() > 0) {
@@ -1121,11 +1128,11 @@ public class OriginalWrapLabel
 
 	/**
 	 * Paints the text and optioanally underlines it
-	 * 
-	 * @param graphics The graphics context
+	 *
+	 * @param graphics  The graphics context
 	 * @param subString The string to draw
-	 */	
-	private void paintText(Graphics graphics, String subString) {		
+	 */
+	private void paintText(Graphics graphics, String subString) {
 		StringTokenizer tokenizer = new StringTokenizer(subString, "\n"); //$NON-NLS-1$
 		Font f = getFont();
 		FontMetrics fontMetrics = FigureUtilities.getFontMetrics(f);
@@ -1144,49 +1151,50 @@ public class OriginalWrapLabel
 		// If the font's leading area is 0 then we need to add an offset to
 		// avoid truncating at the top (e.g. Korean fonts)
 		if (0 == fontMetrics.getLeading()) {
-			y +=  getMapModeConstants().nDPtoLP_2; // 2 is the leading area for default English			
-		}				
+			y += getMapModeConstants().nDPtoLP_2; // 2 is the leading area for default English
+		}
 
 		while (tokenizer.hasMoreTokens()) {
-            x = p.x;
+			x = p.x;
 			String token = tokenizer.nextToken();
 			int tokenWidth = getTextExtents(token, f, fontHeight).width;
-			
+
 			switch (wrapAlignment) {
-				case CENTER:
-					x += (textWidth - tokenWidth) / 2;
-					break;
-				case RIGHT:
-					x += textWidth - tokenWidth;
-					break;
+			case CENTER:
+				x += (textWidth - tokenWidth) / 2;
+				break;
+			case RIGHT:
+				x += textWidth - tokenWidth;
+				break;
 			}
-			
-			// increase the clipping rectangle by a small amount to account for font overhang
+
+			// increase the clipping rectangle by a small amount to account for font
+			// overhang
 			// from italic / irregular characters etc.
-			
-			
+
 			if (tokenWidth + x <= clipRectTopRight_x) {
 				Rectangle newClipRect = new Rectangle(clipRect);
 				newClipRect.width += (tokenWidth / token.length()) / 2;
 				graphics.setClip(newClipRect);
 			}
-				
+
 			graphics.drawText(token, x, y);
 			graphics.setClip(clipRect);
-			
+
 			y += fontHeight;
 
-			if (isUnderlined)
+			if (isUnderlined) {
 				graphics.drawLine(x, y - 1, x + tokenWidth, y - 1);
-			if (isStrikedThrough)
-				graphics.drawLine(x, y - fontHeightHalf + 1, x + tokenWidth, y
-					- fontHeightHalf + 1);
+			}
+			if (isStrikedThrough) {
+				graphics.drawLine(x, y - fontHeightHalf + 1, x + tokenWidth, y - fontHeightHalf + 1);
+			}
 		}
 	}
 
 	/**
 	 * Paints the icon(s)
-	 * 
+	 *
 	 * @param graphics The graphics context
 	 */
 	private void paintIcons(Graphics graphics) {
@@ -1195,7 +1203,7 @@ public class OriginalWrapLabel
 
 		int num = getNumberofIcons();
 		for (int i = 0; i < num; i++) {
-			Image icon = getIcon(i); 
+			Image icon = getIcon(i);
 			if (icon != null) {
 				graphics.drawImage(icon, p);
 				p.x += getIconSize(i).width;
@@ -1205,7 +1213,7 @@ public class OriginalWrapLabel
 
 	/**
 	 * Sets the label's icon to the passed image.
-	 * 
+	 *
 	 * @param image the new label image
 	 * @since 2.0
 	 */
@@ -1215,7 +1223,7 @@ public class OriginalWrapLabel
 
 	/**
 	 * Sets the label's icon at given index
-	 * 
+	 *
 	 * @param image The icon image or null to remove the icon
 	 * @param index The icon index
 	 */
@@ -1228,7 +1236,7 @@ public class OriginalWrapLabel
 				iconInfo.setIcon(image, index);
 			}
 			revalidate();
-			repaint();// Call repaint, in case the image dimensions are the same.           
+			repaint();// Call repaint, in case the image dimensions are the same.
 		} else if (iconInfo.getIcon(index) != image) {
 			if (iconInfo.getMaxIcons() == 1) {
 				if (index == 0) {
@@ -1244,23 +1252,23 @@ public class OriginalWrapLabel
 			iconInfo.setIcon(image, index);
 			revalidate();
 			repaint();// Call repaint, in case the image dimensions are the same.
-		}	
+		}
 	}
-
 
 	/**
 	 * Sets the icon alignment relative to the .abel's alignment to the passed
-	 * value. The default is {@link PositionConstants#CENTER}. Other possible
-	 * values are {@link PositionConstants#TOP},
+	 * value. The default is {@link PositionConstants#CENTER}. Other possible values
+	 * are {@link PositionConstants#TOP},
 	 * {@link PositionConstants#BOTTOM},{@link PositionConstants#LEFT}and
 	 * {@link PositionConstants#RIGHT}.
-	 * 
+	 *
 	 * @param align the icon alignment
 	 * @since 2.0
 	 */
 	public void setIconAlignment(int align) {
-		if (getIconAlignment() == align)
+		if (getIconAlignment() == align) {
 			return;
+		}
 		setAlignmentFlags(align, FLAG_ICON_ALIGN);
 		clearLocations();
 		repaint();
@@ -1268,33 +1276,38 @@ public class OriginalWrapLabel
 
 	/**
 	 * getIconSize
+	 * 
 	 * @param index of icon to retrieve size of.
 	 * @return Dimension representing the icon size.
 	 */
 	protected Dimension getIconSize(int index) {
-		if (iconInfo == null)
+		if (iconInfo == null) {
 			return EMPTY_DIMENSION;
+		}
 		return iconInfo.getIconSize(getFigureMapMode(), index);
 	}
-	
+
 	/**
 	 * getIconNumber
+	 * 
 	 * @return int number of icons in the wrap label
 	 */
 	protected int getNumberofIcons() {
-		if (iconInfo == null)
+		if (iconInfo == null) {
 			return 0;
+		}
 		return iconInfo.getNumberofIcons();
 	}
-	
+
 	/**
-	 * getTotalIconSize
-	 * Calculates the total union of icon sizes
+	 * getTotalIconSize Calculates the total union of icon sizes
+	 * 
 	 * @return Dimension that is the union of icon sizes
 	 */
 	protected Dimension getTotalIconSize() {
-		if (iconInfo == null)
+		if (iconInfo == null) {
 			return EMPTY_DIMENSION;
+		}
 		return iconInfo.getTotalIconSize(getFigureMapMode());
 	}
 
@@ -1303,12 +1316,13 @@ public class OriginalWrapLabel
 	 * {@link PositionConstants#CENTER}. Other possible values are
 	 * {@link PositionConstants#TOP},{@link PositionConstants#BOTTOM},
 	 * {@link PositionConstants#LEFT}and {@link PositionConstants#RIGHT}.
-	 * 
+	 *
 	 * @param align label alignment
 	 */
 	public void setLabelAlignment(int align) {
-		if (getLabelAlignment() == align)
+		if (getLabelAlignment() == align) {
 			return;
+		}
 		setAlignmentFlags(align, FLAG_LABEL_ALIGN);
 		clearLocations();
 		repaint();
@@ -1316,30 +1330,32 @@ public class OriginalWrapLabel
 
 	/**
 	 * Return the ellipse string.
-	 * 
-	 * @return the <code>String</code> that represents the fact that the
-	 * text has been truncated and that more text is available but hidden. 
-	 * Usually this is represented by "...".
+	 *
+	 * @return the <code>String</code> that represents the fact that the text has
+	 *         been truncated and that more text is available but hidden. Usually
+	 *         this is represented by "...".
 	 */
 	protected String getEllipse() {
 		return _ellipse;
 	}
-	
+
 	/**
 	 * Sets the label's text.
-	 * 
+	 *
 	 * @param s the new label text
 	 * @since 2.0
 	 */
 	public void setText(String s) {
-		//"text" will never be null.
-		if (s == null)
+		// "text" will never be null.
+		if (s == null) {
 			s = "";//$NON-NLS-1$
-		if (text.equals(s))
+		}
+		if (text.equals(s)) {
 			return;
+		}
 		text = s;
 		revalidate();
-		repaint(); //If the new text does not cause a new size, we still need
+		repaint(); // If the new text does not cause a new size, we still need
 		// to paint.
 	}
 
@@ -1348,13 +1364,14 @@ public class OriginalWrapLabel
 	 * default is {@link PositionConstants#CENTER}. Other possible values are
 	 * {@link PositionConstants#TOP},{@link PositionConstants#BOTTOM},
 	 * {@link PositionConstants#LEFT}and {@link PositionConstants#RIGHT}.
-	 * 
+	 *
 	 * @param align the text alignment
 	 * @since 2.0
 	 */
 	public void setTextAlignment(int align) {
-		if (getTextAlignment() == align)
+		if (getTextAlignment() == align) {
 			return;
+		}
 		setAlignmentFlags(align, FLAG_TEXT_ALIGN);
 		clearLocations();
 		repaint();
@@ -1365,13 +1382,14 @@ public class OriginalWrapLabel
 	 * {@link PositionConstants#EAST}. Other possible values are
 	 * {@link PositionConstants#NORTH},{@link PositionConstants#SOUTH}and
 	 * {@link PositionConstants#WEST}.
-	 * 
+	 *
 	 * @param where the text placement
 	 * @since 2.0
 	 */
 	public void setTextPlacement(int where) {
-		if (getTextPlacement() == where)
+		if (getTextPlacement() == where) {
 			return;
+		}
 		setPlacementFlags(where, FLAG_TEXT_PLACEMENT);
 		revalidate();
 		repaint();
@@ -1379,12 +1397,13 @@ public class OriginalWrapLabel
 
 	/**
 	 * Sets whether the label text should be underlined
-	 * 
+	 *
 	 * @param b Wether the label text should be underlined
 	 */
 	public void setTextUnderline(boolean b) {
-		if (isTextUnderlined() == b)
+		if (isTextUnderlined() == b) {
 			return;
+		}
 		setFlag(FLAG_UNDERLINED, b);
 		repaint();
 	}
@@ -1395,15 +1414,16 @@ public class OriginalWrapLabel
 	public boolean isTextUnderlined() {
 		return (flags & FLAG_UNDERLINED) != 0;
 	}
-	
+
 	/**
 	 * Sets whether the label text should be striked-through
-	 * 
+	 *
 	 * @param b Wether the label text should be stricked-through
 	 */
 	public void setTextStrikeThrough(boolean b) {
-		if (isTextStrikedThrough() == b)
+		if (isTextStrikedThrough() == b) {
 			return;
+		}
 		setFlag(FLAG_STRIKEDTHROUGH, b);
 		repaint();
 	}
@@ -1417,12 +1437,13 @@ public class OriginalWrapLabel
 
 	/**
 	 * Sets whether the label text should wrap
-	 * 
+	 *
 	 * @param b whether the label text should wrap
 	 */
 	public void setTextWrap(boolean b) {
-		if (isTextWrapped() == b)
+		if (isTextWrapped() == b) {
 			return;
+		}
 		setFlag(FLAG_WRAP, b);
 		revalidate();
 		repaint();
@@ -1438,26 +1459,26 @@ public class OriginalWrapLabel
 	/**
 	 * Sets the wrapping width of the label text. This is only valid if text
 	 * wrapping is turned on
-	 * 
+	 *
 	 * @param i The label text wrapping width
 	 */
 	public void setTextWrapWidth(int i) {
 		/*
-		 * if (this.wrapWidth == i) return; this.wrapWidth = i; revalidate();
-		 * repaint();
+		 * if (this.wrapWidth == i) return; this.wrapWidth = i; revalidate(); repaint();
 		 */
 	}
 
 	/**
 	 * Sets the wrapping width of the label text. This is only valid if text
 	 * wrapping is turned on
-	 * 
+	 *
 	 * @param i The label text wrapping width
 	 */
 	public void setTextWrapAlignment(int i) {
-		if (getTextWrapAlignment() == i)
+		if (getTextWrapAlignment() == i) {
 			return;
-		
+		}
+
 		setAlignmentFlags(i, FLAG_WRAP_ALIGN);
 		repaint();
 	}
@@ -1468,107 +1489,111 @@ public class OriginalWrapLabel
 	public int getTextWrapAlignment() {
 		return getAlignment(FLAG_WRAP_ALIGN);
 	}
-	
+
 	/**
 	 * setPlacementFlags
-	 * @param align 
+	 * 
+	 * @param align
 	 * @param flagOffset
 	 */
 	private void setPlacementFlags(int align, int flagOffset) {
 		flags &= ~(0x7 * flagOffset);
 		switch (align) {
-			case EAST:
-				flags |= 0x1 * flagOffset;
-				break;
-			case WEST:
-				flags |= 0x2 * flagOffset;
-				break;
-			case NORTH:
-				flags |= 0x3 * flagOffset;
-				break;
-			case SOUTH:
-				flags |= 0x4 * flagOffset;
-				break;
+		case EAST:
+			flags |= 0x1 * flagOffset;
+			break;
+		case WEST:
+			flags |= 0x2 * flagOffset;
+			break;
+		case NORTH:
+			flags |= 0x3 * flagOffset;
+			break;
+		case SOUTH:
+			flags |= 0x4 * flagOffset;
+			break;
 		}
 	}
 
 	/**
 	 * getPlacement
-	 * 
+	 *
 	 * @param flagOffset
 	 * @return PositionConstant representing the placement
 	 */
 	private int getPlacement(int flagOffset) {
 		int wrapValue = flags & (0x7 * flagOffset);
-		if (wrapValue == 0x1 * flagOffset)
+		if (wrapValue == 0x1 * flagOffset) {
 			return EAST;
-		else if (wrapValue == 0x2 * flagOffset)
+		} else if (wrapValue == 0x2 * flagOffset) {
 			return WEST;
-		else if (wrapValue == 0x3 * flagOffset)
+		} else if (wrapValue == 0x3 * flagOffset) {
 			return NORTH;
-		else if (wrapValue == 0x4 * flagOffset)
+		} else if (wrapValue == 0x4 * flagOffset) {
 			return SOUTH;
-		
+		}
+
 		return EAST;
 	}
-	
+
 	/**
 	 * setAlignmentFlags
-	 * @param align 
+	 * 
+	 * @param align
 	 * @param flagOffset
 	 */
 	private void setAlignmentFlags(int align, int flagOffset) {
 		flags &= ~(0x7 * flagOffset);
 		switch (align) {
-			case CENTER:
-				flags |= 0x1 * flagOffset;
-				break;
-			case TOP:
-				flags |= 0x2 * flagOffset;
-				break;
-			case LEFT:
-				flags |= 0x3 * flagOffset;
-				break;
-			case RIGHT:
-				flags |= 0x4 * flagOffset;
-				break;
-			case BOTTOM:
-				flags |= 0x5 * flagOffset;
-				break;
+		case CENTER:
+			flags |= 0x1 * flagOffset;
+			break;
+		case TOP:
+			flags |= 0x2 * flagOffset;
+			break;
+		case LEFT:
+			flags |= 0x3 * flagOffset;
+			break;
+		case RIGHT:
+			flags |= 0x4 * flagOffset;
+			break;
+		case BOTTOM:
+			flags |= 0x5 * flagOffset;
+			break;
 		}
 	}
 
 	/**
 	 * Retrieves the alignment value from the flags member.
-	 * 
+	 *
 	 * @param flagOffset that is the bitwise value representing the offset.
 	 * @return PositionConstant representing the alignment
 	 */
 	private int getAlignment(int flagOffset) {
 		int wrapValue = flags & (0x7 * flagOffset);
-		if (wrapValue == 0x1 * flagOffset)
+		if (wrapValue == 0x1 * flagOffset) {
 			return CENTER;
-		else if (wrapValue == 0x2 * flagOffset)
+		} else if (wrapValue == 0x2 * flagOffset) {
 			return TOP;
-		else if (wrapValue == 0x3 * flagOffset)
+		} else if (wrapValue == 0x3 * flagOffset) {
 			return LEFT;
-		else if (wrapValue == 0x4 * flagOffset)
+		} else if (wrapValue == 0x4 * flagOffset) {
 			return RIGHT;
-		else if (wrapValue == 0x5 * flagOffset)
+		} else if (wrapValue == 0x5 * flagOffset) {
 			return BOTTOM;
-		
+		}
+
 		return CENTER;
 	}
-	
 
 	/**
 	 * Sets the selection state of this label
-	 * 
+	 *
 	 * @param b true will cause the label to appear selected
 	 */
 	public void setSelected(boolean b) {
-		if (isSelected() == b)
+		if (isSelected() == b) {
 			return;
+		}
 		setFlag(FLAG_SELECTED, b);
 		repaint();
 	}
@@ -1582,13 +1607,14 @@ public class OriginalWrapLabel
 
 	/**
 	 * Sets the focus state of this label
-	 * 
-	 * @param b true will cause a focus rectangle to be drawn around the text
-	 *            of the Label
+	 *
+	 * @param b true will cause a focus rectangle to be drawn around the text of the
+	 *          Label
 	 */
 	public void setFocus(boolean b) {
-		if (hasFocus() == b)
+		if (hasFocus() == b) {
 			return;
+		}
 		setFlag(FLAG_HASFOCUS, b);
 		repaint();
 	}
@@ -1596,13 +1622,14 @@ public class OriginalWrapLabel
 	/**
 	 * @return the focus state of this label
 	 */
+	@Override
 	public boolean hasFocus() {
 		return (flags & FLAG_HASFOCUS) != 0;
 	}
 
 	/**
 	 * Returns the bounds of the text selection
-	 * 
+	 *
 	 * @return The bounds of the text selection
 	 */
 	private Rectangle getSelectionRectangle() {
@@ -1615,12 +1642,12 @@ public class OriginalWrapLabel
 	}
 
 	/**
-	 * returns the position of last character within the supplied text that will
-	 * fit within the supplied width.
-	 * 
-	 * @param s a text string
-	 * @param f font used to draw the text string
-	 * @param w width in pixles.
+	 * returns the position of last character within the supplied text that will fit
+	 * within the supplied width.
+	 *
+	 * @param s          a text string
+	 * @param f          font used to draw the text string
+	 * @param w          width in pixles.
 	 * @param fontHeight int <b>mapped already to logical units</b>.
 	 */
 	private int getLineWrapPosition(String s, Font f, int w, int fontHeight) {
@@ -1642,53 +1669,54 @@ public class OriginalWrapLabel
 		}
 
 		// keep iterating as long as width permits
-		do
+		do {
 			end = iter.next();
-		while (end != BreakIterator.DONE
-			&& getTextExtents(s.substring(start, end), f, fontHeight).width <= w);
-		return (end == BreakIterator.DONE) ? iter.last()
-			: iter.previous();
-	}	
+		} while (end != BreakIterator.DONE && getTextExtents(s.substring(start, end), f, fontHeight).width <= w);
+		return (end == BreakIterator.DONE) ? iter.last() : iter.previous();
+	}
 
 	/**
 	 * Returns the largest substring of <i>s </i> in Font <i>f </i> that can be
 	 * confined to the number of pixels in <i>availableWidth <i>.
-	 * 
-	 * @param s the original string
-	 * @param f the font
-	 * @param w the available width
-	 * @param fontHeight int <b>mapped already to logical units</b>.
+	 *
+	 * @param s                the original string
+	 * @param f                the font
+	 * @param w                the available width
+	 * @param fontHeight       int <b>mapped already to logical units</b>.
 	 * @param charAverageWidth int <b>mapped already to logical units</b>.
 	 * @return the largest substring that fits in the given width
 	 * @since 2.0
 	 */
-	private int getLargestSubstringConfinedTo(String s, Font f, int w, int fontHeight, int charAverageWidth) {		
+	private int getLargestSubstringConfinedTo(String s, Font f, int w, int fontHeight, int charAverageWidth) {
 		float avg = charAverageWidth;
 		int min = 0;
 		int max = s.length() + 1;
 
-		//The size of the current guess
+		// The size of the current guess
 		int guess = 0, guessSize = 0;
 		while ((max - min) > 1) {
-			//Pick a new guess size
-			//	New guess is the last guess plus the missing width in pixels
-			//	divided by the average character size in pixels
+			// Pick a new guess size
+			// New guess is the last guess plus the missing width in pixels
+			// divided by the average character size in pixels
 			guess = guess + (int) ((w - guessSize) / avg);
 
-			if (guess >= max)
+			if (guess >= max) {
 				guess = max - 1;
-			if (guess <= min)
+			}
+			if (guess <= min) {
 				guess = min + 1;
+			}
 
-			//Measure the current guess
+			// Measure the current guess
 			guessSize = getTextExtents(s.substring(0, guess), f, fontHeight).width;
 
-			if (guessSize < w)
-				//We did not use the available width
+			if (guessSize < w) {
+				// We did not use the available width
 				min = guess;
-			else
-				//We exceeded the available width
+			} else { // We exceeded the available width
+				// We exceeded the available width
 				max = guess;
+			}
 		}
 		return min;
 	}
@@ -1701,15 +1729,13 @@ public class OriginalWrapLabel
 			return getMapModeConstants().dimension_nDPtoLP_0;
 		} else {
 			// height should be set using the font height and the number of
-			// lines in the string			
+			// lines in the string
 			Dimension d = FigureUtilities.getTextExtents(s, f);
 			IMapMode mapMode = getFigureMapMode();
 			d.width = mapMode.DPtoLP(d.width);
 			d.height = fontHeight * new StringTokenizer(s, "\n").countTokens();//$NON-NLS-1$
-			return d;			
+			return d;
 		}
 	}
 
-    
-	
 }

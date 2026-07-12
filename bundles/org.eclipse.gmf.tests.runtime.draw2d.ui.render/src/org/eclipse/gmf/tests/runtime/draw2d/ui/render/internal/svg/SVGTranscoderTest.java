@@ -7,42 +7,45 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.export.GraphicsSVG;
-
-import junit.framework.TestCase;
-
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author sshaw
  *
- * Test case for the SVG transcoder
+ *         Test case for the SVG transcoder
  */
-public class SVGTranscoderTest extends TestCase {
+public class SVGTranscoderTest {
 
-	protected void setUp() {
-		try { 
+	@BeforeEach
+	public void setUp() {
+		try {
 			// do nothing for now
 		} catch (Exception e) {
-			fail( "The SVGTranscoderTest.setUp method caught an exception - " + e ); //$NON-NLS-1$
+			fail("The SVGTranscoderTest.setUp method caught an exception - " + e); //$NON-NLS-1$
 		}
 	}
-	
+
 	/**
-	 * SVG export should be resiliant to the size of the image since it is
-	 * in vector format.
+	 * SVG export should be resiliant to the size of the image since it is in vector
+	 * format.
 	 */
+	@Test
 	public void testSVGGraphicsOverflow() {
-		Rectangle viewBox = new Rectangle(0,0,100000,100000);
+		Rectangle viewBox = new Rectangle(0, 0, 100000, 100000);
 		GraphicsSVG svgG = GraphicsSVG.getInstance(viewBox);
 		assertNotNull(svgG);
-		
+
 		svgG.drawRectangle(10, 10, 500, 500);
 		svgG.dispose();
 	}

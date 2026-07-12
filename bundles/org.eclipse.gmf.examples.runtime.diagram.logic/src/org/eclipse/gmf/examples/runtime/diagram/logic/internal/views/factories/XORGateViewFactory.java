@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories;
@@ -21,17 +21,17 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * The XORGateView Factory class
- * 
+ *
  * @author mmostafa
  */
-public class XORGateViewFactory
-	extends LogicGateViewFactory {
-    
-    protected void decorateView(View containerView, View view, IAdaptable semanticAdapter, String semanticHint, int index, boolean persisted) {
-        super.decorateView(containerView, view, semanticAdapter, semanticHint, index,
-            persisted);
-        ShapeStyle style = (ShapeStyle)view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
-        style.setFillColor((FigureUtilities.colorToInteger(LogicColorConstants.xorGate)).intValue());
+public class XORGateViewFactory extends LogicGateViewFactory {
 
-    }
+	@Override
+	protected void decorateView(View containerView, View view, IAdaptable semanticAdapter, String semanticHint,
+			int index, boolean persisted) {
+		super.decorateView(containerView, view, semanticAdapter, semanticHint, index, persisted);
+		ShapeStyle style = (ShapeStyle) view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
+		style.setFillColor((FigureUtilities.colorToInteger(LogicColorConstants.xorGate)).intValue());
+
+	}
 }

@@ -7,10 +7,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.util;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -45,7 +50,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -59,44 +63,43 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.EditorPart;
-import org.junit.Assert;
-
+import org.junit.jupiter.api.AfterEach;
 
 /**
  * @author choang
  *
- * Most fixture should extend fromthis Abstract class.  The only things that are left to do is to implement the following
- * abstract methods
- * 1.  createProject,createDiagram,craeteShapesAndConnectors
- * 2.  Implement you test class which should extend from org.junit.org or @see org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase
- * 
+ *         Most fixture should extend fromthis Abstract class. The only things
+ *         that are left to do is to implement the following abstract methods 1.
+ *         createProject,createDiagram,craeteShapesAndConnectors 2. Implement
+ *         you test class which should extend from org.junit.org or @see
+ *         org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase
+ *
  */
-public abstract class AbstractPresentationTestFixture
-	extends Assert
-	implements IPresentationTestFixture {
-	
+public abstract class AbstractPresentationTestFixture implements IPresentationTestFixture {
+
 	private IProject project = null;
 	private IDiagramWorkbenchPart diagramWorkbenchPart = null;
 	private IFile diagramFile = null;
-    private TransactionalEditingDomain editingDomain;
-    private Resource resource;
-	
+	private TransactionalEditingDomain editingDomain;
+	private Resource resource;
+
 	private Diagram diagram;
 	private DiagramEditPart diagramEditPart;
-	
-	private Edge connectorView = null; 
+
+	private Edge connectorView = null;
 	// connector view for the test fixture
 
-    /**
-     * Temporary shell to be used when creating the diagram editpart.
-     */
-    private Shell tempShell;
-    
+	/**
+	 * Temporary shell to be used when creating the diagram editpart.
+	 */
+	private Shell tempShell;
+
 	/** verbose flag. */
 	private static boolean _verbose = Boolean.getBoolean(AbstractTestBase.SYSPROP_VERBOSE);
-	
+
 	/**
 	 * Returns the diagramFile.
+	 * 
 	 * @return IFile
 	 */
 	public IFile getDiagramFile() {
@@ -104,59 +107,65 @@ public abstract class AbstractPresentationTestFixture
 	}
 
 	/**
-	 * Enable verbose mode.  If enabled, {@link junit.framework.Assert#fail(java.lang.String)} 
-	 * will print the supplied string; otherwise the string is ignored.
+	 * Enable verbose mode. If enabled,
+	 * {@link junit.framework.Assert#fail(java.lang.String)} will print the supplied
+	 * string; otherwise the string is ignored.
+	 *
+	 * Verbose mode can also be enabled using the
+	 * {@link AbstractTestBase#SYSPROP_VERBOSE} system property.
 	 * 
-	 * Verbose mode can also be enabled using the {@link AbstractTestBase#SYSPROP_VERBOSE} system property.
 	 * @param enabled boolean flag
 	 */
-	protected final void enableVerbose( boolean enabled ) {
+	protected final void enableVerbose(boolean enabled) {
 		_verbose = enabled;
 	}
-	
+
 	/** Return the verbose mode. */
 	public final boolean isVerbose() {
 		return _verbose;
-		
+
 	}
-	
+
 	/** Calls <code>System.out.println(msg)</code> if in verbose mode. */
-	public static final void println( Object msg ) {
-		if ( _verbose ) {
+	public static final void println(Object msg) {
+		if (_verbose) {
 			System.out.println(msg);
 		}
 	}
 
-	
 	/** Calls <code>System.out.print(msg)</code> if in verbose mode. */
-	public static final void print( Object msg ) {
-		if ( _verbose ) {
+	public static final void print(Object msg) {
+		if (_verbose) {
 			System.out.print(msg);
 		}
 	}
-	
+
 	/**
 	 * Returns the editor.
+	 * 
 	 * @return IDiagramWorkbenchPart
 	 */
+	@Override
 	public IDiagramWorkbenchPart getDiagramWorkbenchPart() {
 		if (diagramWorkbenchPart == null) {
-			assertTrue(
-				"It appears that the diagram needs to be opened for this test.  Call openDiagram().", false); //$NON-NLS-1$
+			assertTrue(false, "It appears that the diagram needs to be opened for this test.  Call openDiagram()."); //$NON-NLS-1$
 		}
 		return diagramWorkbenchPart;
 	}
 
 	/**
 	 * Returns the project.
+	 * 
 	 * @return IProject
 	 */
+	@Override
 	public IProject getProject() {
 		return project;
 	}
 
 	/**
 	 * Sets the diagramFile.
+	 * 
 	 * @param diagramFile The diagramFile to set
 	 */
 	protected void setDiagramFile(IFile diagramFile) {
@@ -165,13 +174,17 @@ public abstract class AbstractPresentationTestFixture
 
 	/**
 	 * Method getCommandStack.
-	 * @return CommandStack  Command stack for the diagram edit domain
+	 * 
+	 * @return CommandStack Command stack for the diagram edit domain
 	 */
+	@Override
 	public CommandStack getCommandStack() {
 		return getDiagramEditPart().getDiagramEditDomain().getDiagramCommandStack();
 	}
+
 	/**
 	 * Sets the diagramWorkbenchPart.
+	 * 
 	 * @param diagramWorkbenchPart The editorPart to set
 	 */
 	public void setDiagramWorkbenchPart(IDiagramWorkbenchPart diagramWorkbenchPart) {
@@ -180,6 +193,7 @@ public abstract class AbstractPresentationTestFixture
 
 	/**
 	 * Sets the project.
+	 * 
 	 * @param project The project to set
 	 */
 	protected void setProject(IProject project) {
@@ -187,75 +201,80 @@ public abstract class AbstractPresentationTestFixture
 	}
 
 	/**
-	 * 
-	 * Setup up the data for a test.  It will create the project,diagram and then opent the diagram
-	 * and then create the test shapes and connectors on the diagram for the tests.
+	 *
+	 * Setup up the data for a test. It will create the project,diagram and then
+	 * opent the diagram and then create the test shapes and connectors on the
+	 * diagram for the tests.
 	 */
+	@Override
 	public void setup() throws Exception {
 		createProject();
 		createDiagram();
-        createResource();
+		createResource();
 		createDiagramEditPart();
-		
+
 		flushEventQueue(); // so that all editor related events are fired
 		createShapesAndConnectors();
 	}
 
 	/**
-	 * Will delete the project that was used for the test and removed all the resources in it.
+	 * Will delete the project that was used for the test and removed all the
+	 * resources in it.
 	 */
-	public final void tearDown() throws Exception { 
-        if (tempShell != null) {
-            tempShell.dispose();
-            tempShell = null;
-        }	
+	@Override
+	@AfterEach
+	public final void tearDown() throws Exception {
+		if (tempShell != null) {
+			tempShell.dispose();
+			tempShell = null;
+		}
 //		flushEventQueue();
 		boolean diagramClosed = false;
 		Throwable cde = null; // close diagram exception
-		Throwable pde = null;  //project delete exception
+		Throwable pde = null; // project delete exception
 		try {
-			
+
 			try {
 				diagramClosed = closeDiagram();
-			}
-			catch( Throwable cdt ) {
+			} catch (Throwable cdt) {
 				cde = cdt;
 			}
-			try { 
-				if (project != null)
+			try {
+				if (project != null) {
 					project.delete(true, true, null);
-			}
-			catch( Throwable pdt ) {
+				}
+			} catch (Throwable pdt) {
 				pde = pdt;
 			}
-		}
-		finally {
-            
+		} finally {
+
 			// erasing all the data
 			setDiagramWorkbenchPart(null);
-            // unload resource
-            if (getResource() != null) {
-                getResource().unload();
-                setResource(null);
-            }
+			// unload resource
+			if (getResource() != null) {
+				getResource().unload();
+				setResource(null);
+			}
 			setDiagramFile(null);
 			setProject(null);
 			setConnectorView(null);
 			flushEventQueue();
-			if ( !diagramClosed ) {
-				Log.error( TestsPlugin.getDefault(), IStatus.ERROR, "FAILED TO CLOSE DIAGRAM", cde);//$NON-NLS-1$
+			if (!diagramClosed) {
+				Log.error(TestsPlugin.getDefault(), IStatus.ERROR, "FAILED TO CLOSE DIAGRAM", cde);//$NON-NLS-1$
 			}
-			if ( pde != null ) {
-				Log.error( TestsPlugin.getDefault(), IStatus.ERROR, "FAILED TO DELETE PROJECT", pde);//$NON-NLS-1$
+			if (pde != null) {
+				Log.error(TestsPlugin.getDefault(), IStatus.ERROR, "FAILED TO DELETE PROJECT", pde);//$NON-NLS-1$
 			}
 		}
 	}
-	
+
 	/**
-	 * Returns the connectorView.
-	 * Maybe null if there is no connector view for this test
+	 * Returns the connectorView. Maybe null if there is no connector view for this
+	 * test
+	 * 
 	 * @return IConnectorView
 	 */
+	@Override
 	public Edge getConnectorView() {
 		// maybe null if there is no connector view for this test
 		return connectorView;
@@ -263,6 +282,7 @@ public abstract class AbstractPresentationTestFixture
 
 	/**
 	 * Sets the connectorView.
+	 * 
 	 * @param connectorView The connectorView to set
 	 */
 	protected void setConnectorView(Edge connectorView) {
@@ -270,6 +290,7 @@ public abstract class AbstractPresentationTestFixture
 	}
 
 	/** Clears the diaplay's event queue. */
+	@Override
 	public void flushEventQueue() {
 		Display display = Display.getCurrent();
 		while (display.readAndDispatch()) {
@@ -277,33 +298,30 @@ public abstract class AbstractPresentationTestFixture
 		}
 	}
 
+	@Override
 	public void openDiagram() throws Exception {
 		if (getDiagramFile() == null) {
 			createDiagram();
 		}
 
-		assertTrue("creation of diagram failed", getDiagramFile() != null); //$NON-NLS-1$
-		IWorkbenchPage page =
-			PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage();
+		assertTrue(getDiagramFile() != null, "creation of diagram failed"); //$NON-NLS-1$
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
-		IDEEditorUtil.openDiagram(getDiagramFile(), page.getWorkbenchWindow(),
-            false, new NullProgressMonitor());
+		IDEEditorUtil.openDiagram(getDiagramFile(), page.getWorkbenchWindow(), false, new NullProgressMonitor());
 
-		setDiagramWorkbenchPart((IDiagramWorkbenchPart)IDE.openEditor(page, getDiagramFile(), true));
+		setDiagramWorkbenchPart((IDiagramWorkbenchPart) IDE.openEditor(page, getDiagramFile(), true));
 		setDiagramEditPart(getDiagramWorkbenchPart().getDiagramEditPart());
-        setDiagram(getDiagramEditPart().getDiagramView());
-        setResource(getDiagram().eResource());
+		setDiagram(getDiagramEditPart().getDiagramView());
+		setResource(getDiagram().eResource());
 	}
 
+	@Override
 	public boolean closeDiagram() {
 		boolean closed = true;
 		if (diagramWorkbenchPart != null // only close if it was opened
-			&& diagramWorkbenchPart instanceof IEditorPart) {
-			IWorkbenchPage page =
-			getDiagramWorkbenchPart().getSite().getPage();
-			closed = page.closeEditor((IEditorPart)getDiagramWorkbenchPart(), false);
+				&& diagramWorkbenchPart instanceof IEditorPart) {
+			IWorkbenchPage page = getDiagramWorkbenchPart().getSite().getPage();
+			closed = page.closeEditor((IEditorPart) getDiagramWorkbenchPart(), false);
 			setDiagramWorkbenchPart(null);
 		}
 		return closed;
@@ -312,13 +330,14 @@ public abstract class AbstractPresentationTestFixture
 	protected boolean isDirty() {
 		return ((EditorPart) getDiagramWorkbenchPart()).isDirty();
 	}
-	
+
 	/**
 	 * @param diagram The diagram to set.
 	 */
 	public void setDiagram(Diagram diagram) {
 		this.diagram = diagram;
 	}
+
 	/**
 	 * @param diagramEditPart The diagramEditPart to set.
 	 */
@@ -326,10 +345,12 @@ public abstract class AbstractPresentationTestFixture
 		this.diagramEditPart = diagramEditPart;
 	}
 
+	@Override
 	public Diagram getDiagram() {
 		return diagram;
 	}
 
+	@Override
 	public DiagramEditPart getDiagramEditPart() {
 		return diagramEditPart;
 	}
@@ -340,87 +361,80 @@ public abstract class AbstractPresentationTestFixture
 	protected abstract void createProject() throws Exception;
 
 	/**
-	 * Implement to create the diagram and the diagram file for which
-	 * the test should run under.  Please set the diagramFile variable.
+	 * Implement to create the diagram and the diagram file for which the test
+	 * should run under. Please set the diagramFile variable.
 	 */
 	protected abstract void createDiagram() throws Exception;
-    
+
 	/**
-     * Creates the editing domain and resource and adds the diagram to
-     * that resource.
-     */
-    protected void createResource() {  
-    	if (getResource() == null) {
-	        IFile file = getDiagramFile();
-	        
-	        if (file != null) {
-	            String filePath = file.getLocation().toOSString();
-	            setResource(getEditingDomain().loadResource(filePath));
-	
-	        } else {
-                setResource(getEditingDomain()
-	                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui")); //$NON-NLS-1$
-	        }
-	
-	        if (getDiagram() != null) {
-	            
-	            AbstractEMFOperation operation = new AbstractEMFOperation(
-	            	getEditingDomain(), "AbstractPresentationTestFixture setup") { //$NON-NLS-1$
-	
-	                protected IStatus doExecute(IProgressMonitor monitor,
-	                        IAdaptable info)
-	                    throws ExecutionException {
-	                    
-	                    getResource().getContents().add(getDiagram());
-	                    return Status.OK_STATUS;
-	                };
-	            };
-	
-	    
-	            try {
-	                operation.execute(new NullProgressMonitor(), null);
-	            } catch (ExecutionException ie) {
-	                fail("createResource failed: " + ie.getLocalizedMessage()); //$NON-NLS-1$
-	            }
-	        }
-    	}
-    }
+	 * Creates the editing domain and resource and adds the diagram to that
+	 * resource.
+	 */
+	protected void createResource() {
+		if (getResource() == null) {
+			IFile file = getDiagramFile();
+
+			if (file != null) {
+				String filePath = file.getLocation().toOSString();
+				setResource(getEditingDomain().loadResource(filePath));
+
+			} else {
+				setResource(getEditingDomain().createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui")); //$NON-NLS-1$
+			}
+
+			if (getDiagram() != null) {
+
+				AbstractEMFOperation operation = new AbstractEMFOperation(getEditingDomain(),
+						"AbstractPresentationTestFixture setup") { //$NON-NLS-1$
+
+					@Override
+					protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+
+						getResource().getContents().add(getDiagram());
+						return Status.OK_STATUS;
+					}
+				};
+
+				try {
+					operation.execute(new NullProgressMonitor(), null);
+				} catch (ExecutionException ie) {
+					fail("createResource failed: " + ie.getLocalizedMessage()); //$NON-NLS-1$
+				}
+			}
+		}
+	}
 
 	/**
 	 * Creates and sets the diagram editpart using the offscreen rendering
 	 * capabilities.
 	 */
-	protected void createDiagramEditPart()
-		throws Exception
-	{
+	protected void createDiagramEditPart() {
 		if (getDiagramEditPart() == null) {
-			setDiagramEditPart(OffscreenEditPartFactory.getInstance()
-				.createDiagramEditPart(getDiagram(), getTempShell()));
+			setDiagramEditPart(
+					OffscreenEditPartFactory.getInstance().createDiagramEditPart(getDiagram(), getTempShell()));
 		}
 	}
-	
-    public ShapeEditPart createShapeUsingTool(IElementType elementType,
-            Point location, IGraphicalEditPart containerEP) {
-        return createShapeUsingTool(elementType, location, null, containerEP);
-    }
-    
+
+	public ShapeEditPart createShapeUsingTool(IElementType elementType, Point location,
+			IGraphicalEditPart containerEP) {
+		return createShapeUsingTool(elementType, location, null, containerEP);
+	}
+
 	/**
 	 * Creates a new shape using the request created by the
 	 * <code>CreationTool</code>.
-	 * 
-	 * @param elementType
-	 *            the type of the shape/element to be created
-	 * @param location
-	 *            the location for the new shape
+	 *
+	 * @param elementType the type of the shape/element to be created
+	 * @param location    the location for the new shape
 	 * @return the new shape's editpart
 	 */
-	public ShapeEditPart createShapeUsingTool(IElementType elementType,
-			Point location, Dimension size, IGraphicalEditPart containerEP) {
+	public ShapeEditPart createShapeUsingTool(IElementType elementType, Point location, Dimension size,
+			IGraphicalEditPart containerEP) {
 
 		CreateRequest request = getCreationRequest(elementType);
 		request.setLocation(location);
 		if (size != null) {
-		    request.setSize(size);
+			request.setSize(size);
 		}
 		Command cmd = containerEP.getCommand(request);
 
@@ -431,10 +445,10 @@ public abstract class AbstractPresentationTestFixture
 
 		Object newView = ((IAdaptable) ((List) request.getNewObject()).get(0)).getAdapter(View.class);
 		assertNotNull(newView);
-		assertTrue(!ViewUtil.isTransient((View)newView));
-		
-		EObject element = ((View)newView).getElement();
-		
+		assertTrue(!ViewUtil.isTransient((View) newView));
+
+		EObject element = ((View) newView).getElement();
+
 		getCommandStack().undo();
 		assertEquals(previousNumChildren, containerEP.getChildren().size());
 
@@ -447,42 +461,40 @@ public abstract class AbstractPresentationTestFixture
 			ListIterator li = children.listIterator();
 			while (li.hasNext()) {
 				IGraphicalEditPart gep = (IGraphicalEditPart) li.next();
-                if (gep.getNotationView() != null
-                    && element.equals(gep.getNotationView().getElement())) {
-                    newShape = gep;
-                }
+				if (gep.getNotationView() != null && element.equals(gep.getNotationView().getElement())) {
+					newShape = gep;
+				}
 			}
-		}
-		else {
-			newShape = (ShapeEditPart) getDiagramEditPart()
-			.getViewer().getEditPartRegistry().get(newView);
+		} else {
+			newShape = (ShapeEditPart) getDiagramEditPart().getViewer().getEditPartRegistry().get(newView);
 			assertNotNull(newShape);
 		}
-		
+
 		assertTrue(newShape != null && newShape instanceof ShapeEditPart);
-		return (ShapeEditPart)newShape;
+		return (ShapeEditPart) newShape;
 	}
 
 	/**
-	 * Given an <code>IElementType</code>, gets the creation request that can be used to 
-	 * retrieve the command to creation the element for the type.
-	 * 
+	 * Given an <code>IElementType</code>, gets the creation request that can be
+	 * used to retrieve the command to creation the element for the type.
+	 *
 	 * @param elementType
 	 * @return
 	 */
 	public CreateRequest getCreationRequest(IElementType elementType) {
-		class CreationTool
-			extends org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool {
+		class CreationTool extends org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool {
 
 			public CreationTool(IElementType theElementType) {
 				super(theElementType);
 			}
 
 			/** Make public. */
+			@Override
 			public Request createTargetRequest() {
 				return super.createTargetRequest();
 			}
-			
+
+			@Override
 			protected PreferencesHint getPreferencesHint() {
 				return PreferencesHint.USE_DEFAULTS;
 			}
@@ -496,141 +508,126 @@ public abstract class AbstractPresentationTestFixture
 	/**
 	 * Creates a new shape using the request created by the
 	 * <code>CreationTool</code>.
-	 * 
-	 * @param elementType
-	 *            the type of the shape/element to be created
-	 * @param location
-	 *            the location for the new shape
+	 *
+	 * @param elementType the type of the shape/element to be created
+	 * @param location    the location for the new shape
 	 * @return the new shape's editpart
 	 */
-	public ShapeEditPart createShapeUsingTool(IElementType elementType,
-			Point location) {
+	public ShapeEditPart createShapeUsingTool(IElementType elementType, Point location) {
 
 		return createShapeUsingTool(elementType, location, getDiagramEditPart());
 
 	}
-	
-	   /**
-     * Creates a new shape using the request created by the
-     * <code>CreationTool</code>.
-     * 
-     * @param elementType
-     *            the type of the shape/element to be created
-     * @param location
-     *            the location for the new shape
-     * @return the new shape's editpart
-     */
-    public ShapeEditPart createShapeUsingTool(IElementType elementType,
-            Point location, Dimension size) {
 
-        return createShapeUsingTool(elementType, location, size, getDiagramEditPart());
+	/**
+	 * Creates a new shape using the request created by the
+	 * <code>CreationTool</code>.
+	 *
+	 * @param elementType the type of the shape/element to be created
+	 * @param location    the location for the new shape
+	 * @return the new shape's editpart
+	 */
+	public ShapeEditPart createShapeUsingTool(IElementType elementType, Point location, Dimension size) {
 
-    }
-	
+		return createShapeUsingTool(elementType, location, size, getDiagramEditPart());
+
+	}
+
 	/**
 	 * Creates a new connector using the request created by the
 	 * <code>ConnectionCreationTool</code>.
-	 * 
-	 * @param sourceEditPart
-	 *            the new connector's source
-	 * @param targetEditPart
-	 *            the new connector's target
-	 * @param elementType
-	 *            the type of the connector/relationship to be created
+	 *
+	 * @param sourceEditPart the new connector's source
+	 * @param targetEditPart the new connector's target
+	 * @param elementType    the type of the connector/relationship to be created
 	 * @return the new connector's editpart
 	 */
-	public ConnectionEditPart createConnectorUsingTool(
-			final IGraphicalEditPart sourceEditPart,
+	public ConnectionEditPart createConnectorUsingTool(final IGraphicalEditPart sourceEditPart,
 			final IGraphicalEditPart targetEditPart, IElementType elementType) {
 
-		class ConnectorCreationTool
-			extends
-			org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool {
+		class ConnectorCreationTool extends org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool {
 
 			public ConnectorCreationTool(IElementType theElementType) {
 				super(theElementType);
 			}
 
 			/** Make public. */
+			@Override
 			public Request createTargetRequest() {
 				return super.createTargetRequest();
 			}
-			
+
+			@Override
 			protected PreferencesHint getPreferencesHint() {
 				return PreferencesHint.USE_DEFAULTS;
 			}
 		}
 
 		ConnectorCreationTool tool = new ConnectorCreationTool(elementType);
-		CreateConnectionRequest request = (CreateConnectionRequest) tool
-			.createTargetRequest();
+		CreateConnectionRequest request = (CreateConnectionRequest) tool.createTargetRequest();
 		request.setTargetEditPart(sourceEditPart);
-		request.setType(RequestConstants.REQ_CONNECTION_START);
+		request.setType(org.eclipse.gef.RequestConstants.REQ_CONNECTION_START);
 		sourceEditPart.getCommand(request);
 		request.setSourceEditPart(sourceEditPart);
 		request.setTargetEditPart(targetEditPart);
-		request.setType(RequestConstants.REQ_CONNECTION_END);
+		request.setType(org.eclipse.gef.RequestConstants.REQ_CONNECTION_END);
 		Command cmd = targetEditPart.getCommand(request);
 
 		int previousNumConnectors = getDiagramEditPart().getConnections().size();
 
 		getCommandStack().execute(cmd);
-		assertEquals(previousNumConnectors + 1, getDiagramEditPart()
-			.getConnections().size());
+		assertEquals(previousNumConnectors + 1, getDiagramEditPart().getConnections().size());
 		getCommandStack().undo();
-		assertEquals(previousNumConnectors, getDiagramEditPart()
-			.getConnections().size());
+		assertEquals(previousNumConnectors, getDiagramEditPart().getConnections().size());
 		getCommandStack().redo();
-		assertEquals(previousNumConnectors + 1, getDiagramEditPart()
-			.getConnections().size());
+		assertEquals(previousNumConnectors + 1, getDiagramEditPart().getConnections().size());
 
-		Object newView = ((IAdaptable) request.getNewObject())
-			.getAdapter(View.class);
+		Object newView = ((IAdaptable) request.getNewObject()).getAdapter(View.class);
 		assertNotNull(newView);
 
-		ConnectionEditPart newConnector = (ConnectionEditPart) getDiagramEditPart()
-			.getViewer().getEditPartRegistry().get(newView);
+		ConnectionEditPart newConnector = (ConnectionEditPart) getDiagramEditPart().getViewer().getEditPartRegistry()
+				.get(newView);
 		assertNotNull(newConnector);
 
 		return newConnector;
 	}
 
 	/**
-	 * Implement this to creates the shapes and the connectors for the tests.
-	 * Will set the connect view if there is one needed for the test.
+	 * Implement this to creates the shapes and the connectors for the tests. Will
+	 * set the connect view if there is one needed for the test.
 	 */
 	protected abstract void createShapesAndConnectors() throws Exception;
 
-    
-    public TransactionalEditingDomain getEditingDomain() {
-    	if (editingDomain == null) {
-            if (getDiagram() != null) {
-                editingDomain = TransactionUtil.getEditingDomain(getDiagram());
-            } else {
-                editingDomain = DiagramEditingDomainFactory.getInstance()
-                    .createEditingDomain();
-            }
-        }
-        return editingDomain;
-    }
-    
-    protected Resource getResource() {
-        return resource;
-    }
-    
-    protected void setResource(Resource resource) {
-        this.resource = resource;
-    }
-    
-    /**
-     * Lazily creates a new shell.
-     * @return
-     */
-    private Shell getTempShell() {
-        if (tempShell == null) {
-            tempShell = new Shell();
-        }
-        return tempShell;
-    }
+	@Override
+	public TransactionalEditingDomain getEditingDomain() {
+		if (editingDomain == null) {
+			if (getDiagram() != null) {
+				editingDomain = TransactionUtil.getEditingDomain(getDiagram());
+			} else {
+				editingDomain = DiagramEditingDomainFactory.getInstance().createEditingDomain();
+			}
+		}
+		return editingDomain;
+	}
+
+	protected Resource getResource() {
+		return resource;
+	}
+
+	protected void setResource(Resource resource) {
+		this.resource = resource;
+	}
+
+	/**
+	 * Lazily creates a new shell.
+	 * 
+	 * @return
+	 */
+	private Shell getTempShell() {
+		if (tempShell == null) {
+			tempShell = new Shell();
+		}
+		return tempShell;
+	}
 
 }

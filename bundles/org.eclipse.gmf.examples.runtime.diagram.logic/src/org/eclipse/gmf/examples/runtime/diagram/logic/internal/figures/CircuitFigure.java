@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures;
@@ -25,18 +25,16 @@ import org.eclipse.swt.graphics.Color;
 /*
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
-public class CircuitFigure
-	extends NodeFigure
-	implements HandleBounds
-{
+public class CircuitFigure extends NodeFigure implements HandleBounds {
 	private Dimension prefSize;
-	
+
 	public CircuitFigure(Dimension prefSize) {
 		setBorder(new CircuitBorder());
 		setOpaque(true);
 		this.prefSize = prefSize;
 	}
 
+	@Override
 	public Dimension getPreferredSize(int w, int h) {
 		Dimension newPrefSize = super.getPreferredSize(w, h);
 		Dimension defaultSize = prefSize;
@@ -47,6 +45,7 @@ public class CircuitFigure
 	/**
 	 * @see org.eclipse.draw2d.Figure#paintFigure(Graphics)
 	 */
+	@Override
 	protected void paintFigure(Graphics graphics) {
 		Rectangle rect = getBounds().getCopy();
 		graphics.setBackgroundColor(new Color(255, 255, 255));

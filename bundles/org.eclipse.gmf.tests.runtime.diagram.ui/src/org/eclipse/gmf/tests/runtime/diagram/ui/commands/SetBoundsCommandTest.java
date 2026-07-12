@@ -7,11 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
-
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -23,93 +26,101 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jschofie
  */
-public class SetBoundsCommandTest
-	extends CommandTestFixture {
+public class SetBoundsCommandTest extends CommandTestFixture {
 
 	private int XPOS = 500;
 	private int YPOS = 500;
 	private int WIDTH = 50;
 	private int HEIGHT = 50;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#createCommand()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#
+	 * createCommand()
 	 */
+	@Override
 	protected ICommand createCommand() {
-		return new SetBoundsCommand(getEditingDomain(), 
-			"SetBounds", new EObjectAdapter(noteView), new Rectangle(0, 0, WIDTH, HEIGHT)); //$NON-NLS-1$
+		return new SetBoundsCommand(getEditingDomain(), "SetBounds", new EObjectAdapter(noteView), //$NON-NLS-1$
+				new Rectangle(0, 0, WIDTH, HEIGHT));
 	}
 
+	@Override
+	@Test
 	public void testDoExecute() {
 		assertTrue(getCommand().canExecute());
-	
-		assertEquals( Integer.valueOf(-1),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( Integer.valueOf(-1),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
-		
-        try {
-            getCommand().execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-		
-		assertEquals( Integer.valueOf(WIDTH),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( Integer.valueOf(HEIGHT),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
+
+		assertEquals(Integer.valueOf(-1),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Width()));
+		assertEquals(Integer.valueOf(-1),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Height()));
+
+		try {
+			getCommand().execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+
+		assertEquals(Integer.valueOf(WIDTH),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Width()));
+		assertEquals(Integer.valueOf(HEIGHT),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Height()));
 	}
-	
+
+	@Test
 	public void testMove() {
-		ICommand moveCommand = new SetBoundsCommand(getEditingDomain(),
-			"SetBounds Move Test",new EObjectAdapter(noteView), new Point(XPOS, YPOS)); //$NON-NLS-1$
-		
+		ICommand moveCommand = new SetBoundsCommand(getEditingDomain(), "SetBounds Move Test", //$NON-NLS-1$
+				new EObjectAdapter(noteView), new Point(XPOS, YPOS));
+
 		assertTrue(moveCommand.canExecute());
-		
-		assertEquals( Integer.valueOf(0),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_X()));
-		assertEquals( Integer.valueOf(0),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_Y()));
-			
-        try {
-            moveCommand.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-			
-		assertEquals( Integer.valueOf(XPOS),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_X()));
-		assertEquals( Integer.valueOf(YPOS),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_Y()));
-		assertEquals( Integer.valueOf(-1),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( Integer.valueOf(-1),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
+
+		assertEquals(Integer.valueOf(0),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getLocation_X()));
+		assertEquals(Integer.valueOf(0),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getLocation_Y()));
+
+		try {
+			moveCommand.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+
+		assertEquals(Integer.valueOf(XPOS),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getLocation_X()));
+		assertEquals(Integer.valueOf(YPOS),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getLocation_Y()));
+		assertEquals(Integer.valueOf(-1),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Width()));
+		assertEquals(Integer.valueOf(-1),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Height()));
 	}
-	
+
+	@Test
 	public void testResize() {
-		ICommand resizeCommand = new SetBoundsCommand(getEditingDomain(), 
-			"SetBounds Move Test",new EObjectAdapter(noteView), new Dimension(WIDTH, HEIGHT)); //$NON-NLS-1$
-		
+		ICommand resizeCommand = new SetBoundsCommand(getEditingDomain(), "SetBounds Move Test", //$NON-NLS-1$
+				new EObjectAdapter(noteView), new Dimension(WIDTH, HEIGHT));
+
 		assertTrue(resizeCommand.canExecute());
-		
-		assertEquals( Integer.valueOf(-1),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( Integer.valueOf(-1),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
-			
-        try {
-            resizeCommand.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-			
-		assertEquals( Integer.valueOf(WIDTH),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
-		assertEquals( Integer.valueOf(HEIGHT),
-			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
+
+		assertEquals(Integer.valueOf(-1),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Width()));
+		assertEquals(Integer.valueOf(-1),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Height()));
+
+		try {
+			resizeCommand.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+
+		assertEquals(Integer.valueOf(WIDTH),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Width()));
+		assertEquals(Integer.valueOf(HEIGHT),
+				ViewUtil.getStructuralFeatureValue(noteView, NotationPackage.eINSTANCE.getSize_Height()));
 	}
 }

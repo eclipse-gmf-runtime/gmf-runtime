@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
@@ -18,9 +18,8 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Location;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Location</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object
+ * '<em><b>Location</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
@@ -28,8 +27,8 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Location;
  */
 public class LocationImpl extends EModelElementImpl implements Location {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected LocationImpl() {
@@ -37,12 +36,13 @@ public class LocationImpl extends EModelElementImpl implements Location {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return EmployeePackage.Literals.LOCATION;
 	}
 
-} //LocationImpl
+} // LocationImpl

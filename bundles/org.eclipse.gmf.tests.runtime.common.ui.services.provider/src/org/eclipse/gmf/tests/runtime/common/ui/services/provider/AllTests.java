@@ -7,35 +7,23 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
- * The org.eclipse.gmf.tests.runtime.common.ui.services.provider tests plug-in is not a JUnit test plug-in. This plug-in
- * is used by org.eclipse.gmf.tests.runtime.common.ui for ProviderPolicyExceptionsTest and ProviderPolicyTest.
+ * The org.eclipse.gmf.tests.runtime.common.ui.services.provider tests plug-in
+ * is not a JUnit test plug-in. This plug-in is used by
+ * org.eclipse.gmf.tests.runtime.common.ui for ProviderPolicyExceptionsTest and
+ * ProviderPolicyTest.
  * <p>
- * This AllTests simply is a place holder if someone does try to run the plug-in as a tests plug-in.
+ * This AllTests simply is a place holder if someone does try to run the plug-in
+ * as a tests plug-in.
  */
-public class AllTests extends TestCase {
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(AllTestsTest.suite());
-        return suite;
-    }
-
-    public AllTests() {
-        super(""); //$NON-NLS-1$
-    }
-
+@Suite
+@SelectClasses({ AllTestsTest.class, })
+public class AllTests {
 }

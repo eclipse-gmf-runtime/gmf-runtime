@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -17,6 +17,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 
 public class SecretDepartmentMatcher implements IElementMatcher {
 
+	@Override
 	public boolean matches(EObject eObject) {
 		return false;
 	}

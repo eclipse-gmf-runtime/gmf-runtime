@@ -7,10 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.parts;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +40,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.type.DiagramNotationType;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -46,27 +48,23 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestFixture;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Control;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 /**
  * GraphicalNodeEditPolicy class tests.
- * 
+ *
  * @author cmahoney
  */
-public class GraphicalNodeEditPolicyTests
-	extends AbstractTestBase {
+public class GraphicalNodeEditPolicyTests extends AbstractTestBase {
 
 	/**
-	 * Extend the <code>GraphicalNodeEditPolicy</code> class to support a menu
-	 * popup that not only creates a note attachment, but also allows the user
-	 * to choose what color to make the note attachment.
-	 * 
+	 * Extend the <code>GraphicalNodeEditPolicy</code> class to support a menu popup
+	 * that not only creates a note attachment, but also allows the user to choose
+	 * what color to make the note attachment.
+	 *
 	 * @author cmahoney
 	 */
-	static class NoteGraphicalNodeEditPolicy
-		extends GraphicalNodeEditPolicy {
+	static class NoteGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 
 		/**
 		 * Provides a description of the type of note attachment to be created.
@@ -81,64 +79,56 @@ public class GraphicalNodeEditPolicyTests
 			}
 		}
 
-		static NoteAttachmentDescriptor USER_CHOICE = new NoteAttachmentDescriptor(
-			ColorConstants.red);
+		static NoteAttachmentDescriptor USER_CHOICE = new NoteAttachmentDescriptor(ColorConstants.red);
 
+		@Override
 		protected List getConnectionMenuContent(CreateConnectionRequest request) {
 			List content = super.getConnectionMenuContent(request);
 			if (content.contains(DiagramNotationType.NOTE_ATTACHMENT)) {
 				content.add(new NoteAttachmentDescriptor(ColorConstants.blue));
 				content.add(USER_CHOICE);
-				content
-					.add(new NoteAttachmentDescriptor(ColorConstants.yellow));
+				content.add(new NoteAttachmentDescriptor(ColorConstants.yellow));
 			}
 			return content;
 		}
 
-		protected Command getConnectionCompleteCommand(Object connectionType,
-				CreateConnectionRequest request) {
+		@Override
+		protected Command getConnectionCompleteCommand(Object connectionType, CreateConnectionRequest request) {
 			if (connectionType instanceof NoteAttachmentDescriptor) {
-				CompoundCommand cc = new CompoundCommand(
-					"Create Note Attachment"); //$NON-NLS-1$
-				cc.add(super.getConnectionCompleteCommand(
-					DiagramNotationType.NOTE_ATTACHMENT, request));
+				CompoundCommand cc = new CompoundCommand("Create Note Attachment"); //$NON-NLS-1$
+				cc.add(super.getConnectionCompleteCommand(DiagramNotationType.NOTE_ATTACHMENT, request));
 
-				if (request instanceof CreateUnspecifiedTypeConnectionRequest)
-					cc
-						.add(new ICommandProxy(
-							new SetPropertyCommand(
-                                ((IGraphicalEditPart) getHost()).getEditingDomain(),
-								((CreateConnectionViewRequest) ((CreateUnspecifiedTypeConnectionRequest) request)
+				if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
+					cc.add(new ICommandProxy(new SetPropertyCommand(((IGraphicalEditPart) getHost()).getEditingDomain(),
+							((CreateConnectionViewRequest) ((CreateUnspecifiedTypeConnectionRequest) request)
 									.getRequestForType(DiagramNotationType.NOTE_ATTACHMENT))
 									.getConnectionViewDescriptor(),
-								Properties.ID_LINECOLOR,
-								Properties.ID_LINECOLOR,
-								FigureUtilities
-									.colorToInteger(((NoteAttachmentDescriptor) connectionType).color))));
+							Properties.ID_LINECOLOR, Properties.ID_LINECOLOR,
+							FigureUtilities.colorToInteger(((NoteAttachmentDescriptor) connectionType).color))));
+				}
 				return cc.unwrap();
 			}
 			return super.getConnectionCompleteCommand(connectionType, request);
 		}
 
-		protected ICommand getPromptAndCreateConnectionCommand(List content,
-				CreateConnectionRequest request) {
+		@Override
+		protected ICommand getPromptAndCreateConnectionCommand(List content, CreateConnectionRequest request) {
 
-			class TestablePromptAndCreateConnectionCommand
-				extends PromptAndCreateConnectionCommand {
+			class TestablePromptAndCreateConnectionCommand extends PromptAndCreateConnectionCommand {
 
-				class TestablePopupMenu
-					extends PopupMenu {
+				class TestablePopupMenu extends PopupMenu {
 
-					TestablePopupMenu(List theContent,
-							ILabelProvider theLabelProvider) {
+					TestablePopupMenu(List theContent, ILabelProvider theLabelProvider) {
 						super(theContent, theLabelProvider);
 					}
 
 					/*
 					 * (non-Javadoc)
-					 * 
-					 * @see org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu#show(org.eclipse.swt.widgets.Control)
+					 *
+					 * @see org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu#show(org.eclipse.swt.
+					 * widgets.Control)
 					 */
+					@Override
 					public boolean show(Control parent) {
 						assertTrue(getContent().contains(USER_CHOICE));
 						setResult(Collections.singletonList(USER_CHOICE));
@@ -149,25 +139,25 @@ public class GraphicalNodeEditPolicyTests
 
 				/**
 				 * Creates a new instance.
-				 * 
+				 *
 				 * @param theContent
 				 * @param theRequest
 				 */
-				TestablePromptAndCreateConnectionCommand(List theContent,
-						CreateConnectionRequest theRequest) {
+				TestablePromptAndCreateConnectionCommand(List theContent, CreateConnectionRequest theRequest) {
 					super(theContent, theRequest);
-					setPopupMenu(new TestablePopupMenu(theContent,
-						getLabelProvider()));
+					setPopupMenu(new TestablePopupMenu(theContent, getLabelProvider()));
 
 				}
 
+				@Override
 				protected ILabelProvider getLabelProvider() {
 					return new CreateOrSelectElementCommand.LabelProvider() {
 
+						@Override
 						public String getText(Object object) {
 							if (object instanceof NoteAttachmentDescriptor) {
 								return "Create a note attachment colored " //$NON-NLS-1$
-									+ ((NoteAttachmentDescriptor) object).color;
+										+ ((NoteAttachmentDescriptor) object).color;
 							}
 							return super.getText(object);
 						}
@@ -175,8 +165,7 @@ public class GraphicalNodeEditPolicyTests
 				}
 
 			}
-			return new TestablePromptAndCreateConnectionCommand(content,
-				request);
+			return new TestablePromptAndCreateConnectionCommand(content, request);
 		}
 
 	}
@@ -184,36 +173,28 @@ public class GraphicalNodeEditPolicyTests
 	/**
 	 * Subclass the Connection handle tool to make it usable in the test
 	 * environment.
-	 * 
+	 *
 	 * @author cmahoney
 	 */
-	class ConnectionHandleTool
-		extends
-		org.eclipse.gmf.runtime.diagram.ui.internal.tools.ConnectionHandleTool {
+	class ConnectionHandleTool extends org.eclipse.gmf.runtime.diagram.ui.internal.tools.ConnectionHandleTool {
 
 		public ConnectionHandleTool(ConnectionHandle connectorHandle) {
 			super(connectorHandle);
 		}
 
 		/** Make public. */
+		@Override
 		public Request createTargetRequest() {
 			return super.createTargetRequest();
 		}
 
+		@Override
 		protected PreferencesHint getPreferencesHint() {
 			return PreferencesHint.USE_DEFAULTS;
 		}
 	}
 
-	public static Test suite() {
-		TestSuite s = new TestSuite(GraphicalNodeEditPolicyTests.class);
-		return s;
-	}
-
-	public GraphicalNodeEditPolicyTests() {
-		super("GraphicalNodeEditPolicy Test Suite");//$NON-NLS-1$
-	}
-
+	@Override
 	protected void setTestFixture() {
 		testFixture = new PresentationTestFixture();
 	}
@@ -225,70 +206,61 @@ public class GraphicalNodeEditPolicyTests
 	/**
 	 * Tests the ability to use a custom prompt and add non-element types to the
 	 * prompt.
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public void testCustomPrompt()
-		throws Exception {
+	@Test
+	public void testCustomPrompt() throws Exception {
 
 		NoteEditPart sourceEP = getFixture().createNote();
 		NoteEditPart targetEP = getFixture().createNote();
 
-		sourceEP.installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE,
-			new NoteGraphicalNodeEditPolicy());
-		targetEP.installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE,
-			new NoteGraphicalNodeEditPolicy());
+		sourceEP.installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new NoteGraphicalNodeEditPolicy());
+		targetEP.installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new NoteGraphicalNodeEditPolicy());
 
-		ConnectionHandle handle = new ConnectionHandle(sourceEP,
-			ConnectionHandle.HandleDirection.OUTGOING, "the tooltip"); //$NON-NLS-1$
+		ConnectionHandle handle = new ConnectionHandle(sourceEP, ConnectionHandle.HandleDirection.OUTGOING,
+				"the tooltip"); //$NON-NLS-1$
 		ConnectionHandleTool tool = new ConnectionHandleTool(handle);
-		CreateConnectionRequest request = (CreateConnectionRequest) tool
-			.createTargetRequest();
+		CreateConnectionRequest request = (CreateConnectionRequest) tool.createTargetRequest();
 		request.setTargetEditPart(sourceEP);
-		request.setType(RequestConstants.REQ_CONNECTION_START);
+		request.setType(org.eclipse.gef.RequestConstants.REQ_CONNECTION_START);
 		sourceEP.getCommand(request);
 		request.setSourceEditPart(sourceEP);
 		request.setTargetEditPart(targetEP);
-		request.setType(RequestConstants.REQ_CONNECTION_END);
+		request.setType(org.eclipse.gef.RequestConstants.REQ_CONNECTION_END);
 		targetEP.getCommand(request).execute();
 
 		assertEquals(1, getDiagramEditPart().getConnections().size());
-		NoteAttachmentEditPart noteAttachmentEP = (NoteAttachmentEditPart) getDiagramEditPart()
-			.getConnections().get(0);
+		NoteAttachmentEditPart noteAttachmentEP = (NoteAttachmentEditPart) getDiagramEditPart().getConnections().get(0);
 		assertEquals(sourceEP, noteAttachmentEP.getSource());
 		assertEquals(targetEP, noteAttachmentEP.getTarget());
-		assertTrue(FigureUtilities.integerToColor(
-			(Integer) ViewUtil.getStructuralFeatureValue(noteAttachmentEP
-				.getNotationView(), NotationPackage.eINSTANCE
-				.getLineStyle_LineColor())).equals(
-			NoteGraphicalNodeEditPolicy.USER_CHOICE.color));
+		assertTrue(FigureUtilities
+				.integerToColor((Integer) ViewUtil.getStructuralFeatureValue(noteAttachmentEP.getNotationView(),
+						NotationPackage.eINSTANCE.getLineStyle_LineColor()))
+				.equals(NoteGraphicalNodeEditPolicy.USER_CHOICE.color));
 
-		noteAttachmentEP.getCommand(
-			new GroupRequest(RequestConstants.REQ_DELETE)).execute();
+		noteAttachmentEP.getCommand(new GroupRequest(org.eclipse.gef.RequestConstants.REQ_DELETE)).execute();
 		assertEquals(0, getDiagramEditPart().getConnections().size());
 
-		handle = new ConnectionHandle(targetEP,
-			ConnectionHandle.HandleDirection.INCOMING, "the tooltip"); //$NON-NLS-1$
+		handle = new ConnectionHandle(targetEP, ConnectionHandle.HandleDirection.INCOMING, "the tooltip"); //$NON-NLS-1$
 		tool = new ConnectionHandleTool(handle);
 		request = (CreateConnectionRequest) tool.createTargetRequest();
 		request.setTargetEditPart(targetEP);
-		request.setType(RequestConstants.REQ_CONNECTION_START);
+		request.setType(org.eclipse.gef.RequestConstants.REQ_CONNECTION_START);
 		targetEP.getCommand(request);
 		request.setSourceEditPart(targetEP);
 		request.setTargetEditPart(sourceEP);
-		request.setType(RequestConstants.REQ_CONNECTION_END);
+		request.setType(org.eclipse.gef.RequestConstants.REQ_CONNECTION_END);
 		sourceEP.getCommand(request).execute();
 
 		assertEquals(1, getDiagramEditPart().getConnections().size());
-		noteAttachmentEP = (NoteAttachmentEditPart) getDiagramEditPart()
-			.getConnections().get(0);
+		noteAttachmentEP = (NoteAttachmentEditPart) getDiagramEditPart().getConnections().get(0);
 		assertEquals(sourceEP, noteAttachmentEP.getSource());
 		assertEquals(targetEP, noteAttachmentEP.getTarget());
-		assertTrue(FigureUtilities.integerToColor(
-			(Integer) ViewUtil.getStructuralFeatureValue(noteAttachmentEP
-				.getNotationView(), NotationPackage.eINSTANCE
-				.getLineStyle_LineColor())).equals(
-			NoteGraphicalNodeEditPolicy.USER_CHOICE.color));
+		assertTrue(FigureUtilities
+				.integerToColor((Integer) ViewUtil.getStructuralFeatureValue(noteAttachmentEP.getNotationView(),
+						NotationPackage.eINSTANCE.getLineStyle_LineColor()))
+				.equals(NoteGraphicalNodeEditPolicy.USER_CHOICE.color));
 	}
 
 }

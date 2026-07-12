@@ -7,13 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.draw2d.PositionConstants;
@@ -48,36 +47,38 @@ import org.eclipse.gmf.runtime.notation.PropertiesSetStyle;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * Holds a circuit, which is a container capable of 
- * holding other LogicEditParts.
+ * Holds a circuit, which is a container capable of holding other
+ * LogicEditParts.
  */
 /*
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
 public class CircuitEditPart extends TerminalOwnerShapeEditPart {
-	
+
 	protected class CircuitContainerEditPolicy extends ShapeContainerEditPolicy {
-		
+
 		/**
-		 * Returns the child CompartmentEditPart as a target for pasting 
-		 * (the circuit is not a container, but ShapeCompartmentEditPart is)
-		 * 
+		 * Returns the child CompartmentEditPart as a target for pasting (the circuit is
+		 * not a container, but ShapeCompartmentEditPart is)
+		 *
 		 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy#getTargetEditPart(org.eclipse.gef.Request)
 		 */
+		@Override
 		public EditPart getTargetEditPart(Request request) {
 			if (RequestConstants.REQ_PASTE.equals(request.getType())) {
 				IGraphicalEditPart editPart = (IGraphicalEditPart) getHost();
 				if (editPart instanceof CircuitEditPart) {
-					IGraphicalEditPart targetEP = 
-						((CircuitEditPart)editPart).getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+					IGraphicalEditPart targetEP = ((CircuitEditPart) editPart)
+							.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
 					if (targetEP != null) {
 						return targetEP;
 					}
-				} 
+				}
 			}
 			return super.getTargetEditPart(request);
 		}
-	}	
+	}
+
 	/**
 	 * @param view
 	 */
@@ -85,26 +86,25 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart {
 		super(view);
 	}
 
-	//install ContainerHighlightEditPolicy to highlight circuit figure
+	// install ContainerHighlightEditPolicy to highlight circuit figure
+	@Override
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE,
-				new ContainerHighlightEditPolicy());
-		installEditPolicy(StringConstants.PORTS_COLOR_EDITPOLICY_ROLE,
-				new PortsColorEditPolicy());
-		// ensure that the paste command will execute on its child LogicShapeCompartmentEditPart
-		installEditPolicy(EditPolicy.CONTAINER_ROLE, 
-				new CircuitContainerEditPolicy());
+		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new ContainerHighlightEditPolicy());
+		installEditPolicy(StringConstants.PORTS_COLOR_EDITPOLICY_ROLE, new PortsColorEditPolicy());
+		// ensure that the paste command will execute on its child
+		// LogicShapeCompartmentEditPart
+		installEditPolicy(EditPolicy.CONTAINER_ROLE, new CircuitContainerEditPolicy());
 	}
 
 	/**
 	 * Creates a new Circuit Figure and returns it.
 	 *
-	 * @return  Figure representing the circuit.
+	 * @return Figure representing the circuit.
 	 */
+	@Override
 	protected NodeFigure createMainFigure() {
-		NodeFigure nf = new CircuitFigure(new Dimension(getMapMode()
-				.DPtoLP(100), getMapMode().DPtoLP(100)));
+		NodeFigure nf = new CircuitFigure(new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100)));
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 		nf.setLayoutManager(layout);
 		return nf;
@@ -113,6 +113,7 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart {
 	/**
 	 * @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart#createBoundsMap()
 	 */
+	@Override
 	public Map createBoundsMap() {
 		Map posMap = new HashMap();
 
@@ -133,9 +134,9 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart {
 	/**
 	 * @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart#createOwnedTerminalFigure(TerminalEditPart)
 	 */
+	@Override
 	public NodeFigure createOwnedTerminalFigure(TerminalEditPart terminalEP) {
-		Terminal terminal = (Terminal) ViewUtil
-				.resolveSemanticElement((View) terminalEP.getModel());
+		Terminal terminal = (Terminal) ViewUtil.resolveSemanticElement((View) terminalEP.getModel());
 		if (terminal == null) {
 			return null;
 		}
@@ -143,51 +144,39 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart {
 		NodeFigure theFigure = null;
 		int side = PositionConstants.NORTH;
 		if (terminal instanceof InputTerminal) {
-			theFigure = new TopTerminalFigure(terminal.getId(), new Dimension(
-					getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
+			theFigure = new TopTerminalFigure(terminal.getId(),
+					new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 		} else {
 			theFigure = new BottomTerminalFigure(terminal.getId(),
-					new Dimension(getMapMode().DPtoLP(6), getMapMode()
-							.DPtoLP(7)));
+					new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 			side = PositionConstants.SOUTH;
 		}
 
 		terminalEP.setLocator(new TerminalFigure.TerminalLocator(getFigure(),
-				new Dimension(getMapMode().DPtoLP(100), getMapMode()
-						.DPtoLP(100)), side));
+				new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100)), side));
 		return theFigure;
 	}
 
+	@Override
 	public Object getPreferredValue(EStructuralFeature feature) {
 		if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
-			return FigureUtilities
-					.colorToInteger(LogicColorConstants.logicGreen);
-		} else if (feature == NotationPackage.eINSTANCE
-				.getLineStyle_LineColor()) {
-			return FigureUtilities
-					.colorToInteger(LogicColorConstants.connectorGreen);
+			return FigureUtilities.colorToInteger(LogicColorConstants.logicGreen);
+		} else if (feature == NotationPackage.eINSTANCE.getLineStyle_LineColor()) {
+			return FigureUtilities.colorToInteger(LogicColorConstants.connectorGreen);
 		}
 		return super.getPreferredValue(feature);
 	}
 
+	@Override
 	protected void handleNotificationEvent(Notification evt) {
-		if (NotationPackage.eINSTANCE.getPropertyValue_RawValue().equals(
-				evt.getFeature())) {
-			View viewContainer = ViewUtil.getViewContainer((EObject) evt
-					.getNotifier());
-			if (viewContainer != null
-					&& viewContainer.equals(getNotationView())) {
-				PropertiesSetStyle style = (PropertiesSetStyle) getNotationView()
-						.getNamedStyle(
-								NotationPackage.eINSTANCE
-										.getPropertiesSetStyle(),
-								StringConstants.PORTS_PROPERTIES_STYLE_NAME);
-				if (style != null
-						&& style.getPropertiesMap().get(
-								StringConstants.PORTS_COLOR_PROPERTY_NAME)
-								.equals(evt.getNotifier())) {
-					for (Iterator itr = getChildren().iterator(); itr.hasNext();) {
-						Object obj = itr.next();
+		if (NotationPackage.eINSTANCE.getPropertyValue_RawValue().equals(evt.getFeature())) {
+			View viewContainer = ViewUtil.getViewContainer((EObject) evt.getNotifier());
+			if (viewContainer != null && viewContainer.equals(getNotationView())) {
+				PropertiesSetStyle style = (PropertiesSetStyle) getNotationView().getNamedStyle(
+						NotationPackage.eINSTANCE.getPropertiesSetStyle(), StringConstants.PORTS_PROPERTIES_STYLE_NAME);
+				if (style != null && style.getPropertiesMap().get(StringConstants.PORTS_COLOR_PROPERTY_NAME)
+						.equals(evt.getNotifier())) {
+					for (Object obj : getChildren()) {
 						if (obj instanceof TerminalEditPart) {
 							((TerminalEditPart) obj).refreshBackgroundColor();
 						}

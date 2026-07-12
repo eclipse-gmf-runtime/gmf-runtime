@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories;
@@ -20,16 +20,16 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
 
-
 /**
  * @author mmostafa
  */
 public class ConnectionPointViewFactory extends ShapeViewFactory {
-    protected void decorateView(View containerView, View view, IAdaptable semanticAdapter, String semanticHint, int index, boolean persisted) {
-        super.decorateView(containerView, view, semanticAdapter, semanticHint, index,
-            persisted);
-        ShapeStyle style = (ShapeStyle)view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
-        style.setFillColor((FigureUtilities.colorToInteger(LogicColorConstants.connectorGreen)).intValue());
-        style.setLineColor((FigureUtilities.colorToInteger(LogicColorConstants.logicBlack)).intValue());
-    }	
+	@Override
+	protected void decorateView(View containerView, View view, IAdaptable semanticAdapter, String semanticHint,
+			int index, boolean persisted) {
+		super.decorateView(containerView, view, semanticAdapter, semanticHint, index, persisted);
+		ShapeStyle style = (ShapeStyle) view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
+		style.setFillColor((FigureUtilities.colorToInteger(LogicColorConstants.connectorGreen)).intValue());
+		style.setLineColor((FigureUtilities.colorToInteger(LogicColorConstants.logicBlack)).intValue());
+	}
 }

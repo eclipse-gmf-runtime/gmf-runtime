@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences;
@@ -17,19 +17,17 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectionsPreferencePage;
 
 /**
  * The connections preference page used for the Logic Diagram preferences.
- * 
+ *
  * @author cmahoney
  */
-public class LogicConnectionsPreferencePage
-	extends ConnectionsPreferencePage {
+public class LogicConnectionsPreferencePage extends ConnectionsPreferencePage {
 
 	/**
 	 * Creates a new instance.
 	 */
 	public LogicConnectionsPreferencePage() {
 		super();
-		setPreferenceStore(LogicDiagramPlugin.getInstance()
-			.getPreferenceStore());
+		setPreferenceStore(LogicDiagramPlugin.getInstance().getPreferenceStore());
 	}
 
 }

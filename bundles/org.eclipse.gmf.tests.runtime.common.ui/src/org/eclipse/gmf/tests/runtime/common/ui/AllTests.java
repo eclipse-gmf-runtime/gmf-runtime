@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui;
@@ -24,47 +24,25 @@ import org.eclipse.gmf.tests.runtime.common.ui.internal.resources.FileChangeEven
 import org.eclipse.gmf.tests.runtime.common.ui.internal.resources.FileObserverFilterTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.resources.FileObserverFilterTypeTest;
 import org.eclipse.gmf.tests.runtime.common.ui.util.StatusLineUtilTest;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-public class AllTests extends TestCase {
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(AbstractActionDelegateTest.suite());
-        suite.addTest(AbstractActionHandlerTest.suite());
-        suite.addTest(ActionManagerTest.suite());
-        suite.addTest(RemoveMnemonicTests.suite());
-        // suite.addTest(ExtendedPropertyDescriptorTest.suite());
-        // suite.addTest(ExtendedTextPropertyDescriptorTest.suite());
-        // suite.addTest(PropertiesServiceTest.suite());
-        // suite.addTest(PropertySourceTest.suite());
-        suite.addTest(FileChangeEventTypeTest.suite());
-        suite.addTest(FileChangeEventTest.suite());
-        suite.addTest(FileObserverFilterTypeTest.suite());
-        suite.addTest(FileObserverFilterTest.suite());
-        suite.addTest(GlobalRedoActionTest.suite());
-        suite.addTest(GlobalUndoActionTest.suite());
-        suite.addTest(SelectableElementTest.suite());
-        suite.addTest(StatusLineUtilTest.suite());
-        /**
-         * waiting for resolution of Bugzilla 115843
-         */
-        // run ProviderPolicyTest before ProviderPolicyExceptionsTest
-        // suite.addTest(ProviderPolicyTest.suite());
-        // suite.addTest(ProviderPolicyExceptionsTest.suite());
-        return suite;
-    }
-
-    public AllTests() {
-        super(""); //$NON-NLS-1$
-    }
-
+@Suite
+@SelectClasses({ AbstractActionDelegateTest.class, AbstractActionHandlerTest.class, ActionManagerTest.class,
+		RemoveMnemonicTests.class,
+		// ExtendedPropertyDescriptorTest.class,
+		// ExtendedTextPropertyDescriptorTest.class,
+		// PropertiesServiceTest.class,
+		// PropertySourceTest.class,
+		FileChangeEventTypeTest.class, FileChangeEventTest.class, FileObserverFilterTypeTest.class,
+		FileObserverFilterTest.class, GlobalRedoActionTest.class, GlobalUndoActionTest.class,
+		SelectableElementTest.class, StatusLineUtilTest.class,
+/**
+ * waiting for resolution of Bugzilla 115843
+ */
+// run ProviderPolicyTest before ProviderPolicyExceptionsTest
+// ProviderPolicyTest.class,
+// ProviderPolicyExceptionsTest.class,
+})
+public class AllTests {
 }

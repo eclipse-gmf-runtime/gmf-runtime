@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
@@ -32,9 +32,8 @@ import org.eclipse.gmf.runtime.notation.PropertiesSetStyle;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * A Connection Point can sit on a border of a logic shape or on the
- * interior.
- * 
+ * A Connection Point can sit on a border of a logic shape or on the interior.
+ *
  * @author qili
  */
 public class TerminalEditPart extends AbstractBorderItemEditPart {
@@ -48,22 +47,24 @@ public class TerminalEditPart extends AbstractBorderItemEditPart {
 		super(view);
 	}
 
+	@Override
 	protected NodeFigure createNodeFigure() {
 		EditPart host = getParent();
 		if (host instanceof ITerminalOwnerEditPart) {
-			return ((ITerminalOwnerEditPart) host)
-					.createOwnedTerminalFigure(this);
+			return ((ITerminalOwnerEditPart) host).createOwnedTerminalFigure(this);
 		}
 		return null;
 	}
 
-	/* 
+	/*
 	 * Don't allow terminal editparts to be selectable
 	 */
+	@Override
 	public boolean isSelectable() {
 		return false;
 	}
 
+	@Override
 	public void activate() {
 		super.activate();
 		Insets parentInset = new Insets(0);
@@ -73,12 +74,14 @@ public class TerminalEditPart extends AbstractBorderItemEditPart {
 		}
 		Rectangle rBounds = ((NodeFigure) getFigure()).getHandleBounds();
 		((BorderItemLocator) getLocator()).setBorderItemOffset(new Dimension(
-				rBounds.width / 2 + parentInset.getWidth() / 2, rBounds.height
-						/ 2 + parentInset.getHeight() / 2));
+				rBounds.width / 2 + parentInset.getWidth() / 2, rBounds.height / 2 + parentInset.getHeight() / 2));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart#getLocator()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart#getLocator()
 	 */
 	public IBorderItemLocator getLocator() {
 		return locator;
@@ -86,40 +89,34 @@ public class TerminalEditPart extends AbstractBorderItemEditPart {
 
 	/**
 	 * Sets the locator.
+	 * 
 	 * @param locator The locator to set.
 	 */
 	public void setLocator(BorderItemLocator locator) {
 		this.locator = locator;
 	}
 
+	@Override
 	public Object getPreferredValue(EStructuralFeature feature) {
 		if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
-			return FigureUtilities
-					.colorToInteger(LogicColorConstants.connectorGreen);
-		} else if (feature == NotationPackage.eINSTANCE
-				.getLineStyle_LineColor()) {
-			return FigureUtilities
-					.colorToInteger(LogicColorConstants.logicBlack);
+			return FigureUtilities.colorToInteger(LogicColorConstants.connectorGreen);
+		} else if (feature == NotationPackage.eINSTANCE.getLineStyle_LineColor()) {
+			return FigureUtilities.colorToInteger(LogicColorConstants.logicBlack);
 		}
 		return super.getPreferredValue(feature);
 	}
 
+	@Override
 	protected void refreshBackgroundColor() {
 		View view = ViewUtil.getViewContainer(getNotationView());
 		if (view != null) {
-			PropertiesSetStyle propertiesStyle = (PropertiesSetStyle) view
-					.getNamedStyle(NotationPackage.eINSTANCE
-							.getPropertiesSetStyle(),
-							StringConstants.PORTS_PROPERTIES_STYLE_NAME);
-			if (propertiesStyle != null
-					&& propertiesStyle
-							.hasProperty(StringConstants.PORTS_COLOR_PROPERTY_NAME)) {
+			PropertiesSetStyle propertiesStyle = (PropertiesSetStyle) view.getNamedStyle(
+					NotationPackage.eINSTANCE.getPropertiesSetStyle(), StringConstants.PORTS_PROPERTIES_STYLE_NAME);
+			if (propertiesStyle != null && propertiesStyle.hasProperty(StringConstants.PORTS_COLOR_PROPERTY_NAME)) {
 				try {
-					Integer value = (Integer) propertiesStyle
-							.getProperty(StringConstants.PORTS_COLOR_PROPERTY_NAME);
+					Integer value = (Integer) propertiesStyle.getProperty(StringConstants.PORTS_COLOR_PROPERTY_NAME);
 					if (value != null) {
-						getFigure().setBackgroundColor(
-								FigureUtilities.integerToColor(value));
+						getFigure().setBackgroundColor(FigureUtilities.integerToColor(value));
 						return;
 					}
 				} catch (Exception e) {
@@ -130,6 +127,7 @@ public class TerminalEditPart extends AbstractBorderItemEditPart {
 		super.refreshBackgroundColor();
 	}
 
+	@Override
 	public void notifyChanged(Notification notification) {
 		super.notifyChanged(notification);
 	}

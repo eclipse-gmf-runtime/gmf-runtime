@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
 
@@ -26,41 +26,38 @@ import org.eclipse.ui.IWorkbenchPage;
  * An example status bar contribution for the status bar. This added the
  * increment / decrement actions to the status bar. These actions are in the
  * toolbar for GEF, but we are demonstrating them in the status bar for GMF.
- * 
+ *
  * @author Anthony Hunter
  */
-public class IncrementDecrementContributionItem extends ActionContributionItem
-		implements LogicActionIds {
+public class IncrementDecrementContributionItem extends ActionContributionItem implements LogicActionIds {
 
 	/**
 	 * Constructor for a IncrementDecrementContributionItem
-	 * 
-	 * @param workbenchPage
-	 *            The workbench page
-	 * @param id
-	 *            the id for the action.
+	 *
+	 * @param workbenchPage The workbench page
+	 * @param id            the id for the action.
 	 */
-	public IncrementDecrementContributionItem(IWorkbenchPage workbenchPage,
-			String id) {
+	public IncrementDecrementContributionItem(IWorkbenchPage workbenchPage, String id) {
 		super(new IncrementDecrementAction(workbenchPage, id));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.action.ActionContributionItem#isDynamic()
 	 */
+	@Override
 	public boolean isDynamic() {
 		return true;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.action.ActionContributionItem#fill(org.eclipse.swt.
+	 *
+	 * @see org.eclipse.jface.action.ActionContributionItem#fill(org.eclipse.swt.
 	 * widgets.Composite)
 	 */
+	@Override
 	public void fill(Composite parent) {
 		((DiagramAction) getAction()).init();
 		Button button = new Button(parent, SWT.PUSH);
@@ -68,10 +65,12 @@ public class IncrementDecrementContributionItem extends ActionContributionItem
 		button.setToolTipText(getAction().getToolTipText());
 		button.addSelectionListener(new SelectionListener() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				getAction().run();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// Not implemented
 
@@ -81,9 +80,10 @@ public class IncrementDecrementContributionItem extends ActionContributionItem
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.action.ActionContributionItem#isEnabled()
 	 */
+	@Override
 	public boolean isEnabled() {
 		return getAction().isEnabled();
 	}

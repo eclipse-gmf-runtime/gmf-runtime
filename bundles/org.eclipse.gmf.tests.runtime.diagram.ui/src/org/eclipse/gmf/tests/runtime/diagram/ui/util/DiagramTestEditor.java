@@ -7,40 +7,40 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
-
 /**
  * A simple editor for using in JUnit tests that require UI interaction.
  *
  * @author Christian W. Damus (cdamus)
  */
-public class DiagramTestEditor
-	extends DiagramEditor {
+public class DiagramTestEditor extends DiagramEditor {
 
 	/** The editor ID for use in opening the editor. */
 	public static final String ID = "org.eclipse.gmf.tests.runtime.diagram.ui.DiagramTestEditor"; //$NON-NLS-1$
-	
-    
+
+	@Override
 	public void doSave(IProgressMonitor monitor) {
 		// no need to implement this
 	}
 
+	@Override
 	public void doSaveAs() {
 		// no need to implement this
 	}
 
+	@Override
 	public boolean isDirty() {
 		return false;
 	}
 
+	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
 	}

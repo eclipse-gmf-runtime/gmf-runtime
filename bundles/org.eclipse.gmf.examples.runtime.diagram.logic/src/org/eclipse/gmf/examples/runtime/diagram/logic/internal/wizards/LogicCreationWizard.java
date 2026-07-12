@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.wizards;
 
@@ -19,27 +18,29 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorCre
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 
-
 /**
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  *
- * Create Logic Diagram Wizard
+ *              Create Logic Diagram Wizard
  */
-public class LogicCreationWizard extends EditorCreationWizard{
-	
+public class LogicCreationWizard extends EditorCreationWizard {
+
 	/**
 	 * @see org.eclipse.jface.wizard.IWizard#addPages()
 	 */
+	@Override
 	public void addPages() {
 		super.addPages();
 
-		if (page == null)
+		if (page == null) {
 			page = new LogicWizardPage(getWorkbench(), getSelection());
+		}
 
 		addPage(page);
 	}
-	
+
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection sel) {
 		super.init(workbench, sel);
 

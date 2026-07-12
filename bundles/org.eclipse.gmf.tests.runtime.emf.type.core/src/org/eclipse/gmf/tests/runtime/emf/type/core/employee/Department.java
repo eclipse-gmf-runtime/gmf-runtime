@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee;
@@ -17,17 +17,20 @@ import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Department</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>Department</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getNumber <em>Number</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getMembers <em>Members</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getManager <em>Manager</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getNumber
+ * <em>Number</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getName
+ * <em>Name</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getMembers
+ * <em>Members</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getManager
+ * <em>Manager</em>}</li>
  * </ul>
  * </p>
  *
@@ -37,13 +40,14 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Department extends EObject, EModelElement {
 	/**
-	 * Returns the value of the '<em><b>Number</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Number</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Number</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Number</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Number</em>' attribute.
 	 * @see #setNumber(int)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getDepartment_Number()
@@ -53,9 +57,10 @@ public interface Department extends EObject, EModelElement {
 	int getNumber();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getNumber <em>Number</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getNumber
+	 * <em>Number</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Number</em>' attribute.
 	 * @see #getNumber()
 	 * @generated
@@ -63,14 +68,14 @@ public interface Department extends EObject, EModelElement {
 	void setNumber(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * The default value is <code>""</code>.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute. The default value
+	 * is <code>""</code>. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getDepartment_Name()
@@ -80,9 +85,10 @@ public interface Department extends EObject, EModelElement {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getName
+	 * <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
@@ -90,19 +96,23 @@ public interface Department extends EObject, EModelElement {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Members</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getDepartment <em>Department</em>}'.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Members</b></em>' containment reference
+	 * list. The list contents are of type
+	 * {@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee}. It is
+	 * bidirectional and its opposite is
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getDepartment
+	 * <em>Department</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Members</em>' reference list isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Members</em>' reference list isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Members</em>' containment reference list.
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getDepartment_Members()
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee#getDepartment
-	 * @model type="org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee" opposite="department" containment="true"
+	 * @model type="org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee"
+	 *        opposite="department" containment="true"
 	 * @generated
 	 */
 	EList getMembers();
@@ -111,10 +121,11 @@ public interface Department extends EObject, EModelElement {
 	 * Returns the value of the '<em><b>Manager</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Manager</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Manager</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Manager</em>' containment reference.
 	 * @see #setManager(Employee)
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getDepartment_Manager()
@@ -124,9 +135,11 @@ public interface Department extends EObject, EModelElement {
 	Employee getManager();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getManager <em>Manager</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the
+	 * '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department#getManager
+	 * <em>Manager</em>}' containment reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @param value the new value of the '<em>Manager</em>' containment reference.
 	 * @see #getManager()
 	 * @generated

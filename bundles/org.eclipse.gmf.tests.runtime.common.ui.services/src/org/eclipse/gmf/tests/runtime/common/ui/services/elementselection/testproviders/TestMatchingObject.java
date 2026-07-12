@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders;
 
@@ -17,22 +17,21 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * A matching object used by the tests.
- * 
+ *
  * @author Anthony Hunter
  */
-public class TestMatchingObject
-    extends AbstractMatchingObject {
+public class TestMatchingObject extends AbstractMatchingObject {
 
-    private String component;
-    
-    public TestMatchingObject(String name, String component,
-            String displayName, Image image, IElementSelectionProvider provider) {
-        super(name, displayName, image, provider);
-        this.component = component;
-    }
+	private String component;
 
-    public String getComponent() {
-        return component;
-    }
+	public TestMatchingObject(String name, String component, String displayName, Image image,
+			IElementSelectionProvider provider) {
+		super(name, displayName, image, provider);
+		this.component = component;
+	}
+
+	public String getComponent() {
+		return component;
+	}
 
 }

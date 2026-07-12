@@ -7,15 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal;
 
 /**
  * A list of debug options for this plug-in.
- * 
+ *
  * @author qili
  * @canBeSeenBy %level1
  *
@@ -23,12 +22,11 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal;
 public final class LogicDiagramDebugOptions {
 
 	/**
-	 * This class should not be instantiated since it is a static constant
-	 * class.
-	 * 
+	 * This class should not be instantiated since it is a static constant class.
+	 *
 	 */
 	private LogicDiagramDebugOptions() {
-		//Limiting the scope of the constructor so that no-one can initialize.
+		// Limiting the scope of the constructor so that no-one can initialize.
 	}
 
 	public static final String DEBUG = LogicDiagramPlugin.getPluginId() + "/debug"; //$NON-NLS-1$
@@ -39,4 +37,3 @@ public final class LogicDiagramDebugOptions {
 	public static final String METHODS_ENTERING = DEBUG + "/methods/entering"; //$NON-NLS-1$
 	public static final String METHODS_EXITING = DEBUG + "/methods/exiting"; //$NON-NLS-1$
 }
-

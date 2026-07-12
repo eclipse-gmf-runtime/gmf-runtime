@@ -7,20 +7,18 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
 
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
-
 /**
  * @author ldamus
  */
-public interface ISecurityCleared
-	extends IElementType {
-	
+public interface ISecurityCleared extends IElementType {
+
 	public static final String TOP_SECRET = "topSecret"; //$NON-NLS-1$
 
 	public abstract String getSecurityClearance();

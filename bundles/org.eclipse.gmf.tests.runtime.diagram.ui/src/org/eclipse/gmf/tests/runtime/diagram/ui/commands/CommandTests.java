@@ -7,30 +7,23 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author jschofie
  */
+@Suite
+@SelectClasses({
+		// $JUnit-BEGIN$
+		SetBoundsCommandTest.class, SendToBackCommandTest.class, BringToFrontCommandTest.class,
+		SendBackwardCommandTest.class, BringForwardCommandTest.class,
+// $JUnit-END$
+})
 public class CommandTests {
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.gmf.tests.runtime.diagram.ui.commands"); //$NON-NLS-1$
-		//$JUnit-BEGIN$
-		suite.addTestSuite(SetBoundsCommandTest.class);
-		suite.addTestSuite(SendToBackCommandTest.class);
-		suite.addTestSuite(BringToFrontCommandTest.class);
-		suite.addTestSuite(SendBackwardCommandTest.class);
-		suite.addTestSuite(BringForwardCommandTest.class);
-		//$JUnit-END$
-		return suite;
-	}
 }

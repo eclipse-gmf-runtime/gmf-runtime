@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation;
 
@@ -41,76 +41,77 @@ import org.eclipse.ui.part.FileEditorInput;
  */
 public class ResourceLoadedListener extends DemultiplexingListener {
 	private static ResourceLoadedListener instance;
-	
-	private final Set<Resource> ignoredResources = new java.util.HashSet<Resource>();
-	
+
+	private final Set<Resource> ignoredResources = new java.util.HashSet<>();
+
 	/**
 	 * Initializes me with my filter.
 	 */
 	public ResourceLoadedListener() {
-		super(NotificationFilter.createFeatureFilter(
-				EcorePackage.eINSTANCE.getEResource(), Resource.RESOURCE__IS_LOADED));
-		
+		super(NotificationFilter.createFeatureFilter(EcorePackage.eINSTANCE.getEResource(),
+				Resource.RESOURCE__IS_LOADED));
+
 		instance = this;
 	}
-	
+
 	/**
 	 * Returns the default listener instance.
-	 * 
+	 *
 	 * @return the instance associated with the editing domain that manages the
-	 *     specified resource set, or <code>null</code> if none is found
+	 *         specified resource set, or <code>null</code> if none is found
 	 */
 	public static ResourceLoadedListener getDefault() {
 		return instance;
 	}
-	
+
 	/**
 	 * Ignores any future load/unload notifications from the specified resource,
 	 * until the next call to {@link #watch(Resource) watch(res)}.
-	 * 
+	 *
 	 * @param res the resource to ignore
 	 */
 	public void ignore(Resource res) {
 		ignoredResources.add(res);
 	}
-	
+
 	/**
 	 * Ceases to {@link #ignore(Resource)} a previously ignored resource.
-	 * 
+	 *
 	 * @param res the resource
 	 */
 	public void watch(Resource res) {
 		ignoredResources.remove(res);
 	}
 
+	@Override
 	protected void handleNotification(TransactionalEditingDomain domain, Notification notification) {
 		if (ignoredResources.contains(notification.getNotifier())) {
 			// skip any resource that we are supposed to ignore
 			return;
 		}
-		
+
 		if (notification.getNewBooleanValue() && !notification.getOldBooleanValue()) {
-			// a resource has been loaded that was not loaded before.  Open an editor
-			final IFile file = getFile((Resource)notification.getNotifier(), domain);
-			
+			// a resource has been loaded that was not loaded before. Open an editor
+			final IFile file = getFile((Resource) notification.getNotifier(), domain);
+
 			if (file != null && PlatformUI.isWorkbenchRunning()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						try {
 							IWorkbenchPage page = getActivePage();
-							
+
 							if (page != null) {
 								IEditorPart activeEditor = page.getActiveEditor();
-								
+
 								if (file.getFileExtension().equals("logic2semantic")) { //$NON-NLS-1$
-									page.openEditor(
-											new FileEditorInput(file),
+									page.openEditor(new FileEditorInput(file),
 											"org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation.SemanticEditorID", //$NON-NLS-1$
 											false);
 								}
-								
+
 								// restore the previously active editor to active
-								//    state
+								// state
 								if (activeEditor != null) {
 									page.activate(activeEditor);
 								}
@@ -118,47 +119,49 @@ public class ResourceLoadedListener extends DemultiplexingListener {
 						} catch (PartInitException e) {
 							LogicsemanticEditorPlugin.getPlugin().log(e.getStatus());
 						}
-					}});
+					}
+				});
 			}
 		} else if (!notification.getNewBooleanValue() && notification.getOldBooleanValue()) {
-			// a resource has been unloaded that was  loaded before.  Close
-			//    the editor, if any
-			final IFile file = WorkspaceSynchronizer.getFile(
-					(Resource) notification.getNotifier());
-			
+			// a resource has been unloaded that was loaded before. Close
+			// the editor, if any
+			final IFile file = WorkspaceSynchronizer.getFile((Resource) notification.getNotifier());
+
 			if (file != null && PlatformUI.isWorkbenchRunning()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						IWorkbenchPage page = getActivePage();
-						
+
 						if (page != null) {
-							IEditorReference[] editors = page.findEditors(
-									new FileEditorInput(file),
+							IEditorReference[] editors = page.findEditors(new FileEditorInput(file),
 									"org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation.SemanticEditorID", //$NON-NLS-1$
 									IWorkbenchPage.MATCH_ID | IWorkbenchPage.MATCH_INPUT);
-							
+
 							page.closeEditors(editors, false);
 						}
-					}});
+					}
+				});
 			}
 		}
 	}
-	
+
 	private IFile getFile(Resource resource, TransactionalEditingDomain domain) {
 		IFile result = null;
-		
+
 		URI normalizedURI = domain.getResourceSet().getURIConverter().normalize(resource.getURI());
-		
+
 		if ("file".equals(normalizedURI.scheme())) { //$NON-NLS-1$
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(URI.decode(normalizedURI.devicePath())));
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot()
+					.findFilesForLocation(new Path(URI.decode(normalizedURI.devicePath())));
 			if (files.length > 0) {
 				result = files[0];
 			}
-		} else  {
+		} else {
 			if ("platform".equals(normalizedURI.scheme()) && (normalizedURI.segmentCount() > 2)) { //$NON-NLS-1$
 				if ("resource".equals(normalizedURI.segment(0))) { //$NON-NLS-1$
 					IPath path = new Path(URI.decode(normalizedURI.path())).removeFirstSegments(1);
-					
+
 					result = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 				}
 			}
@@ -168,21 +171,21 @@ public class ResourceLoadedListener extends DemultiplexingListener {
 
 	/**
 	 * Obtains the currently active workbench page.
-	 * 
+	 *
 	 * @return the active page, or <code>null</code> if none is active
 	 */
 	private IWorkbenchPage getActivePage() {
 		IWorkbenchPage result = null;
-		
+
 		IWorkbench bench = PlatformUI.getWorkbench();
 		if (bench != null) {
 			IWorkbenchWindow window = bench.getActiveWorkbenchWindow();
-			
+
 			if (window != null) {
 				result = window.getActivePage();
 			}
 		}
-		
+
 		return result;
 	}
 }

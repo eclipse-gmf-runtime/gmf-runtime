@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.util;
@@ -21,11 +21,10 @@ import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
  * default diagram view so that we can create diagrams in this package without
  * depending on UML. If ever this capability becomes available in presentation
  * itself, then it can be removed from here.
- * 
+ *
  * @author cmahoney
  */
-public class PresentationTestsViewProvider
-	extends AbstractViewProvider {
+public class PresentationTestsViewProvider extends AbstractViewProvider {
 
 	/** the diagram kind to use to request a 'presentation tests diagram' */
 	public static final String PRESENTATION_TESTS_DIAGRAM_KIND = "PresentationTestsDiagramKind"; //$NON-NLS-1$
@@ -34,9 +33,8 @@ public class PresentationTestsViewProvider
 	 * @see org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider#getDiagramViewClass(IAdaptable,
 	 *      java.lang.String)
 	 */
-	protected Class getDiagramViewClass(IAdaptable semanticAdapter,
-			String diagramKind) {
-		return PRESENTATION_TESTS_DIAGRAM_KIND.equals(diagramKind) ? DiagramViewFactory.class
-			: null;
+	@Override
+	protected Class getDiagramViewClass(IAdaptable semanticAdapter, String diagramKind) {
+		return PRESENTATION_TESTS_DIAGRAM_KIND.equals(diagramKind) ? DiagramViewFactory.class : null;
 	}
 }

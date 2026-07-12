@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses;
 
@@ -15,13 +15,14 @@ import org.eclipse.core.runtime.IAdaptable;
 
 /**
  * Test IAdaptable
- * 
+ *
  * @author wdiu, Wayne Diu
  */
 public final class TestAdaptable implements IAdaptable {
 
+	@Override
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
-	
+
 }

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.util;
@@ -17,11 +17,10 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
  * Element types for the logic elements.
- * 
+ *
  * @author qili, ldamus
  */
-public class LogicSemanticType
-	extends AbstractElementTypeEnumerator {
+public class LogicSemanticType extends AbstractElementTypeEnumerator {
 
 	public static final IElementType MODEL = getElementType("logic.model"); //$NON-NLS-1$
 

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
@@ -23,34 +23,37 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * Superclass for all of the logic element edit helpers.
- * 
+ *
  * @author ldamus
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
-public class LogicElementEditHelper
-	extends AbstractEditHelper {
+public class LogicElementEditHelper extends AbstractEditHelper {
 
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper#getContainerCommand(org.eclipse.gmf.runtime.emf.type.core.requests.GetContainerRequest)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper#
+	 * getContainerCommand(org.eclipse.gmf.runtime.emf.type.core.requests.
+	 * GetContainerRequest)
 	 */
+	@Override
 	protected ICommand getEditContextCommand(GetEditContextRequest req) {
 
 		GetEditContextCommand result = null;
-		
+
 		IEditCommandRequest editRequest = req.getEditCommandRequest();
-		
+
 		if (editRequest instanceof CreateElementRequest) {
 			result = new GetEditContextCommand(req);
 			EObject container = ((CreateElementRequest) editRequest).getContainer();
 
 			if (container instanceof Diagram) {
 				EObject element = ((Diagram) container).getElement();
-	
+
 				if (element == null) {
 					// Element is null if the diagram was created using the wizard
-					EObject annotation = ((Diagram) container).eContainer();
-	
+					EObject annotation = container.eContainer();
+
 					if (annotation != null) {
 						element = annotation.eContainer();
 					}

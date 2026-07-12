@@ -7,10 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.parts;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
@@ -21,24 +23,20 @@ import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandleLocator;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit testing of the ConnectionHandleLocator class.
- * 
+ *
  * @author cmahoney
  */
-public class ConnectionHandleLocatorTest
-	extends TestCase {
+public class ConnectionHandleLocatorTest {
 
 	private RectangleFigure rectangle;
 
-	private class FakeConnectionHandle
-		extends ConnectionHandle {
+	private class FakeConnectionHandle extends ConnectionHandle {
 
 		public FakeConnectionHandle() {
 			super(null, null, null);
@@ -46,70 +44,45 @@ public class ConnectionHandleLocatorTest
 		}
 	}
 
-	public ConnectionHandleLocatorTest(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(ConnectionHandleLocatorTest.class);
-	}
-
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp()
-		throws Exception {
-
+	@BeforeEach
+	void setUp() {
 		rectangle = new RectangleFigure();
 		rectangle.setLocation(new Point(100, 100));
 		rectangle.setSize(100, 200);
 	}
 
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown()
-		throws Exception {
-
+	@AfterEach
+	void tearDown() {
 		rectangle = null;
 	}
 
 	/**
 	 * Tests the public API of the ConnectionHandleLocator class.
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public void testConnectionHandleLocator()
-		throws Exception {
+	@Test
+	public void testConnectionHandleLocator() {
 
-		Object data[][] = {
-			{new Point(130, 100), Integer.valueOf(PositionConstants.NORTH)},
-			{new Point(130, 200), Integer.valueOf(PositionConstants.WEST)},
-			{new Point(180, 170), Integer.valueOf(PositionConstants.EAST)},
-			{new Point(140, 290), Integer.valueOf(PositionConstants.SOUTH)}};
+		Object data[][] = { { new Point(130, 100), Integer.valueOf(PositionConstants.NORTH) },
+				{ new Point(130, 200), Integer.valueOf(PositionConstants.WEST) },
+				{ new Point(180, 170), Integer.valueOf(PositionConstants.EAST) },
+				{ new Point(140, 290), Integer.valueOf(PositionConstants.SOUTH) } };
 
-		for (int i = 0; i < data.length; i++) {
-			ConnectionHandleLocator locator = new ConnectionHandleLocator(
-				rectangle, (Point) data[i][0]);
+		for (Object[] element : data) {
+			ConnectionHandleLocator locator = new ConnectionHandleLocator(rectangle, (Point) element[0]);
 
 			ConnectionHandle handle = new FakeConnectionHandle();
 
 			locator.addHandle(handle);
 			locator.relocate(handle);
 
-			assertTrue(rectangle.getBounds().getPosition(handle.getLocation()) == ((Integer) data[i][1])
-				.intValue());
-			assertTrue(locator.getBorderSide() == ((Integer) data[i][1])
-				.intValue());
+			assertTrue(rectangle.getBounds().getPosition(handle.getLocation()) == ((Integer) element[1]).intValue());
+			assertTrue(locator.getBorderSide() == ((Integer) element[1]).intValue());
 			assertTrue(!locator.isEastWestSouth());
 		}
-		for (int i = 0; i < data.length; i++) {
-			ConnectionHandleLocator locator = new ConnectionHandleLocator(
-				rectangle, (Point) data[i][0]);
+		for (Object[] element : data) {
+			ConnectionHandleLocator locator = new ConnectionHandleLocator(rectangle, (Point) element[0]);
 
 			ConnectionHandle handle1 = new FakeConnectionHandle();
 			ConnectionHandle handle2 = new FakeConnectionHandle();
@@ -119,17 +92,14 @@ public class ConnectionHandleLocatorTest
 			locator.relocate(handle1);
 			locator.relocate(handle2);
 
-			int expectedSide = ((Integer) data[i][1]).intValue();
+			int expectedSide = ((Integer) element[1]).intValue();
 			if (expectedSide != PositionConstants.NORTH) { // North will be off
 				// to left.
-				assertTrue(rectangle.getBounds().getPosition(
-					handle1.getLocation()) == expectedSide);
-				assertTrue(rectangle.getBounds().getPosition(
-					handle2.getLocation()) == expectedSide);
+				assertTrue(rectangle.getBounds().getPosition(handle1.getLocation()) == expectedSide);
+				assertTrue(rectangle.getBounds().getPosition(handle2.getLocation()) == expectedSide);
 			}
 			assertTrue(locator.getBorderSide() == expectedSide);
-			if (expectedSide == PositionConstants.NORTH
-				|| expectedSide == PositionConstants.SOUTH) {
+			if (expectedSide == PositionConstants.NORTH || expectedSide == PositionConstants.SOUTH) {
 				assertTrue(handle1.getLocation().y == handle2.getLocation().y);
 				assertTrue(handle1.getLocation().x != handle2.getLocation().x);
 			} else {
@@ -138,16 +108,14 @@ public class ConnectionHandleLocatorTest
 			}
 		}
 
-		Object data2[][] = {
-			{new Point(130, 100), Integer.valueOf(PositionConstants.WEST)},
-			{new Point(180, 110), Integer.valueOf(PositionConstants.EAST)},
-			{new Point(130, 200), Integer.valueOf(PositionConstants.WEST)},
-			{new Point(180, 170), Integer.valueOf(PositionConstants.EAST)},
-			{new Point(140, 290), Integer.valueOf(PositionConstants.SOUTH)}};
+		Object data2[][] = { { new Point(130, 100), Integer.valueOf(PositionConstants.WEST) },
+				{ new Point(180, 110), Integer.valueOf(PositionConstants.EAST) },
+				{ new Point(130, 200), Integer.valueOf(PositionConstants.WEST) },
+				{ new Point(180, 170), Integer.valueOf(PositionConstants.EAST) },
+				{ new Point(140, 290), Integer.valueOf(PositionConstants.SOUTH) } };
 
 		for (int i = 0; i < data.length; i++) {
-			ConnectionHandleLocator locator = new ConnectionHandleLocator(
-				rectangle, (Point) data2[i][0]);
+			ConnectionHandleLocator locator = new ConnectionHandleLocator(rectangle, (Point) data2[i][0]);
 			locator.setEastWestSouth(true);
 
 			ConnectionHandle handle = new FakeConnectionHandle();
@@ -155,24 +123,21 @@ public class ConnectionHandleLocatorTest
 			locator.addHandle(handle);
 			locator.relocate(handle);
 
-			assertTrue(rectangle.getBounds().getPosition(handle.getLocation()) == ((Integer) data2[i][1])
-				.intValue());
-			assertTrue(locator.getBorderSide() == ((Integer) data2[i][1])
-				.intValue());
+			assertTrue(rectangle.getBounds().getPosition(handle.getLocation()) == ((Integer) data2[i][1]).intValue());
+			assertTrue(locator.getBorderSide() == ((Integer) data2[i][1]).intValue());
 			assertTrue(locator.isEastWestSouth());
 		}
 	}
 
 	/**
 	 * Tests the ConnectionHandleLocator class for memory leaks.
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public void testConnectionHandleLocatorForMemoryLeaks()
-		throws Exception {
+	@Test
+	public void testConnectionHandleLocatorForMemoryLeaks() throws Exception {
 
-		ConnectionHandleLocator objTested = new ConnectionHandleLocator(
-			rectangle, new Point(10, 10));
+		ConnectionHandleLocator objTested = new ConnectionHandleLocator(rectangle, new Point(10, 10));
 		ConnectionHandle handle = new FakeConnectionHandle();
 		objTested.addHandle(handle);
 		objTested.relocate(handle);
@@ -192,8 +157,9 @@ public class ConnectionHandleLocatorTest
 		assertTrue(refObjTested.isEnqueued());
 
 		Reference removedRef = spy.remove();
-		if (removedRef != null)
+		if (removedRef != null) {
 			removedRef.clear();
+		}
 	}
 
 }

@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
- *    
+ *    IBM Corporation - initial API and implementation
+ *
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.wizards;
@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWiz
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,7 +47,7 @@ import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 /**
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
- * 
+ *
  *              Create Logic Diagram Wizard Page
  */
 public class LogicWizardPage extends EditorWizardPage {
@@ -58,44 +59,35 @@ public class LogicWizardPage extends EditorWizardPage {
 
 	/**
 	 * LogicDiagramWizardPage constructor
-	 * 
-	 * @param aWorkbench
-	 *            workbench
-	 * @param selection
-	 *            selection
+	 *
+	 * @param aWorkbench workbench
+	 * @param selection  selection
 	 */
 	public LogicWizardPage(IWorkbench aWorkbench, IStructuredSelection selection) {
 		super("LogicDiagramPage", aWorkbench, selection); //$NON-NLS-1$
 		this.setTitle(ExampleDiagramLogicMessages.LogicWizardPage_Title);
-		this
-				.setDescription(ExampleDiagramLogicMessages.LogicWizardPage_Description);
+		this.setDescription(ExampleDiagramLogicMessages.LogicWizardPage_Description);
 	}
 
-	public IFile createAndOpenDiagram(IPath containerPath, String fileName,
-			InputStream initialContents, String kind, IWorkbenchWindow dWindow,
-			IProgressMonitor progressMonitor, boolean saveDiagram) {
+	@Override
+	public IFile createAndOpenDiagram(IPath containerPath, String fileName, InputStream initialContents, String kind,
+			IWorkbenchWindow dWindow, IProgressMonitor progressMonitor, boolean saveDiagram) {
 
 		String semanticResourcePath = null;
 
-		if (separateSemantics.getSelection()
-				&& semanticResource.getText().length() > 0) {
+		if (separateSemantics.getSelection() && semanticResource.getText().length() > 0) {
 
 			semanticResourcePath = semanticResource.getText();
 		}
 
-		IFile diagramFile = LogicEditorUtil.createAndOpenDiagram(
-				getDiagramFileCreator(), containerPath, fileName,
-				initialContents, kind, dWindow, progressMonitor,
-				isOpenNewlyCreatedDiagramEditor(), saveDiagram,
+		IFile diagramFile = LogicEditorUtil.createAndOpenDiagram(getDiagramFileCreator(), containerPath, fileName,
+				initialContents, kind, dWindow, progressMonitor, isOpenNewlyCreatedDiagramEditor(), saveDiagram,
 				semanticResourcePath);
 
 		if (adderModel.getSelection()) {
-			LogicNotationEditor editor = (LogicNotationEditor) dWindow
-					.getPartService().getActivePart();
-			IGraphicalEditPart diagramEditPart = (IGraphicalEditPart) editor
-					.getDiagramEditPart();
-			LogicDiagramFactory.CreateFourBitAdder(diagramEditPart,
-					progressMonitor);
+			LogicNotationEditor editor = (LogicNotationEditor) dWindow.getPartService().getActivePart();
+			IGraphicalEditPart diagramEditPart = editor.getDiagramEditPart();
+			LogicDiagramFactory.CreateFourBitAdder(diagramEditPart, progressMonitor);
 			editor.doSave(progressMonitor);
 		}
 
@@ -104,30 +96,33 @@ public class LogicWizardPage extends EditorWizardPage {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.
 	 * EditorWizardPage#getDefaultFileName()
 	 */
+	@Override
 	protected String getDefaultFileName() {
 		return ExampleDiagramLogicMessages.LogicVisualizer_DefaultLogicDiagramFileName;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.
 	 * EditorWizardPage#getDiagramFileCreator()
 	 */
+	@Override
 	public DiagramFileCreator getDiagramFileCreator() {
 		return LogicDiagramFileCreator.getInstance();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.
 	 * EditorWizardPage#getDiagramKind()
 	 */
+	@Override
 	protected String getDiagramKind() {
 		return "logic"; //$NON-NLS-1$
 	}
@@ -141,28 +136,24 @@ public class LogicWizardPage extends EditorWizardPage {
 		// sample section generation group
 		Group group = new Group(composite, SWT.NONE);
 		group.setLayout(new GridLayout());
-		group
-				.setText(ExampleDiagramLogicMessages.LogicWizardPage_ModelOptions_GroupName);
-		group.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-				| GridData.HORIZONTAL_ALIGN_FILL));
+		group.setText(ExampleDiagramLogicMessages.LogicWizardPage_ModelOptions_GroupName);
+		group.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 
 		// sample section generation checkboxes
 		emptyModel = new Button(group, SWT.RADIO);
-		emptyModel
-				.setText(ExampleDiagramLogicMessages.LogicWizardPage_ModelOptions_EmptyModelName);
+		emptyModel.setText(ExampleDiagramLogicMessages.LogicWizardPage_ModelOptions_EmptyModelName);
 		emptyModel.setSelection(true);
 
 		adderModel = new Button(group, SWT.RADIO);
-		adderModel
-				.setText(ExampleDiagramLogicMessages.LogicWizardPage_ModelOptions_FourBitAdderModelName);
+		adderModel.setText(ExampleDiagramLogicMessages.LogicWizardPage_ModelOptions_FourBitAdderModelName);
 	}
 
+	@Override
 	protected void createAdvancedControls(Composite parent) {
 		super.createAdvancedControls(parent);
 
 		separateSemantics = new Button(parent, SWT.CHECK);
-		separateSemantics
-				.setText(ExampleDiagramLogicMessages.LogicWizardPage_StoreSemanticsSeparately);
+		separateSemantics.setText(ExampleDiagramLogicMessages.LogicWizardPage_StoreSemanticsSeparately);
 		separateSemantics.setSelection(false);
 
 		Composite separateSemanticsGroup = new Composite(parent, SWT.NONE);
@@ -183,9 +174,9 @@ public class LogicWizardPage extends EditorWizardPage {
 
 		// browse button
 		final Button browseButton = new Button(separateSemanticsGroup, SWT.PUSH);
-		browseButton
-				.setText(ExampleDiagramLogicMessages.LogicWizardPage_BrowseSemanticResource);
+		browseButton.setText(ExampleDiagramLogicMessages.LogicWizardPage_BrowseSemanticResource);
 		browseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				handleBrowseButtonPressed();
 			}
@@ -194,14 +185,15 @@ public class LogicWizardPage extends EditorWizardPage {
 		setButtonLayoutData(browseButton);
 
 		separateSemantics.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				semanticResource.setEnabled(!semanticResource.getEnabled());
 				browseButton.setEnabled(!browseButton.getEnabled());
-				semanticResource.setText(getContainerFullPath().append(
-						getFileName()).removeFileExtension().addFileExtension(
-						"logic2semantic").toString()); //$NON-NLS-1$
+				semanticResource.setText(getContainerFullPath().append(getFileName()).removeFileExtension()
+						.addFileExtension("logic2semantic").toString()); //$NON-NLS-1$
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// Do nothing
 			}
@@ -209,14 +201,14 @@ public class LogicWizardPage extends EditorWizardPage {
 	}
 
 	protected void handleBrowseButtonPressed() {
-		ResourceSelectionDialog dialog = new ResourceSelectionDialog(
-				getShell(),
+		ResourceSelectionDialog dialog = new ResourceSelectionDialog(getShell(),
 				ResourcesPlugin.getWorkspace().getRoot(),
 				ExampleDiagramLogicMessages.LogicWizardPage_BrowseSemanticDialogTitle);
 
-		if (dialog.open() == ResourceSelectionDialog.OK) {
-			if (dialog.getResult().length == 0)
+		if (dialog.open() == Window.OK) {
+			if (dialog.getResult().length == 0) {
 				return;
+			}
 
 			IResource r = (IResource) dialog.getResult()[0];
 			semanticResource.setText(r.getFullPath().toString());

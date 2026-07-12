@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.services.action.contributionitem;
@@ -16,11 +16,10 @@ import org.eclipse.jface.action.Action;
 
 /**
  * A concrete action class to be used the test contribution item providers.
- * 
+ *
  * @author cmahoney
  */
-public class MyAction
-	extends Action {
+public class MyAction extends Action {
 
 	public MyAction(String id) {
 		super(id);

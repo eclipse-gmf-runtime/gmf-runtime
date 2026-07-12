@@ -7,10 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,97 +26,84 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicCo
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 /**
  * Repeat all the same tests in <code>GroupTests</code> but within a
- * compartment.  There are also additional tests here.
- * 
+ * compartment. There are also additional tests here.
+ *
  * @author crevells
  */
-public class GroupsInCompartmentTests
-    extends GroupTests {
+public class GroupsInCompartmentTests extends GroupTests {
+	private static IElementType CIRCUIT_TYPE = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
 
-    public static Test suite() {
-        TestSuite s = new TestSuite(GroupsInCompartmentTests.class);
-        return s;
-    }
+	private IGraphicalEditPart logicCompartmentEP;
 
-    private static IElementType CIRCUIT_TYPE = ElementTypeRegistry
-        .getInstance().getType("logic.circuit"); //$NON-NLS-1$
+	@Override
+	protected IGraphicalEditPart getContainerEP() {
+		return logicCompartmentEP;
+	}
 
-    private IGraphicalEditPart logicCompartmentEP;
+	@Override
+	protected void setTestFixture() {
+		testFixture = new GroupTestFixture() {
 
-    protected IGraphicalEditPart getContainerEP() {
-        return logicCompartmentEP;
-    }
+			@Override
+			protected void createShapesAndConnectors() throws Exception {
 
-    protected void setTestFixture() {
-        testFixture = new GroupTestFixture() {
+				// create the circuit that is the container
+				CircuitEditPart circuitEP = (CircuitEditPart) getFixture().createShapeUsingTool(CIRCUIT_TYPE,
+						new Point(5, 5), new Dimension(300, 300));
+				logicCompartmentEP = circuitEP.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+			}
+		};
+	}
 
-            protected void createShapesAndConnectors()
-                throws Exception {
+	@Test
+	public void testRefreshCanonicalDoesNotCreateDoubles() throws Exception {
+		setupShapesAndGroups();
 
-                // create the circuit that is the container
-                CircuitEditPart circuitEP = (CircuitEditPart) getFixture()
-                    .createShapeUsingTool(CIRCUIT_TYPE, new Point(5, 5),
-                        new Dimension(300, 300));
-                logicCompartmentEP = circuitEP
-                    .getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
-            }
-        };
-    }
+		assertEquals(2, getContainerEP().getChildren().size());
 
-    public void testRefreshCanonicalDoesNotCreateDoubles()
-        throws Exception {
-        setupShapesAndGroups();
+		// trigger a canonical refresh
+		getFixture().createShapeUsingTool(CIRCUIT_TYPE, new Point(10, 10), new Dimension(50, 50), getContainerEP());
+		flushEventQueue();
 
-        assertEquals(2, getContainerEP().getChildren().size());
+		assertEquals(3, getContainerEP().getChildren().size());
+	}
 
-        // trigger a canonical refresh
-        getFixture().createShapeUsingTool(CIRCUIT_TYPE, new Point(10, 10),
-            new Dimension(50, 50), getContainerEP());
-        flushEventQueue();
+	@Test
+	public void testDeleteShapeInGroupDoesNotReappear() throws Exception {
 
-        assertEquals(3, getContainerEP().getChildren().size());
-    }
+		setupShapes();
 
-    public void testDeleteShapeInGroupDoesNotReappear()
-        throws Exception {
+		List<ShapeEditPart> shapes = new LinkedList<>();
+		shapes.add(getNWShape());
+		shapes.add(getSWShape());
+		shapes.add(getSEShape());
 
-        setupShapes();
+		GroupEditPart groupEP = groupShapes(shapes);
 
-        List<ShapeEditPart> shapes = new LinkedList<ShapeEditPart>();
-        shapes.add(getNWShape());
-        shapes.add(getSWShape());
-        shapes.add(getSEShape());
+		assertEquals(2, getContainerEP().getChildren().size());
+		assertEquals(3, groupEP.getChildren().size());
 
-        GroupEditPart groupEP = groupShapes(shapes);
+		Request request = new GroupRequest(org.eclipse.gef.RequestConstants.REQ_DELETE);
 
-        assertEquals(2, getContainerEP().getChildren().size());
-        assertEquals(3, groupEP.getChildren().size());
+		// Delete one shape from the inner group.
+		getCommandStack().execute(getNWShape().getCommand(request));
 
-        Request request = new GroupRequest(RequestConstants.REQ_DELETE);
+		assertEquals(2, getContainerEP().getChildren().size());
+		assertEquals(2, groupEP.getChildren().size());
 
-        // Delete one shape from the inner group.
-        getCommandStack().execute(getNWShape().getCommand(request));
+		// trigger a canonical refresh
+		getFixture().createShapeUsingTool(CIRCUIT_TYPE, new Point(10, 10), new Dimension(50, 50), getContainerEP());
+		flushEventQueue();
 
-        assertEquals(2, getContainerEP().getChildren().size());
-        assertEquals(2, groupEP.getChildren().size());
+		assertEquals(3, getContainerEP().getChildren().size());
+		assertEquals(2, groupEP.getChildren().size());
 
-        // trigger a canonical refresh
-        getFixture().createShapeUsingTool(CIRCUIT_TYPE, new Point(10, 10),
-            new Dimension(50, 50), getContainerEP());
-        flushEventQueue();
-
-        assertEquals(3, getContainerEP().getChildren().size());
-        assertEquals(2, groupEP.getChildren().size());
-
-    }
+	}
 
 }

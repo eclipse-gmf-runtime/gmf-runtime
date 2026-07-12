@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures;
@@ -32,7 +32,7 @@ public class XOrGateFigure extends NodeFigure {
 	private static final PointList topPoints = new PointList();
 
 	static {
-		//setup gate outline
+		// setup gate outline
 		outlinePoints.addPoint(2, 10);
 		outlinePoints.addPoint(2, 4);
 		outlinePoints.addPoint(4, 6);
@@ -43,7 +43,7 @@ public class XOrGateFigure extends NodeFigure {
 		outlinePoints.addPoint(12, 4);
 		outlinePoints.addPoint(12, 10);
 
-		//setup top curve of gate
+		// setup top curve of gate
 		topPoints.addPoint(2, 2);
 		topPoints.addPoint(4, 4);
 		topPoints.addPoint(6, 5);
@@ -51,10 +51,10 @@ public class XOrGateFigure extends NodeFigure {
 		topPoints.addPoint(8, 5);
 		topPoints.addPoint(10, 4);
 		topPoints.addPoint(12, 2);
-	}	
+	}
 
-	 private Dimension prefSize;
-	    
+	private Dimension prefSize;
+
 	/**
 	 * Constructor for XOrGateFigure.
 	 */
@@ -67,6 +67,7 @@ public class XOrGateFigure extends NodeFigure {
 	/**
 	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
 	 */
+	@Override
 	public Dimension getPreferredSize(int wHint, int hHint) {
 		return new Dimension(prefSize);
 	}
@@ -74,39 +75,39 @@ public class XOrGateFigure extends NodeFigure {
 	/**
 	 * @see org.eclipse.draw2d.Figure#paintFigure(Graphics)
 	 */
+	@Override
 	protected void paintFigure(Graphics g) {
 		Rectangle r = getBounds().getCopy();
-		
+
 		IMapMode mm = MapModeUtil.getMapMode(this);
 		r.translate(mm.DPtoLP(2), mm.DPtoLP(2));
-		r.setSize(mm.DPtoLP(11), mm.DPtoLP(9)); 
+		r.setSize(mm.DPtoLP(11), mm.DPtoLP(9));
 
-		//Draw an oval that represents the bottom arc
+		// Draw an oval that represents the bottom arc
 		r.y += mm.DPtoLP(4);
-	
-		/* 
-		 * Draw the bottom gate arc.
-		 * This is done with an oval. The oval overlaps the top
-		 * arc of the gate, so this region is clipped.
+
+		/*
+		 * Draw the bottom gate arc. This is done with an oval. The oval overlaps the
+		 * top arc of the gate, so this region is clipped.
 		 */
 		g.pushState();
 		r.y++;
 		g.clipRect(r);
 		r.y--;
-		
+
 		r.width = r.width - mm.DPtoLP(1);
 		g.fillOval(r);
 		r.height--;
 		g.drawOval(r);
 		g.popState();
 
-		//Draw the gate outline and top curve
+		// Draw the gate outline and top curve
 		g.translate(getLocation());
-		
+
 		PointList topLP = topPoints.getCopy();
 		mm.DPtoLP(topLP);
 		g.drawPolyline(topLP);
-		
+
 		PointList outlineLP = outlinePoints.getCopy();
 		mm.DPtoLP(outlineLP);
 		g.fillPolygon(outlineLP);

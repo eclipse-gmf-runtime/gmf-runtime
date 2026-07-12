@@ -7,11 +7,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.wizards;
-
 
 import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.ExampleDiagramGeoshapeMessages;
 import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.util.GeoShapeDiagramFileCreator;
@@ -20,51 +19,55 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreat
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 
-
-
 /**
  * @author qili
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.geoshapes.*
  *
- * Create Diagram Wizard Page
+ *              Create Diagram Wizard Page
  */
-public class DiagramWizardPage extends EditorWizardPage{
+public class DiagramWizardPage extends EditorWizardPage {
 
 	/**
 	 * DiagramWizardPage constructor
 	 *
-	 * @param aWorkbench
-	 *            workbench
-	 * @param selection
-	 *            selection
+	 * @param aWorkbench workbench
+	 * @param selection  selection
 	 */
-	public DiagramWizardPage(IWorkbench aWorkbench,
-			IStructuredSelection selection) {
+	public DiagramWizardPage(IWorkbench aWorkbench, IStructuredSelection selection) {
 		super("GeoshapeDiagramPage", aWorkbench, selection); //$NON-NLS-1$
-		this.setTitle(ExampleDiagramGeoshapeMessages.
-			GeoshapeWizardPage_Title);
-		this.setDescription(ExampleDiagramGeoshapeMessages.
-			GeoshapeWizardPage_Description);
+		this.setTitle(ExampleDiagramGeoshapeMessages.GeoshapeWizardPage_Title);
+		this.setDescription(ExampleDiagramGeoshapeMessages.GeoshapeWizardPage_Description);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage#getDefaultFileName()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.
+	 * EditorWizardPage#getDefaultFileName()
 	 */
+	@Override
 	protected String getDefaultFileName() {
 		return ExampleDiagramGeoshapeMessages.GEOVisualizer_DefaultGeoshapeDiagramFileName;
 	}
-	
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage#getDiagramFileCreator()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.
+	 * EditorWizardPage#getDiagramFileCreator()
 	 */
+	@Override
 	public DiagramFileCreator getDiagramFileCreator() {
 		return GeoShapeDiagramFileCreator.getInstance();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage#getDiagramKind()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.
+	 * EditorWizardPage#getDiagramKind()
 	 */
+	@Override
 	protected String getDiagramKind() {
 		return "Geoshape"; //$NON-NLS-1$
 	}

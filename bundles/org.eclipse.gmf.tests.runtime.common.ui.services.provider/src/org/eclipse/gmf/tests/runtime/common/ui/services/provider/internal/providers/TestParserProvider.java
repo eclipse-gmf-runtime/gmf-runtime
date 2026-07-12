@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers;
 
@@ -23,51 +23,61 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 
 /**
  * Base test parser provider
- * 
+ *
  * @author wdiu, Wayne Diu
  */
 public class TestParserProvider implements IParserProvider {
 
+	@Override
 	public IParser getParser(IAdaptable hint) {
 		return new IParser() {
 
+			@Override
 			public String getEditString(IAdaptable element, int flags) {
 				return StringStatics.BLANK;
 			}
 
+			@Override
 			public IParserEditStatus isValidEditString(IAdaptable element, String editString) {
 				return null;
 			}
 
+			@Override
 			public ICommand getParseCommand(IAdaptable element, String newString, int flags) {
 				return null;
 			}
 
+			@Override
 			public String getPrintString(IAdaptable element, int flags) {
 				return StringStatics.BLANK;
 			}
 
+			@Override
 			public boolean isAffectingEvent(Object event, int flags) {
 				return false;
 			}
 
+			@Override
 			public IContentAssistProcessor getCompletionProcessor(IAdaptable element) {
 				return null;
 			}
-			
+
 		};
 	}
 
+	@Override
 	public void addProviderChangeListener(IProviderChangeListener listener) {
-		//does nothing
+		// does nothing
 	}
 
+	@Override
 	public boolean provides(IOperation operation) {
 		return false;
 	}
 
+	@Override
 	public void removeProviderChangeListener(IProviderChangeListener listener) {
-		//does nothing
+		// does nothing
 	}
 
 }

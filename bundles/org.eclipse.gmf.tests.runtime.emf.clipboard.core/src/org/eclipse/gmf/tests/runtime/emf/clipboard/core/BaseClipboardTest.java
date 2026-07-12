@@ -7,12 +7,16 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.clipboard.core;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -34,28 +38,30 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
+import org.opentest4j.AssertionFailedError;
 import org.osgi.framework.Bundle;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 
 /**
  * Sets up a test framework for clipboard tests.
- * 
+ *
  * @author Christian Vogt (cvogt)
  */
-public abstract class BaseClipboardTest extends TestCase {
+public abstract class BaseClipboardTest {
 
-	static final Bundle CLIPBOARD_TESTS_BUNDLE =
-		Platform.getBundle("org.eclipse.gmf.tests.runtime.emf.clipboard.core"); //$NON-NLS-1$
+	static final Bundle CLIPBOARD_TESTS_BUNDLE = Platform.getBundle("org.eclipse.gmf.tests.runtime.emf.clipboard.core"); //$NON-NLS-1$
 
 	protected static final String PROJECT_NAME = "clipboardTests"; //$NON-NLS-1$
-	protected static final String RESOURCE_NAME = "/" + PROJECT_NAME + "/logres.extlibrary";  //$NON-NLS-1$//$NON-NLS-2$
+	protected static final String RESOURCE_NAME = "/" + PROJECT_NAME + "/logres.extlibrary"; //$NON-NLS-1$//$NON-NLS-2$
 
 	private Transaction tx;
-	
+
 	private ChangeDescription lastChange;
-	
+
+	private Method currentTestMethod;
+
 	protected TransactionalEditingDomain domain;
 
 	protected IProject project;
@@ -65,17 +71,17 @@ public abstract class BaseClipboardTest extends TestCase {
 	//
 	// Model structure created by setUp():
 	//
-	// Library root1                     (== root1)
-	//  +- Writer level1 writer          (== level1writer)
-	//  +- Book level1 book              (== level1book)
-	//  +- Library level1                (== level1)
-	//  |   +- Writer level1-2 writer    (== level12writer)
-	//  |   +- Book level1-2 book        (== level12book)
-	//  |   +- Library level1-2          (== level12)
-	// Library root2                     (== root2)
-	//  +- Writer level2 writer          (== level2writer)
-	//  +- Book level2 book              (== level2book)
-	// Library root3                     (== root3) 
+	// Library root1 (== root1)
+	// +- Writer level1 writer (== level1writer)
+	// +- Book level1 book (== level1book)
+	// +- Library level1 (== level1)
+	// | +- Writer level1-2 writer (== level12writer)
+	// | +- Book level1-2 book (== level12book)
+	// | +- Library level1-2 (== level12)
+	// Library root2 (== root2)
+	// +- Writer level2 writer (== level2writer)
+	// +- Book level2 book (== level2book)
+	// Library root3 (== root3)
 	//
 	protected Library root1;
 	protected Writer level1writer;
@@ -89,66 +95,62 @@ public abstract class BaseClipboardTest extends TestCase {
 	protected Book level2book;
 	protected Library root3;
 
-	/**
-	 * Constructor.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param name
-	 */
-	public BaseClipboardTest(String name) {
-		super(name);
-	}
-
-
-	/* (non-Javadoc)
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
+	@BeforeEach
+	protected void setUp(TestInfo testInfo) throws Exception {
+		currentTestMethod = testInfo.getTestMethod().orElse(null);
+		lastChange = null;
 
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		if (!project.exists()) {
 			project.create(null);
 		}
-		
+
 		project.open(null);
-	
+
 		domain = GMFEditingDomainFactory.getInstance().createEditingDomain();
-		
+
 		tx = ((InternalTransactionalEditingDomain) domain).startTransaction(false, null);
-		
+
 		try {
-			Resource originalRes = domain.getResourceSet().getResource(
-					URI.createURI(
-							CLIPBOARD_TESTS_BUNDLE.getEntry(
-								"/test_models/clipboard_test.extlibrary") //$NON-NLS-1$
-					.toString()), true);
+			Resource originalRes = domain.getResourceSet()
+					.getResource(URI.createURI(CLIPBOARD_TESTS_BUNDLE.getEntry("/test_models/clipboard_test.extlibrary") //$NON-NLS-1$
+							.toString()), true);
 			originalRes.setURI(URI.createPlatformResourceURI(RESOURCE_NAME, false));
 			originalRes.save(Collections.EMPTY_MAP);
 			testResource = originalRes;
 
 			// see above for model info
-			root1 = (Library)testResource.getContents().get(0);
-			level1writer = (Writer)root1.getWriters().get(0);
-			level1book = (Book)root1.getBooks().get(0);
-			level1 = (Library)root1.getBranches().get(0);
-			
-			level12writer = (Writer)level1.getWriters().get(0);
-			level12book = (Book)level1.getBooks().get(0);
-			level12 = (Library)level1.getBranches().get(0);
-			
-			root2 = (Library)testResource.getContents().get(1);
-			level2writer = (Writer)root2.getWriters().get(0);
-			level2book = (Book)root2.getBooks().get(0);
-			
-			root3 = (Library)testResource.getContents().get(2);
+			root1 = (Library) testResource.getContents().get(0);
+			level1writer = root1.getWriters().get(0);
+			level1book = root1.getBooks().get(0);
+			level1 = root1.getBranches().get(0);
+
+			level12writer = level1.getWriters().get(0);
+			level12book = level1.getBooks().get(0);
+			level12 = level1.getBranches().get(0);
+
+			root2 = (Library) testResource.getContents().get(1);
+			level2writer = root2.getWriters().get(0);
+			level2book = root2.getBooks().get(0);
+
+			root3 = (Library) testResource.getContents().get(2);
 		} catch (IOException e) {
 			fail("Failed to load test model: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() throws Exception {
 		root1 = null;
 		level1writer = null;
 		level1book = null;
@@ -165,50 +167,50 @@ public abstract class BaseClipboardTest extends TestCase {
 			if (testResource.isLoaded()) {
 				testResource.unload();
 			}
-			
+
 			if (testResource.getResourceSet() != null) {
 				testResource.getResourceSet().getResources().remove(testResource);
 			}
 			testResource = null;
 		}
-		
+
 		if ((project != null) && project.exists()) {
 			project.delete(true, true, null);
 		}
-		
+
 		project = null;
 		domain = null;
+		currentTestMethod = null;
 	}
 
 	/**
 	 * Copy elements to a the clipboard.
-	 * 
+	 *
 	 * @param eObjects a collection of {@link EObject}s to be serialized
-	 * @param hints a mapping of hints (defined as constants on this class), or
-	 *     <code>null</code> to provide no hints
-	 * 
+	 * @param hints    a mapping of hints (defined as constants on this class), or
+	 *                 <code>null</code> to provide no hints
+	 *
 	 * @return the serial form of the <code>eObjects</code>
 	 */
 	protected String copy(Collection objects, Map hints) {
 		try {
-			return ClipboardUtil.copyElementsToString(
-				objects, hints, new NullProgressMonitor());
+			return ClipboardUtil.copyElementsToString(objects, hints, new NullProgressMonitor());
 		} catch (Exception ex) {
 			fail("Failed to copy elements to string."); //$NON-NLS-1$
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Deerializes elements from a string (obtained from the system clipboard)
-	 * and pastes them into the specified target element.
+	 * Deerializes elements from a string (obtained from the system clipboard) and
+	 * pastes them into the specified target element.
 	 *
 	 * @param string the string containing the elements to be pasted
-	 * @param target the element into which the new elements are to be
-	 *     pasted (must be of type EObject or Resource)
-	 * @param hints a mapping of hints (defined as constants on this class), or
-	 *     <code>null</code> to provide no hints
-	 * 
+	 * @param target the element into which the new elements are to be pasted (must
+	 *               be of type EObject or Resource)
+	 * @param hints  a mapping of hints (defined as constants on this class), or
+	 *               <code>null</code> to provide no hints
+	 *
 	 * @return the newly pasted {@link EObject}s
 	 */
 	protected Collection paste(final String str, final Object target, final Map hints) {
@@ -216,21 +218,20 @@ public abstract class BaseClipboardTest extends TestCase {
 
 		Collection result = null;
 		Transaction pasteTx = null;
-		
+
 		try {
 			pasteTx = ((InternalTransactionalEditingDomain) domain).startTransaction(false, null);
 		} catch (Exception e) {
 			fail("Failed to paste elements from string: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		
+
 		try {
 			if (target instanceof Resource) {
-				result = ClipboardUtil.pasteElementsFromString(
-					str, (Resource)target, hints, new NullProgressMonitor());
+				result = ClipboardUtil.pasteElementsFromString(str, (Resource) target, hints,
+						new NullProgressMonitor());
 			} else {
 				// else it must be an EObject
-				result =  ClipboardUtil.pasteElementsFromString(
-					str, (EObject)target, hints, new NullProgressMonitor());
+				result = ClipboardUtil.pasteElementsFromString(str, (EObject) target, hints, new NullProgressMonitor());
 			}
 		} catch (Exception ex) {
 			fail("Failed to paste elements from string."); //$NON-NLS-1$
@@ -244,42 +245,59 @@ public abstract class BaseClipboardTest extends TestCase {
 
 		return result;
 	}
-	
+
 	/**
 	 * Must be called first in every test method that needs to run in a write
-	 * action.  If we are not in a write action, we return <code>false</code>.
-	 * However, in this case, we do also re-execute the original test method
-	 * inside of a new write action, in which nested execution this method will
-	 * return <code>true</code>.  Therefore, the entire test method should be
-	 * in an <code>if</code> block conditional on this result.  Following this
-	 * <code>if</code> block, it is safe to access the undo interval created
-	 * during the test via the {@link #getLastUndo()} method in an
-	 * <code>else</code> block.
+	 * action. If we are not in a write action, we return <code>false</code>.
+	 * However, in this case, we do also re-execute the original test method inside
+	 * of a new write action, in which nested execution this method will return
+	 * <code>true</code>. Therefore, the entire test method should be in an
+	 * <code>if</code> block conditional on this result. Following this
+	 * <code>if</code> block, it is safe to access the undo interval created during
+	 * the test via the {@link #getLastUndo()} method in an <code>else</code> block.
 	 * <p>
 	 * Example:
 	 * </p>
+	 * 
 	 * <pre>
-	 *     if (writing()) {
-	 *        // ... do stuff in a write action ...
-	 *     }
+	 * if (writing()) {
+	 * 	// ... do stuff in a write action ...
+	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @return whether we are in a write action or not
-	 * 
+	 *
 	 * @see #getLastUndo()
 	 */
 	protected boolean writing() {
 		boolean result = (tx != null);
-		
+
 		if (!result) {
 			try {
 				tx = ((InternalTransactionalEditingDomain) domain).startTransaction(false, null);
 			} catch (Exception e) {
 				fail("Could not start transaction: " + e.getLocalizedMessage()); //$NON-NLS-1$
 			}
-			
+
 			try {
-				runTest();
+				if (currentTestMethod == null) {
+					fail("Current test method is unavailable."); //$NON-NLS-1$
+				}
+				currentTestMethod.invoke(this);
+			} catch (InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				tx.rollback();
+				if (cause instanceof AssertionFailedError) {
+					throw (AssertionFailedError) cause;
+				}
+				if (cause instanceof Exception) {
+					cause.printStackTrace();
+					fail("Unexpected exception: " + cause.getLocalizedMessage()); //$NON-NLS-1$
+				}
+				if (cause instanceof Error) {
+					throw (Error) cause;
+				}
+				fail("Unexpected throwable: " + cause); //$NON-NLS-1$
 			} catch (AssertionFailedError e) {
 				tx.rollback();
 				throw e;
@@ -299,28 +317,30 @@ public abstract class BaseClipboardTest extends TestCase {
 					}
 				}
 			}
-				
+
 			lastChange = tx.getChangeDescription();
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Gets the change description created by the test within its
+	 * 
 	 * <pre>
-	 *     if (writing()) {
-	 *        // ... do stuff in a write action ...
-	 *     } else {
-	 *         ChangeDescription change = getLastChange();
-	 *         
-	 *         // ... do stuff with the change description ...
-	 *     }
+	 * if (writing()) {
+	 * 	// ... do stuff in a write action ...
+	 * } else {
+	 * 	ChangeDescription change = getLastChange();
+	 *
+	 * 	// ... do stuff with the change description ...
+	 * }
 	 * </pre>
+	 * 
 	 * block.
-	 * 
+	 *
 	 * @return the test's change description
-	 * 
+	 *
 	 * @see #writing()
 	 */
 	protected ChangeDescription getLastChange() {

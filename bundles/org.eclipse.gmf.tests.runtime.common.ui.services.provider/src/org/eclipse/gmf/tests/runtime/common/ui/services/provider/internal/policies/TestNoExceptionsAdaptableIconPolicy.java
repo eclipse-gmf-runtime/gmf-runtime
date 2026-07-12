@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies;
 
@@ -19,12 +19,12 @@ import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testCl
 
 /**
  * Basic icon policy that does not throw exceptions.
- * 
+ *
  * @author wdiu, Wayne Diu
  */
-public class TestNoExceptionsAdaptableIconPolicy
-	implements IProviderPolicy {
+public class TestNoExceptionsAdaptableIconPolicy implements IProviderPolicy {
 
+	@Override
 	public boolean provides(IOperation operation) {
 		if (operation instanceof GetIconOperation) {
 			return (((IIconOperation) operation).getHint() instanceof TestAdaptable);

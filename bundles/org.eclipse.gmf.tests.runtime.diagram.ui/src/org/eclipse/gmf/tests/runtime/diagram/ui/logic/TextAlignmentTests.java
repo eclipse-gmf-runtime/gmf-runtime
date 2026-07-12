@@ -7,10 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -33,28 +35,19 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the text alignment feature.
- * 
+ *
  * @author Anthony Hunter
  */
 public class TextAlignmentTests extends AbstractTestBase {
 
-	public static Test suite() {
-		TestSuite s = new TestSuite(TextAlignmentTests.class);
-		return s;
-	}
-
-	public TextAlignmentTests() {
-		super("Group Tests");//$NON-NLS-1$
-	}
-
 	public class TextAlignmentTestFixture extends LogicTestFixture {
 
+		@Override
 		public void setup() throws Exception {
 			closeWelcome();
 			super.setup();
@@ -63,20 +56,15 @@ public class TextAlignmentTests extends AbstractTestBase {
 		public void closeWelcome() {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
-				IWorkbenchWindow workbenchWindow = workbench
-						.getActiveWorkbenchWindow();
+				IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
 				if (workbenchWindow != null) {
-					IWorkbenchPage workbenchPage = workbenchWindow
-							.getActivePage();
+					IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
 					if (workbenchPage != null) {
-						IWorkbenchPart workbenchPart = workbenchPage
-								.getActivePart();
+						IWorkbenchPart workbenchPart = workbenchPage.getActivePart();
 						if (workbenchPart != null) {
-							IWorkbenchPartSite workbenchPartSite = workbenchPart
-									.getSite();
+							IWorkbenchPartSite workbenchPartSite = workbenchPart.getSite();
 							if (workbenchPartSite != null) {
-								if (workbenchPartSite.getId().equals(
-										"org.eclipse.ui.internal.introview")) { //$NON-NLS-1$
+								if (workbenchPartSite.getId().equals("org.eclipse.ui.internal.introview")) { //$NON-NLS-1$
 									IViewPart welcomeView = (IViewPart) workbenchPart;
 									workbenchPage.hideView(welcomeView);
 
@@ -88,6 +76,7 @@ public class TextAlignmentTests extends AbstractTestBase {
 			}
 		}
 
+		@Override
 		protected void createShapesAndConnectors() throws Exception {
 			/**
 			 * Override so that the test creates the shapes it wants
@@ -95,6 +84,7 @@ public class TextAlignmentTests extends AbstractTestBase {
 		}
 	}
 
+	@Override
 	protected void setTestFixture() {
 		testFixture = new TextAlignmentTestFixture();
 	}
@@ -103,7 +93,9 @@ public class TextAlignmentTests extends AbstractTestBase {
 		return (LogicTestFixture) testFixture;
 	}
 
-	protected void setUp() throws Exception {
+	@Override
+	@BeforeEach
+	public void setUp() throws Exception {
 		super.setUp();
 	}
 
@@ -127,8 +119,7 @@ public class TextAlignmentTests extends AbstractTestBase {
 		final String description = "Text align this text\nThe quick brown fox\njumps over\nthe lazy\ndog"; //$NON-NLS-1$
 
 		/* create a square geoshape */
-		squareEditPart = getFixture().createShapeUsingTool(
-				GeoshapeType.RECTANGLE, new Point(10, 10),
+		squareEditPart = getFixture().createShapeUsingTool(GeoshapeType.RECTANGLE, new Point(10, 10),
 				new Dimension(-1, -1), getDiagramEditPart());
 
 		squareView = (View) squareEditPart.getModel();
@@ -137,12 +128,11 @@ public class TextAlignmentTests extends AbstractTestBase {
 		testProperty(squareView, Properties.ID_DESCRIPTION, description);
 
 		/* create a note */
-		noteEditPart = getFixture().createShapeUsingTool(
-				DiagramNotationType.NOTE, new Point(200, 200),
+		noteEditPart = getFixture().createShapeUsingTool(DiagramNotationType.NOTE, new Point(200, 200),
 				new Dimension(-1, -1), getDiagramEditPart());
 
 		noteView = (View) noteEditPart.getModel();
-		
+
 		/* set the description (text) for the note */
 		testProperty(noteView, Properties.ID_DESCRIPTION, description);
 
@@ -150,89 +140,72 @@ public class TextAlignmentTests extends AbstractTestBase {
 
 	}
 
+	@Test
 	public void testSetTextAlignmentCenterAction() throws Exception {
 		setupShapes();
 
-		getDiagramEditPart().getViewer().setSelection(
-				new StructuredSelection(squareEditPart));
+		getDiagramEditPart().getViewer().setSelection(new StructuredSelection(squareEditPart));
 
-		TextAlignmentAction action = TextAlignmentAction
-				.createTextAlignmentCenterAction(getWorkbenchPage());
+		TextAlignmentAction action = TextAlignmentAction.createTextAlignmentCenterAction(getWorkbenchPage());
 		testAction(action, new ITestActionCallback() {
 
+			@Override
 			public void onRunExecution() {
 
-				assertEquals(
-						TextAlignment.CENTER_LITERAL,
-						squareEditPart
-								.getStructuralFeatureValue((EStructuralFeature) PackageUtil
-										.getElement(Properties.ID_TEXT_ALIGNMENT)));
+				assertEquals(TextAlignment.CENTER_LITERAL, squareEditPart.getStructuralFeatureValue(
+						(EStructuralFeature) PackageUtil.getElement(Properties.ID_TEXT_ALIGNMENT)));
 
 			}
 		});
-		
+
 		getCommandStack().undo();
-		
-		assertEquals(
-				TextAlignment.LEFT_LITERAL,
-				squareEditPart
-						.getStructuralFeatureValue((EStructuralFeature) PackageUtil
-								.getElement(Properties.ID_TEXT_ALIGNMENT)));
-		
+
+		assertEquals(TextAlignment.LEFT_LITERAL, squareEditPart
+				.getStructuralFeatureValue((EStructuralFeature) PackageUtil.getElement(Properties.ID_TEXT_ALIGNMENT)));
+
 	}
 
+	@Test
 	public void testSetTextAlignmentRightAction() throws Exception {
 		setupShapes();
 
-		getDiagramEditPart().getViewer().setSelection(
-				new StructuredSelection(noteEditPart));
+		getDiagramEditPart().getViewer().setSelection(new StructuredSelection(noteEditPart));
 
-		TextAlignmentAction action = TextAlignmentAction
-				.createTextAlignmentRightAction(getWorkbenchPage());
+		TextAlignmentAction action = TextAlignmentAction.createTextAlignmentRightAction(getWorkbenchPage());
 		testAction(action, new ITestActionCallback() {
 
+			@Override
 			public void onRunExecution() {
 
-				assertEquals(
-						TextAlignment.RIGHT_LITERAL,
-						noteEditPart
-								.getStructuralFeatureValue((EStructuralFeature) PackageUtil
-										.getElement(Properties.ID_TEXT_ALIGNMENT)));
+				assertEquals(TextAlignment.RIGHT_LITERAL, noteEditPart.getStructuralFeatureValue(
+						(EStructuralFeature) PackageUtil.getElement(Properties.ID_TEXT_ALIGNMENT)));
 
 			}
 		});
-		
+
 		getCommandStack().undo();
-		
-		assertEquals(
-				TextAlignment.LEFT_LITERAL,
-				noteEditPart
-						.getStructuralFeatureValue((EStructuralFeature) PackageUtil
-								.getElement(Properties.ID_TEXT_ALIGNMENT)));
-		
+
+		assertEquals(TextAlignment.LEFT_LITERAL, noteEditPart
+				.getStructuralFeatureValue((EStructuralFeature) PackageUtil.getElement(Properties.ID_TEXT_ALIGNMENT)));
+
 	}
 
+	@Test
 	public void testSetTextAlignmentProperty() throws Exception {
 
 		setupShapes();
 
-		testProperty(squareView, Properties.ID_TEXT_ALIGNMENT,
-				TextAlignment.RIGHT_LITERAL);
+		testProperty(squareView, Properties.ID_TEXT_ALIGNMENT, TextAlignment.RIGHT_LITERAL);
 
-		testProperty(squareView, Properties.ID_TEXT_ALIGNMENT,
-				TextAlignment.CENTER_LITERAL);
+		testProperty(squareView, Properties.ID_TEXT_ALIGNMENT, TextAlignment.CENTER_LITERAL);
 
-		testProperty(squareView, Properties.ID_TEXT_ALIGNMENT,
-				TextAlignment.LEFT_LITERAL);
+		testProperty(squareView, Properties.ID_TEXT_ALIGNMENT, TextAlignment.LEFT_LITERAL);
 
-		testProperty(noteView, Properties.ID_TEXT_ALIGNMENT,
-				TextAlignment.RIGHT_LITERAL);
+		testProperty(noteView, Properties.ID_TEXT_ALIGNMENT, TextAlignment.RIGHT_LITERAL);
 
-		testProperty(noteView, Properties.ID_TEXT_ALIGNMENT,
-				TextAlignment.CENTER_LITERAL);
+		testProperty(noteView, Properties.ID_TEXT_ALIGNMENT, TextAlignment.CENTER_LITERAL);
 
-		testProperty(noteView, Properties.ID_TEXT_ALIGNMENT,
-				TextAlignment.LEFT_LITERAL);
+		testProperty(noteView, Properties.ID_TEXT_ALIGNMENT, TextAlignment.LEFT_LITERAL);
 	}
 
 }

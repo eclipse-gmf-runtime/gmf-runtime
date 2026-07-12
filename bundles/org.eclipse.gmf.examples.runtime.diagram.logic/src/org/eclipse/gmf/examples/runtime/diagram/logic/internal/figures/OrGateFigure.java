@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures;
@@ -39,15 +39,15 @@ public class OrGateFigure extends NodeFigure {
 		points.addPoint(10, 4);
 		points.addPoint(12, 2);
 		points.addPoint(12, 10);
-	}	
+	}
 
 	private Dimension prefSize;
-	
+
 	/**
 	 * Creates a new OrGateFigure
 	 */
 	public OrGateFigure(Dimension prefSize) {
-		getBounds().width = prefSize.width; 
+		getBounds().width = prefSize.width;
 		getBounds().height = prefSize.height;
 		this.prefSize = new Dimension(prefSize);
 	}
@@ -55,6 +55,7 @@ public class OrGateFigure extends NodeFigure {
 	/**
 	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
 	 */
+	@Override
 	public Dimension getPreferredSize(int wHint, int hHint) {
 		return new Dimension(prefSize);
 	}
@@ -62,21 +63,22 @@ public class OrGateFigure extends NodeFigure {
 	/**
 	 * @see org.eclipse.draw2d.Figure#paintFigure(Graphics)
 	 */
+	@Override
 	protected void paintFigure(Graphics g) {
 		Rectangle r = getBounds().getCopy();
-		
+
 		IMapMode mm = MapModeUtil.getMapMode(this);
 		r.translate(mm.DPtoLP(2), mm.DPtoLP(2));
 		r.setSize(mm.DPtoLP(11), mm.DPtoLP(9));
-	
-		//Draw the bottom arc of the gate
+
+		// Draw the bottom arc of the gate
 		r.y += mm.DPtoLP(4);
 		r.width = r.width - mm.DPtoLP(1);
 		g.fillOval(r);
 		r.height--;
 		g.drawOval(r);
-	
-		//draw gate
+
+		// draw gate
 		g.translate(getLocation());
 		PointList outline = points.getCopy();
 		mm.DPtoLP(outline);

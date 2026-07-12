@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
@@ -22,32 +22,36 @@ import org.eclipse.jface.action.Action;
 /**
  * @author qili
  *
- * Holds the EditPart signifying a ShapeCompartmentFigure
+ *         Holds the EditPart signifying a ShapeCompartmentFigure
  */
-public class LogicShapeCompartmentEditPart extends ShapeCompartmentEditPart{
-	
+public class LogicShapeCompartmentEditPart extends ShapeCompartmentEditPart {
+
 	/**
 	 * Constructor for LogicShapeCompartmentEditPart.
+	 * 
 	 * @param view the view <code>controlled</code> by this editpart.
 	 */
 	public LogicShapeCompartmentEditPart(View view) {
 		super(view);
 	}
-	
-	/* 
+
+	/*
 	 * Overridden to turn off support for drag selection of children.
 	 */
+	@Override
 	protected boolean supportsDragSelection() {
 		return false;
 	}
-	
+
+	@Override
 	public String getCompartmentName() {
 		return Action.removeMnemonics(ExampleDiagramLogicMessages.logic_CircuitTool_Label);
 	}
-	
-	//install ContainerHighlightEditPolicy to highlight circuit figure
-	protected void createDefaultEditPolicies(){
+
+	// install ContainerHighlightEditPolicy to highlight circuit figure
+	@Override
+	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.CANONICAL_ROLE, new CircuitCompartmentCanonicalEditPolicy ());
+		installEditPolicy(EditPolicyRoles.CANONICAL_ROLE, new CircuitCompartmentCanonicalEditPolicy());
 	}
 }

@@ -7,10 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.parts;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -21,41 +23,54 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * This test should be run as a JUnit Plugin Test
- * 
+ *
  * @author ldamus
  */
-public class DiagramCommandStackTest extends TestCase {
+public class DiagramCommandStackTest {
 
 	private static class MyProgressMonitor implements IProgressMonitor {
+		@Override
 		public void beginTask(String name, int totalWork) {
 			// do nothing
 		}
+
+		@Override
 		public void done() {
 			// do nothing
 		}
+
+		@Override
 		public void internalWorked(double work) {
 			// do nothing
 		}
+
+		@Override
 		public boolean isCanceled() {
 			return false;
 		}
+
+		@Override
 		public void setCanceled(boolean value) {
 			// do nothing
 		}
+
+		@Override
 		public void setTaskName(String name) {
 			// do nothing
 		}
+
+		@Override
 		public void subTask(String name) {
 			// do nothing
 		}
+
+		@Override
 		public void worked(int work) {
 			// do nothing
 		}
@@ -63,27 +78,16 @@ public class DiagramCommandStackTest extends TestCase {
 
 	private DiagramCommandStack fixture = null;
 
-	public DiagramCommandStackTest(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(DiagramCommandStackTest.class);
-	}
-
 	private String getLabel() {
 		return "DiagramCommandStackTest"; //$NON-NLS-1$
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+
+	@BeforeEach
+	public void setUp() throws Exception {
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() {
 	}
 
 	protected DiagramCommandStack getFixture() {
@@ -94,6 +98,7 @@ public class DiagramCommandStackTest extends TestCase {
 		this.fixture = fixture;
 	}
 
+	@Test
 	public void test_execute() {
 
 		// Verify that the progress monitor is transfered from the
@@ -101,23 +106,27 @@ public class DiagramCommandStackTest extends TestCase {
 
 		final IProgressMonitor progressMonitor = new MyProgressMonitor();
 		ICommand iCommand = new AbstractCommand(getLabel(), null) {
-			protected CommandResult doExecuteWithResult(IProgressMonitor pm, IAdaptable info) throws ExecutionException {
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor pm, IAdaptable info)
+					throws ExecutionException {
 				assertEquals(progressMonitor, progressMonitor);
 				return CommandResult.newOKCommandResult();
 			}
-            protected CommandResult doRedoWithResult(IProgressMonitor pm, IAdaptable info)
-                throws ExecutionException {
-                return null;
-            }
-            protected CommandResult doUndoWithResult(IProgressMonitor pm, IAdaptable info)
-                throws ExecutionException {
-                return null;
-            }
+
+			@Override
+			protected CommandResult doRedoWithResult(IProgressMonitor pm, IAdaptable info) throws ExecutionException {
+				return null;
+			}
+
+			@Override
+			protected CommandResult doUndoWithResult(IProgressMonitor pm, IAdaptable info) throws ExecutionException {
+				return null;
+			}
 		};
 		ICommandProxy proxyCommand = new ICommandProxy(iCommand);
 
 		DiagramEditDomain domain = new DiagramEditDomain(null);
-				
+
 		setFixture(new DiagramCommandStack(domain));
 		getFixture().execute(proxyCommand, progressMonitor);
 	}

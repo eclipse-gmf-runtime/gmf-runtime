@@ -7,10 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.action.actions.global;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.AbstractOperation;
@@ -29,123 +33,106 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+public class GlobalUndoActionTest {
 
-public class GlobalUndoActionTest
-    extends TestCase {
+	private GlobalUndoAction undoAction;
+	private IViewPart part;
 
-    private GlobalUndoAction undoAction;
-    private IViewPart part;
+	@BeforeEach
+	public void setUp() throws Exception {
+		if (part == null) {
+			// There is an issue when running the tests, run no tests for now.
+			return;
+		}
+		if (part == null) {
+			part = (IViewPart) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		} else {
+			part.setFocus();
+		}
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+		IOperationHistory history = OperationHistoryFactory.getOperationHistory();
+		IUndoContext undoContext = new UndoContext();
 
-    public static Test suite() {
-        return new TestSuite(GlobalUndoActionTest.class,
-            "GlobalUndoAction Test Suite"); //$NON-NLS-1$
-    }
+		undoAction = new GlobalUndoAction(part);
+		undoAction.setUndoContext(undoContext);
 
-    protected void setUp()
-        throws Exception {
-        if (part == null) {
-    		// There is an issue when running the tests, run no tests for now.
-        	return;
-        }
-    	if(part == null){
-            part = (IViewPart) PlatformUI.getWorkbench()
-                .getActiveWorkbenchWindow().getActivePage().getActivePart();
-        	} else {
-        		part.setFocus();
-        	}
+		IUndoableOperation operation = new AbstractOperation("test_nullWorkbenchPart") { //$NON-NLS-1$
 
-        IOperationHistory history = OperationHistoryFactory
-            .getOperationHistory();
-        IUndoContext undoContext = new UndoContext();
+			@Override
+			public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+				return Status.OK_STATUS;
+			}
 
-        undoAction = new GlobalUndoAction(part);
-        undoAction.setUndoContext(undoContext);
+			@Override
+			public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+				return Status.OK_STATUS;
+			}
 
-        IUndoableOperation operation = new AbstractOperation(
-            "test_nullWorkbenchPart") { //$NON-NLS-1$
+			@Override
+			public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+				return Status.OK_STATUS;
+			}
+		};
 
-            public IStatus execute(IProgressMonitor monitor, IAdaptable info)
-                throws ExecutionException {
-                return Status.OK_STATUS;
-            }
+		try {
+			operation.addContext(undoContext);
+			history.execute(operation, new NullProgressMonitor(), null);
+			history.execute(operation, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+	}
 
-            public IStatus undo(IProgressMonitor monitor, IAdaptable info)
-                throws ExecutionException {
-                return Status.OK_STATUS;
-            }
+	/**
+	 * Tests that the action is not enabled when it's part is closed.
+	 */
+	public void ignore_dispose_131781() throws PartInitException {
 
-            public IStatus redo(IProgressMonitor monitor, IAdaptable info)
-                throws ExecutionException {
-                return Status.OK_STATUS;
-            }
-        };
+		// Enables testing that closing the view doesn't cause exceptions to be
+		// reported to the user
+		SafeRunnable.setIgnoreErrors(false);
 
-        try {
-            operation.addContext(undoContext);
-            history.execute(operation, new NullProgressMonitor(), null);
-            history.execute(operation, new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
-    }
+		// Re-set the undo context to ensure that the UndoActionHandler's part
+		// listener is registered AFTER the GlobalUndoAction. We can then test
+		// that closing the part doesn't cause the UndoActionHandler's part
+		// listener to throw an NPE.
+		undoAction.setUndoContext(undoAction.getUndoContext());
 
-    /**
-     * Tests that the action is not enabled when it's part is closed.
-     */
-    public void ignore_dispose_131781()  throws PartInitException{
-        
-        // Enables testing that closing the view doesn't cause exceptions to be
-        // reported to the user
-        SafeRunnable.setIgnoreErrors(false);
-        
-        // Re-set the undo context to ensure that the UndoActionHandler's part
-        // listener is registered AFTER the GlobalUndoAction. We can then test
-        // that closing the part doesn't cause the UndoActionHandler's part
-        // listener to throw an NPE.
-        undoAction.setUndoContext(undoAction.getUndoContext());
-        
-        try {
-            OperationHistoryFactory.getOperationHistory().undo(
-               undoAction.getUndoContext(), new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }  
-        
-        assertTrue(undoAction.isEnabled());
-        
-        // Close the view
-        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-            .hideView(part);
-        
-        assertFalse(undoAction.isEnabled());
-        
-        SafeRunnable.setIgnoreErrors(true);
-        
-        // Close the view
-        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-            .showView(part.getViewSite().getId());
-    }
+		try {
+			OperationHistoryFactory.getOperationHistory().undo(undoAction.getUndoContext(), new NullProgressMonitor(),
+					null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
 
-    /**
-     * Tests that the delegate is disposed when the undo context is set to null.
-     */
-    public void ignore_nullUndoContext() {
-        assertTrue(undoAction.isEnabled());
-        undoAction.setUndoContext(null);
-        assertFalse(undoAction.isEnabled());
-    }
+		assertTrue(undoAction.isEnabled());
 
+		// Close the view
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(part);
+
+		assertFalse(undoAction.isEnabled());
+
+		SafeRunnable.setIgnoreErrors(true);
+
+		// Close the view
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(part.getViewSite().getId());
+	}
+
+	/**
+	 * Tests that the delegate is disposed when the undo context is set to null.
+	 */
+	public void ignore_nullUndoContext() {
+		assertTrue(undoAction.isEnabled());
+		undoAction.setUndoContext(null);
+		assertFalse(undoAction.isEnabled());
+	}
+
+	@Test
 	public void test_testNothing() {
 		// There is an issue when running the tests, run no tests for now.
 	}

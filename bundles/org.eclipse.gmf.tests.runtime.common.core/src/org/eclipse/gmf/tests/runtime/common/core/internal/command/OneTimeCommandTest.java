@@ -7,10 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.core.internal.command;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.AbstractOperation;
@@ -28,137 +32,115 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.OneTimeCommand;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+public class OneTimeCommandTest {
 
-public class OneTimeCommandTest
-    extends TestCase {
+	private IOperationHistory history;
 
-    private IOperationHistory history;
+	@BeforeEach
+	public void setUp() throws Exception {
+		history = OperationHistoryFactory.getOperationHistory();
+	}
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	/**
+	 * Verifies that subclasses of IsolatedCommand can be not undoable but also not
+	 * cause the undo history to be flushed when they are executed in a linear undo
+	 * model.
+	 */
+	@Test
+	public void test_historyNotFlushed_132371() throws Exception {
 
-    public static Test suite() {
-        return new TestSuite(OneTimeCommandTest.class,
-            "OneTimeCommand Test Suite"); //$NON-NLS-1$
-    }
+		// create an undo context
+		final IUndoContext context = new UndoContext();
 
-    public OneTimeCommandTest(String name) {
-        super(name);
-    }
+		// add a listener to enforce a linear undo model for the undo context,
+		// which flushes the undo history when the top-most operation is not
+		// undoable
+		IOperationHistoryListener historyListener = new IOperationHistoryListener() {
 
-    protected void setUp()
-        throws Exception {
-        super.setUp();
-        history = OperationHistoryFactory.getOperationHistory();
-    }
+			@Override
+			public void historyNotification(OperationHistoryEvent event) {
+				switch (event.getEventType()) {
+				case OperationHistoryEvent.OPERATION_ADDED:
+				case OperationHistoryEvent.OPERATION_REMOVED:
+				case OperationHistoryEvent.UNDONE:
+				case OperationHistoryEvent.REDONE:
+					if (!history.canUndo(context)) {
+						history.dispose(context, true, false, false);
+					}
+					break;
+				}
+			}
+		};
+		history.addOperationHistoryListener(historyListener);
 
-    /**
-     * Verifies that subclasses of IsolatedCommand can be not undoable but also
-     * not cause the undo history to be flushed when they are executed in a
-     * linear undo model.
-     */
-    public void test_historyNotFlushed_132371()
-        throws Exception {
+		// put a marker operation on the history
+		IUndoableOperation marker = new MarkerOperation();
+		marker.addContext(context);
+		history.execute(marker, new NullProgressMonitor(), null);
+		assertTrue(history.canUndo(context), "Marker operation must be undoable"); //$NON-NLS-1$
 
-        // create an undo context
-        final IUndoContext context = new UndoContext();
+		// create a command with no undo context
+		OneTimeCommand command = new OneTimeCommand("test_historyNotFlushed_132371") { //$NON-NLS-1$
 
-        // add a listener to enforce a linear undo model for the undo context,
-        // which flushes the undo history when the top-most operation is not
-        // undoable
-        IOperationHistoryListener historyListener = new IOperationHistoryListener() {
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+					throws ExecutionException {
+				return CommandResult.newOKCommandResult();
+			}
+		};
 
-            public void historyNotification(OperationHistoryEvent event) {
-                switch (event.getEventType()) {
-                    case OperationHistoryEvent.OPERATION_ADDED:
-                    case OperationHistoryEvent.OPERATION_REMOVED:
-                    case OperationHistoryEvent.UNDONE:
-                    case OperationHistoryEvent.REDONE:
-                        if (!history.canUndo(context)) {
-                            history.dispose(context, true, false, false);
-                        }
-                        break;
-                }
-            };
-        };
-        history.addOperationHistoryListener(historyListener);
+		command.addContext(context);
+		assertFalse(command.hasContext(context), "Unexpected undo context"); //$NON-NLS-1$
 
-        // put a marker operation on the history
-        IUndoableOperation marker = new MarkerOperation();
-        marker.addContext(context);
-        history.execute(marker, new NullProgressMonitor(), null);
-        assertTrue(
-            "Marker operation must be undoable", history.canUndo(context)); //$NON-NLS-1$
+		// execute the command
+		history.execute(command, new NullProgressMonitor(), null);
 
-        // create a command with no undo context
-        OneTimeCommand command = new OneTimeCommand(
-            "test_historyNotFlushed_132371") { //$NON-NLS-1$
+		// verify that the marker operation is still undoable
+		assertTrue(history.canUndo(context), "Undo history should not have been flushed"); //$NON-NLS-1$
+		assertSame(marker, history.getUndoOperation(context), "Marker operation should be on top of the undo history."); //$NON-NLS-1$
+	}
 
-            protected CommandResult doExecuteWithResult(
-                    IProgressMonitor progressMonitor, IAdaptable info)
-                throws ExecutionException {
-                return CommandResult.newOKCommandResult();
-            };
-        };
+	//
+	// TEST FIXTURES
+	//
 
-        command.addContext(context);
-        assertFalse("Unexpected undo context", command.hasContext(context)); //$NON-NLS-1$
+	static class MarkerOperation extends AbstractOperation {
 
-        // execute the command
-        history.execute(command, new NullProgressMonitor(), null);
+		boolean wasExecuted;
 
-        // verify that the marker operation is still undoable
-        assertTrue(
-            "Undo history should not have been flushed", history.canUndo(context)); //$NON-NLS-1$
-        assertSame(
-            "Marker operation should be on top of the undo history.", marker, history.getUndoOperation(context)); //$NON-NLS-1$
-    }
+		boolean wasUndone;
 
-    //
-    // TEST FIXTURES
-    //
+		boolean wasRedone;
 
-    static class MarkerOperation
-        extends AbstractOperation {
+		MarkerOperation() {
+			super("Marker operation"); //$NON-NLS-1$
+		}
 
-        boolean wasExecuted;
+		void reset() {
+			wasExecuted = false;
+			wasUndone = false;
+			wasRedone = false;
+		}
 
-        boolean wasUndone;
+		@Override
+		public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+			wasExecuted = true;
+			return Status.OK_STATUS;
+		}
 
-        boolean wasRedone;
+		@Override
+		public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+			wasUndone = true;
+			return Status.OK_STATUS;
+		}
 
-        MarkerOperation() {
-            super("Marker operation"); //$NON-NLS-1$
-        }
-
-        void reset() {
-            wasExecuted = false;
-            wasUndone = false;
-            wasRedone = false;
-        }
-
-        public IStatus execute(IProgressMonitor monitor, IAdaptable info)
-            throws ExecutionException {
-            wasExecuted = true;
-            return Status.OK_STATUS;
-        }
-
-        public IStatus undo(IProgressMonitor monitor, IAdaptable info)
-            throws ExecutionException {
-            wasUndone = true;
-            return Status.OK_STATUS;
-        }
-
-        public IStatus redo(IProgressMonitor monitor, IAdaptable info)
-            throws ExecutionException {
-            wasRedone = true;
-            return Status.OK_STATUS;
-        }
-    }
+		@Override
+		public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+			wasRedone = true;
+			return Status.OK_STATUS;
+		}
+	}
 }

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl;
 
@@ -16,9 +16,8 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputOutputTermin
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Input Output Terminal</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Input
+ * Output Terminal</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
@@ -26,8 +25,8 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
  */
 public class InputOutputTerminalImpl extends OutputTerminalImpl implements InputOutputTerminal {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected InputOutputTerminalImpl() {
@@ -35,12 +34,13 @@ public class InputOutputTerminalImpl extends OutputTerminalImpl implements Input
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return SemanticPackage.Literals.INPUT_OUTPUT_TERMINAL;
 	}
 
-} //InputOutputTerminalImpl
+} // InputOutputTerminalImpl

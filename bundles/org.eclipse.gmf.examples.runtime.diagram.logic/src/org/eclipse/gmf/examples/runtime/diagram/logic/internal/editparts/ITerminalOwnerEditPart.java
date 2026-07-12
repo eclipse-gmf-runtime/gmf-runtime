@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
@@ -16,23 +16,23 @@ import java.util.Map;
 
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
-
 /**
  * @author qili / sshaw
  *
- * The interface for logic shapes that own connection points.
+ *         The interface for logic shapes that own connection points.
  */
 public interface ITerminalOwnerEditPart {
-	
+
 	/**
 	 * Create connection points position map on the given editpart.
+	 * 
 	 * @return connection points position map
 	 */
 	public Map createBoundsMap();
-	
+
 	/**
 	 * Method for returning the owned terminal figure based on an ID value.
-	 * 
+	 *
 	 * @param terminalEP <code>Terminal</code> to create a figure of
 	 * @return <code>NodeFigure</code> that is the figure for the terminal.
 	 */

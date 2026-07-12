@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
@@ -24,25 +24,24 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 
 /**
  * Edit helper for logic LED elements.
- * 
+ *
  * @author ldamus
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
-public class LEDEditHelper
-	extends LogicElementEditHelper {
+public class LEDEditHelper extends LogicElementEditHelper {
 
 	/**
 	 * Gets a command to configure an LED.
 	 */
+	@Override
 	protected ICommand getConfigureCommand(final ConfigureRequest req) {
 
-		return new ConfigureLogicElementCommand(req, SemanticPackage.eINSTANCE
-			.getLED()) {
+		return new ConfigureLogicElementCommand(req, SemanticPackage.eINSTANCE.getLED()) {
 
-			protected CommandResult doExecuteWithResult(
-                    IProgressMonitor monitor, IAdaptable info)
-                throws ExecutionException {
-                
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+					throws ExecutionException {
+
 				LED oLED = (LED) req.getElementToConfigure();
 
 				createInputTerminal(oLED, "A", monitor); //$NON-NLS-1$

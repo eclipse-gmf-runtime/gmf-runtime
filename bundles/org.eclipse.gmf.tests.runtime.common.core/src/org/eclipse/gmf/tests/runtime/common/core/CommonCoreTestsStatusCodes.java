@@ -7,23 +7,22 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.core;
 
 /**
  * A list of status codes for this plug-in.
- * 
+ *
  * @author khussey
  *
  */
 public final class CommonCoreTestsStatusCodes {
 
 	/**
-	 * This class should not be instantiated since it is a static constant
-	 * class.
-	 * 
+	 * This class should not be instantiated since it is a static constant class.
+	 *
 	 */
 	private CommonCoreTestsStatusCodes() {
 		/* private constructor */
@@ -53,21 +52,21 @@ public final class CommonCoreTestsStatusCodes {
 	 * Status code indicating that an error occurred with a command.
 	 */
 	public static final int COMMAND_FAILURE = 4;
-	
+
 	/**
 	 * Status code indicating that an error occurred with a service.
 	 */
 	public static final int SERVICE_FAILURE = 5;
-	
+
 	/**
 	 * Status code indicating that an operation was cancelled.
 	 */
 	public static final int CANCELLED = 6;
-	
+
 	/**
 	 * Status code indicating that an operation was rolled back due to live
 	 * validation errors.
 	 */
 	public static final int VALIDATION_FAILURE = 7;
-	
+
 }

@@ -7,10 +7,16 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -19,84 +25,65 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+public class AbstractEditHelperAdviceTest extends AbstractEMFTypeTest {
 
-public class AbstractEditHelperAdviceTest
-    extends AbstractEMFTypeTest {
+	private Department department;
 
-    private Department department;
-    
-    private Employee financeEmployee;
+	private Employee financeEmployee;
 
-    public AbstractEditHelperAdviceTest(String name) {
-        super(name);
-    }
+	@Override
+	protected void doModelSetup(Resource resource) {
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+		department = (Department) getEmployeeFactory().create(getEmployeePackage().getDepartment());
+		department.setName("Finance"); //$NON-NLS-1$
 
-    public static Test suite() {
-        return new TestSuite(AbstractEditHelperAdviceTest.class,
-            "AbstractEditHelperAdvice Test Suite"); //$NON-NLS-1$
-    }
+		resource.getContents().add(department);
 
-    protected void doModelSetup(Resource resource) {
+		financeEmployee = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
 
-        department = (Department) getEmployeeFactory().create(
-            getEmployeePackage().getDepartment());
-        department.setName("Finance"); //$NON-NLS-1$
+		department.getMembers().add(financeEmployee);
+	}
 
-        resource.getContents().add(department);
-        
-        financeEmployee = (Employee) getEmployeeFactory().create(
-            getEmployeePackage().getEmployee());
-        
-        department.getMembers().add(financeEmployee);
-    }
-    
-    /**
-     * Tests that edit helper advice is consulted to approve edit requests.
-     */
-    public void test_approveRequest_133160() {
-        
-        // Request is approved by the FinanceEditHelperAdvice
-        SetRequest setRequest = new SetRequest(financeEmployee,
-            getEmployeePackage().getEmployee_Band(), Band.SENIOR_LITERAL);
-        
-        boolean canEdit = EmployeeType.EMPLOYEE.getEditHelper().canEdit(setRequest);
-        assertTrue(canEdit);
-        Object parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
-        assertSame(Boolean.TRUE, parameter);
-        
-        // reset the parameter
-        setRequest.setParameter("approved", null); //$NON-NLS-1$
-        
-        ICommand command = EmployeeType.EMPLOYEE.getEditHelper().getEditCommand(setRequest);
-        assertNotNull(command);
-        assertTrue(command.canExecute());
-        parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
-        assertSame(Boolean.TRUE, parameter);
-        
-        
-        // Request is not approved by the FinanceEditHelperAdvice
-        setRequest = new SetRequest(financeEmployee,
-            getEmployeePackage().getEmployee_Band(), Band.DIRECTOR_LITERAL);
-        
-        canEdit = EmployeeType.EMPLOYEE.getEditHelper().canEdit(setRequest);
-        assertFalse(canEdit);
-        parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
-        assertSame(Boolean.FALSE, parameter);
-        
-        // reset the parameter
-        setRequest.setParameter("approved", null); //$NON-NLS-1$
-        
-        command = EmployeeType.EMPLOYEE.getEditHelper().getEditCommand(setRequest);
-        assertNull(command);
-        parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
-        assertSame(Boolean.FALSE, parameter);
-    }
+	/**
+	 * Tests that edit helper advice is consulted to approve edit requests.
+	 */
+	@Test
+	public void test_approveRequest_133160() {
+
+		// Request is approved by the FinanceEditHelperAdvice
+		SetRequest setRequest = new SetRequest(financeEmployee, getEmployeePackage().getEmployee_Band(),
+				Band.SENIOR_LITERAL);
+
+		boolean canEdit = EmployeeType.EMPLOYEE.getEditHelper().canEdit(setRequest);
+		assertTrue(canEdit);
+		Object parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
+		assertSame(Boolean.TRUE, parameter);
+
+		// reset the parameter
+		setRequest.setParameter("approved", null); //$NON-NLS-1$
+
+		ICommand command = EmployeeType.EMPLOYEE.getEditHelper().getEditCommand(setRequest);
+		assertNotNull(command);
+		assertTrue(command.canExecute());
+		parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
+		assertSame(Boolean.TRUE, parameter);
+
+		// Request is not approved by the FinanceEditHelperAdvice
+		setRequest = new SetRequest(financeEmployee, getEmployeePackage().getEmployee_Band(), Band.DIRECTOR_LITERAL);
+
+		canEdit = EmployeeType.EMPLOYEE.getEditHelper().canEdit(setRequest);
+		assertFalse(canEdit);
+		parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
+		assertSame(Boolean.FALSE, parameter);
+
+		// reset the parameter
+		setRequest.setParameter("approved", null); //$NON-NLS-1$
+
+		command = EmployeeType.EMPLOYEE.getEditHelper().getEditCommand(setRequest);
+		assertNull(command);
+		parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
+		assertSame(Boolean.FALSE, parameter);
+	}
 }

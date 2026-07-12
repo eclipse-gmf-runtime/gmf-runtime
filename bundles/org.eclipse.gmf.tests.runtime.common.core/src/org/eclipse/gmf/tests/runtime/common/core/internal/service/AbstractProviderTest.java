@@ -7,172 +7,165 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.core.internal.service;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProviderChangeListener;
 import org.eclipse.gmf.runtime.common.core.service.ProviderChangeEvent;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+public class AbstractProviderTest {
 
-public class AbstractProviderTest extends TestCase {
+	protected static class Fixture extends AbstractProvider {
 
-    protected static class Fixture extends AbstractProvider {
+		protected Fixture() {
+			super();
+		}
 
-        protected Fixture() {
-            super();
-        }
+		@Override
+		protected void fireProviderChange(ProviderChangeEvent event) {
+			super.fireProviderChange(event);
+		}
 
-        protected void fireProviderChange(ProviderChangeEvent event) {
-            super.fireProviderChange(event);
-        }
+		@Override
+		public boolean provides(IOperation operation) {
+			return true;
+		}
 
-        public boolean provides(IOperation operation) {
-            return true;
-        }
+	}
 
-    }
+	private Fixture fixture = null;
 
-    private Fixture fixture = null;
+	private Exception exception = null;
 
-    private Exception exception = null;
+	protected Fixture getFixture() {
+		return fixture;
+	}
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	private void setFixture(Fixture fixture) {
+		this.fixture = fixture;
+	}
 
-    public static Test suite() {
-        return new TestSuite(AbstractProviderTest.class);
-    }
+	protected Exception getException() {
+		return exception;
+	}
 
-    public AbstractProviderTest(String name) {
-        super(name);
-    }
+	protected void setException(Exception exception) {
+		this.exception = exception;
+	}
 
-    protected Fixture getFixture() {
-        return fixture;
-    }
+	@BeforeEach
+	public void setUp() {
+		setFixture(new Fixture());
+	}
 
-    private void setFixture(Fixture fixture) {
-        this.fixture = fixture;
-    }
+	@Test
+	public void test_add_remove_ProviderChangeListener() {
+		IProviderChangeListener listener = new IProviderChangeListener() {
+			@Override
+			public final void providerChanged(ProviderChangeEvent event) {
+				throw new RuntimeException();
+			}
+		};
 
-    protected Exception getException() {
-        return exception;
-    }
+		getFixture().addProviderChangeListener(listener);
+		try {
+			getFixture().fireProviderChange(new ProviderChangeEvent(getFixture()));
+			fail();
+		} catch (Exception e) {
+			// Nothing to do
+		}
 
-    protected void setException(Exception exception) {
-        this.exception = exception;
-    }
+		getFixture().removeProviderChangeListener(listener);
+		try {
+			getFixture().fireProviderChange(new ProviderChangeEvent(getFixture()));
+		} catch (Exception e) {
+			fail();
+		}
+	}
 
-    protected void setUp() {
-        setFixture(new Fixture());
-    }
+	@Test
+	public void test_fireProviderChange() {
+		final int count = 99;
 
-    public void test_add_remove_ProviderChangeListener() {
-        IProviderChangeListener listener = new IProviderChangeListener() {
-            public final void providerChanged(ProviderChangeEvent event) {
-                throw new RuntimeException();
-            }
-        };
+		final IProviderChangeListener[] listeners = new IProviderChangeListener[count];
 
-        getFixture().addProviderChangeListener(listener);
-        try {
-            getFixture().fireProviderChange(
-                new ProviderChangeEvent(getFixture()));
-            fail();
-        } catch (Exception e) {
-        	// Nothing to do
-        }
+		for (int i = 0; i < count; i++) {
+			listeners[i] = new IProviderChangeListener() {
+				@Override
+				public void providerChanged(ProviderChangeEvent event) {
+					// Nothing to do
+				}
+			};
+		}
 
-        getFixture().removeProviderChangeListener(listener);
-        try {
-            getFixture().fireProviderChange(
-                new ProviderChangeEvent(getFixture()));
-        } catch (Exception e) {
-            fail();
-        }
-    }
+		Thread addThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = 0; i < count; i++) {
+					getFixture().addProviderChangeListener(listeners[i]);
 
-    public void test_fireProviderChange() {
-        final int count = 99;
+					if (null != getException()) {
+						break;
+					}
+				}
+			}
+		});
+		addThread.start();
 
-        final IProviderChangeListener[] listeners =
-            new IProviderChangeListener[count];
+		Thread fireThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ProviderChangeEvent event = new ProviderChangeEvent(getFixture());
 
-        for (int i = 0; i < count; i++) {
-            listeners[i] = new IProviderChangeListener() {
-                public void providerChanged(ProviderChangeEvent event) {
-                	//Nothing to do 	
-                }
-            };
-        }
+				try {
+					for (int i = 0; i < count; i++) {
+						getFixture().fireProviderChange(event);
 
-        Thread addThread = new Thread(new Runnable() {
-            public void run() {
-                for (int i = 0; i < count; i++) {
-                    getFixture().addProviderChangeListener(listeners[i]);
+						try {
+							Thread.sleep(1);
+						} catch (InterruptedException ie) {
+							// Nothing to do
+						}
 
-                    if (null != getException()) {
-                        break;
-                    }
-                }
-            }
-        });
-        addThread.start();
+					}
+				} catch (Exception e) {
+					setException(e);
+				}
+			}
+		});
+		fireThread.start();
 
-        Thread fireThread = new Thread(new Runnable() {
-            public void run() {
-                ProviderChangeEvent event =
-                    new ProviderChangeEvent(getFixture());
+		Thread removeThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = 0; i < count; i++) {
+					getFixture().removeProviderChangeListener(listeners[i]);
 
-                try {
-                    for (int i = 0; i < count; i++) {
-                        getFixture().fireProviderChange(event);
+					if (null != getException()) {
+						break;
+					}
+				}
+			}
+		});
+		removeThread.start();
 
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException ie) {
-                        	//Nothing to do	
-                        }
+		try {
+			fireThread.join();
+		} catch (InterruptedException ie) {
+			setException(ie);
+		}
 
-                    }
-                } catch (Exception e) {
-                    setException(e);
-                }
-            }
-        });
-        fireThread.start();
-
-        Thread removeThread = new Thread(new Runnable() {
-            public void run() {
-                for (int i = 0; i < count; i++) {
-                    getFixture().removeProviderChangeListener(listeners[i]);
-
-                    if (null != getException()) {
-                        break;
-                    }
-                }
-            }
-        });
-        removeThread.start();
-
-        try {
-            fireThread.join();
-        } catch (InterruptedException ie) {
-            setException(ie);
-        }
-
-        if (null != getException()) {
-            fail();
-        }
-    }
+		if (null != getException()) {
+			fail();
+		}
+	}
 
 }

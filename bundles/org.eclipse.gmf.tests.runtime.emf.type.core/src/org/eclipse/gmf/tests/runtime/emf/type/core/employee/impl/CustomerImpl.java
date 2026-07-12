@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
@@ -28,17 +28,21 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Customer;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Customer</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object
+ * '<em><b>Customer</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getAddress <em>Address</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getRepresentatives <em>Representatives</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getSubsidiaries <em>Subsidiaries</em>}</li>
- *   <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getParent <em>Parent</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getName
+ * <em>Name</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getAddress
+ * <em>Address</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getRepresentatives
+ * <em>Representatives</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getSubsidiaries
+ * <em>Subsidiaries</em>}</li>
+ * <li>{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.CustomerImpl#getParent
+ * <em>Parent</em>}</li>
  * </ul>
  * </p>
  *
@@ -46,9 +50,9 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
  */
 public class CustomerImpl extends EModelElementImpl implements Customer {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -56,9 +60,9 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -67,8 +71,8 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 
 	/**
 	 * The default value of the '{@link #getAddress() <em>Address</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getAddress()
 	 * @generated
 	 * @ordered
@@ -77,8 +81,8 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 
 	/**
 	 * The cached value of the '{@link #getAddress() <em>Address</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getAddress()
 	 * @generated
 	 * @ordered
@@ -86,9 +90,10 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 	protected String address = ADDRESS_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getRepresentatives() <em>Representatives</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRepresentatives()
+	 * <em>Representatives</em>}' containment reference list. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRepresentatives()
 	 * @generated
 	 * @ordered
@@ -96,9 +101,9 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 	protected EList representatives = null;
 
 	/**
-	 * The cached value of the '{@link #getSubsidiaries() <em>Subsidiaries</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSubsidiaries() <em>Subsidiaries</em>}'
+	 * containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSubsidiaries()
 	 * @generated
 	 * @ordered
@@ -106,8 +111,8 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 	protected EList subsidiaries = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected CustomerImpl() {
@@ -115,273 +120,309 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return EmployeePackage.Literals.CUSTOMER;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.CUSTOMER__NAME, oldName, name));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String getAddress() {
 		return address;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void setAddress(String newAddress) {
 		String oldAddress = address;
 		address = newAddress;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.CUSTOMER__ADDRESS, oldAddress, address));
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.CUSTOMER__ADDRESS, oldAddress,
+					address));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public EList getRepresentatives() {
 		if (representatives == null) {
-			representatives = new EObjectContainmentWithInverseEList(Client.class, this, EmployeePackage.CUSTOMER__REPRESENTATIVES, EmployeePackage.CLIENT__REPRESENTS);
+			representatives = new EObjectContainmentWithInverseEList(Client.class, this,
+					EmployeePackage.CUSTOMER__REPRESENTATIVES, EmployeePackage.CLIENT__REPRESENTS);
 		}
 		return representatives;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public EList getSubsidiaries() {
 		if (subsidiaries == null) {
-			subsidiaries = new EObjectContainmentWithInverseEList(Customer.class, this, EmployeePackage.CUSTOMER__SUBSIDIARIES, EmployeePackage.CUSTOMER__PARENT);
+			subsidiaries = new EObjectContainmentWithInverseEList(Customer.class, this,
+					EmployeePackage.CUSTOMER__SUBSIDIARIES, EmployeePackage.CUSTOMER__PARENT);
 		}
 		return subsidiaries;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Customer getParent() {
-		if (eContainerFeatureID() != EmployeePackage.CUSTOMER__PARENT) return null;
-		return (Customer)eContainer();
+		if (eContainerFeatureID() != EmployeePackage.CUSTOMER__PARENT) {
+			return null;
+		}
+		return (Customer) eContainer();
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetParent(Customer newParent, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject)newParent, EmployeePackage.CUSTOMER__PARENT, msgs);
+		msgs = eBasicSetContainer((InternalEObject) newParent, EmployeePackage.CUSTOMER__PARENT, msgs);
 		return msgs;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void setParent(Customer newParent) {
-		if (newParent != eInternalContainer() || (eContainerFeatureID() != EmployeePackage.CUSTOMER__PARENT && newParent != null)) {
-			if (EcoreUtil.isAncestor(this, newParent))
+		if (newParent != eInternalContainer()
+				|| (eContainerFeatureID() != EmployeePackage.CUSTOMER__PARENT && newParent != null)) {
+			if (EcoreUtil.isAncestor(this, newParent)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
-			if (newParent != null)
-				msgs = ((InternalEObject)newParent).eInverseAdd(this, EmployeePackage.CUSTOMER__SUBSIDIARIES, Customer.class, msgs);
+			}
+			if (newParent != null) {
+				msgs = ((InternalEObject) newParent).eInverseAdd(this, EmployeePackage.CUSTOMER__SUBSIDIARIES,
+						Customer.class, msgs);
+			}
 			msgs = basicSetParent(newParent, msgs);
-			if (msgs != null) msgs.dispatch();
+			if (msgs != null) {
+				msgs.dispatch();
+			}
+		} else if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.CUSTOMER__PARENT, newParent,
+					newParent));
 		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.CUSTOMER__PARENT, newParent, newParent));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case EmployeePackage.CUSTOMER__REPRESENTATIVES:
-				return ((InternalEList)getRepresentatives()).basicAdd(otherEnd, msgs);
-			case EmployeePackage.CUSTOMER__SUBSIDIARIES:
-				return ((InternalEList)getSubsidiaries()).basicAdd(otherEnd, msgs);
-			case EmployeePackage.CUSTOMER__PARENT:
-				if (eInternalContainer() != null)
-					msgs = eBasicRemoveFromContainer(msgs);
-				return basicSetParent((Customer)otherEnd, msgs);
+		case EmployeePackage.CUSTOMER__REPRESENTATIVES:
+			return ((InternalEList) getRepresentatives()).basicAdd(otherEnd, msgs);
+		case EmployeePackage.CUSTOMER__SUBSIDIARIES:
+			return ((InternalEList) getSubsidiaries()).basicAdd(otherEnd, msgs);
+		case EmployeePackage.CUSTOMER__PARENT:
+			if (eInternalContainer() != null) {
+				msgs = eBasicRemoveFromContainer(msgs);
+			}
+			return basicSetParent((Customer) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case EmployeePackage.CUSTOMER__REPRESENTATIVES:
-				return ((InternalEList)getRepresentatives()).basicRemove(otherEnd, msgs);
-			case EmployeePackage.CUSTOMER__SUBSIDIARIES:
-				return ((InternalEList)getSubsidiaries()).basicRemove(otherEnd, msgs);
-			case EmployeePackage.CUSTOMER__PARENT:
-				return basicSetParent(null, msgs);
+		case EmployeePackage.CUSTOMER__REPRESENTATIVES:
+			return ((InternalEList) getRepresentatives()).basicRemove(otherEnd, msgs);
+		case EmployeePackage.CUSTOMER__SUBSIDIARIES:
+			return ((InternalEList) getSubsidiaries()).basicRemove(otherEnd, msgs);
+		case EmployeePackage.CUSTOMER__PARENT:
+			return basicSetParent(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-			case EmployeePackage.CUSTOMER__PARENT:
-				return eInternalContainer().eInverseRemove(this, EmployeePackage.CUSTOMER__SUBSIDIARIES, Customer.class, msgs);
+		case EmployeePackage.CUSTOMER__PARENT:
+			return eInternalContainer().eInverseRemove(this, EmployeePackage.CUSTOMER__SUBSIDIARIES, Customer.class,
+					msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case EmployeePackage.CUSTOMER__NAME:
-				return getName();
-			case EmployeePackage.CUSTOMER__ADDRESS:
-				return getAddress();
-			case EmployeePackage.CUSTOMER__REPRESENTATIVES:
-				return getRepresentatives();
-			case EmployeePackage.CUSTOMER__SUBSIDIARIES:
-				return getSubsidiaries();
-			case EmployeePackage.CUSTOMER__PARENT:
-				return getParent();
+		case EmployeePackage.CUSTOMER__NAME:
+			return getName();
+		case EmployeePackage.CUSTOMER__ADDRESS:
+			return getAddress();
+		case EmployeePackage.CUSTOMER__REPRESENTATIVES:
+			return getRepresentatives();
+		case EmployeePackage.CUSTOMER__SUBSIDIARIES:
+			return getSubsidiaries();
+		case EmployeePackage.CUSTOMER__PARENT:
+			return getParent();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case EmployeePackage.CUSTOMER__NAME:
-				setName((String)newValue);
-				return;
-			case EmployeePackage.CUSTOMER__ADDRESS:
-				setAddress((String)newValue);
-				return;
-			case EmployeePackage.CUSTOMER__REPRESENTATIVES:
-				getRepresentatives().clear();
-				getRepresentatives().addAll((Collection)newValue);
-				return;
-			case EmployeePackage.CUSTOMER__SUBSIDIARIES:
-				getSubsidiaries().clear();
-				getSubsidiaries().addAll((Collection)newValue);
-				return;
-			case EmployeePackage.CUSTOMER__PARENT:
-				setParent((Customer)newValue);
-				return;
+		case EmployeePackage.CUSTOMER__NAME:
+			setName((String) newValue);
+			return;
+		case EmployeePackage.CUSTOMER__ADDRESS:
+			setAddress((String) newValue);
+			return;
+		case EmployeePackage.CUSTOMER__REPRESENTATIVES:
+			getRepresentatives().clear();
+			getRepresentatives().addAll((Collection) newValue);
+			return;
+		case EmployeePackage.CUSTOMER__SUBSIDIARIES:
+			getSubsidiaries().clear();
+			getSubsidiaries().addAll((Collection) newValue);
+			return;
+		case EmployeePackage.CUSTOMER__PARENT:
+			setParent((Customer) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case EmployeePackage.CUSTOMER__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case EmployeePackage.CUSTOMER__ADDRESS:
-				setAddress(ADDRESS_EDEFAULT);
-				return;
-			case EmployeePackage.CUSTOMER__REPRESENTATIVES:
-				getRepresentatives().clear();
-				return;
-			case EmployeePackage.CUSTOMER__SUBSIDIARIES:
-				getSubsidiaries().clear();
-				return;
-			case EmployeePackage.CUSTOMER__PARENT:
-				setParent((Customer)null);
-				return;
+		case EmployeePackage.CUSTOMER__NAME:
+			setName(NAME_EDEFAULT);
+			return;
+		case EmployeePackage.CUSTOMER__ADDRESS:
+			setAddress(ADDRESS_EDEFAULT);
+			return;
+		case EmployeePackage.CUSTOMER__REPRESENTATIVES:
+			getRepresentatives().clear();
+			return;
+		case EmployeePackage.CUSTOMER__SUBSIDIARIES:
+			getSubsidiaries().clear();
+			return;
+		case EmployeePackage.CUSTOMER__PARENT:
+			setParent((Customer) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case EmployeePackage.CUSTOMER__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case EmployeePackage.CUSTOMER__ADDRESS:
-				return ADDRESS_EDEFAULT == null ? address != null : !ADDRESS_EDEFAULT.equals(address);
-			case EmployeePackage.CUSTOMER__REPRESENTATIVES:
-				return representatives != null && !representatives.isEmpty();
-			case EmployeePackage.CUSTOMER__SUBSIDIARIES:
-				return subsidiaries != null && !subsidiaries.isEmpty();
-			case EmployeePackage.CUSTOMER__PARENT:
-				return getParent() != null;
+		case EmployeePackage.CUSTOMER__NAME:
+			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+		case EmployeePackage.CUSTOMER__ADDRESS:
+			return ADDRESS_EDEFAULT == null ? address != null : !ADDRESS_EDEFAULT.equals(address);
+		case EmployeePackage.CUSTOMER__REPRESENTATIVES:
+			return representatives != null && !representatives.isEmpty();
+		case EmployeePackage.CUSTOMER__SUBSIDIARIES:
+			return subsidiaries != null && !subsidiaries.isEmpty();
+		case EmployeePackage.CUSTOMER__PARENT:
+			return getParent() != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy()) {
+			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
@@ -392,4 +433,4 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 		return result.toString();
 	}
 
-} //CustomerImpl
+} // CustomerImpl

@@ -7,10 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.services.action.internal.filter;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.AbstractOperation;
@@ -30,17 +33,14 @@ import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFilterProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.TestAttributeOperation;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author khussey
  *
  */
-public class ActionFilterServiceTest extends TestCase {
+public class ActionFilterServiceTest {
 
 	public class ActionFilterProvider extends AbstractActionFilterProvider {
 
@@ -63,17 +63,15 @@ public class ActionFilterServiceTest extends TestCase {
 			return value;
 		}
 
+		@Override
 		public boolean provides(IOperation operation) {
 			TestAttributeOperation tao = (TestAttributeOperation) operation;
 
-			return tao.getName().equals(getName())
-				&& tao.getValue().equals(getValue());
+			return tao.getName().equals(getName()) && tao.getValue().equals(getValue());
 		}
 
-		public boolean testAttribute(
-			Object target,
-			String nam,
-			String val) {
+		@Override
+		public boolean testAttribute(Object target, String nam, String val) {
 
 			return String.valueOf(target).equals(val);
 		}
@@ -82,8 +80,7 @@ public class ActionFilterServiceTest extends TestCase {
 
 	protected static class Fixture extends ActionFilterService {
 
-		protected static class ProviderDescriptor
-			extends ActionFilterService.ProviderDescriptor {
+		protected static class ProviderDescriptor extends ActionFilterService.ProviderDescriptor {
 
 			protected ProviderDescriptor(IProvider provider) {
 				super(null);
@@ -92,14 +89,17 @@ public class ActionFilterServiceTest extends TestCase {
 				provider.addProviderChangeListener(this);
 			}
 
+			@Override
 			public IProvider getProvider() {
 				return provider;
 			}
 
+			@Override
 			protected IProviderPolicy getPolicy() {
 				return null;
 			}
 
+			@Override
 			public boolean provides(IOperation operation) {
 				return getProvider().provides(operation);
 			}
@@ -110,15 +110,12 @@ public class ActionFilterServiceTest extends TestCase {
 			super();
 		}
 
-		protected void addFixtureProvider(
-			ProviderPriority priority,
-			Service.ProviderDescriptor provider) {
+		protected void addFixtureProvider(ProviderPriority priority, Service.ProviderDescriptor provider) {
 
 			super.addProvider(priority, provider);
 		}
 
-		protected void removeFixtureProvider(
-			Service.ProviderDescriptor provider) {
+		protected void removeFixtureProvider(Service.ProviderDescriptor provider) {
 
 			super.removeProvider(provider);
 		}
@@ -126,18 +123,6 @@ public class ActionFilterServiceTest extends TestCase {
 	}
 
 	private Fixture fixture = null;
-
-	public ActionFilterServiceTest(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(ActionFilterServiceTest.class);
-	}
 
 	protected Fixture getFixture() {
 		return fixture;
@@ -147,12 +132,13 @@ public class ActionFilterServiceTest extends TestCase {
 		this.fixture = fixture;
 	}
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		setFixture(new Fixture());
 	}
 
 	public void ignore_testAttribute() {
-        
+
 		String prefix = "@"; //$NON-NLS-1$
 
 		String zero = "zero"; //$NON-NLS-1$
@@ -160,88 +146,74 @@ public class ActionFilterServiceTest extends TestCase {
 
 		assertTrue(!getFixture().testAttribute(zero, prefix + getName(), zero));
 
+		IOperationHistory history = ActionManager.getDefault().getOperationHistory();
+		IUndoableOperation operation = new AbstractOperation("ActionFilterServiceTest") { //$NON-NLS-1$
 
-        IOperationHistory history = ActionManager.getDefault().getOperationHistory();
-        IUndoableOperation operation = new AbstractOperation(
-            "ActionFilterServiceTest") { //$NON-NLS-1$
+			@Override
+			public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+				return Status.OK_STATUS;
+			}
 
-            public IStatus execute(IProgressMonitor monitor, IAdaptable info)
-                throws ExecutionException {
-                return Status.OK_STATUS;
-            }
+			@Override
+			public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+				return Status.OK_STATUS;
+			}
 
-            public IStatus redo(IProgressMonitor monitor, IAdaptable info)
-                throws ExecutionException {
-                return Status.OK_STATUS;
-            }
+			@Override
+			public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+				return Status.OK_STATUS;
+			}
+		};
 
-            public IStatus undo(IProgressMonitor monitor, IAdaptable info)
-                throws ExecutionException {
-                return Status.OK_STATUS;
-            }
-        };
-        
-		ActionFilterProvider provider0 =
-			new ActionFilterProvider(getName(), zero);
-		Fixture.ProviderDescriptor providerDescriptor0 =
-			new Fixture.ProviderDescriptor(provider0);
-		getFixture().addFixtureProvider(
-			ProviderPriority.HIGHEST,
-			providerDescriptor0);
+		ActionFilterProvider provider0 = new ActionFilterProvider(getName(), zero);
+		Fixture.ProviderDescriptor providerDescriptor0 = new Fixture.ProviderDescriptor(provider0);
+		getFixture().addFixtureProvider(ProviderPriority.HIGHEST, providerDescriptor0);
 
 		assertTrue(!getFixture().testAttribute(zero, prefix + getName(), zero));
 
-        try {
-            history.execute(operation, new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
-        history.dispose(
-            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
+		try {
+			history.execute(operation, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+		history.dispose(IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(getFixture().testAttribute(zero, prefix + getName(), zero));
 		assertTrue(getFixture().testAttribute(one, prefix + getName(), zero));
 
-        try {
-            history.execute(operation, new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
-        
-        history.dispose(
-            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
+		try {
+			history.execute(operation, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+
+		history.dispose(IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(!getFixture().testAttribute(one, prefix + getName(), zero));
 		assertTrue(!getFixture().testAttribute(one, prefix + getName(), one));
 
-		ActionFilterProvider provider1 =
-			new ActionFilterProvider(getName(), one);
-		Fixture.ProviderDescriptor providerDescriptor1 =
-			new Fixture.ProviderDescriptor(provider1);
-		getFixture().addFixtureProvider(
-			ProviderPriority.LOWEST,
-			providerDescriptor1);
+		ActionFilterProvider provider1 = new ActionFilterProvider(getName(), one);
+		Fixture.ProviderDescriptor providerDescriptor1 = new Fixture.ProviderDescriptor(provider1);
+		getFixture().addFixtureProvider(ProviderPriority.LOWEST, providerDescriptor1);
 
 		assertTrue(!getFixture().testAttribute(one, prefix + getName(), one));
 
-        try {
-            history.execute(operation, new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
-        history.dispose(
-            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
+		try {
+			history.execute(operation, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+		history.dispose(IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(getFixture().testAttribute(one, prefix + getName(), one));
 		assertTrue(getFixture().testAttribute(zero, prefix + getName(), one));
 
-        try {
-            history.execute(operation, new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
-        history.dispose(
-            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
+		try {
+			history.execute(operation, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+		history.dispose(IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(!getFixture().testAttribute(zero, prefix + getName(), one));
 		assertTrue(getFixture().testAttribute(zero, prefix + getName(), zero));
@@ -250,20 +222,25 @@ public class ActionFilterServiceTest extends TestCase {
 
 		assertTrue(getFixture().testAttribute(zero, prefix + getName(), zero));
 
-        try {
-            history.execute(operation, new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
-        history.dispose(
-            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
+		try {
+			history.execute(operation, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+		history.dispose(IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(!getFixture().testAttribute(zero, prefix + getName(), zero));
 
 	}
 
+	@Test
 	public void test_testNothing() {
-		// There is a NPE in org.eclipse.e4.core.internal.di.MethodRequestor.execute when running
+		// There is a NPE in org.eclipse.e4.core.internal.di.MethodRequestor.execute
+		// when running
 		// the test_testAttribute() test, run no tests for now.
+	}
+
+	protected String getName() {
+		return this.getClass().getSimpleName();
 	}
 }

@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.preferences;
 
@@ -19,31 +18,33 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
-/**
- * Initializes the preference values for the geo shapes Diagram Editor.
+ * /** Initializes the preference values for the geo shapes Diagram Editor.
+ * 
  * @author mmostafa
  */
 
-public class GeoshapesPreferenceInitializer
-    extends DiagramPreferenceInitializer {
+public class GeoshapesPreferenceInitializer extends DiagramPreferenceInitializer {
 
-    public void initializeDefaultPreferences() {
-        super.initializeDefaultPreferences();
-        // Resetting AntiAliase settings in the geo shapes preference store 
-        IPreferenceStore store = getPreferenceStore(); 
-        // Anti Aliasing was turned off in fix Bugzilla 137155 
-        // Since Bugzilla 204012 is resolved, we can turn on again.
-        // This class should be removed, but leaving in case we need it again.
-        store.setDefault(IPreferenceConstants.PREF_ENABLE_ANTIALIAS, true);
-    }
+	@Override
+	public void initializeDefaultPreferences() {
+		super.initializeDefaultPreferences();
+		// Resetting AntiAliase settings in the geo shapes preference store
+		IPreferenceStore store = getPreferenceStore();
+		// Anti Aliasing was turned off in fix Bugzilla 137155
+		// Since Bugzilla 204012 is resolved, we can turn on again.
+		// This class should be removed, but leaving in case we need it again.
+		store.setDefault(IPreferenceConstants.PREF_ENABLE_ANTIALIAS, true);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gmf.runtime.diagram.ui.internal.preferences.DiagramPreferenceInitializer#getPreferenceStore()
-     */
-    protected IPreferenceStore getPreferenceStore() {
-        return DiagramPlugin.getInstance().getPreferenceStore();
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.preferences.
+	 * DiagramPreferenceInitializer#getPreferenceStore()
+	 */
+	@Override
+	protected IPreferenceStore getPreferenceStore() {
+		return DiagramPlugin.getInstance().getPreferenceStore();
+	}
 
 }

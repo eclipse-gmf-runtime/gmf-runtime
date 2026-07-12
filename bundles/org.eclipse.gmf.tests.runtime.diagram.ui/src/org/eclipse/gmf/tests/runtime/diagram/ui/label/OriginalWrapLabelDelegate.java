@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.label;
@@ -21,119 +21,144 @@ import org.eclipse.swt.graphics.Image;
  * @author crevells
  * @deprecated
  */
-public class OriginalWrapLabelDelegate
-    extends ILabelDelegate.Stub {
+@Deprecated
+public class OriginalWrapLabelDelegate extends ILabelDelegate.Stub {
 
-    private OriginalWrapLabel label;
+	private OriginalWrapLabel label;
 
-    public OriginalWrapLabelDelegate(OriginalWrapLabel wrapLabel) {
-        this.label = wrapLabel;
-    }
+	public OriginalWrapLabelDelegate(OriginalWrapLabel wrapLabel) {
+		this.label = wrapLabel;
+	}
 
-    public String getText() {
-        return label.getText();
-    }
+	@Override
+	public String getText() {
+		return label.getText();
+	}
 
-    public void setIcon(Image image) {
-        label.setIcon(image);
-    }
+	public void setIcon(Image image) {
+		label.setIcon(image);
+	}
 
-    public void setIcon(Image image, int index) {
-        label.setIcon(image, index);
-    }
+	@Override
+	public void setIcon(Image image, int index) {
+		label.setIcon(image, index);
+	}
 
-    public void setAlignment(int right) {
-        label.setLabelAlignment(right);
-    }
+	@Override
+	public void setAlignment(int right) {
+		label.setLabelAlignment(right);
+	}
 
-    public void setText(String text) {
-        label.setText(text);
-    }
+	@Override
+	public void setText(String text) {
+		label.setText(text);
+	}
 
-    public void setTextStrikeThrough(boolean strikeThrough) {
-        label.setTextStrikeThrough(strikeThrough);
-    }
+	@Override
+	public void setTextStrikeThrough(boolean strikeThrough) {
+		label.setTextStrikeThrough(strikeThrough);
+	}
 
-    public void setTextUnderline(boolean underline) {
-        label.setTextUnderline(underline);
-    }
+	@Override
+	public void setTextUnderline(boolean underline) {
+		label.setTextUnderline(underline);
+	}
 
-    public int getTextJustification() {
-        return label.getTextWrapAlignment();
-    }
+	@Override
+	public int getTextJustification() {
+		return label.getTextWrapAlignment();
+	}
 
-    public void setTextJustification(int justification) {
-        label.setTextWrapAlignment(justification);
-    }
+	@Override
+	public void setTextJustification(int justification) {
+		label.setTextWrapAlignment(justification);
+	}
 
-    public void setFocus(boolean b) {
-        label.setFocus(b);
-    }
+	@Override
+	public void setFocus(boolean b) {
+		label.setFocus(b);
+	}
 
-    public void setSelected(boolean b) {
-        label.setSelected(b);
-    }
+	@Override
+	public void setSelected(boolean b) {
+		label.setSelected(b);
+	}
 
-    public void setTextAlignment(int alignment) {
-        label.setTextAlignment(alignment);
-    }
+	@Override
+	public void setTextAlignment(int alignment) {
+		label.setTextAlignment(alignment);
+	}
 
-    public void setIconAlignment(int alignment) {
-        label.setIconAlignment(alignment);
-    }
+	@Override
+	public void setIconAlignment(int alignment) {
+		label.setIconAlignment(alignment);
+	}
 
-    public boolean isTextWrapOn() {
-        return label.isTextWrapped();
-    }
+	@Override
+	public boolean isTextWrapOn() {
+		return label.isTextWrapped();
+	}
 
-    public Rectangle getTextBounds() {
-        Rectangle rect = label.getTextBounds();
-        label.translateToAbsolute(rect);
-        return rect;
-    }
+	@Override
+	public Rectangle getTextBounds() {
+		Rectangle rect = label.getTextBounds();
+		label.translateToAbsolute(rect);
+		return rect;
+	}
 
-    public void setTextPlacement(int placement) {
-        label.setTextPlacement(placement);
-    }
+	@Override
+	public void setTextPlacement(int placement) {
+		label.setTextPlacement(placement);
+	}
 
-    public void setTextWrapOn(boolean textWrappingOn) {
-        label.setTextWrap(textWrappingOn);
-    }
-    
-    public Image getIcon(int index) {
-        return label.getIcon(index);
-    }
+	@Override
+	public void setTextWrapOn(boolean textWrappingOn) {
+		label.setTextWrap(textWrappingOn);
+	}
 
-    public int getIconAlignment() {
-        return label.getIconAlignment();
-    }
+	@Override
+	public Image getIcon(int index) {
+		return label.getIcon(index);
+	}
 
-    public int getTextAlignment() {
-        return label.getTextAlignment();
-    }
+	@Override
+	public int getIconAlignment() {
+		return label.getIconAlignment();
+	}
 
-    public int getTextPlacement() {
-        return label.getTextPlacement();
-    }
+	@Override
+	public int getTextAlignment() {
+		return label.getTextAlignment();
+	}
 
-    public boolean hasFocus() {
-        return label.hasFocus();
-    }
+	@Override
+	public int getTextPlacement() {
+		return label.getTextPlacement();
+	}
 
-    public boolean isSelected() {
-        return label.isSelected();
-    }
+	@Override
+	public boolean hasFocus() {
+		return label.hasFocus();
+	}
 
-    public boolean isTextStrikedThrough() {
-        return label.isTextStrikedThrough();
-    }
+	@Override
+	public boolean isSelected() {
+		return label.isSelected();
+	}
 
-    public boolean isTextUnderlined() {
-        return label.isTextUnderlined();
-    }
+	@Override
+	public boolean isTextStrikedThrough() {
+		return label.isTextStrikedThrough();
+	}
 
-    public int getAlignment() {
-        return label.getLabelAlignment();
-    }
-    
+	@Override
+	public boolean isTextUnderlined() {
+		return label.isTextUnderlined();
+	}
+
+	@Override
+	public int getAlignment() {
+		return label.getLabelAlignment();
+	}
+
 }

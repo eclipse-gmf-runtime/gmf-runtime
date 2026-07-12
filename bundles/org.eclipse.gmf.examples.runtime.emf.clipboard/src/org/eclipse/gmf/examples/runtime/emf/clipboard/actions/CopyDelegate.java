@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.emf.clipboard.actions;
 
@@ -19,13 +18,10 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.Transfer;
 
-
-
 /**
  * Action delegate for the Library-metamodel-aware Copy action.
  */
-public class CopyDelegate
-	extends AbstractClipboardDelegate {
+public class CopyDelegate extends AbstractClipboardDelegate {
 
 	/**
 	 * Initializes me.
@@ -35,22 +31,19 @@ public class CopyDelegate
 	}
 
 	/**
-	 * Copies the selected elements to the clipboard, in string form.  No hints
-	 * are required for the copy operation.
+	 * Copies the selected elements to the clipboard, in string form. No hints are
+	 * required for the copy operation.
 	 */
+	@Override
 	protected void doRun(Clipboard clipboard) {
-		String clipString = ClipboardUtil.copyElementsToString(
-			getSelectedObjects(),
-			null,
-			null);
-		
+		String clipString = ClipboardUtil.copyElementsToString(getSelectedObjects(), null, null);
+
 		if (clipString == null) {
 			return;
 		}
-		
+
 		// use the customer EMF data transfer type provided by this plug-in
-		clipboard.setContents(
-			new EmfTransferType[] {new EmfTransferType(clipString)},
-			new Transfer[] {EmfTransfer.getInstance()});
+		clipboard.setContents(new EmfTransferType[] { new EmfTransferType(clipString) },
+				new Transfer[] { EmfTransfer.getInstance() });
 	}
 }

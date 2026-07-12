@@ -7,10 +7,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -43,43 +44,34 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFix
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+import org.junit.jupiter.api.Test;
 
 /**
- * Tests the canonical editpolicies installed on the class attribute and 
+ * Tests the canonical editpolicies installed on the class attribute and
  * operation list compartments.
+ * 
  * @author mhanner
  */
 public class LogicCreationTests extends AbstractTestBase {
 
 	/**
 	 * Defines the statechart diagram test suite.
-	 * 
+	 *
 	 * @return the test suite.
 	 */
-	public static Test suite() {
-		TestSuite s = new TestSuite(LogicCreationTests.class);
-		return s;
-	}
-	
-	/** Create an instance. */
-	public LogicCreationTests() {
-		super("Logic Shape Creation Test Suite");//$NON-NLS-1$
-	}
 
 	/** installs the composite state test fixture. */
+	@Override
 	protected void setTestFixture() {
 		testFixture = new LogicTestFixture();
 	}
-	
+
 	/** Return <code>(CanonicalTestFixture)getTestFixture();</code> */
 	protected AbstractPresentationTestFixture getLogicTestFixture() {
-		return (AbstractPresentationTestFixture)getTestFixture();
+		return (AbstractPresentationTestFixture) getTestFixture();
 	}
-	
+
+	@Test
 	public void test_createLogicShapes() {
 		Rectangle rect = new Rectangle(getDiagramEditPart().getFigure().getBounds());
 		getDiagramEditPart().getFigure().translateToAbsolute(rect);
@@ -89,40 +81,46 @@ public class LogicCreationTests extends AbstractTestBase {
 		IElementType typeXorGate = ElementTypeRegistry.getInstance().getType("logic.xorgate"); //$NON-NLS-1$
 		IElementType typeFlowContainer = ElementTypeRegistry.getInstance().getType("logic.flowcontainer"); //$NON-NLS-1$
 		IElementType typeOrGate = ElementTypeRegistry.getInstance().getType("logic.orgate"); //$NON-NLS-1$
-		
+
 		Point createPt = new Point(100, 100);
-		LEDEditPart ledEP = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, createPt, getDiagramEditPart());
+		LEDEditPart ledEP = (LEDEditPart) getLogicTestFixture().createShapeUsingTool(typeLED, createPt,
+				getDiagramEditPart());
 		createPt.getTranslated(ledEP.getFigure().getSize().getExpanded(100, 100));
-		
-		CircuitEditPart circuitEP = (CircuitEditPart)getLogicTestFixture().createShapeUsingTool(typeCircuit, createPt, getDiagramEditPart());
+
+		CircuitEditPart circuitEP = (CircuitEditPart) getLogicTestFixture().createShapeUsingTool(typeCircuit, createPt,
+				getDiagramEditPart());
 		createPt.getTranslated(circuitEP.getFigure().getSize().getExpanded(100, 100));
-		
-		LogicGateEditPart andGateEP = (LogicGateEditPart)getLogicTestFixture().createShapeUsingTool(typeAndGate, createPt, getDiagramEditPart());
+
+		LogicGateEditPart andGateEP = (LogicGateEditPart) getLogicTestFixture().createShapeUsingTool(typeAndGate,
+				createPt, getDiagramEditPart());
 		createPt.getTranslated(andGateEP.getFigure().getSize().getExpanded(100, 100));
-		
-		LogicGateEditPart orGateEP = (LogicGateEditPart)getLogicTestFixture().createShapeUsingTool(typeOrGate, createPt, getDiagramEditPart());
+
+		LogicGateEditPart orGateEP = (LogicGateEditPart) getLogicTestFixture().createShapeUsingTool(typeOrGate,
+				createPt, getDiagramEditPart());
 		createPt.getTranslated(orGateEP.getFigure().getSize().getExpanded(100, 100));
-		
-		LogicGateEditPart xorGateEP = (LogicGateEditPart)getLogicTestFixture().createShapeUsingTool(typeXorGate, createPt, getDiagramEditPart());
+
+		LogicGateEditPart xorGateEP = (LogicGateEditPart) getLogicTestFixture().createShapeUsingTool(typeXorGate,
+				createPt, getDiagramEditPart());
 		createPt.getTranslated(xorGateEP.getFigure().getSize().getExpanded(100, 100));
-		
+
 		getLogicTestFixture().createShapeUsingTool(typeFlowContainer, createPt, getDiagramEditPart());
 	}
-	
+
+	@Test
 	public void test_bugzilla124678() {
 		final Command cc = getLongProgressCommand();
-		
+
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
-			public void run(final IProgressMonitor monitor)
-				throws InvocationTargetException, InterruptedException {
-				
-				((DiagramCommandStack)getCommandStack()).execute(cc, monitor);
+			@Override
+			public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+				((DiagramCommandStack) getCommandStack()).execute(cc, monitor);
 			}
 
 		};
-		ProgressMonitorDialog dialog = new ProgressMonitorDialog(PlatformUI
-			.getWorkbench().getActiveWorkbenchWindow().getShell());
+		ProgressMonitorDialog dialog = new ProgressMonitorDialog(
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		try {
 			dialog.run(true, true, runnable);
 		} catch (InvocationTargetException e) {
@@ -131,17 +129,16 @@ public class LogicCreationTests extends AbstractTestBase {
 			assertTrue(false);
 		}
 	}
-	
+
 	private Command getLongProgressCommand() {
 		CompoundCommand cc = new CompoundCommand("Add Multiple Octagons"); //$NON-NLS-1$
 		ArrayList newViews = new ArrayList();
 
 		EditPart containerEditPart = getDiagramEditPart();
-		
+
 		for (int x = 0; x < 500; x = x + 55) {
 			for (int y = 0; y < 500; y = y + 55) {
-				CreateViewRequest createOctagon = CreateViewRequestFactory
-					.getCreateShapeRequest(GeoshapeType.OCTAGON,
+				CreateViewRequest createOctagon = CreateViewRequestFactory.getCreateShapeRequest(GeoshapeType.OCTAGON,
 						PreferencesHint.USE_DEFAULTS);
 
 				createOctagon.setLocation(new Point(x, y));
@@ -150,67 +147,68 @@ public class LogicCreationTests extends AbstractTestBase {
 
 				Object obj = createOctagon.getNewObject();
 				if (obj instanceof Collection) {
-					Iterator iter = ((Collection)obj).iterator();
+					Iterator iter = ((Collection) obj).iterator();
 					while (iter.hasNext()) {
 						newViews.add(iter.next());
 					}
-				}
-				else
+				} else {
 					newViews.add(createOctagon.getNewObject());
+				}
 			}
 		}
 
-		ArrangeRequest arrangeRequest = new ArrangeRequest(
-		RequestConstants.REQ_ARRANGE_DEFERRED);
+		ArrangeRequest arrangeRequest = new ArrangeRequest(RequestConstants.REQ_ARRANGE_DEFERRED);
 		arrangeRequest.setViewAdaptersToArrange(newViews);
 		Command arrangeCommand = containerEditPart.getCommand(arrangeRequest);
 		cc.add(arrangeCommand);
 
 		return cc;
 	}
-    
-    public void test_reorientingNoteAttachments() {
-        
-        // Add two LEDs.
-        IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$        
-        LEDEditPart led1 = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, new Point(100, 10), getDiagramEditPart());        
-        LEDEditPart led2 = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, new Point(200, 10), getDiagramEditPart());
 
-        // Add two notes.
-        NoteEditPart note1 = (NoteEditPart)getLogicTestFixture().createShapeUsingTool(DiagramNotationType.NOTE, new Point(100, 100), getDiagramEditPart());        
-        NoteEditPart note2 = (NoteEditPart)getLogicTestFixture().createShapeUsingTool(DiagramNotationType.NOTE, new Point(200, 100), getDiagramEditPart());
+	@Test
+	public void test_reorientingNoteAttachments() {
 
-        // Create a note attachment from note1 to led1.
-        ConnectionEditPart noteAttachment = getLogicTestFixture()
-            .createConnectorUsingTool(note1,
-                led1, DiagramNotationType.NOTE_ATTACHMENT);
-        
-        // Reorient the note attachment to led2.
-        reorientConnectionTarget(noteAttachment, led2, true);
+		// Add two LEDs.
+		IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$
+		LEDEditPart led1 = (LEDEditPart) getLogicTestFixture().createShapeUsingTool(typeLED, new Point(100, 10),
+				getDiagramEditPart());
+		LEDEditPart led2 = (LEDEditPart) getLogicTestFixture().createShapeUsingTool(typeLED, new Point(200, 10),
+				getDiagramEditPart());
 
-        // Reorient the note attachment to note2.
-        reorientConnectionSource(noteAttachment, note2, true);
-                
-        // Test that we cannot reorient a note attachment between two LEDs.
-        reorientConnectionSource(noteAttachment, led1, false);
-        
-        // Now test this all again but creating the note attachment from the LED
-        // to the note.
-        
-        // Create a note attachment from led1 to note1.
-        noteAttachment = getLogicTestFixture()
-            .createConnectorUsingTool(led1,
-                note1, DiagramNotationType.NOTE_ATTACHMENT);
-        
-        // Reorient the note attachment to led2.
-        reorientConnectionSource(noteAttachment, led2, true);
+		// Add two notes.
+		NoteEditPart note1 = (NoteEditPart) getLogicTestFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+				new Point(100, 100), getDiagramEditPart());
+		NoteEditPart note2 = (NoteEditPart) getLogicTestFixture().createShapeUsingTool(DiagramNotationType.NOTE,
+				new Point(200, 100), getDiagramEditPart());
 
-        // Reorient the note attachment to note2.
-        reorientConnectionTarget(noteAttachment, note2, true);
-                
-        // Test that we cannot reorient a note attachment between two LEDs.
-        reorientConnectionTarget(noteAttachment, led1, false);
-    }
+		// Create a note attachment from note1 to led1.
+		ConnectionEditPart noteAttachment = getLogicTestFixture().createConnectorUsingTool(note1, led1,
+				DiagramNotationType.NOTE_ATTACHMENT);
+
+		// Reorient the note attachment to led2.
+		reorientConnectionTarget(noteAttachment, led2, true);
+
+		// Reorient the note attachment to note2.
+		reorientConnectionSource(noteAttachment, note2, true);
+
+		// Test that we cannot reorient a note attachment between two LEDs.
+		reorientConnectionSource(noteAttachment, led1, false);
+
+		// Now test this all again but creating the note attachment from the LED
+		// to the note.
+
+		// Create a note attachment from led1 to note1.
+		noteAttachment = getLogicTestFixture().createConnectorUsingTool(led1, note1,
+				DiagramNotationType.NOTE_ATTACHMENT);
+
+		// Reorient the note attachment to led2.
+		reorientConnectionSource(noteAttachment, led2, true);
+
+		// Reorient the note attachment to note2.
+		reorientConnectionTarget(noteAttachment, note2, true);
+
+		// Test that we cannot reorient a note attachment between two LEDs.
+		reorientConnectionTarget(noteAttachment, led1, false);
+	}
 
 }
-

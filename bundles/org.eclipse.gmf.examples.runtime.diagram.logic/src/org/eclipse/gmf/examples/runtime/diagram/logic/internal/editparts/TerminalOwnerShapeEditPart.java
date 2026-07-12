@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
@@ -19,43 +19,44 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.View;
 
-
 /**
  * @author qili
  *
- * Abstract editpart class for logic shapes
+ *         Abstract editpart class for logic shapes
  */
-public abstract class TerminalOwnerShapeEditPart 
-	extends AbstractBorderedShapeEditPart 
-	implements ITerminalOwnerEditPart
-{
-		
+public abstract class TerminalOwnerShapeEditPart extends AbstractBorderedShapeEditPart
+		implements ITerminalOwnerEditPart {
+
 	/**
 	 * @param view
 	 */
 	public TerminalOwnerShapeEditPart(View view) {
 		super(view);
 	}
-	
-	protected void createDefaultEditPolicies(){
+
+	@Override
+	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-	
-		installEditPolicy(EditPolicyRoles.CANONICAL_ROLE, 
-			new TerminalCanonicalEditPolicy());
+
+		installEditPolicy(EditPolicyRoles.CANONICAL_ROLE, new TerminalCanonicalEditPolicy());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderedShapeEditPart#addBorderItem(org.eclipse.draw2d.IFigure, org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderedShapeEditPart#
+	 * addBorderItem(org.eclipse.draw2d.IFigure,
+	 * org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart)
 	 */
-	protected void addBorderItem(IFigure borderItemContainer,
-			IBorderItemEditPart borderItemEditPart) {
+	@Override
+	protected void addBorderItem(IFigure borderItemContainer, IBorderItemEditPart borderItemEditPart) {
 		if (borderItemEditPart instanceof TerminalEditPart) {
 			borderItemContainer.add(borderItemEditPart.getFigure(),
-				((TerminalEditPart) borderItemEditPart).getLocator());
+					((TerminalEditPart) borderItemEditPart).getLocator());
 		} else {
 			super.addBorderItem(borderItemContainer, borderItemEditPart);
 		}
 	}
-
 
 }

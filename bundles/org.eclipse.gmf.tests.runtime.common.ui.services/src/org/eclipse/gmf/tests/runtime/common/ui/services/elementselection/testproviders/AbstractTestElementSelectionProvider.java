@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders;
 
@@ -29,108 +29,106 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * An abstract class for the element selection providers used by the tests.
- * 
+ *
  * @author Anthony Hunter
  */
-public abstract class AbstractTestElementSelectionProvider
-    extends AbstractElementSelectionProvider {
+public abstract class AbstractTestElementSelectionProvider extends AbstractElementSelectionProvider {
 
-    private List matchingObjects = new ArrayList();
+	private List matchingObjects = new ArrayList();
 
-    public AbstractTestElementSelectionProvider() {
-        super();
-        initializeMatchingObjects();
-    }
+	public AbstractTestElementSelectionProvider() {
+		super();
+		initializeMatchingObjects();
+	}
 
-    private void initializeMatchingObjects() {
-        String[] names = new String[] {"One", "Two", "Three", "Four", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-            "Five", "Six", "Seven", "Eight", "Nine"}; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
-        String component = getTestElementComponent();
-        Image image = getTestElementImage();
-        for (int i = 0; i < names.length; i++) {
-            TestMatchingObject testMatchingObject = new TestMatchingObject(
-                names[i], component, names[i] + TestMatchingObject.DASHES
-                    + component, image, this);
-            matchingObjects.add(testMatchingObject);
-        }
-    }
+	private void initializeMatchingObjects() {
+		String[] names = new String[] { "One", "Two", "Three", "Four", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				"Five", "Six", "Seven", "Eight", "Nine" }; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
+		String component = getTestElementComponent();
+		Image image = getTestElementImage();
+		for (String name : names) {
+			TestMatchingObject testMatchingObject = new TestMatchingObject(name, component,
+					name + AbstractMatchingObject.DASHES + component, image, this);
+			matchingObjects.add(testMatchingObject);
+		}
+	}
 
-    protected abstract String getTestElementComponent();
+	protected abstract String getTestElementComponent();
 
-    protected abstract Image getTestElementImage();
+	protected abstract Image getTestElementImage();
 
-    public void run(IProgressMonitor monitor) {
-        /**
-         * filter the matching objects using the user input and filter.
-         */
-        String filter = validatePattern(getElementSelectionInput().getInput());
-        Pattern pattern = Pattern.compile(filter);
-        for (Iterator iter = matchingObjects.iterator(); iter.hasNext();) {
-            AbstractMatchingObject element = (AbstractMatchingObject) iter
-                .next();
-            Matcher matcher = pattern.matcher(element.getName().toLowerCase());
-            /**
-             * If element matches user input.
-             */
-            if (matcher.matches()) {
-                /**
-                 * If element matches input filter.
-                 */
-                if (getElementSelectionInput().getFilter().select(element)) {
-                    fireMatchingObjectEvent(element);
-                }
-            }
-            if (monitor.isCanceled()) {
-                break;
-            }
-        }
+	@Override
+	public void run(IProgressMonitor monitor) {
+		/**
+		 * filter the matching objects using the user input and filter.
+		 */
+		String filter = validatePattern(getElementSelectionInput().getInput());
+		Pattern pattern = Pattern.compile(filter);
+		for (Iterator iter = matchingObjects.iterator(); iter.hasNext();) {
+			AbstractMatchingObject element = (AbstractMatchingObject) iter.next();
+			Matcher matcher = pattern.matcher(element.getName().toLowerCase());
+			/**
+			 * If element matches user input.
+			 */
+			if (matcher.matches()) {
+				/**
+				 * If element matches input filter.
+				 */
+				if (getElementSelectionInput().getFilter().select(element)) {
+					fireMatchingObjectEvent(element);
+				}
+			}
+			if (monitor.isCanceled()) {
+				break;
+			}
+		}
 
-        fireEndOfMatchesEvent();
-    }
+		fireEndOfMatchesEvent();
+	}
 
-    public boolean provides(IOperation operation) {
-        assert operation instanceof IMatchingObjectsOperation;
-        Object context = ((IMatchingObjectsOperation) operation)
-            .getElementSelectionInput().getContext();
-        if (context instanceof TestElementSelectionProviderContext) {
-            return true;
-        }
-        return false;
-    }
+	@Override
+	public boolean provides(IOperation operation) {
+		assert operation instanceof IMatchingObjectsOperation;
+		Object context = ((IMatchingObjectsOperation) operation).getElementSelectionInput().getContext();
+		if (context instanceof TestElementSelectionProviderContext) {
+			return true;
+		}
+		return false;
+	}
 
-    public Object resolve(IMatchingObject object) {
-        /**
-         * Just return a String for the tests
-         */
-        return object.getDisplayName();
-    }
+	@Override
+	public Object resolve(IMatchingObject object) {
+		/**
+		 * Just return a String for the tests
+		 */
+		return object.getDisplayName();
+	}
 
-    /**
-     * Convert the UNIX style pattern entered by the user to a Java regex
-     * pattern (? = any character, * = any string).
-     * 
-     * @param string
-     *            the UNIX style pattern.
-     * @return a Java regex pattern.
-     */
-    private String validatePattern(String string) {
-        if (string.equals(StringStatics.BLANK)) {
-            return string;
-        }
-        StringBuffer result = new StringBuffer();
-        for (int i = 0; i < string.length(); i++) {
-            char c = Character.toLowerCase(string.charAt(i));
-            if (c == '?') {
-                result.append('.');
-            } else if (c == '*') {
-                result.append(".*"); //$NON-NLS-1$
-            } else if (c == '?') {
-                result.append("\\."); //$NON-NLS-1$
-            } else {
-                result.append(c);
-            }
-        }
-        result.append(".*"); //$NON-NLS-1$
-        return result.toString();
-    }
+	/**
+	 * Convert the UNIX style pattern entered by the user to a Java regex pattern (?
+	 * = any character, * = any string).
+	 *
+	 * @param string the UNIX style pattern.
+	 * @return a Java regex pattern.
+	 */
+	private String validatePattern(String string) {
+		if (string.equals(StringStatics.BLANK)) {
+			return string;
+		}
+		StringBuffer result = new StringBuffer();
+		for (int i = 0; i < string.length(); i++) {
+			char c = Character.toLowerCase(string.charAt(i));
+			if (c == '?') {
+				result.append('.');
+			} else if (c == '*') {
+				result.append(".*"); //$NON-NLS-1$
+			} else if (c == '?') {
+				result.append("\\."); //$NON-NLS-1$
+			} else {
+				result.append(c);
+			}
+		}
+		result.append(".*"); //$NON-NLS-1$
+		return result.toString();
+	}
 }

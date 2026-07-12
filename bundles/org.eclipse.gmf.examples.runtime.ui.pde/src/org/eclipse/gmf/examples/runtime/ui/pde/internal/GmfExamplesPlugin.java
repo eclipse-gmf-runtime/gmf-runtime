@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.ui.pde.internal;
 
@@ -18,8 +17,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class GmfExamplesPlugin
-	extends AbstractUIPlugin {
+public class GmfExamplesPlugin extends AbstractUIPlugin {
 
 	/** The shared instance. */
 	private static GmfExamplesPlugin fPlugin;
@@ -34,7 +32,7 @@ public class GmfExamplesPlugin
 
 	/**
 	 * Returns the shared instance.
-	 * 
+	 *
 	 * @return The plugin instance of <code>GmfExamplesPlugin</code>
 	 */
 	public static GmfExamplesPlugin getDefault() {
@@ -43,7 +41,7 @@ public class GmfExamplesPlugin
 
 	/**
 	 * Retrieves the unique identifier of this plug-in.
-	 * 
+	 *
 	 * @return A non-empty string and is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {

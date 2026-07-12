@@ -7,22 +7,19 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.ui.pde.internal.l10n;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesPlugin;
 
-
 /**
  * A singleton resource manager object that manages string, image, font and
  * cursor types of resources for this plug-in.
  */
-public final class ResourceManager
-	extends AbstractResourceManager {
+public final class ResourceManager extends AbstractResourceManager {
 
 	/**
 	 * Singleton instance for the resource manager.
@@ -38,7 +35,7 @@ public final class ResourceManager
 
 	/**
 	 * Retrieves the singleton instance of this resource manager.
-	 * 
+	 *
 	 * @return The singleton resource manager.
 	 */
 	public static AbstractResourceManager getInstance() {
@@ -47,11 +44,10 @@ public final class ResourceManager
 
 	/**
 	 * Retrieves a localized string for the specified key.
-	 * 
+	 *
 	 * @return A localized string value, or a key if the bundle does not contain
 	 *         this entry.
-	 * @param key
-	 *            The resource bundle key.
+	 * @param key The resource bundle key.
 	 */
 	public static String getI18NString(String key) {
 		return getInstance().getString(key);
@@ -59,12 +55,14 @@ public final class ResourceManager
 
 	/**
 	 * Initializes this resource manager's resources.
-	 * 
+	 *
 	 */
+	@Override
 	protected void initializeResources() {
 		initializeMessageResources();
 	}
 
+	@Override
 	protected Plugin getPlugin() {
 		return GmfExamplesPlugin.getDefault();
 	}

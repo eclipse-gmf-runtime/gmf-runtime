@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.core;
@@ -23,35 +23,12 @@ import org.eclipse.gmf.tests.runtime.common.core.internal.service.ServiceTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.util.HashUtilTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.util.ProxyTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.util.StringUtilTest;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-public class AllTests extends TestCase {
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(AbstractCommandTest.suite());
-        suite.addTest(AbstractProviderTest.suite());
-        suite.addTest(CompositeCommandTest.suite());
-        suite.addTest(ExecutionStrategyTest.suite());
-        suite.addTest(FileModificationApproverTest.suite());
-        suite.addTest(HashUtilTest.suite());
-        suite.addTest(OneTimeCommandTest.suite());
-        suite.addTest(ProviderPriorityTest.suite());
-        suite.addTest(ProxyTest.suite());
-        suite.addTest(StringUtilTest.suite());
-        suite.addTest(ServiceTest.suite());
-        return suite;
-    }
-
-    public AllTests() {
-        super(""); //$NON-NLS-1$
-    }
+@Suite
+@SelectClasses({ AbstractCommandTest.class, AbstractProviderTest.class, CompositeCommandTest.class,
+		ExecutionStrategyTest.class, FileModificationApproverTest.class, HashUtilTest.class, OneTimeCommandTest.class,
+		ProviderPriorityTest.class, ProxyTest.class, StringUtilTest.class, ServiceTest.class, })
+public class AllTests {
 }

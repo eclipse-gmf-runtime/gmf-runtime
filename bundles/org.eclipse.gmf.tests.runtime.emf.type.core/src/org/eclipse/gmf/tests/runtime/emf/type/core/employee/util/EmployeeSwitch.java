@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.util;
@@ -28,31 +28,28 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student;
 
 /**
- * <!-- begin-user-doc -->
- * The <b>Switch</b> for the model's inheritance hierarchy.
- * It supports the call {@link #doSwitch(EObject) doSwitch(object)}
+ * <!-- begin-user-doc --> The <b>Switch</b> for the model's inheritance
+ * hierarchy. It supports the call {@link #doSwitch(EObject) doSwitch(object)}
  * to invoke the <code>caseXXX</code> method for each class of the model,
- * starting with the actual class of the object
- * and proceeding up the inheritance hierarchy
- * until a non-null result is returned,
- * which is the result of the switch.
- * <!-- end-user-doc -->
+ * starting with the actual class of the object and proceeding up the
+ * inheritance hierarchy until a non-null result is returned, which is the
+ * result of the switch. <!-- end-user-doc -->
+ * 
  * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage
  * @generated
  */
 public class EmployeeSwitch {
 	/**
-	 * The cached model package
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached model package <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected static EmployeePackage modelPackage;
 
 	/**
-	 * Creates an instance of the switch.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the switch. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public EmployeeSwitch() {
@@ -62,9 +59,10 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a
+	 * non null result; it yields that result. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
@@ -73,105 +71,143 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a
+	 * non null result; it yields that result. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
 	protected Object doSwitch(EClass theEClass, EObject theEObject) {
 		if (theEClass.eContainer() == modelPackage) {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		}
-		else {
+		} else {
 			List eSuperTypes = theEClass.getESuperTypes();
-			return
-				eSuperTypes.isEmpty() ?
-					defaultCase(theEObject) :
-					doSwitch((EClass)eSuperTypes.get(0), theEObject);
+			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch((EClass) eSuperTypes.get(0), theEObject);
 		}
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a
+	 * non null result; it yields that result. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
 	protected Object doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case EmployeePackage.EMPLOYEE: {
-				Employee employee = (Employee)theEObject;
-				Object result = caseEmployee(employee);
-				if (result == null) result = caseEModelElement(employee);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
+		case EmployeePackage.EMPLOYEE: {
+			Employee employee = (Employee) theEObject;
+			Object result = caseEmployee(employee);
+			if (result == null) {
+				result = caseEModelElement(employee);
 			}
-			case EmployeePackage.DEPARTMENT: {
-				Department department = (Department)theEObject;
-				Object result = caseDepartment(department);
-				if (result == null) result = caseEModelElement(department);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
+			if (result == null) {
+				result = defaultCase(theEObject);
 			}
-			case EmployeePackage.OFFICE: {
-				Office office = (Office)theEObject;
-				Object result = caseOffice(office);
-				if (result == null) result = caseEModelElement(office);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
+			return result;
+		}
+		case EmployeePackage.DEPARTMENT: {
+			Department department = (Department) theEObject;
+			Object result = caseDepartment(department);
+			if (result == null) {
+				result = caseEModelElement(department);
 			}
-			case EmployeePackage.STUDENT: {
-				Student student = (Student)theEObject;
-				Object result = caseStudent(student);
-				if (result == null) result = caseEmployee(student);
-				if (result == null) result = caseEModelElement(student);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
+			if (result == null) {
+				result = defaultCase(theEObject);
 			}
-			case EmployeePackage.LOCATION: {
-				Location location = (Location)theEObject;
-				Object result = caseLocation(location);
-				if (result == null) result = caseEModelElement(location);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
+			return result;
+		}
+		case EmployeePackage.OFFICE: {
+			Office office = (Office) theEObject;
+			Object result = caseOffice(office);
+			if (result == null) {
+				result = caseEModelElement(office);
 			}
-			case EmployeePackage.CLIENT: {
-				Client client = (Client)theEObject;
-				Object result = caseClient(client);
-				if (result == null) result = caseEModelElement(client);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
+			if (result == null) {
+				result = defaultCase(theEObject);
 			}
-			case EmployeePackage.CUSTOMER: {
-				Customer customer = (Customer)theEObject;
-				Object result = caseCustomer(customer);
-				if (result == null) result = caseEModelElement(customer);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
+			return result;
+		}
+		case EmployeePackage.STUDENT: {
+			Student student = (Student) theEObject;
+			Object result = caseStudent(student);
+			if (result == null) {
+				result = caseEmployee(student);
 			}
-			case EmployeePackage.HIGH_SCHOOL_STUDENT: {
-				HighSchoolStudent highSchoolStudent = (HighSchoolStudent)theEObject;
-				Object result = caseHighSchoolStudent(highSchoolStudent);
-				if (result == null) result = caseStudent(highSchoolStudent);
-				if (result == null) result = caseEmployee(highSchoolStudent);
-				if (result == null) result = caseEModelElement(highSchoolStudent);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
+			if (result == null) {
+				result = caseEModelElement(student);
 			}
-			default: return defaultCase(theEObject);
+			if (result == null) {
+				result = defaultCase(theEObject);
+			}
+			return result;
+		}
+		case EmployeePackage.LOCATION: {
+			Location location = (Location) theEObject;
+			Object result = caseLocation(location);
+			if (result == null) {
+				result = caseEModelElement(location);
+			}
+			if (result == null) {
+				result = defaultCase(theEObject);
+			}
+			return result;
+		}
+		case EmployeePackage.CLIENT: {
+			Client client = (Client) theEObject;
+			Object result = caseClient(client);
+			if (result == null) {
+				result = caseEModelElement(client);
+			}
+			if (result == null) {
+				result = defaultCase(theEObject);
+			}
+			return result;
+		}
+		case EmployeePackage.CUSTOMER: {
+			Customer customer = (Customer) theEObject;
+			Object result = caseCustomer(customer);
+			if (result == null) {
+				result = caseEModelElement(customer);
+			}
+			if (result == null) {
+				result = defaultCase(theEObject);
+			}
+			return result;
+		}
+		case EmployeePackage.HIGH_SCHOOL_STUDENT: {
+			HighSchoolStudent highSchoolStudent = (HighSchoolStudent) theEObject;
+			Object result = caseHighSchoolStudent(highSchoolStudent);
+			if (result == null) {
+				result = caseStudent(highSchoolStudent);
+			}
+			if (result == null) {
+				result = caseEmployee(highSchoolStudent);
+			}
+			if (result == null) {
+				result = caseEModelElement(highSchoolStudent);
+			}
+			if (result == null) {
+				result = defaultCase(theEObject);
+			}
+			return result;
+		}
+		default:
+			return defaultCase(theEObject);
 		}
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Employee</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of
+	 * '<em>Employee</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Employee</em>'.
+	 * @return the result of interpretting the object as an instance of
+	 *         '<em>Employee</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -180,13 +216,13 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Office</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of
+	 * '<em>Office</em>'. <!-- begin-user-doc --> This implementation returns null;
+	 * returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Office</em>'.
+	 * @return the result of interpretting the object as an instance of
+	 *         '<em>Office</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -195,13 +231,14 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Department</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of
+	 * '<em>Department</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Department</em>'.
+	 * @return the result of interpretting the object as an instance of
+	 *         '<em>Department</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -210,13 +247,13 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Student</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of
+	 * '<em>Student</em>'. <!-- begin-user-doc --> This implementation returns null;
+	 * returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Student</em>'.
+	 * @return the result of interpretting the object as an instance of
+	 *         '<em>Student</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -225,13 +262,14 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Location</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of
+	 * '<em>Location</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Location</em>'.
+	 * @return the result of interpretting the object as an instance of
+	 *         '<em>Location</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -240,13 +278,13 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Client</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of
+	 * '<em>Client</em>'. <!-- begin-user-doc --> This implementation returns null;
+	 * returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Client</em>'.
+	 * @return the result of interpretting the object as an instance of
+	 *         '<em>Client</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -255,13 +293,14 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Customer</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of
+	 * '<em>Customer</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Customer</em>'.
+	 * @return the result of interpretting the object as an instance of
+	 *         '<em>Customer</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -270,13 +309,14 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>High School Student</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of '<em>High
+	 * School Student</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>High School Student</em>'.
+	 * @return the result of interpretting the object as an instance of '<em>High
+	 *         School Student</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -285,13 +325,13 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>EModel Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of '<em>EModel
+	 * Element</em>'. <!-- begin-user-doc --> This implementation returns null;
+	 * returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>EModel Element</em>'.
+	 * @return the result of interpretting the object as an instance of '<em>EModel
+	 *         Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -300,13 +340,14 @@ public class EmployeeSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>EObject</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch, but this is the last case anyway.
-	 * <!-- end-user-doc -->
+	 * Returns the result of interpretting the object as an instance of
+	 * '<em>EObject</em>'. <!-- begin-user-doc --> This implementation returns null;
+	 * returning a non-null result will terminate the switch, but this is the last
+	 * case anyway. <!-- end-user-doc -->
+	 * 
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>EObject</em>'.
+	 * @return the result of interpretting the object as an instance of
+	 *         '<em>EObject</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
 	 * @generated
 	 */
@@ -314,4 +355,4 @@ public class EmployeeSwitch {
 		return null;
 	}
 
-} //EmployeeSwitch
+} // EmployeeSwitch

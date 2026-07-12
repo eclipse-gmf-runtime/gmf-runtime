@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.common.service.application;
 
@@ -18,16 +17,16 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**
  * Concrete operation for creating Widgets.
- * 
+ *
  */
-public class CreateWidgetOperation
-	implements IOperation {
+public class CreateWidgetOperation implements IOperation {
 
 	private int orderSize;
 
 	/**
-	 * Creates an instance of the CreateWidgetOperation with the specified 
-	 * order size.
+	 * Creates an instance of the CreateWidgetOperation with the specified order
+	 * size.
+	 * 
 	 * @param orderSize the order size requested.
 	 */
 	public CreateWidgetOperation(int orderSize) {
@@ -36,14 +35,17 @@ public class CreateWidgetOperation
 
 	/**
 	 * Delegates the creation of the Widgets to the Provider.
+	 * 
 	 * @see org.eclipse.gmf.runtime.common.core.service.IOperation#execute(org.eclipse.gmf.runtime.common.core.service.IProvider)
 	 */
+	@Override
 	public Object execute(IProvider provider) {
 		return ((IWidgetProvider) provider).createWidget(orderSize);
 	}
 
 	/**
 	 * Returns the order size for this CreateWidgetOperation.
+	 * 
 	 * @return Returns the orderSize.
 	 */
 	public int getOrderSize() {

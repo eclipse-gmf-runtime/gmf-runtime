@@ -7,83 +7,95 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
-
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendToBackCommand;
 import org.eclipse.gmf.runtime.notation.View;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the SendToBack ZOrder command
  *
  * @author jschofie
  */
-public class SendToBackCommandTest
-	extends CommandTestFixture {
+public class SendToBackCommandTest extends CommandTestFixture {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#createCommand()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#
+	 * createCommand()
 	 */
+	@Override
 	protected ICommand createCommand() {
 		return new SendToBackCommand(getEditingDomain(), noteView);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#testDoExecute()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#
+	 * testDoExecute()
 	 */
+	@Override
+	@Test
 	public void testDoExecute() {
 		assertEquals(getDiagram().getChildren().size(), 1);
-		View firstNote  = (View)getDiagram().getChildren().get(0);
+		View firstNote = (View) getDiagram().getChildren().get(0);
 
 		ICommand zorderCommand = new SendToBackCommand(getEditingDomain(), firstNote);
-        try {
-            zorderCommand.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
+		try {
+			zorderCommand.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
 
 		assertEquals(getDiagram().getChildren().get(0), firstNote);
 	}
-	
+
+	@Test
 	public void testLastEntry() {
 		createView();
 		assertEquals(getDiagram().getChildren().size(), 2);
-		View firstNote  = (View)getDiagram().getChildren().get(0);
-		View secondNote = (View)getDiagram().getChildren().get(1);
+		View firstNote = (View) getDiagram().getChildren().get(0);
+		View secondNote = (View) getDiagram().getChildren().get(1);
 
 		ICommand zorderCommand = new SendToBackCommand(getEditingDomain(), secondNote);
-        try {
-            zorderCommand.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
+		try {
+			zorderCommand.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
 
 		assertEquals(getDiagram().getChildren().get(0), secondNote);
 		assertEquals(getDiagram().getChildren().get(1), firstNote);
 	}
-	
+
+	@Test
 	public void testMiddleEntry() {
 		createView();
 		createView();
 		assertEquals(getDiagram().getChildren().size(), 3);
-		View firstNote  = (View)getDiagram().getChildren().get(0);
-		View secondNote = (View)getDiagram().getChildren().get(1);
-		View thirdNote  = (View)getDiagram().getChildren().get(2);
+		View firstNote = (View) getDiagram().getChildren().get(0);
+		View secondNote = (View) getDiagram().getChildren().get(1);
+		View thirdNote = (View) getDiagram().getChildren().get(2);
 
 		ICommand zorderCommand = new SendToBackCommand(getEditingDomain(), secondNote);
-		
-        try {
-            zorderCommand.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
+
+		try {
+			zorderCommand.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
 
 		assertEquals(getDiagram().getChildren().get(0), secondNote);
 		assertEquals(getDiagram().getChildren().get(1), firstNote);

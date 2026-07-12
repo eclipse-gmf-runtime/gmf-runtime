@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.decorator;
@@ -22,8 +22,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class DecoratorPlugin
-	extends AbstractUIPlugin {
+public class DecoratorPlugin extends AbstractUIPlugin {
 
 	/**
 	 * The shared plug-in instance
@@ -37,6 +36,7 @@ public class DecoratorPlugin
 
 	/**
 	 * Constructor
+	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#AbstractUIPlugin()
 	 */
 	public DecoratorPlugin() {
@@ -44,7 +44,7 @@ public class DecoratorPlugin
 		plugin = this;
 		try {
 			resourceBundle = ResourceBundle
-				.getBundle("org.eclipse.gmf.examples.runtime.diagram.decorator.DiagramPluginResources"); //$NON-NLS-1$
+					.getBundle("org.eclipse.gmf.examples.runtime.diagram.decorator.DiagramPluginResources"); //$NON-NLS-1$
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
@@ -65,8 +65,7 @@ public class DecoratorPlugin
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = DecoratorPlugin.getDefault().getResourceBundle();

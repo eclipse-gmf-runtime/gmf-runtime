@@ -7,10 +7,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.core.internal.command;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -35,293 +40,267 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.internal.command.FileModificationApprover;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the {@link FileModificationApprover}.
- * 
+ *
  * @author ldamus
  */
-public class FileModificationApproverTest
-    extends TestCase {
+public class FileModificationApproverTest {
 
-    private IOperationHistory history;
-    private IProject project;
-    private IFile file;
+	private IOperationHistory history;
+	private IProject project;
+	private IFile file;
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	@BeforeEach
+	public void setUp() throws Exception {
+		history = OperationHistoryFactory.getOperationHistory();
 
-    public static Test suite() {
-        return new TestSuite(FileModificationApproverTest.class);
-    }
+		try {
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			project = root.getProject("FileModificationApproverTest"); //$NON-NLS-1$
 
-    public FileModificationApproverTest(String name) {
-        super(name);
-    }
+			project.create(null);
+			project.open(null);
 
-    protected void setUp()
-        throws Exception {
+			file = project.getFile("test.txt"); //$NON-NLS-1$
+			InputStream contents = new ByteArrayInputStream(new byte[0]);
 
-        super.setUp();
+			file.create(contents, false, new NullProgressMonitor());
 
-        history = OperationHistoryFactory.getOperationHistory();
+		} catch (CoreException e) {
+			fail(e);
+		}
+	}
 
-        try {
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-            project = root.getProject("FileModificationApproverTest"); //$NON-NLS-1$
+	@AfterEach
+	public void tearDown() throws CoreException {
+		file.delete(true, new NullProgressMonitor());
+		project.close(new NullProgressMonitor());
+		project.delete(true, true, new NullProgressMonitor());
+		project = null;
+		file = null;
+		history = null;
+	}
 
-            project.create(null);
-            project.open(null);
+	private void fail(Exception e) {
+		e.printStackTrace();
+		Assertions.fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
+	}
 
-            file = project.getFile("test.txt"); //$NON-NLS-1$
-            InputStream contents = new ByteArrayInputStream(new byte[0]);
+	/**
+	 * Tests that commands that affect read-only files cannot be executed, undone
+	 * and redone through the operation history.
+	 */
+	@Test
+	public void test_execute_undo_redo() {
 
-            file.create(contents, false, new NullProgressMonitor());
+		TestCommand c = new TestCommand("test_execute_undo_redo", Collections.singletonList(file)); //$NON-NLS-1$
+		IUndoContext ctx = new UndoContext();
+		c.addContext(ctx);
 
-        } catch (CoreException e) {
-            fail(e);
-        }
-    }
-    
-    protected void tearDown()
-        throws Exception {
-        
-        super.tearDown();
-        
-        file.delete(true, new NullProgressMonitor());
-        project.close(new NullProgressMonitor());
-        project.delete(true, true, new NullProgressMonitor());
-        project = null;
-        file = null;
-        history = null;
-    }
-    
-    private void fail(Exception e) {
-        e.printStackTrace();
-        fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
-    }
+		ResourceAttributes attributes = file.getResourceAttributes();
 
-    /**
-     * Tests that commands that affect read-only files cannot be executed, undone and redone through the
-     * operation history.
-     */
-    public void test_execute_undo_redo() {
-        
-        TestCommand c = new TestCommand("test_execute_undo_redo", Collections.singletonList(file)); //$NON-NLS-1$
-        IUndoContext ctx = new UndoContext();
-        c.addContext(ctx);
-        
+		// Execute fails when file is read-only
+		try {
+			attributes.setReadOnly(true);
+			file.setResourceAttributes(attributes);
 
-        ResourceAttributes attributes = file.getResourceAttributes();
+			history.execute(c, new NullProgressMonitor(), null);
 
-        
-        // Execute fails when file is read-only
-        try {
-            attributes.setReadOnly(true);
-            file.setResourceAttributes(attributes);
-            
-            history.execute(c, new NullProgressMonitor(), null);
-            
-        } catch (CoreException e) {
-            fail(e);
-        } catch (ExecutionException e) {
-            fail(e);
-        }
+		} catch (CoreException e) {
+			fail(e);
+		} catch (ExecutionException e) {
+			fail(e);
+		}
 
-        c.assertNotExecuted();
-        c.reset();
-        
-        // Execute succeeds when file is writable
-        try {
-            attributes.setReadOnly(false);
-            file.setResourceAttributes(attributes);
-            
-            history.execute(c, new NullProgressMonitor(), null);
-            
-        } catch (CoreException e) {
-            fail(e);
-        } catch (ExecutionException e) {
-            fail(e);
-        }
+		c.assertNotExecuted();
+		c.reset();
 
-        c.assertExecuted();
-        c.reset();
-        
-        // Undo fails when file is read-only
-        try {
-            attributes.setReadOnly(true);
-            file.setResourceAttributes(attributes);
-            
-            assertTrue(history.canUndo(ctx));
-            
-            history.undo(ctx, new NullProgressMonitor(), null);
-            
-        } catch (CoreException e) {
-            fail(e);
-        } catch (ExecutionException e) {
-            fail(e);
-        }
+		// Execute succeeds when file is writable
+		try {
+			attributes.setReadOnly(false);
+			file.setResourceAttributes(attributes);
 
-        c.assertNotUndone();
-        c.reset();
-        
-        // Undo succeeds when file is writable
-        try {
-            attributes.setReadOnly(false);
-            file.setResourceAttributes(attributes);
-            
-            assertTrue(history.canUndo(ctx));
-            
-            history.undo(ctx, new NullProgressMonitor(), null);
-            
-        } catch (CoreException e) {
-            fail(e);
-        } catch (ExecutionException e) {
-            fail(e);
-        }
+			history.execute(c, new NullProgressMonitor(), null);
 
-        c.assertUndone();
-        c.reset();
-        
-        // Redo fails when file is read-only
-        try {
-            attributes.setReadOnly(true);
-            file.setResourceAttributes(attributes);
-            
-            assertTrue(history.canRedo(ctx));
-            
-            history.redo(ctx, new NullProgressMonitor(), null);
-            
-        } catch (CoreException e) {
-            fail(e);
-        } catch (ExecutionException e) {
-            fail(e);
-        }
+		} catch (CoreException e) {
+			fail(e);
+		} catch (ExecutionException e) {
+			fail(e);
+		}
 
-        c.assertNotRedone();
-        c.reset();
-        
-        
-        // Redo succeeds when file is writable
-        try {
-            attributes.setReadOnly(false);
-            file.setResourceAttributes(attributes);
-            
-            assertTrue(history.canRedo(ctx));
-            
-            history.redo(ctx, new NullProgressMonitor(), null);
-            
-        } catch (CoreException e) {
-            fail(e);
-        } catch (ExecutionException e) {
-            fail(e);
-        }
+		c.assertExecuted();
+		c.reset();
 
-        c.assertRedone();
-        c.reset();
- 
-    }
+		// Undo fails when file is read-only
+		try {
+			attributes.setReadOnly(true);
+			file.setResourceAttributes(attributes);
 
-    // 
-    // TEST FIXTURES
-    //
+			assertTrue(history.canUndo(ctx));
 
-    protected static class TestCommand
-        extends AbstractCommand {
+			history.undo(ctx, new NullProgressMonitor(), null);
 
-        private static final String EXECUTED = "executed"; //$NON-NLS-1$
+		} catch (CoreException e) {
+			fail(e);
+		} catch (ExecutionException e) {
+			fail(e);
+		}
 
-        private static final String UNDONE = "undone"; //$NON-NLS-1$
+		c.assertNotUndone();
+		c.reset();
 
-        private static final String REDONE = "redone"; //$NON-NLS-1$
+		// Undo succeeds when file is writable
+		try {
+			attributes.setReadOnly(false);
+			file.setResourceAttributes(attributes);
 
-        private boolean executed;
+			assertTrue(history.canUndo(ctx));
 
-        private boolean undone;
+			history.undo(ctx, new NullProgressMonitor(), null);
 
-        private boolean redone;
+		} catch (CoreException e) {
+			fail(e);
+		} catch (ExecutionException e) {
+			fail(e);
+		}
 
-        public TestCommand(String label, List affectedFiles) {
-            super(label, affectedFiles);
-        }
+		c.assertUndone();
+		c.reset();
 
-        protected CommandResult doExecuteWithResult(
-                IProgressMonitor progressMonitor, IAdaptable info)
-            throws ExecutionException {
-            executed = true;
-            undone = false;
-            redone = false;
-            return CommandResult.newOKCommandResult(EXECUTED);
-        }
+		// Redo fails when file is read-only
+		try {
+			attributes.setReadOnly(true);
+			file.setResourceAttributes(attributes);
 
-        protected CommandResult doRedoWithResult(
-                IProgressMonitor progressMonitor, IAdaptable info)
-            throws ExecutionException {
-            executed = false;
-            undone = false;
-            redone = true;
-            return CommandResult.newOKCommandResult(REDONE);
-        }
+			assertTrue(history.canRedo(ctx));
 
-        protected CommandResult doUndoWithResult(
-                IProgressMonitor progressMonitor, IAdaptable info)
-            throws ExecutionException {
-            executed = false;
-            undone = true;
-            redone = false;
-            return CommandResult.newOKCommandResult(UNDONE);
-        }
+			history.redo(ctx, new NullProgressMonitor(), null);
 
-        public void assertExecuted() {
-            assertTrue(executed);
-            assertEquals(IStatus.OK, getCommandResult().getStatus()
-                .getSeverity());
-            assertSame(EXECUTED, getCommandResult().getReturnValue());
-        }
-        
-        public void assertNotExecuted() {
-            assertFalse(executed);
-            //our validator should have marked it invalid
-            assertFalse(getCommandResult().getStatus().isOK());
-        }
+		} catch (CoreException e) {
+			fail(e);
+		} catch (ExecutionException e) {
+			fail(e);
+		}
 
-        public void assertUndone() {
-            assertTrue(undone);
-            assertEquals(IStatus.OK, getCommandResult().getStatus()
-                .getSeverity());
-            assertSame(UNDONE, getCommandResult().getReturnValue());
-        }
-        
-        public void assertNotUndone() {
-            assertFalse(undone);
-            //our validator should have marked it invalid
-            assertFalse(getCommandResult().getStatus().isOK());
-        }
+		c.assertNotRedone();
+		c.reset();
 
-        public void assertRedone() {
-            assertTrue(redone);
-            assertEquals(IStatus.OK, getCommandResult().getStatus()
-                .getSeverity());
-            assertSame(REDONE, getCommandResult().getReturnValue());
-        }
-        
-        public void assertNotRedone() {
-            assertFalse(redone);
-            //our validator should have marked it invalid
-            assertFalse(getCommandResult().getStatus().isOK());
-        }
-        
-        public void reset() {
-            executed = false;
-            undone = false;
-            redone = false;
-            setResult(null);
-        }
-    }
+		// Redo succeeds when file is writable
+		try {
+			attributes.setReadOnly(false);
+			file.setResourceAttributes(attributes);
+
+			assertTrue(history.canRedo(ctx));
+
+			history.redo(ctx, new NullProgressMonitor(), null);
+
+		} catch (CoreException e) {
+			fail(e);
+		} catch (ExecutionException e) {
+			fail(e);
+		}
+
+		c.assertRedone();
+		c.reset();
+
+	}
+
+	//
+	// TEST FIXTURES
+	//
+
+	protected static class TestCommand extends AbstractCommand {
+
+		private static final String EXECUTED = "executed"; //$NON-NLS-1$
+
+		private static final String UNDONE = "undone"; //$NON-NLS-1$
+
+		private static final String REDONE = "redone"; //$NON-NLS-1$
+
+		private boolean executed;
+
+		private boolean undone;
+
+		private boolean redone;
+
+		public TestCommand(String label, List affectedFiles) {
+			super(label, affectedFiles);
+		}
+
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+			executed = true;
+			undone = false;
+			redone = false;
+			return CommandResult.newOKCommandResult(EXECUTED);
+		}
+
+		@Override
+		protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+			executed = false;
+			undone = false;
+			redone = true;
+			return CommandResult.newOKCommandResult(REDONE);
+		}
+
+		@Override
+		protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+			executed = false;
+			undone = true;
+			redone = false;
+			return CommandResult.newOKCommandResult(UNDONE);
+		}
+
+		public void assertExecuted() {
+			assertTrue(executed);
+			assertEquals(IStatus.OK, getCommandResult().getStatus().getSeverity());
+			assertSame(EXECUTED, getCommandResult().getReturnValue());
+		}
+
+		public void assertNotExecuted() {
+			assertFalse(executed);
+			// our validator should have marked it invalid
+			assertFalse(getCommandResult().getStatus().isOK());
+		}
+
+		public void assertUndone() {
+			assertTrue(undone);
+			assertEquals(IStatus.OK, getCommandResult().getStatus().getSeverity());
+			assertSame(UNDONE, getCommandResult().getReturnValue());
+		}
+
+		public void assertNotUndone() {
+			assertFalse(undone);
+			// our validator should have marked it invalid
+			assertFalse(getCommandResult().getStatus().isOK());
+		}
+
+		public void assertRedone() {
+			assertTrue(redone);
+			assertEquals(IStatus.OK, getCommandResult().getStatus().getSeverity());
+			assertSame(REDONE, getCommandResult().getReturnValue());
+		}
+
+		public void assertNotRedone() {
+			assertFalse(redone);
+			// our validator should have marked it invalid
+			assertFalse(getCommandResult().getStatus().isOK());
+		}
+
+		public void reset() {
+			executed = false;
+			undone = false;
+			redone = false;
+			setResult(null);
+		}
+	}
 }

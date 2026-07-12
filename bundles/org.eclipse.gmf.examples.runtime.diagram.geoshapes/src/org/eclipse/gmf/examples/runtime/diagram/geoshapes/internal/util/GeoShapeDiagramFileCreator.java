@@ -7,35 +7,40 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.util;
 
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorFileCreator;
 
-
 /**
  * @author qili
  *
- * Class that generates diagram files.
+ *         Class that generates diagram files.
  */
 public class GeoShapeDiagramFileCreator extends IDEEditorFileCreator {
-	
+
 	private static GeoShapeDiagramFileCreator INSTANCE = new GeoShapeDiagramFileCreator();
 
 	/**
-	 * Method getInstance.
-	 * This class is a singleton that can only be accessed through this static method.
+	 * Method getInstance. This class is a singleton that can only be accessed
+	 * through this static method.
+	 * 
 	 * @return VizDiagramFileCreator The singleton instance
 	 */
 	static public GeoShapeDiagramFileCreator getInstance() {
 		return INSTANCE;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator#getExtension()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator#
+	 * getExtension()
 	 */
+	@Override
 	public String getExtension() {
 		return ".geo"; //$NON-NLS-1$
 	}

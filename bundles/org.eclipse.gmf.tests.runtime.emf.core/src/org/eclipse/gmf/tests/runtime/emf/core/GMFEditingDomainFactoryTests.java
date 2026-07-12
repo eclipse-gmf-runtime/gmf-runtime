@@ -7,14 +7,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.core;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.DefaultOperationHistory;
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,64 +27,53 @@ import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.emf.workspace.ResourceUndoContext;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the GMF editing domain factory.
- * 
+ *
  * @author ldamus
  */
 public class GMFEditingDomainFactoryTests extends BaseTests {
 
 	private DefaultOperationHistory history;
 
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(GMFEditingDomainFactoryTests.class,
-				"GMFEditingDomainFactoryTests Test Suite"); //$NON-NLS-1$
-	}
-
 	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		history = new DefaultOperationHistory();
 		super.setUp();
 	}
 
 	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() throws CoreException {
 		super.tearDown();
 		history = null;
 	}
 
 	@Override
 	protected TransactionalEditingDomain createEditingDomain() {
-		return GMFEditingDomainFactory.getInstance().createEditingDomain(
-				history);
+		return GMFEditingDomainFactory.getInstance().createEditingDomain(history);
 	}
 
 	/**
-	 * Tests the resource undo policy for the
-	 * <code>GMFEditingDomainFactory</code>. <code>ResourceUndoContext</code>s
-	 * should not be added to operations because of notifications on transient
-	 * features. These are considered as not modifying the resource.
+	 * Tests the resource undo policy for the <code>GMFEditingDomainFactory</code>.
+	 * <code>ResourceUndoContext</code>s should not be added to operations because
+	 * of notifications on transient features. These are considered as not modifying
+	 * the resource.
 	 */
+	@Test
 	public void test_transientNotifications() {
-		IUndoContext context = new ResourceUndoContext(domain,
-				testNotationResource);
-		IUndoableOperation op = new AbstractEMFOperation(domain,
-				"transientNotifications") { //$NON-NLS-1$
+		IUndoContext context = new ResourceUndoContext(domain, testNotationResource);
+		IUndoableOperation op = new AbstractEMFOperation(domain, "transientNotifications") { //$NON-NLS-1$
 			@Override
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+			protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
-				notationRoot.getTransientChildren().add(
-						NotationFactory.eINSTANCE.createNode());
+				notationRoot.getTransientChildren().add(NotationFactory.eINSTANCE.createNode());
 
 				return Status.OK_STATUS;
 			}
@@ -90,9 +82,9 @@ public class GMFEditingDomainFactoryTests extends BaseTests {
 		try {
 			history.execute(op, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
 
-		assertFalse("Resource should not have context", op.hasContext(context));
+		assertFalse(op.hasContext(context), "Resource should not have context");
 	}
 }

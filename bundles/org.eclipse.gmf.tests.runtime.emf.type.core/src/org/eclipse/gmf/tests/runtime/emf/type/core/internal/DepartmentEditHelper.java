@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -24,11 +24,9 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 /**
  * @author ldamus
  */
-public class DepartmentEditHelper
-	extends AbstractEditHelper {
+public class DepartmentEditHelper extends AbstractEditHelper {
 
-	public static class DepartmentCreateCommand
-		extends CreateElementCommand {
+	public static class DepartmentCreateCommand extends CreateElementCommand {
 
 		public DepartmentCreateCommand(CreateElementRequest req) {
 			super(req);
@@ -37,48 +35,53 @@ public class DepartmentEditHelper
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper#getCreateCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.CreateElementRequest)
+	 *
+	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper#
+	 * getCreateCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.
+	 * CreateElementRequest)
 	 */
+	@Override
 	protected ICommand getCreateCommand(CreateElementRequest req) {
 		return new DepartmentCreateCommand(req);
 	}
-    
-    protected boolean approveRequest(IEditCommandRequest req) {
-        if (req instanceof SetRequest) {
-            SetRequest setRequest = (SetRequest) req;
-            EStructuralFeature feature = setRequest.getFeature();
-            
-            if (feature == EmployeePackage.eINSTANCE.getDepartment_Number()) {
-                Object value = setRequest.getValue();
-                
-                if (value instanceof Integer) {
-                    if (((Integer) value).intValue() == 0) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return super.approveRequest(req);
-    }
-    
-    protected void configureRequest(IEditCommandRequest req) {
-        if (req instanceof SetRequest) {
-            SetRequest setRequest = (SetRequest) req;
-            EStructuralFeature feature = setRequest.getFeature();
-            
-            if (feature == EmployeePackage.eINSTANCE.getDepartment_Number()) {
-                Object value = setRequest.getValue();
-                
-                if (value instanceof Integer) {
-                    if (((Integer) value).intValue() == 0) {
-                        // set a parameter
-                        req.setParameter("approved", Boolean.FALSE); //$NON-NLS-1$
-                        return;
-                    }
-                }
-            }
-        }
-        req.setParameter("approved", Boolean.TRUE); //$NON-NLS-1$
-    }
+
+	@Override
+	protected boolean approveRequest(IEditCommandRequest req) {
+		if (req instanceof SetRequest) {
+			SetRequest setRequest = (SetRequest) req;
+			EStructuralFeature feature = setRequest.getFeature();
+
+			if (feature == EmployeePackage.eINSTANCE.getDepartment_Number()) {
+				Object value = setRequest.getValue();
+
+				if (value instanceof Integer) {
+					if (((Integer) value).intValue() == 0) {
+						return false;
+					}
+				}
+			}
+		}
+		return super.approveRequest(req);
+	}
+
+	@Override
+	protected void configureRequest(IEditCommandRequest req) {
+		if (req instanceof SetRequest) {
+			SetRequest setRequest = (SetRequest) req;
+			EStructuralFeature feature = setRequest.getFeature();
+
+			if (feature == EmployeePackage.eINSTANCE.getDepartment_Number()) {
+				Object value = setRequest.getValue();
+
+				if (value instanceof Integer) {
+					if (((Integer) value).intValue() == 0) {
+						// set a parameter
+						req.setParameter("approved", Boolean.FALSE); //$NON-NLS-1$
+						return;
+					}
+				}
+			}
+		}
+		req.setParameter("approved", Boolean.TRUE); //$NON-NLS-1$
+	}
 }

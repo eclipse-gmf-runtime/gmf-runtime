@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -21,22 +21,20 @@ import org.eclipse.gmf.runtime.emf.type.core.commands.ConfigureElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 
-
 /**
  * @author ldamus
  */
-public class OfficeEditHelper
-	extends AbstractEditHelper {
+public class OfficeEditHelper extends AbstractEditHelper {
 
-	public static class OfficeConfigureCommand
-		extends ConfigureElementCommand {
+	public static class OfficeConfigureCommand extends ConfigureElementCommand {
 
 		public OfficeConfigureCommand(ConfigureRequest req) {
 			super(req);
 		}
 
+		@Override
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-		    throws ExecutionException {
+				throws ExecutionException {
 
 			return null;
 		}
@@ -44,9 +42,12 @@ public class OfficeEditHelper
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper#getConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.ConfigureRequest)
+	 *
+	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper#
+	 * getConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.
+	 * ConfigureRequest)
 	 */
+	@Override
 	protected ICommand getConfigureCommand(ConfigureRequest req) {
 		return new OfficeConfigureCommand(req);
 	}

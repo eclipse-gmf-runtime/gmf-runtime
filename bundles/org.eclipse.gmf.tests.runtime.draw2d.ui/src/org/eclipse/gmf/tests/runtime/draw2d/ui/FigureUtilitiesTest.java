@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 /*
  * Created on Mar 12, 2004
@@ -17,52 +17,62 @@
  */
 package org.eclipse.gmf.tests.runtime.draw2d.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jschofie
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ *         To change the template for this generated type comment go to Window -
+ *         Preferences - Java - Code Generation - Code and Comments
  */
-public class FigureUtilitiesTest extends TestCase {
-	
-	/* (non-Javadoc)
+public class FigureUtilitiesTest {
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	public void setUp() throws Exception {
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() {
 	}
-	
+
+	@Test
 	public void testNormalizeSegements() {
-		
+
 		PointList points = new PointList();
-		points.addPoint( 10, 10 );
+		points.addPoint(10, 10);
 
 		// Nominal case - point size <= 1
-		assertFalse( PointListUtilities.normalizeSegments( points, 1 ) );
-		
+		assertFalse(PointListUtilities.normalizeSegments(points, 1));
+
 		// 2 points - should ignore any tolerance
-		points.addPoint( 11, 11 );
-		assertFalse( PointListUtilities.normalizeSegments( points, 1 ) );
-		
+		points.addPoint(11, 11);
+		assertFalse(PointListUtilities.normalizeSegments(points, 1));
+
 		// Length less than LENGTH THRESHOLD with another point
-		points.addPoint( 12, 12 );
-		assertTrue( PointListUtilities.normalizeSegments( points, 1 ) );
-		assertEquals( "The point list didn't get flattened", 2, points.size() ); //$NON-NLS-1$
-		
-		points.addPoint( 30, 30 );
-		assertTrue( PointListUtilities.normalizeSegments( points, 1 ) );
-		assertEquals( "The point list didn't get flattened", 2, points.size() ); //$NON-NLS-1$
+		points.addPoint(12, 12);
+		assertTrue(PointListUtilities.normalizeSegments(points, 1));
+		assertEquals(2, points.size(), "The point list didn't get flattened"); //$NON-NLS-1$
+
+		points.addPoint(30, 30);
+		assertTrue(PointListUtilities.normalizeSegments(points, 1));
+		assertEquals(2, points.size(), "The point list didn't get flattened"); //$NON-NLS-1$
 	}
 }

@@ -65,7 +65,7 @@ public final class ExampleDiagramLogicMessages extends NLS {
 	public static String LogicWizardPage_ModelOptions_FourBitAdderModelName;
 	public static String LogicPortsColor_Action_Label;
 	public static String LogicPortsColor_Action_Tooltip;
-	
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, ExampleDiagramLogicMessages.class);
 	}

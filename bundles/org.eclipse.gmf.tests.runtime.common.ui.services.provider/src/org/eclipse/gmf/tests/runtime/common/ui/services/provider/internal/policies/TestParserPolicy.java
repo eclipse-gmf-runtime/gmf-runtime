@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies;
 
@@ -18,11 +18,10 @@ import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testCl
 
 /**
  * For provides test will fail the first time, then pass on subsequent times.
- * 
+ *
  * @author wdiu, Wayne Diu
  */
-public class TestParserPolicy
-	implements IProviderPolicy {
+public class TestParserPolicy implements IProviderPolicy {
 
 	/**
 	 * Set to true after the provides method has been executed
@@ -32,6 +31,7 @@ public class TestParserPolicy
 	/*
 	 * Returns false unless the GetParserOperation hint is TestAdaptable
 	 */
+	@Override
 	public boolean provides(IOperation operation) {
 		providesExecuted = true;
 

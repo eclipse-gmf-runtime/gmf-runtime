@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.common.service;
@@ -21,11 +21,11 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * The main plugin class to be used in the desktop.
  */
 public class ServicePlugin extends AbstractUIPlugin {
-	//The shared instance.
+	// The shared instance.
 	private static ServicePlugin plugin;
-	//Resource bundle.
+	// Resource bundle.
 	private ResourceBundle resourceBundle;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -33,7 +33,8 @@ public class ServicePlugin extends AbstractUIPlugin {
 		super();
 		plugin = this;
 		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.gmf.examples.runtime.common.service.ServicePluginResources");//$NON-NLS-1$
+			resourceBundle = ResourceBundle
+					.getBundle("org.eclipse.gmf.examples.runtime.common.service.ServicePluginResources");//$NON-NLS-1$
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
@@ -41,7 +42,7 @@ public class ServicePlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance.
-	 * 
+	 *
 	 * @return the shared instance of <code>ServicePlugin</code>
 	 */
 	public static ServicePlugin getDefault() {
@@ -49,9 +50,8 @@ public class ServicePlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
-	 * 
+	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
+	 *
 	 * @param key resource key
 	 * @return resource, 'key' if not found
 	 */
@@ -66,16 +66,16 @@ public class ServicePlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the plugin's resource bundle.
-	 * 
+	 *
 	 * @return plugin's resource bundle
 	 */
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
 	}
-	
+
 	/**
 	 * Retrieves the unique identifier of this plug-in.
-	 * 
+	 *
 	 * @return A non-empty string and is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {

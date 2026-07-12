@@ -7,34 +7,34 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.providers;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
 import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies.TestParserPolicy;
 import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses.TestAdaptable;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Bundle;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * This test case tests provider polciies using the Parser Service from a UI
  * plugin as the example service.
- * 
+ *
  * @author wdiu, Wayne Diu
  */
-public class ProviderPolicyTest
-	extends TestCase {
+public class ProviderPolicyTest {
 
 	final private Bundle TEST_PROVIDER_PLUGIN_BUNDLE = Platform
-		.getBundle("org.eclipse.gmf.tests.runtime.common.ui.services.provider"); //$NON-NLS-1$
+			.getBundle("org.eclipse.gmf.tests.runtime.common.ui.services.provider"); //$NON-NLS-1$
 
+	@Test
 	public void testPluginDoesNotLoad() {
 
 		// this test should be run before loading the bundle, otherwise this
@@ -43,6 +43,7 @@ public class ProviderPolicyTest
 
 		IAdaptable adaptable = new IAdaptable() {
 
+			@Override
 			public Object getAdapter(Class adapter) {
 				return null;
 			}
@@ -69,6 +70,7 @@ public class ProviderPolicyTest
 
 	}
 
+	@Test
 	public void testPluginLoad() {
 
 		// make sure the org.eclipse.gmf.tests.runtime.common.core.provider
@@ -82,9 +84,5 @@ public class ProviderPolicyTest
 		// because the provider provides for the TestAdaptable hint
 		assertTrue(TEST_PROVIDER_PLUGIN_BUNDLE.getState() == Bundle.ACTIVE);
 
-	}
-
-	public static Test suite() {
-		return new TestSuite(ProviderPolicyTest.class);
 	}
 }

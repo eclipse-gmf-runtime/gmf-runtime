@@ -7,27 +7,26 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions;
 
-
 /**
  * @author qili
  *
- * Ids for all action specific to logic diagram
+ *         Ids for all action specific to logic diagram
  */
 public interface LogicActionIds {
-	
+
 	/* Menu contribution ids */
 	public final String MENU_INCREMENT = "incrementMenu"; //$NON-NLS-1$
 	public final String MENU_DECREMENT = "decrementMenu"; //$NON-NLS-1$
-	
+
 	/* Action contribution ids */
-    public final String ACTION_INCREMENT_VALUE = "incrementValueAction";//$NON-NLS-1$
+	public final String ACTION_INCREMENT_VALUE = "incrementValueAction";//$NON-NLS-1$
 	public final String ACTION_DECREMENT_VALUE = "decrementValueAction";//$NON-NLS-1$
 	public final String DELETE_SEMANTIC_VALUE = "deleteSemanticAction"; //$NON-NLS-1$
 	public final String MODIFY_PORTS_COLOR_VALUE = "modifyPortsColorAction"; //$NON-NLS-1$
-	
+
 }

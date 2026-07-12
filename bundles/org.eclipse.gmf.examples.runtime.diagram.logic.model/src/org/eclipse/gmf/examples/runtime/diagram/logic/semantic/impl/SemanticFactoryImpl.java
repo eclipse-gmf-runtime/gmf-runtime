@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl;
 
@@ -31,35 +31,35 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Wire;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.XORGate;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Factory</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!--
+ * end-user-doc -->
+ * 
  * @generated
  */
 public class SemanticFactoryImpl extends EFactoryImpl implements SemanticFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates the default factory implementation. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static SemanticFactory init() {
 		try {
-			SemanticFactory theSemanticFactory = (SemanticFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic"); //$NON-NLS-1$ 
+			SemanticFactory theSemanticFactory = (SemanticFactory) EPackage.Registry.INSTANCE
+					.getEFactory("http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic"); //$NON-NLS-1$
 			if (theSemanticFactory != null) {
 				return theSemanticFactory;
 			}
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new SemanticFactoryImpl();
 	}
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public SemanticFactoryImpl() {
@@ -67,155 +67,180 @@ public class SemanticFactoryImpl extends EFactoryImpl implements SemanticFactory
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case SemanticPackage.LED: return createLED();
-			case SemanticPackage.WIRE: return createWire();
-			case SemanticPackage.CIRCUIT: return createCircuit();
-			case SemanticPackage.FLOW_CONTAINER: return createFlowContainer();
-			case SemanticPackage.AND_GATE: return createAndGate();
-			case SemanticPackage.OR_GATE: return createOrGate();
-			case SemanticPackage.XOR_GATE: return createXORGate();
-			case SemanticPackage.MODEL: return createModel();
-			case SemanticPackage.OUTPUT_TERMINAL: return createOutputTerminal();
-			case SemanticPackage.INPUT_TERMINAL: return createInputTerminal();
-			case SemanticPackage.INPUT_OUTPUT_TERMINAL: return createInputOutputTerminal();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		case SemanticPackage.LED:
+			return createLED();
+		case SemanticPackage.WIRE:
+			return createWire();
+		case SemanticPackage.CIRCUIT:
+			return createCircuit();
+		case SemanticPackage.FLOW_CONTAINER:
+			return createFlowContainer();
+		case SemanticPackage.AND_GATE:
+			return createAndGate();
+		case SemanticPackage.OR_GATE:
+			return createOrGate();
+		case SemanticPackage.XOR_GATE:
+			return createXORGate();
+		case SemanticPackage.MODEL:
+			return createModel();
+		case SemanticPackage.OUTPUT_TERMINAL:
+			return createOutputTerminal();
+		case SemanticPackage.INPUT_TERMINAL:
+			return createInputTerminal();
+		case SemanticPackage.INPUT_OUTPUT_TERMINAL:
+			return createInputOutputTerminal();
+		default:
+			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public LED createLED() {
 		LEDImpl led = new LEDImpl();
 		return led;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Wire createWire() {
 		WireImpl wire = new WireImpl();
 		return wire;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Circuit createCircuit() {
 		CircuitImpl circuit = new CircuitImpl();
 		return circuit;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public FlowContainer createFlowContainer() {
 		FlowContainerImpl flowContainer = new FlowContainerImpl();
 		return flowContainer;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public AndGate createAndGate() {
 		AndGateImpl andGate = new AndGateImpl();
 		return andGate;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public OrGate createOrGate() {
 		OrGateImpl orGate = new OrGateImpl();
 		return orGate;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public XORGate createXORGate() {
 		XORGateImpl xorGate = new XORGateImpl();
 		return xorGate;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Model createModel() {
 		ModelImpl model = new ModelImpl();
 		return model;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public OutputTerminal createOutputTerminal() {
 		OutputTerminalImpl outputTerminal = new OutputTerminalImpl();
 		return outputTerminal;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public InputTerminal createInputTerminal() {
 		InputTerminalImpl inputTerminal = new InputTerminalImpl();
 		return inputTerminal;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public InputOutputTerminal createInputOutputTerminal() {
 		InputOutputTerminalImpl inputOutputTerminal = new InputOutputTerminalImpl();
 		return inputOutputTerminal;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public SemanticPackage getSemanticPackage() {
-		return (SemanticPackage)getEPackage();
+		return (SemanticPackage) getEPackage();
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */
+	@Deprecated
 	public static SemanticPackage getPackage() {
 		return SemanticPackage.eINSTANCE;
 	}
 
-} //SemanticFactoryImpl
+} // SemanticFactoryImpl

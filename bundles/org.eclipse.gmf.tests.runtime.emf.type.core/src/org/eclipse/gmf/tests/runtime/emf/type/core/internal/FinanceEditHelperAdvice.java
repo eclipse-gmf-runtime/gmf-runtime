@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -30,86 +30,95 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 /**
  * @author ldamus
  */
-public class FinanceEditHelperAdvice
-	extends AbstractEditHelperAdvice {
+public class FinanceEditHelperAdvice extends AbstractEditHelperAdvice {
 
-	public static class BeforeFinanceConfigureCommand
-		extends ConfigureElementCommand {
+	public static class BeforeFinanceConfigureCommand extends ConfigureElementCommand {
 
 		public BeforeFinanceConfigureCommand(ConfigureRequest req) {
 			super(req);
 		}
 
+		@Override
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-		    throws ExecutionException {
+				throws ExecutionException {
 
 			return null;
 		}
 	}
 
-	public static class AfterFinanceConfigureCommand
-		extends ConfigureElementCommand {
+	public static class AfterFinanceConfigureCommand extends ConfigureElementCommand {
 
 		public AfterFinanceConfigureCommand(ConfigureRequest req) {
 			super(req);
 		}
 
+		@Override
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
-		    throws ExecutionException {
+				throws ExecutionException {
 
 			Employee employee = (Employee) getElementToEdit();
 			employee.getDepartment().setName("Finance"); //$NON-NLS-1$
 			return null;
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#getBeforeConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.ConfigureRequest)
+	 *
+	 * @see
+	 * org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#
+	 * getBeforeConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.
+	 * ConfigureRequest)
 	 */
+	@Override
 	protected ICommand getBeforeConfigureCommand(ConfigureRequest request) {
 		return new BeforeFinanceConfigureCommand(request);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#getAfterConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.ConfigureRequest)
+	 *
+	 * @see
+	 * org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#
+	 * getAfterConfigureCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.
+	 * ConfigureRequest)
 	 */
+	@Override
 	protected ICommand getAfterConfigureCommand(ConfigureRequest request) {
 		return new AfterFinanceConfigureCommand(request);
 	}
-    
-    public boolean approveRequest(IEditCommandRequest request) {
 
-        if (request instanceof SetRequest) {
-            SetRequest setRequest = (SetRequest) request;
-            EStructuralFeature feature = setRequest.getFeature();
-            
-            if (feature == EmployeePackage.eINSTANCE.getEmployee_Band()
-                && setRequest.getValue() == Band.DIRECTOR_LITERAL) {
-                // arbitrarily no directors in finance
-                return false;
-            }
-        }
-        return super.approveRequest(request);
-    }
-    
-    public void configureRequest(IEditCommandRequest request) {
+	@Override
+	public boolean approveRequest(IEditCommandRequest request) {
 
-        if (request instanceof SetRequest) {
-            SetRequest setRequest = (SetRequest) request;
-            EStructuralFeature feature = setRequest.getFeature();
-            
-            if (feature == EmployeePackage.eINSTANCE.getEmployee_Band()
-                && setRequest.getValue() == Band.DIRECTOR_LITERAL) {
-                // set a parameter
-                request.setParameter("approved", Boolean.FALSE); //$NON-NLS-1$
-                return;
-            }
-        }
-        request.setParameter("approved", Boolean.TRUE); //$NON-NLS-1$
-    }
-    
+		if (request instanceof SetRequest) {
+			SetRequest setRequest = (SetRequest) request;
+			EStructuralFeature feature = setRequest.getFeature();
+
+			if (feature == EmployeePackage.eINSTANCE.getEmployee_Band()
+					&& setRequest.getValue() == Band.DIRECTOR_LITERAL) {
+				// arbitrarily no directors in finance
+				return false;
+			}
+		}
+		return super.approveRequest(request);
+	}
+
+	@Override
+	public void configureRequest(IEditCommandRequest request) {
+
+		if (request instanceof SetRequest) {
+			SetRequest setRequest = (SetRequest) request;
+			EStructuralFeature feature = setRequest.getFeature();
+
+			if (feature == EmployeePackage.eINSTANCE.getEmployee_Band()
+					&& setRequest.getValue() == Band.DIRECTOR_LITERAL) {
+				// set a parameter
+				request.setParameter("approved", Boolean.FALSE); //$NON-NLS-1$
+				return;
+			}
+		}
+		request.setParameter("approved", Boolean.TRUE); //$NON-NLS-1$
+	}
+
 }

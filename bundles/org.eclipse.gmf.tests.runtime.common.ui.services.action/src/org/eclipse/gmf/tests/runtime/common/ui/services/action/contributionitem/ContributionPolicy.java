@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.services.action.contributionitem;
@@ -16,19 +16,18 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IPopupMenuContributionPolicy;
 import org.eclipse.jface.viewers.ISelection;
 
-public class ContributionPolicy
-    implements IPopupMenuContributionPolicy {
+public class ContributionPolicy implements IPopupMenuContributionPolicy {
 
-    static int callcount = 0;
+	static int callcount = 0;
 
-    public boolean appliesTo(ISelection selection,
-            IConfigurationElement configuration) {
-        callcount++;
-        return false;
-    }
+	@Override
+	public boolean appliesTo(ISelection selection, IConfigurationElement configuration) {
+		callcount++;
+		return false;
+	}
 
-    static int getCallCount() {
-        return callcount;
-    }
+	static int getCallCount() {
+		return callcount;
+	}
 
 }

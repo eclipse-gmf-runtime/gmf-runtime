@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  *    Christian W. Damus - bug 457888
  ****************************************************************************/
 
@@ -18,42 +18,15 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.commands.DeferredSetValueComm
 import org.eclipse.gmf.tests.runtime.emf.type.core.commands.DestroyElementCommandTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.commands.SetValueCommandTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.requests.SetRequestTest;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-public class AllTests extends TestCase {
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(AbstractEditHelperAdviceTest.suite());
-        suite.addTest(AbstractEditHelperTest.suite());
-        suite.addTest(ElementTypeRegistryTest.suite());
-        suite.addTest(ClientContextManagerTest.suite());
-        suite.addTest(CreateElementCommandTest.suite());
-        suite.addTest(CreateElementRequestTest.suite());
-        suite.addTest(DeferredSetValueCommandTest.suite());
-        suite.addTest(DestroyElementCommandTest.suite());
-        suite.addTest(MetamodelTypeDescriptorTest.suite());
-        suite.addTest(MetamodelTypeTest.suite());
-        suite.addTest(MoveRequestTest.suite());
-        suite.addTest(MultiClientContextTest.suite());
-        suite.addTest(SetRequestTest.suite());
-        suite.addTest(SetValueCommandTest.suite());
-        suite.addTest(SpecializationTypeDescriptorTest.suite());
-        suite.addTest(SpecializationTypeTest.suite());
-        suite.addTest(ElementTypeUtilTest.suite());
-        return suite;
-    }
-
-    public AllTests() {
-        super(""); //$NON-NLS-1$
-    }
-
+@Suite
+@SelectClasses({ AbstractEditHelperAdviceTest.class, AbstractEditHelperTest.class, ElementTypeRegistryTest.class,
+		ClientContextManagerTest.class, CreateElementCommandTest.class, CreateElementRequestTest.class,
+		DeferredSetValueCommandTest.class, DestroyElementCommandTest.class, MetamodelTypeDescriptorTest.class,
+		MetamodelTypeTest.class, MoveRequestTest.class, MultiClientContextTest.class, SetRequestTest.class,
+		SetValueCommandTest.class, SpecializationTypeDescriptorTest.class, SpecializationTypeTest.class,
+		ElementTypeUtilTest.class, })
+public class AllTests {
 }

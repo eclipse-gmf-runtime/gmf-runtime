@@ -7,12 +7,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.layout.actions;
-
-import java.util.Iterator;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -34,14 +32,14 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
-
 /**
  * @author sshaw
  *
- * Sample action for demonstrating invokation of a custom layout provider.  In this
- * case the square layout provider is invoked through a separate menu action.
+ *         Sample action for demonstrating invokation of a custom layout
+ *         provider. In this case the square layout provider is invoked through
+ *         a separate menu action.
  */
-public class SquareLayoutAction	implements IWorkbenchWindowActionDelegate {
+public class SquareLayoutAction implements IWorkbenchWindowActionDelegate {
 
 	/**
 	 * Title of diagram creation operation
@@ -52,15 +50,15 @@ public class SquareLayoutAction	implements IWorkbenchWindowActionDelegate {
 	 * Constructor
 	 */
 	public SquareLayoutAction() {
-		//No-op
+		// No-op
 	}
 
 	/**
-	 * Walk the selected objects and creates a new diagram for each visited
-	 * packages
-	 * 
+	 * Walk the selected objects and creates a new diagram for each visited packages
+	 *
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
+	@Override
 	public void run(IAction action) {
 
 		/* Get selection */
@@ -68,71 +66,69 @@ public class SquareLayoutAction	implements IWorkbenchWindowActionDelegate {
 
 		// Get selection from the window
 		final ISelection selection = window.getSelectionService().getSelection();
-        Diagram diagramView = null;
-        
-        // get the editing domain
-        if (selection instanceof IStructuredSelection) {
+		Diagram diagramView = null;
 
-            IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		// get the editing domain
+		if (selection instanceof IStructuredSelection) {
 
-            // Walk selection
-            for (Iterator i = structuredSelection.iterator(); i.hasNext();) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
-                // Try to adapt the selection to a view
-                Object selectedObject = i.next();
-                if (selectedObject instanceof IAdaptable) {
+			// Walk selection
+			for (Object selectedObject : structuredSelection) {
 
-                    // Try to get a View (new notation)
-                    Object object = ((IAdaptable) selectedObject)
-                        .getAdapter(View.class);
-                    
-                    diagramView = ((View)object).getDiagram();
-                }
-            }
-        }
-        
-        if (diagramView != null) {
-            final Diagram diag = diagramView;
-            TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagramView);
-            AbstractEMFOperation operation = new AbstractEMFOperation(
-                ted, KEY_SQUARE_LAYOUT, null) {
+				// Try to adapt the selection to a view
+				if (selectedObject instanceof IAdaptable) {
 
-                protected IStatus doExecute(IProgressMonitor monitor,
-                        IAdaptable info)
-                    throws ExecutionException {
+					// Try to get a View (new notation)
+					Object object = ((IAdaptable) selectedObject).getAdapter(View.class);
 
-                    LayoutService.getInstance().layout(diag, SquareLayoutProvider.SQUARE_LAYOUT);
+					diagramView = ((View) object).getDiagram();
+				}
+			}
+		}
 
-                    return Status.OK_STATUS;
-                }
-            };
-            try {
-                operation.execute(new NullProgressMonitor(), null);
-            } 
-            catch (Exception e) {
-                throw new RuntimeException(e.getCause());
-            }
-        }
+		if (diagramView != null) {
+			final Diagram diag = diagramView;
+			TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagramView);
+			AbstractEMFOperation operation = new AbstractEMFOperation(ted, KEY_SQUARE_LAYOUT, null) {
+
+				@Override
+				protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+
+					LayoutService.getInstance().layout(diag, SquareLayoutProvider.SQUARE_LAYOUT);
+
+					return Status.OK_STATUS;
+				}
+			};
+			try {
+				operation.execute(new NullProgressMonitor(), null);
+			} catch (Exception e) {
+				throw new RuntimeException(e.getCause());
+			}
+		}
 	}
 
 	/**
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		//No-op
+		// No-op
 	}
 
 	/**
 	 * @see IWorkbenchWindowActionDelegate#dispose
 	 */
+	@Override
 	public void dispose() {
-		//No-op
+		// No-op
 	}
 
 	/**
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
+	@Override
 	public void init(IWorkbenchWindow windowIn) {
-		//No-op
+		// No-op
 	}
 }

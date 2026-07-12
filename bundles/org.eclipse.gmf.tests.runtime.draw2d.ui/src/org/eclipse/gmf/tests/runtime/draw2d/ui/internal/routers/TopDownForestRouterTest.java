@@ -7,10 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers;
+
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,45 +24,46 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ITreeConnection;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.OrthogonalRouterUtilities;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 /**
  * @author sshaw
- * 
- * ForestRouter test class.
+ *
+ *         ForestRouter test class.
  */
 public class TopDownForestRouterTest extends AbstractForestRouterTest {
-	public TopDownForestRouterTest(String name) {
-		super(name);
-	}
-	
-	protected void setUp() {
+	@Override
+	@BeforeEach
+	public void setUp() {
 		super.setUp();
-		
+
 		try {
 			getConnection1().getSourceAnchor().getOwner().setLocation(new Point(100, 200));
 			getConnection2().getSourceAnchor().getOwner().setLocation(new Point(200, 200));
 			getConnection1().getTargetAnchor().getOwner().setLocation(new Point(150, 50));
-			
+
 			getConnection3().getSourceAnchor().getOwner().setLocation(new Point(100, 300));
 			getConnection4().getSourceAnchor().getOwner().setLocation(new Point(200, 300));
-			
+
 			getConnection1().setOrientation(ITreeConnection.Orientation.VERTICAL);
 			getConnection2().setOrientation(ITreeConnection.Orientation.VERTICAL);
 			getConnection3().setOrientation(ITreeConnection.Orientation.VERTICAL);
 			getConnection4().setOrientation(ITreeConnection.Orientation.VERTICAL);
-			
+
 		} catch (Exception e) {
 			fail("The ForestRouterTest.setUp method caught an exception - " + e); //$NON-NLS-1$
 		}
 	}
-	
+
+	@Test
 	public void testRouteTopDown() {
 		// test default routing - no constraint set
 		routeConnections("TopDown:no constraint"); //$NON-NLS-1$
-		
+
 		// now set constraint and change it simulating user gesture
 		List newConstraint = new ArrayList(getConnection1().getPoints().size());
-		PointList pts = PointListUtilities
-				.copyPoints(getConnection1().getPoints());
+		PointList pts = PointListUtilities.copyPoints(getConnection1().getPoints());
 		OrthogonalRouterUtilities.resetEndPointsToCenter(getConnection1(), pts);
 		// test 1 change trunk end
 		pts.setPoint(pts.getPoint(2).getTranslated(10, 0), 2);
@@ -91,9 +95,10 @@ public class TopDownForestRouterTest extends AbstractForestRouterTest {
 		getForestRouter().setConstraint(getConnection1(), newConstraint);
 		routeConnections("TopDown:change branch"); //$NON-NLS-1$
 	}
-	
+
+	@Test
 	public void testMultiTrees() {
-		//	test default routing - no constraint set
+		// test default routing - no constraint set
 		routeMultiTreeConnections("TopDown:no constraint"); //$NON-NLS-1$
 	}
 }

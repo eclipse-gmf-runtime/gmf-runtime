@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal;
@@ -15,12 +15,11 @@ package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal;
 import org.eclipse.core.runtime.Plugin;
 
 /**
- * Main plugin class. 
- * 
+ * Main plugin class.
+ *
  * @author Wayne Diu, wdiu
  */
-public class CommonUIServicesProviderPlugin
-	extends Plugin {
+public class CommonUIServicesProviderPlugin extends Plugin {
 
 	/**
 	 * This plug-in's shared instance.
@@ -37,7 +36,7 @@ public class CommonUIServicesProviderPlugin
 
 	/**
 	 * Retrieves this plug-in's shared instance.
-	 * 
+	 *
 	 * @return This plug-in's shared instance.
 	 */
 	public static CommonUIServicesProviderPlugin getDefault() {
@@ -46,7 +45,7 @@ public class CommonUIServicesProviderPlugin
 
 	/**
 	 * Retrieves the unique identifier of this plug-in.
-	 * 
+	 *
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {

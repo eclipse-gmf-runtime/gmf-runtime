@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions;
 
@@ -25,9 +25,9 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * Implementation of an action that changes ports color on LED and/or Circuit
- * 
+ *
  * @author aboyko
- * 
+ *
  */
 public class ModifyPortsColorAction extends DiagramAction {
 
@@ -35,6 +35,7 @@ public class ModifyPortsColorAction extends DiagramAction {
 		super(workbenchPage);
 	}
 
+	@Override
 	public void init() {
 		super.init();
 		setId("PortsColor"); //$NON-NLS-1$
@@ -42,32 +43,35 @@ public class ModifyPortsColorAction extends DiagramAction {
 		setToolTipText(ExampleDiagramLogicMessages.LogicPortsColor_Action_Tooltip);
 	}
 
+	@Override
 	protected Request createTargetRequest() {
 		return new Request(StringConstants.PORTSCOLOR_REQUEST);
 	}
 
+	@Override
 	protected boolean isSelectionListener() {
 		return true;
 	}
 
+	@Override
 	protected void doRun(IProgressMonitor progressMonitor) {
 		Shell shell = getDiagramGraphicalViewer().getControl().getShell();
 		ColorDialog dialog = new ColorDialog(shell);
 		RGB newRGB = dialog.open();
 		if (newRGB != null) {
-			getTargetRequest().getExtendedData().put(
-					StringConstants.PORTS_COLOR_PROPERTY_NAME,
+			getTargetRequest().getExtendedData().put(StringConstants.PORTS_COLOR_PROPERTY_NAME,
 					FigureUtilities.RGBToInteger(newRGB));
 			ModifyPortsColorAction.super.doRun(progressMonitor);
 		}
 	}
 
+	@Override
 	protected Command getCommand() {
-		Command cmd = super.getCommand();		
+		Command cmd = super.getCommand();
 		// In the case of composite command the label is blank, hence lets just
 		// force the label to be there regardless of the command
 		cmd.setLabel(ExampleDiagramLogicMessages.LogicPortsColor_Action_Label);
 		return cmd;
 	}
-	
+
 }

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
@@ -19,21 +19,22 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 /**
  * @author ldamus
  */
-public class ManagerMatcher
-	implements IElementMatcher {
+public class ManagerMatcher implements IElementMatcher {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.IElementMatcher#matches(org.eclipse.emf.ecore.EObject)
+	 *
+	 * @see
+	 * org.eclipse.gmf.runtime.emf.type.core.IElementMatcher#matches(org.eclipse.emf
+	 * .ecore.EObject)
 	 */
+	@Override
 	public boolean matches(EObject eObject) {
-		
+
 		if (eObject instanceof Employee) {
 			Employee employee = (Employee) eObject;
-			
-			if (employee.getOffice().getNumberOfWindows() == 1
-				&& employee.getOffice().isHasDoor() == false) {
+
+			if (employee.getOffice().getNumberOfWindows() == 1 && !employee.getOffice().isHasDoor()) {
 				return true;
 			}
 		}

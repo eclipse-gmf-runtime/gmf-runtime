@@ -7,10 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Christian W. Damus - initial API and implementation 
+ *    Christian W. Damus - initial API and implementation
  */
 
 package org.eclipse.gmf.tests.runtime.emf.type.core;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,30 +46,16 @@ import org.eclipse.gmf.runtime.emf.type.core.SpecializationType;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * JUnit tests for the {@link ElementTypeUtil} class.
  */
-public class ElementTypeUtilTest extends TestCase {
+public class ElementTypeUtilTest {
 
 	private TestListener listener;
-
-	public ElementTypeUtilTest(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(ElementTypeUtilTest.class, "ElementTypeUtil Tests"); //$NON-NLS-1$
-	}
 
 	protected ElementTypeRegistry getFixture() {
 		return ElementTypeRegistry.getInstance();
@@ -74,16 +64,17 @@ public class ElementTypeUtilTest extends TestCase {
 	/**
 	 * Tests the sorting of element types in bottom-up specialization order.
 	 */
+	@Test
 	public void test_sort() {
 		final IElementType employee = getFixture().getType("org.eclipse.gmf.tests.runtime.emf.type.core.employee"); //$NON-NLS-1$
 		final IElementType manager = getFixture().getType("org.eclipse.gmf.tests.runtime.emf.type.core.manager"); //$NON-NLS-1$
 		final IElementType executive = getFixture().getType("org.eclipse.gmf.tests.runtime.emf.type.core.executive"); //$NON-NLS-1$
 		final IElementType department = getFixture().getType("org.eclipse.gmf.tests.runtime.emf.type.core.department"); //$NON-NLS-1$
-		final IElementType secretDept = getFixture().getType(
-				"org.eclipse.gmf.tests.runtime.emf.type.core.secretDepartment"); //$NON-NLS-1$
+		final IElementType secretDept = getFixture()
+				.getType("org.eclipse.gmf.tests.runtime.emf.type.core.secretDepartment"); //$NON-NLS-1$
 
 		// create a list in exactly the wrong order
-		List<IElementType> types = new ArrayList<IElementType>(5);
+		List<IElementType> types = new ArrayList<>(5);
 		types.add(employee);
 		types.add(department);
 		types.add(manager);
@@ -99,9 +90,10 @@ public class ElementTypeUtilTest extends TestCase {
 	}
 
 	/**
-	 * Tests that a dynamically-added element type can be removed from the
-	 * registry without options.
+	 * Tests that a dynamically-added element type can be removed from the registry
+	 * without options.
 	 */
+	@Test
 	public void test_deregister_noFlags() {
 		final IMetamodelType type = type("dynamic.metamodel.typeToBeRemoved", EmployeePackage.eINSTANCE.getLocation()); //$NON-NLS-1$
 
@@ -117,9 +109,10 @@ public class ElementTypeUtilTest extends TestCase {
 	}
 
 	/**
-	 * Tests that a dynamically-added element type can be removed from the
-	 * registry with its advices.
+	 * Tests that a dynamically-added element type can be removed from the registry
+	 * with its advices.
 	 */
+	@Test
 	public void test_deregister_withAdvices() {
 		String id = "dynamic.metamodel.typeToBeRemoved"; //$NON-NLS-1$
 		final IMetamodelType type = type(id, EmployeePackage.eINSTANCE.getLocation());
@@ -127,7 +120,7 @@ public class ElementTypeUtilTest extends TestCase {
 		// Register the type now
 		getFixture().register(type);
 
-		Set<IAdviceBindingDescriptor> advices = new HashSet<IAdviceBindingDescriptor>();
+		Set<IAdviceBindingDescriptor> advices = new HashSet<>();
 		advices.add(new MyAdviceBindingDescriptor("test.advice.1", id)); //$NON-NLS-1$
 		advices.add(new MyAdviceBindingDescriptor("test.advice.2", id)); //$NON-NLS-1$
 
@@ -147,9 +140,10 @@ public class ElementTypeUtilTest extends TestCase {
 	}
 
 	/**
-	 * Tests that a dynamically-added element type can be removed from the
-	 * registry with its specializations.
+	 * Tests that a dynamically-added element type can be removed from the registry
+	 * with its specializations.
 	 */
+	@Test
 	public void test_deregister_withSubtypes() {
 		final IMetamodelType type = type("dynamic.metamodel.typeToBeRemoved", EmployeePackage.eINSTANCE.getLocation()); //$NON-NLS-1$
 		final ISpecializationType subtype1 = type("dynamic.specialization.typeToBeRemoved1", type); //$NON-NLS-1$
@@ -170,9 +164,10 @@ public class ElementTypeUtilTest extends TestCase {
 	}
 
 	/**
-	 * Tests that a dynamically-added element type can be removed from the
-	 * registry with its specializations and its (and their) advice.
+	 * Tests that a dynamically-added element type can be removed from the registry
+	 * with its specializations and its (and their) advice.
 	 */
+	@Test
 	public void test_deregister_withSubtypesAndAdvice() {
 		String id = "dynamic.metamodel.typeToBeRemoved"; //$NON-NLS-1$
 		final IMetamodelType type = type(id, EmployeePackage.eINSTANCE.getLocation());
@@ -184,7 +179,7 @@ public class ElementTypeUtilTest extends TestCase {
 		final ISpecializationType subtype2 = type(subID2, type);
 
 		// Advise one of the specialization types
-		Set<IAdviceBindingDescriptor> advices = new HashSet<IAdviceBindingDescriptor>();
+		Set<IAdviceBindingDescriptor> advices = new HashSet<>();
 		advices.add(new MyAdviceBindingDescriptor("test.advice.1", subID2)); //$NON-NLS-1$
 		advices.add(new MyAdviceBindingDescriptor("test.advice.2", subID2)); //$NON-NLS-1$
 
@@ -211,9 +206,10 @@ public class ElementTypeUtilTest extends TestCase {
 	}
 
 	/**
-	 * Tests that multiple related dynamically-added element types can be
-	 * removed from the registry.
+	 * Tests that multiple related dynamically-added element types can be removed
+	 * from the registry.
 	 */
+	@Test
 	public void test_deregister_multiple() {
 		final IMetamodelType type = type("dynamic.metamodel.typeToBeRemoved", EmployeePackage.eINSTANCE.getLocation()); //$NON-NLS-1$
 		final ISpecializationType subtype1 = type("dynamic.specialization.typeToBeRemoved1", type); //$NON-NLS-1$
@@ -239,9 +235,10 @@ public class ElementTypeUtilTest extends TestCase {
 	}
 
 	/**
-	 * Tests that multiple related dynamically-added element types can be
-	 * removed from the registry with their specializations.
+	 * Tests that multiple related dynamically-added element types can be removed
+	 * from the registry with their specializations.
 	 */
+	@Test
 	public void test_deregister_multiple_withSubtypes() {
 		final IMetamodelType type = type("dynamic.metamodel.typeToBeRemoved", EmployeePackage.eINSTANCE.getLocation()); //$NON-NLS-1$
 		final ISpecializationType subtype1 = type("dynamic.specialization.typeToBeRemoved1", type); //$NON-NLS-1$
@@ -273,9 +270,10 @@ public class ElementTypeUtilTest extends TestCase {
 	}
 
 	/**
-	 * Tests that multiple related dynamically-added element types can be
-	 * removed from the registry with their specializations and all advice.
+	 * Tests that multiple related dynamically-added element types can be removed
+	 * from the registry with their specializations and all advice.
 	 */
+	@Test
 	public void test_deregister_multiple_withSubtypesAndAdvice() {
 		String id = "dynamic.metamodel.typeToBeRemoved"; //$NON-NLS-1$
 		final IMetamodelType type = type(id, EmployeePackage.eINSTANCE.getLocation());
@@ -296,7 +294,7 @@ public class ElementTypeUtilTest extends TestCase {
 		final List<IElementType> someTypes = Arrays.asList(type, subtype3);
 
 		// Advise two of the specialization types
-		Set<IAdviceBindingDescriptor> advices = new HashSet<IAdviceBindingDescriptor>();
+		Set<IAdviceBindingDescriptor> advices = new HashSet<>();
 		advices.add(new MyAdviceBindingDescriptor("test.advice.1", subID2)); //$NON-NLS-1$
 		advices.add(new MyAdviceBindingDescriptor("test.advice.2", subID2)); //$NON-NLS-1$
 		advices.add(new MyAdviceBindingDescriptor("test.advice.3", subID4)); //$NON-NLS-1$
@@ -316,8 +314,8 @@ public class ElementTypeUtilTest extends TestCase {
 
 		listener.clear();
 
-		Set<IElementType> rejects = ElementTypeUtil.deregisterElementTypes(someTypes, ElementTypeUtil.SPECIALIZATIONS
-				| ElementTypeUtil.ADVICE_BINDINGS);
+		Set<IElementType> rejects = ElementTypeUtil.deregisterElementTypes(someTypes,
+				ElementTypeUtil.SPECIALIZATIONS | ElementTypeUtil.ADVICE_BINDINGS);
 
 		listener.assertRemoved(type);
 		listener.assertRemoved(subtype1);
@@ -333,10 +331,10 @@ public class ElementTypeUtilTest extends TestCase {
 	}
 
 	/**
-	 * Tests that multiple related dynamically-added element types can be
-	 * removed from the registry with their specializations and client-context
-	 * bindings.
+	 * Tests that multiple related dynamically-added element types can be removed
+	 * from the registry with their specializations and client-context bindings.
 	 */
+	@Test
 	public void test_deregister_multiple_withSubtypesAndClientContexts() {
 		final IMetamodelType type = type("dynamic.metamodel.typeToBeRemoved", EmployeePackage.eINSTANCE.getLocation()); //$NON-NLS-1$
 		final ISpecializationType subtype1 = type("dynamic.specialization.typeToBeRemoved1", type); //$NON-NLS-1$
@@ -344,8 +342,9 @@ public class ElementTypeUtilTest extends TestCase {
 		final ISpecializationType subtype3 = type("dynamic.specialization.typeToBeRemoved3", type); //$NON-NLS-1$
 		final ISpecializationType subtype4 = type("dynamic.specialization.typeToBeRemoved4", subtype3); //$NON-NLS-1$
 
-		IClientContext context = ClientContextManager.getInstance().getClientContext("org.eclipse.gmf.tests.runtime.emf.type.core.ClientContext1"); //$NON-NLS-1$
-		
+		IClientContext context = ClientContextManager.getInstance()
+				.getClientContext("org.eclipse.gmf.tests.runtime.emf.type.core.ClientContext1"); //$NON-NLS-1$
+
 		// One of these is redundant
 		final List<IElementType> someTypes = Arrays.asList(type, subtype3);
 
@@ -355,7 +354,7 @@ public class ElementTypeUtilTest extends TestCase {
 		getFixture().register(subtype2);
 		getFixture().register(subtype3);
 		getFixture().register(subtype4);
-		
+
 		// And bind them to the context
 		context.bindId(type.getId());
 		context.bindId(subtype1.getId());
@@ -368,7 +367,7 @@ public class ElementTypeUtilTest extends TestCase {
 		assertTrue(context.includes(subtype2));
 		assertTrue(context.includes(subtype3));
 		assertTrue(context.includes(subtype4));
-		
+
 		ElementTypeUtil.deregisterElementTypes(someTypes, ElementTypeUtil.ALL_DEPENDENTS);
 
 		assertFalse(context.includes(type));
@@ -382,20 +381,16 @@ public class ElementTypeUtilTest extends TestCase {
 	// Test framework
 	//
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@BeforeEach
+	public void setUp() {
 		listener = new TestListener();
 		getFixture().addElementTypeRegistryListener(listener);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() {
 		getFixture().removeElementTypeRegistryListener(listener);
 		listener = null;
-
-		super.tearDown();
 	}
 
 	IMetamodelType type(String id, EClass ecoreType) {
@@ -420,6 +415,7 @@ public class ElementTypeUtilTest extends TestCase {
 			super();
 		}
 
+		@Override
 		protected ICommand getBeforeCreateCommand(CreateElementRequest request) {
 			return super.getBeforeCreateCommand(request);
 		}
@@ -430,6 +426,7 @@ public class ElementTypeUtilTest extends TestCase {
 			super();
 		}
 
+		@Override
 		protected ICommand getBeforeCreateCommand(CreateElementRequest request) {
 			return super.getBeforeCreateCommand(request);
 		}
@@ -440,10 +437,12 @@ public class ElementTypeUtilTest extends TestCase {
 			super(id, typeID, AdviceBindingInheritance.ALL, new MyAdvice());
 		}
 
+		@Override
 		public IElementMatcher getMatcher() {
 			return null;
 		}
 
+		@Override
 		public IContainerDescriptor getContainerDescriptor() {
 			return null;
 		}
@@ -452,23 +451,27 @@ public class ElementTypeUtilTest extends TestCase {
 	@SuppressWarnings("unused")
 	private class TestListener implements IElementTypeRegistryListener2 {
 
-		List<IElementType> addedTypes = new ArrayList<IElementType>();
-		List<IElementType> removedTypes = new ArrayList<IElementType>();
-		List<IAdviceBindingDescriptor> addedAdvices = new ArrayList<IAdviceBindingDescriptor>();
-		List<IAdviceBindingDescriptor> removedAdvices = new ArrayList<IAdviceBindingDescriptor>();
+		List<IElementType> addedTypes = new ArrayList<>();
+		List<IElementType> removedTypes = new ArrayList<>();
+		List<IAdviceBindingDescriptor> addedAdvices = new ArrayList<>();
+		List<IAdviceBindingDescriptor> removedAdvices = new ArrayList<>();
 
+		@Override
 		public void elementTypeAdded(ElementTypeAddedEvent event) {
 			addedTypes.add(getFixture().getType(event.getElementTypeId()));
 		}
 
+		@Override
 		public void elementTypeRemoved(ElementTypeRemovedEvent event) {
 			removedTypes.add(event.getElementType());
 		}
 
+		@Override
 		public void adviceBindingAdded(AdviceBindingAddedEvent event) {
 			addedAdvices.add(event.getAdviceBinding());
 		}
 
+		@Override
 		public void adviceBindingRemoved(AdviceBindingRemovedEvent event) {
 			removedAdvices.add(event.getAdviceBinding());
 		}

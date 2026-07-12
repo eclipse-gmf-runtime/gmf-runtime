@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures;
@@ -18,22 +18,19 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-
 /**
  * code copied from real logic example in gef
  */
 /*
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
-public class LogicFlowBorder 
-	extends org.eclipse.draw2d.LineBorder 
-{
-	
+public class LogicFlowBorder extends org.eclipse.draw2d.LineBorder {
+
 	private int grabBarWidth;
 	private Dimension grabBarSize;
 
-	public LogicFlowBorder() { 
-		// do nothing 
+	public LogicFlowBorder() {
+		// do nothing
 	}
 
 	public LogicFlowBorder(Dimension size) {
@@ -41,14 +38,16 @@ public class LogicFlowBorder
 		this.grabBarSize = new Dimension(size);
 	}
 
-	public Insets getInsets(IFigure figure){
-		return new Insets(getWidth()+2, grabBarWidth+2, getWidth()+2, getWidth()+2);
+	@Override
+	public Insets getInsets(IFigure figure) {
+		return new Insets(getWidth() + 2, grabBarWidth + 2, getWidth() + 2, getWidth() + 2);
 	}
 
 	public Dimension getPreferredSize() {
 		return grabBarSize;
 	}
 
+	@Override
 	public void paint(IFigure figure, Graphics graphics, Insets insets) {
 		Rectangle bounds = figure.getBounds();
 		tempRect.setBounds(new Rectangle(bounds.x, bounds.y, grabBarWidth, bounds.height));

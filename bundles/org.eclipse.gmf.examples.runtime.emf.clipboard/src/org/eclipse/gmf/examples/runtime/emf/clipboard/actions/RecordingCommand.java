@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.emf.clipboard.actions;
 
@@ -21,24 +20,22 @@ import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
-
 /**
- * A command that records the changes made by an arbitrary {@link Runnable},
- * to be able to undo them, later.
+ * A command that records the changes made by an arbitrary {@link Runnable}, to
+ * be able to undo them, later.
  */
-public class RecordingCommand
-	extends AbstractCommand {
+public class RecordingCommand extends AbstractCommand {
 
 	private Runnable runnable;
 	private Set notifiers;
 	private ChangeRecorder recorder;
 	private ChangeDescription change;
-	
+
 	/**
 	 * Initializes me with my label and my runnable to execute.
-	 * 
-	 * @param domain my editing domain
-	 * @param label my label
+	 *
+	 * @param domain   my editing domain
+	 * @param label    my label
 	 * @param runnable the change that I need to make
 	 */
 	public RecordingCommand(EditingDomain domain, String label, Runnable runnable) {
@@ -51,6 +48,7 @@ public class RecordingCommand
 	/**
 	 * I run the runnable when I execute the first time.
 	 */
+	@Override
 	public void execute() {
 		try {
 			recorder.beginRecording(notifiers);
@@ -60,14 +58,15 @@ public class RecordingCommand
 			runnable = null;
 		}
 	}
-	
+
 	/**
 	 * I am ready to execute if I haven't recorded any changes, yet.
 	 */
+	@Override
 	protected boolean prepare() {
 		return change == null;
 	}
-	
+
 	/**
 	 * Applies (undoes) changes recorded previously, recording the new changes
 	 * meanwhile.
@@ -80,17 +79,19 @@ public class RecordingCommand
 			change = recorder.endRecording();
 		}
 	}
-	
+
 	/**
 	 * I can undo if I have recorded any changes previously.
 	 */
+	@Override
 	public boolean canUndo() {
 		return change != null;
 	}
-	
+
 	/**
 	 * Undoes by applying recorded changes.
 	 */
+	@Override
 	public void undo() {
 		applyChanges();
 	}
@@ -98,10 +99,12 @@ public class RecordingCommand
 	/**
 	 * Redoes by applying changes recorded in the last undo.
 	 */
+	@Override
 	public void redo() {
 		applyChanges();
 	}
-	
+
+	@Override
 	public void dispose() {
 		change = null;
 		recorder = null;

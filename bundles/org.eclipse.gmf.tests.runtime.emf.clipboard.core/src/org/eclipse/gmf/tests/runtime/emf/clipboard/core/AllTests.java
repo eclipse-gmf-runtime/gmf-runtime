@@ -7,37 +7,21 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.clipboard.core;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
- * 
+ *
  * @author Christian Vogt (cvogt)
  */
-public class AllTests extends TestCase {
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-
-        suite.addTest(RegressionTest.suite());
-        // suite.addTest(ClipboardUtilTest.suite());
-
-        return suite;
-    }
-
-    public AllTests() {
-        super(""); //$NON-NLS-1$
-    }
-
+@Suite
+@SelectClasses({ RegressionTest.class,
+// ClipboardUtilTest.class,
+})
+public class AllTests {
 }

@@ -7,10 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.core.internal.service;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,89 +25,71 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.gmf.runtime.common.core.service.ProviderPriority;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author khussey
  */
-public class ProviderPriorityTest extends TestCase {
+public class ProviderPriorityTest {
 
-    protected static class Fixture extends ProviderPriority {
+	protected static class Fixture extends ProviderPriority {
 
-    	private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-        protected Fixture() {
-            super("Fixture", 0); //$NON-NLS-1$
-        }
+		protected Fixture() {
+			super("Fixture", 0); //$NON-NLS-1$
+		}
 
-        protected List getValues() {
-            return super.getValues();
-        }
+		@Override
+		protected List getValues() {
+			return super.getValues();
+		}
 
-    }
+	}
 
-    private Fixture fixture = null;
+	private Fixture fixture = null;
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	protected Fixture getFixture() {
+		return fixture;
+	}
 
-    public static Test suite() {
-        return new TestSuite(ProviderPriorityTest.class);
-    }
+	private void setFixture(Fixture fixture) {
+		this.fixture = fixture;
+	}
 
-    public ProviderPriorityTest(String name) {
-        super(name);
-    }
+	@BeforeEach
+	public void setUp() {
+		setFixture(new Fixture());
+	}
 
-    protected Fixture getFixture() {
-        return fixture;
-    }
+	@Test
+	public void test_readResolve() {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-    private void setFixture(Fixture fixture) {
-        this.fixture = fixture;
-    }
+		ObjectOutput output = null;
+		ObjectInput input = null;
+		try {
+			output = new ObjectOutputStream(stream);
+			for (Iterator i = getFixture().getValues().iterator(); i.hasNext();) {
+				output.writeObject(i.next());
+			}
+			output.flush();
 
-    protected void setUp() {
-        setFixture(new Fixture());
-    }
-
-    public void test_readResolve() {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-        ObjectOutput output = null;
-        ObjectInput input = null;
-        try {
-            output = new ObjectOutputStream(stream);
-            for (Iterator i = getFixture().getValues().iterator();
-                i.hasNext();
-                ) {
-                output.writeObject(i.next());
-            }
-            output.flush();
-
-            input =
-                new ObjectInputStream(
-                    new ByteArrayInputStream(stream.toByteArray()));
-            for (Iterator i = getFixture().getValues().iterator();
-                i.hasNext();
-                ) {
-                assertSame(i.next(), input.readObject());
-            }
-        } catch (Exception e) {
-            fail();
-        } finally {
-            try {
-                output.close();
-                input.close();
-            } catch (Exception e) {
-            	// Nothing to do
-            }
-        }
-    }
+			input = new ObjectInputStream(new ByteArrayInputStream(stream.toByteArray()));
+			for (Iterator i = getFixture().getValues().iterator(); i.hasNext();) {
+				assertSame(i.next(), input.readObject());
+			}
+		} catch (Exception e) {
+			fail();
+		} finally {
+			try {
+				output.close();
+				input.close();
+			} catch (Exception e) {
+				// Nothing to do
+			}
+		}
+	}
 
 }

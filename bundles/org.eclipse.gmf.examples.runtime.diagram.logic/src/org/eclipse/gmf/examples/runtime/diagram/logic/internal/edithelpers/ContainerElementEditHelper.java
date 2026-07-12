@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
@@ -23,23 +23,22 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 
 /**
  * Edit helper for logic container elements.
- * 
+ *
  * @author ldamus
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
-public class ContainerElementEditHelper
-	extends LogicElementEditHelper {
-    
-    // Default containment features.
-    {
-        getDefaultContainmentFeatures().put(
-            SemanticPackage.eINSTANCE.getElement(),
-            SemanticPackage.eINSTANCE.getContainerElement_Children());
-    }
+public class ContainerElementEditHelper extends LogicElementEditHelper {
+
+	// Default containment features.
+	{
+		getDefaultContainmentFeatures().put(SemanticPackage.eINSTANCE.getElement(),
+				SemanticPackage.eINSTANCE.getContainerElement_Children());
+	}
 
 	/**
-     * Gets a command to create a child in the container element.
-     */
+	 * Gets a command to create a child in the container element.
+	 */
+	@Override
 	protected ICommand getCreateCommand(CreateElementRequest req) {
 
 		return super.getCreateCommand(req);
@@ -48,15 +47,14 @@ public class ContainerElementEditHelper
 	/**
 	 * Creates a wire relationship.
 	 */
-	protected ICommand getCreateRelationshipCommand(
-			CreateRelationshipRequest req) {
+	@Override
+	protected ICommand getCreateRelationshipCommand(CreateRelationshipRequest req) {
 
-		if (req.getElementType() == LogicSemanticType.WIRE
-            && req.getSource() instanceof OutputTerminal
-            && req.getTarget() instanceof InputTerminal) {
-            
-            return new CreateWireCommand(req);
-        }
+		if (req.getElementType() == LogicSemanticType.WIRE && req.getSource() instanceof OutputTerminal
+				&& req.getTarget() instanceof InputTerminal) {
+
+			return new CreateWireCommand(req);
+		}
 
 		return super.getCreateRelationshipCommand(req);
 	}

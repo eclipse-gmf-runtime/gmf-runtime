@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.util;
@@ -18,4 +18,3 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 public interface ITestCommandCallback {
 	void onCommandExecution();
 }
-

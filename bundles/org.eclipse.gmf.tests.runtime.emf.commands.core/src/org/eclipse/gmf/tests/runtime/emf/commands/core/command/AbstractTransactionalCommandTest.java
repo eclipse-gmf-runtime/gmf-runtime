@@ -7,10 +7,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.emf.commands.core.command;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,173 +49,154 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the {@link AbstractTransactionalCommand}.
- * 
+ *
  * @author ldamus
  */
-public class AbstractTransactionalCommandTest
-    extends TestCase {
+public class AbstractTransactionalCommandTest {
 
-    private IOperationHistory history;
+	private IOperationHistory history;
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
+	@BeforeEach
+	public void setUp() throws Exception {
+		history = OperationHistoryFactory.getOperationHistory();
+	}
 
-    public static Test suite() {
-        return new TestSuite(AbstractTransactionalCommandTest.class);
-    }
+	private List getFiles(String str) {
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IFile[] files = workspaceRoot.findFilesForLocationURI(java.net.URI.create(str));
+		return Arrays.asList(files);
+	}
 
-    public AbstractTransactionalCommandTest(String name) {
-        super(name);
-    }
+	/**
+	 * Tests that commands can be executed, undone and redone through the operation
+	 * history.
+	 */
+	@Test
+	public void test_execute_undo_redo() {
+		String name = "test_execute_undo_redo"; //$NON-NLS-1$
+		TestCommand c = new TestCommand(name, null);
+		IUndoContext ctx = new ObjectUndoContext(this);
 
-    protected void setUp()
-        throws Exception {
-        super.setUp();
-        history = OperationHistoryFactory.getOperationHistory();
-    }
+		try {
+			c.addContext(ctx);
+			history.execute(c, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
 
-    private List getFiles(String str) {
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-        IFile[] files = workspaceRoot.findFilesForLocationURI(java.net.URI.create(str));
-        return Arrays.asList(files);
-    }
+		c.assertExecuted();
 
-    /**
-     * Tests that commands can be executed, undone and redone through the
-     * operation history.
-     */
-    public void test_execute_undo_redo() {
-        String name = "test_execute_undo_redo"; //$NON-NLS-1$
-        TestCommand c = new TestCommand(name, null);
-        IUndoContext ctx = new ObjectUndoContext(this);
+		try {
+			assertTrue(history.canUndo(ctx));
+			history.undo(ctx, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
 
-        try {
-            c.addContext(ctx);
-            history.execute(c, new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
+		c.assertUndone();
 
-        c.assertExecuted();
+		try {
+			assertTrue(history.canRedo(ctx));
+			history.redo(ctx, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
 
-        try {
-            assertTrue(history.canUndo(ctx));
-            history.undo(ctx, new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
+		c.assertRedone();
+	}
 
-        c.assertUndone();
+	/**
+	 * Tests that composing two commands results in a command that combines the
+	 * contexts and affected files from both children.
+	 */
+	@Test
+	public void test_compose() {
+		String name = "test_compose"; //$NON-NLS-1$
 
-        try {
-            assertTrue(history.canRedo(ctx));
-            history.redo(ctx, new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
-        }
+		IUndoContext ctx1 = new UndoContext();
+		IUndoContext ctx2 = new UndoContext();
 
-        c.assertRedone();
-    }
+		ICommand c1 = new TestCommand(name, getFiles("null:/compose1")); //$NON-NLS-1$
+		c1.addContext(ctx1);
 
-    /**
-     * Tests that composing two commands results in a command that combines the
-     * contexts and affected files from both children.
-     */
-    public void test_compose() {
-        String name = "test_compose"; //$NON-NLS-1$
+		ICommand c2 = new TestCommand(name, getFiles("null:/compose2")); //$NON-NLS-1$
+		c2.addContext(ctx2);
 
-        IUndoContext ctx1 = new UndoContext();
-        IUndoContext ctx2 = new UndoContext();
+		ICommand composition = c1.compose(c2);
 
-        ICommand c1 = new TestCommand(name, getFiles("null:/compose1")); //$NON-NLS-1$
-        c1.addContext(ctx1);
+		List affectedFiles = composition.getAffectedFiles();
+		assertTrue(affectedFiles.containsAll(c1.getAffectedFiles()));
+		assertTrue(affectedFiles.containsAll(c2.getAffectedFiles()));
+		assertEquals(c1.getAffectedFiles().size() + c2.getAffectedFiles().size(), affectedFiles.size());
 
-        ICommand c2 = new TestCommand(name, getFiles("null:/compose2")); //$NON-NLS-1$
-        c2.addContext(ctx2);
+		List contexts = Arrays.asList(composition.getContexts());
+		assertTrue(contexts.contains(ctx1));
+		assertTrue(contexts.contains(ctx2));
+	}
 
-        ICommand composition = c1.compose(c2);
+	/**
+	 * Tests that the reduction of an AbstractCommand returns itself.
+	 */
+	@Test
+	public void test_reduce() {
+		String name = "test_reduce"; //$NON-NLS-1$
 
-        List affectedFiles = composition.getAffectedFiles();
-        assertTrue(affectedFiles.containsAll(c1.getAffectedFiles()));
-        assertTrue(affectedFiles.containsAll(c2.getAffectedFiles()));
-        assertEquals(c1.getAffectedFiles().size()
-            + c2.getAffectedFiles().size(), affectedFiles.size());
+		ICommand c = new TestCommand(name, null);
+		ICommand reduction = c.reduce();
 
-        List contexts = Arrays.asList(composition.getContexts());
-        assertTrue(contexts.contains(ctx1));
-        assertTrue(contexts.contains(ctx2));
-    }
+		assertSame(c, reduction);
+	}
 
-    /**
-     * Tests that the reduction of an AbstractCommand returns itself.
-     */
-    public void test_reduce() {
-        String name = "test_reduce"; //$NON-NLS-1$
+	/**
+	 * Tests that the affected files set in the command constructor are available
+	 * through the getAffectedFiles() method.
+	 */
+	@Test
+	public void test_getAffectedFiles() {
+		String fixtureName = "test_getAffectedFiles"; //$NON-NLS-1$
 
-        ICommand c = new TestCommand(name, null);
-        ICommand reduction = c.reduce();
+		// no affected files
+		ICommand c = new TestCommand(fixtureName, null);
+		assertTrue(c.getAffectedFiles().isEmpty());
 
-        assertSame(c, reduction);
-    }
+		// an affected file
+		List affectedFiles = getFiles("null:/AbstractTransactionalCommandTest"); //$NON-NLS-1$
 
-    /**
-     * Tests that the affected files set in the command constructor are
-     * available through the getAffectedFiles() method.
-     */
-    public void test_getAffectedFiles() {
-        String fixtureName = "test_getAffectedFiles"; //$NON-NLS-1$
+		c = new TestCommand(fixtureName, affectedFiles);
 
-        // no affected files
-        ICommand c = new TestCommand(fixtureName, null);
-        assertTrue(c.getAffectedFiles().isEmpty());
+		assertEquals(affectedFiles.size(), c.getAffectedFiles().size());
+		assertTrue(c.getAffectedFiles().containsAll(affectedFiles));
+	}
 
-        // an affected file
-        List affectedFiles = getFiles("null:/AbstractTransactionalCommandTest"); //$NON-NLS-1$
-
-        c = new TestCommand(fixtureName, affectedFiles);
-
-        assertEquals(affectedFiles.size(), c.getAffectedFiles().size());
-        assertTrue(c.getAffectedFiles().containsAll(affectedFiles));
-    }
-    
-    /**
+	/**
 	 * Verifies the when a precommit listener throws a rollback exception, the
 	 * command result status reflects this fact.
 	 */
-    public void test_statusOnRollback_142025() {
+	@Test
+	public void test_statusOnRollback_142025() {
 
 		String name = "test_statusOnRollback_142025"; //$NON-NLS-1$
 
 		TestCommand c = new TestCommand(name, null) {
-			protected CommandResult doExecuteWithResult(
-					IProgressMonitor progressMonitor, IAdaptable info)
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info)
 					throws ExecutionException {
 
 				// do something that causes notifications to be sent to
 				// precommit listeners
-				CommandResult result = super.doExecuteWithResult(
-						progressMonitor, info);
-				EFactory logicFactory = SemanticPackage.eINSTANCE
-						.getEFactoryInstance();
-				EObject circuit = logicFactory
-						.create(SemanticPackage.eINSTANCE.getCircuit());
-				Resource resource = getEditingDomain()
-						.getResourceSet()
-						.createResource(
-								URI
-										.createURI("null://org.eclipse.gmf.tests.runtime.emf.commands.core")); //$NON-NLS-1$
+				CommandResult result = super.doExecuteWithResult(progressMonitor, info);
+				EFactory logicFactory = SemanticPackage.eINSTANCE.getEFactoryInstance();
+				EObject circuit = logicFactory.create(SemanticPackage.eINSTANCE.getCircuit());
+				Resource resource = getEditingDomain().getResourceSet()
+						.createResource(URI.createURI("null://org.eclipse.gmf.tests.runtime.emf.commands.core")); //$NON-NLS-1$
 				resource.getContents().add(circuit);
 				return result;
 			}
@@ -236,8 +224,8 @@ public class AbstractTransactionalCommandTest
 		// Add a listeners on the editing domain that throws a roll back
 		// exception
 		ResourceSetListenerImpl listener = new ResourceSetListenerImpl() {
-			public Command transactionAboutToCommit(ResourceSetChangeEvent event)
-					throws RollbackException {
+			@Override
+			public Command transactionAboutToCommit(ResourceSetChangeEvent event) throws RollbackException {
 				throw new RollbackException(Status.CANCEL_STATUS);
 			}
 		};
@@ -261,56 +249,52 @@ public class AbstractTransactionalCommandTest
 		// execution status
 		result = c.getCommandResult();
 		assertSame(status, result.getStatus());
-		assertEquals(Status.CANCEL, result.getStatus().getSeverity());
+		assertEquals(IStatus.CANCEL, result.getStatus().getSeverity());
 	}
 
-    // 
-    // TEST FIXTURES
-    //
+	//
+	// TEST FIXTURES
+	//
 
-    protected static class TestCommand
-        extends AbstractTransactionalCommand {
+	protected static class TestCommand extends AbstractTransactionalCommand {
 
-        private static final String EXECUTED = "executed"; //$NON-NLS-1$
+		private static final String EXECUTED = "executed"; //$NON-NLS-1$
 
-        private boolean executed;
+		private boolean executed;
 
-        private boolean undone;
+		private boolean undone;
 
-        private boolean redone;
+		private boolean redone;
 
-        public TestCommand(String label, List affectedFiles) {
-            super(TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(), label, affectedFiles);
-        }
+		public TestCommand(String label, List affectedFiles) {
+			super(TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(), label, affectedFiles);
+		}
 
-        protected CommandResult doExecuteWithResult(
-                IProgressMonitor progressMonitor, IAdaptable info)
-            throws ExecutionException {
-            executed = true;
-            undone = false;
-            redone = false;
-            return CommandResult.newOKCommandResult(EXECUTED);
-        }
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+			executed = true;
+			undone = false;
+			redone = false;
+			return CommandResult.newOKCommandResult(EXECUTED);
+		}
 
-        public void assertExecuted() {
-            assertTrue(executed);
-            assertFalse(undone);
-            assertFalse(redone);
-            assertEquals(IStatus.OK, getCommandResult().getStatus()
-                .getSeverity());
-            assertSame(EXECUTED, getCommandResult().getReturnValue());
-        }
+		public void assertExecuted() {
+			assertTrue(executed);
+			assertFalse(undone);
+			assertFalse(redone);
+			assertEquals(IStatus.OK, getCommandResult().getStatus().getSeverity());
+			assertSame(EXECUTED, getCommandResult().getReturnValue());
+		}
 
-        public void assertUndone() {
-            assertEquals(IStatus.OK, getCommandResult().getStatus()
-                .getSeverity());
-            assertNull(getCommandResult().getReturnValue());
-        }
+		public void assertUndone() {
+			assertEquals(IStatus.OK, getCommandResult().getStatus().getSeverity());
+			assertNull(getCommandResult().getReturnValue());
+		}
 
-        public void assertRedone() {
-            assertEquals(IStatus.OK, getCommandResult().getStatus()
-                .getSeverity());
-            assertNull(getCommandResult().getReturnValue());
-        }
-    }
+		public void assertRedone() {
+			assertEquals(IStatus.OK, getCommandResult().getStatus().getSeverity());
+			assertNull(getCommandResult().getReturnValue());
+		}
+	}
 }

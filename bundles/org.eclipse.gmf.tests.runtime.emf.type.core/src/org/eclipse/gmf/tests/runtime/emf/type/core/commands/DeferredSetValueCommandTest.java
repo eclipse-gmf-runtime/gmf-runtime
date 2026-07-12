@@ -7,9 +7,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.commands;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -22,13 +28,11 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the DeferredSetValueCommand.
- * 
+ *
  * @author ldamus
  */
 public class DeferredSetValueCommandTest extends AbstractEMFTypeTest {
@@ -39,39 +43,29 @@ public class DeferredSetValueCommandTest extends AbstractEMFTypeTest {
 
 	private Office managerOffice;
 
-	public DeferredSetValueCommandTest(String name) {
-		super(name);
-	}
-
-	public static Test suite() {
-		return new TestSuite(DeferredSetValueCommandTest.class);
-	}
-
+	@Override
 	protected void doModelSetup(Resource resource) {
-		department = (Department) getEmployeeFactory().create(
-				getEmployeePackage().getDepartment());
+		department = (Department) getEmployeeFactory().create(getEmployeePackage().getDepartment());
 		department.setName("Department"); //$NON-NLS-1$
 		resource.getContents().add(department);
 
-		manager = (Employee) getEmployeeFactory().create(
-				getEmployeePackage().getEmployee());
+		manager = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
 
-		managerOffice = (Office) getEmployeeFactory().create(
-				getEmployeePackage().getOffice());
+		managerOffice = (Office) getEmployeeFactory().create(getEmployeePackage().getOffice());
 	}
 
 	/**
 	 * Tests that a DeferredSetValueCommand is executable when it has no
 	 * elementToEdit.
 	 */
+	@Test
 	public void test_isExecutable() {
 
 		// command is executable when no elementToEdit in the request
-		SetRequest request = new SetRequest(getEditingDomain(), null,
-				EmployeePackage.eINSTANCE.getDepartment_Manager(), manager);
+		SetRequest request = new SetRequest(getEditingDomain(), null, EmployeePackage.eINSTANCE.getDepartment_Manager(),
+				manager);
 
-		TestDeferredSetValueCommand command = new TestDeferredSetValueCommand(
-				request);
+		TestDeferredSetValueCommand command = new TestDeferredSetValueCommand(request);
 		assertTrue(command.canExecute());
 
 		// command is not executable with invalid elementToEdit
@@ -103,6 +97,7 @@ public class DeferredSetValueCommandTest extends AbstractEMFTypeTest {
 			super(request);
 		}
 
+		@Override
 		protected EObject getElementToEdit() {
 			return owner;
 		}

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers;
 
@@ -18,11 +18,10 @@ import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testCl
 
 /**
  * Provider that purposely throws an exception.
- * 
+ *
  * @author wdiu, Wayne Diu
  */
-public class TestExceptionThrowingIconProvider
-	extends TestNoExceptionsIconProvider {
+public class TestExceptionThrowingIconProvider extends TestNoExceptionsIconProvider {
 
 	/**
 	 * Set to true after the provides method has been executed, implying an
@@ -33,6 +32,7 @@ public class TestExceptionThrowingIconProvider
 	/*
 	 * This test method purposely throws an exception
 	 */
+	@Override
 	public boolean provides(IOperation operation) {
 		providesExecuted = true;
 		if (operation instanceof GetIconOperation) {

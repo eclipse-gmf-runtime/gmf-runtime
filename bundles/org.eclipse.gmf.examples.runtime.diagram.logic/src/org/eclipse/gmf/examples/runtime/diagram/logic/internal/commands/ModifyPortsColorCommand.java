@@ -7,11 +7,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,17 +28,16 @@ import org.eclipse.gmf.runtime.notation.PropertiesSetStyle;
 
 /**
  * Implementation of the command for changing ports color
- * 
+ *
  * @author aboyko
- * 
+ *
  */
 public class ModifyPortsColorCommand extends AbstractTransactionalCommand {
 
 	private IGraphicalEditPart ep;
 	private Integer color;
 
-	public ModifyPortsColorCommand(TransactionalEditingDomain editingDomain,
-			IGraphicalEditPart ep, Integer color) {
+	public ModifyPortsColorCommand(TransactionalEditingDomain editingDomain, IGraphicalEditPart ep, Integer color) {
 		super(editingDomain, "Modify Ports Color", null); //$NON-NLS-1$
 		this.ep = ep;
 		this.color = color;
@@ -47,23 +45,20 @@ public class ModifyPortsColorCommand extends AbstractTransactionalCommand {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#doExecuteWithResult(org.eclipse.core.runtime.IProgressMonitor,
-	 *      org.eclipse.core.runtime.IAdaptable)
+	 *
+	 * @see org.eclipse.gmf.runtime.emf.commands.core.command.
+	 * AbstractTransactionalCommand#doExecuteWithResult(org.eclipse.core.runtime.
+	 * IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
 	 */
-	protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
-			IAdaptable info) throws ExecutionException {
+	@Override
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		List ports = getPorts();
 		if (ports != null && color != null && !ports.isEmpty()) {
-			PropertiesSetStyle style = (PropertiesSetStyle) ep
-					.getNotationView().getNamedStyle(
-							NotationPackage.eINSTANCE.getPropertiesSetStyle(),
-							StringConstants.PORTS_PROPERTIES_STYLE_NAME);
+			PropertiesSetStyle style = (PropertiesSetStyle) ep.getNotationView().getNamedStyle(
+					NotationPackage.eINSTANCE.getPropertiesSetStyle(), StringConstants.PORTS_PROPERTIES_STYLE_NAME);
 			if (style != null) {
-				if (style
-						.hasProperty(StringConstants.PORTS_COLOR_PROPERTY_NAME)) {
-					style.setProperty(
-							StringConstants.PORTS_COLOR_PROPERTY_NAME, color);
+				if (style.hasProperty(StringConstants.PORTS_COLOR_PROPERTY_NAME)) {
+					style.setProperty(StringConstants.PORTS_COLOR_PROPERTY_NAME, color);
 					return CommandResult.newOKCommandResult();
 				}
 			}
@@ -73,8 +68,7 @@ public class ModifyPortsColorCommand extends AbstractTransactionalCommand {
 
 	private List getPorts() {
 		List ports = new LinkedList();
-		for (Iterator itr = ep.getChildren().iterator(); itr.hasNext();) {
-			Object obj = itr.next();
+		for (Object obj : ep.getChildren()) {
 			if (obj instanceof TerminalEditPart) {
 				ports.add(obj);
 			}
@@ -84,13 +78,13 @@ public class ModifyPortsColorCommand extends AbstractTransactionalCommand {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.commands.operations.AbstractOperation#canExecute()
 	 */
+	@Override
 	public boolean canExecute() {
 		if (ep.getNotationView() != null) {
-			if (ep.getNotationView().getNamedStyle(
-					NotationPackage.eINSTANCE.getPropertiesSetStyle(),
+			if (ep.getNotationView().getNamedStyle(NotationPackage.eINSTANCE.getPropertiesSetStyle(),
 					StringConstants.PORTS_PROPERTIES_STYLE_NAME) != null) {
 				List ports = getPorts();
 				return ports != null && !ports.isEmpty() && super.canExecute();

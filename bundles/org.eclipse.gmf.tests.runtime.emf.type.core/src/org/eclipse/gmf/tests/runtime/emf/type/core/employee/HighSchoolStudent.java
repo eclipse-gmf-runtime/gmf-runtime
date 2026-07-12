@@ -7,15 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>High School Student</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>High
+ * School Student</b></em>'. <!-- end-user-doc -->
  *
  *
  * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage#getHighSchoolStudent()

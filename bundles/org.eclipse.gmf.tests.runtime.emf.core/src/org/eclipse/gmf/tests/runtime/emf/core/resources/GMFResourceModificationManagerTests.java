@@ -7,9 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.core.resources;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -17,6 +21,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.DefaultOperationHistory;
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -28,58 +33,48 @@ import org.eclipse.emf.workspace.ResourceUndoContext;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceModificationManager;
 import org.eclipse.gmf.tests.runtime.emf.core.BaseTests;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the management of the modified state of GMF resources as operations are
  * executed, undone and redone on the operation history. The modified state of
  * these resources is managed by the {@link GMFResourceModificationManager}.
- * 
+ *
  * @author ldamus
  */
 public class GMFResourceModificationManagerTests extends BaseTests {
 
 	private DefaultOperationHistory history;
-	
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(GMFResourceModificationManagerTests.class,
-				"GMFResourceModificationManagerTests Test Suite"); //$NON-NLS-1$
-	}
 
 	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		history = new DefaultOperationHistory();
 		super.setUp();
 		testEcoreResource.setTrackingModification(true);
 	}
 
 	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() throws CoreException {
 		super.tearDown();
 		history = null;
 	}
 
 	@Override
 	protected TransactionalEditingDomain createEditingDomain() {
-		return GMFEditingDomainFactory.getInstance().createEditingDomain(
-				history);
+		return GMFEditingDomainFactory.getInstance().createEditingDomain(history);
 	}
 
 	protected IUndoableOperation createOperation(String name) {
 		return new AbstractEMFOperation(domain, name) {
 			@Override
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+			protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
-				ecoreRoot.getEClassifiers().add(
-						EcoreFactory.eINSTANCE.createEClass());
+				ecoreRoot.getEClassifiers().add(EcoreFactory.eINSTANCE.createEClass());
 
 				return Status.OK_STATUS;
 			}
@@ -87,226 +82,219 @@ public class GMFResourceModificationManagerTests extends BaseTests {
 	}
 
 	/**
-	 * Tests that the resource reports that it is not modified when the history
-	 * is undone back to a given save point.
+	 * Tests that the resource reports that it is not modified when the history is
+	 * undone back to a given save point.
 	 */
+	@Test
 	public void test_execute_save_execute_undo() {
 		IUndoContext context = new ResourceUndoContext(domain, testEcoreResource);
 
 		IUndoableOperation op1 = createOperation("operation1"); //$NON-NLS-1$
 		IUndoableOperation op2 = createOperation("operation2"); //$NON-NLS-1$
 
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op1, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// save --> not modified
 		try {
 			testEcoreResource.save(null);
 		} catch (IOException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op2, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// undo --> not modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 	}
 
 	/**
-	 * Tests that undo will return the resource to a modified state after a
-	 * save, and that a subsequent redo will return the resource back to its
-	 * unmodified state.
+	 * Tests that undo will return the resource to a modified state after a save,
+	 * and that a subsequent redo will return the resource back to its unmodified
+	 * state.
 	 */
+	@Test
 	public void test_execute_save_undo_redo() {
 		IUndoContext context = new ResourceUndoContext(domain, testEcoreResource);
 		IUndoableOperation op = createOperation("op"); //$NON-NLS-1$
 
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// save --> not modified
 		try {
 			testEcoreResource.save(null);
 		} catch (IOException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// undo --> modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// redo --> not modified
 		try {
 			history.redo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 	}
 
 	/**
-	 * Tests that the resource is modified after save followed by undo, but is
-	 * not modified after save followed by execute, followed by undo.
+	 * Tests that the resource is modified after save followed by undo, but is not
+	 * modified after save followed by execute, followed by undo.
 	 */
+	@Test
 	public void test_execute_save_undo_save_execute_undo() {
 		IUndoContext context = new ResourceUndoContext(domain, testEcoreResource);
 
 		IUndoableOperation op1 = createOperation("operation1"); //$NON-NLS-1$
 		IUndoableOperation op2 = createOperation("operation2"); //$NON-NLS-1$
 
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op1, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// save --> not modified
 		try {
 			testEcoreResource.save(null);
 		} catch (IOException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// undo --> modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// save --> not modified
 		try {
 			testEcoreResource.save(null);
 		} catch (IOException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op2, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// undo --> not modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 	}
 
 	/**
-	 * Tests that the resource is modified after undo when there is more than
-	 * one operation on the history. Also, tests that the resource is modified
-	 * after save followed by redo.
+	 * Tests that the resource is modified after undo when there is more than one
+	 * operation on the history. Also, tests that the resource is modified after
+	 * save followed by redo.
 	 */
+	@Test
 	public void test_execute_execute_undo_save_redo() {
 		IUndoContext context = new ResourceUndoContext(domain, testEcoreResource);
 
 		IUndoableOperation op1 = createOperation("operation1"); //$NON-NLS-1$
 		IUndoableOperation op2 = createOperation("operation2"); //$NON-NLS-1$
 
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op1, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op2, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// undo --> modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// save --> not modified
 		try {
 			testEcoreResource.save(null);
 		} catch (IOException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// redo --> modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should not be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should not be modified");
 	}
 
 	/**
 	 * Tests that after the flush limit is exceeded for operations with a given
-	 * resource context, the resource continues to report that it is modified
-	 * even when all of the operations on the history have been undone.
+	 * resource context, the resource continues to report that it is modified even
+	 * when all of the operations on the history have been undone.
 	 */
+	@Test
 	public void test_execute_flushLimit_undo() {
 		IUndoContext context = new ResourceUndoContext(domain, testEcoreResource);
 		history.setLimit(context, 1);
@@ -317,54 +305,50 @@ public class GMFResourceModificationManagerTests extends BaseTests {
 		try {
 			history.execute(op1, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op2, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
-		assertSame("Operation should have been flushed", history
-				.getUndoHistory(context).length, 1);
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
+		assertSame(history.getUndoHistory(context).length, 1, "Operation should have been flushed");
 
 		// undo --> modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// undo --> modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 	}
 
 	/**
 	 * Tests that if the isModified state of the resource is set to
-	 * <code>false</code> during the execution of an operation, subsequent
-	 * execute followed by undo will return the resource back to its unmodified
-	 * state.
+	 * <code>false</code> during the execution of an operation, subsequent execute
+	 * followed by undo will return the resource back to its unmodified state.
 	 */
+	@Test
 	public void test_executeModifiedFalse_execute_undo() {
 		IUndoContext context = new ResourceUndoContext(domain, testEcoreResource);
-		IUndoableOperation notModified = new AbstractEMFOperation(domain,
-				"notModified") { //$NON-NLS-1$
+		IUndoableOperation notModified = new AbstractEMFOperation(domain, "notModified") { //$NON-NLS-1$
 			@Override
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+			protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
-				ecoreRoot.getEClassifiers().add(
-						EcoreFactory.eINSTANCE.createEClass());
+				ecoreRoot.getEClassifiers().add(EcoreFactory.eINSTANCE.createEClass());
 				ecoreRoot.eResource().setModified(false);
 
 				return Status.OK_STATUS;
@@ -383,59 +367,53 @@ public class GMFResourceModificationManagerTests extends BaseTests {
 
 		IUndoableOperation op = createOperation("operation"); //$NON-NLS-1$
 
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> not modified
 		try {
 			history.execute(notModified, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// undo --> not modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 	}
 
 	/**
 	 * Tests that if the isModified state of the resource is set to
-	 * <code>false</code> during the undo of an operation, subsequent
-	 * execute followed by undo will return the resource back to its unmodified
-	 * state.
+	 * <code>false</code> during the undo of an operation, subsequent execute
+	 * followed by undo will return the resource back to its unmodified state.
 	 */
+	@Test
 	public void test_execute_undoModifiedFalse_execute_undo() {
 		IUndoContext context = new ResourceUndoContext(domain, testEcoreResource);
-		IUndoableOperation notModified = new AbstractEMFOperation(domain,
-				"notModified") { //$NON-NLS-1$
+		IUndoableOperation notModified = new AbstractEMFOperation(domain, "notModified") { //$NON-NLS-1$
 			@Override
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+			protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
-				ecoreRoot.getEClassifiers().add(
-						EcoreFactory.eINSTANCE.createEClass());
+				ecoreRoot.getEClassifiers().add(EcoreFactory.eINSTANCE.createEClass());
 				ecoreRoot.eResource().setModified(false);
 
 				return Status.OK_STATUS;
 			}
+
 			@Override
-			protected IStatus doUndo(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+			protected IStatus doUndo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 				IStatus status = super.doUndo(monitor, info);
 				ecoreRoot.eResource().setModified(false);
 				return status;
@@ -444,76 +422,68 @@ public class GMFResourceModificationManagerTests extends BaseTests {
 
 		IUndoableOperation op = createOperation("operation"); //$NON-NLS-1$
 
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> not modified
 		try {
 			history.execute(notModified, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// undo --> not modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
-		
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
+
 		// execute --> modified
 		try {
 			history.execute(op, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// undo --> not modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 	}
 
 	/**
 	 * Tests that if the isModified state of the resource is set to
-	 * <code>false</code> during the redo of an operation, subsequent
-	 * execute followed by undo will return the resource back to its unmodified
-	 * state.
+	 * <code>false</code> during the redo of an operation, subsequent execute
+	 * followed by undo will return the resource back to its unmodified state.
 	 */
+	@Test
 	public void test_execute_undo_redoModifiedFalse_execute_undo() {
 		IUndoContext context = new ResourceUndoContext(domain, testEcoreResource);
-		IUndoableOperation notModified = new AbstractEMFOperation(domain,
-				"notModified") { //$NON-NLS-1$
+		IUndoableOperation notModified = new AbstractEMFOperation(domain, "notModified") { //$NON-NLS-1$
 			@Override
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+			protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
-				ecoreRoot.getEClassifiers().add(
-						EcoreFactory.eINSTANCE.createEClass());
+				ecoreRoot.getEClassifiers().add(EcoreFactory.eINSTANCE.createEClass());
 				ecoreRoot.eResource().setModified(false);
 
 				return Status.OK_STATUS;
 			}
+
 			@Override
-			protected IStatus doUndo(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+			protected IStatus doUndo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 				IStatus status = super.doUndo(monitor, info);
 				ecoreRoot.eResource().setModified(false);
 				return status;
 			}
 
 			@Override
-			protected IStatus doRedo(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+			protected IStatus doRedo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 				IStatus status = super.doRedo(monitor, info);
 				ecoreRoot.eResource().setModified(false);
 				return status;
@@ -522,67 +492,61 @@ public class GMFResourceModificationManagerTests extends BaseTests {
 
 		IUndoableOperation op = createOperation("operation"); //$NON-NLS-1$
 
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> not modified
 		try {
 			history.execute(notModified, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// undo --> not modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// redo --> not modified
 		try {
 			history.redo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
-		
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
+
 		// execute --> modified
 		try {
 			history.execute(op, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// undo --> not modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 	}
-	
+
 	/**
 	 * Tests that if only the isModified state of the resource is set to <true> then
-	 * <code>false</code> during the execution of an operation (no other change
-	 * to the resource), subsequent execute followed by undo will return the
-	 * resource back to its unmodified state.
+	 * <code>false</code> during the execution of an operation (no other change to
+	 * the resource), subsequent execute followed by undo will return the resource
+	 * back to its unmodified state.
 	 */
+	@Test
 	public void test_modifiedTrueFalse_execute_undo() {
 		IUndoContext context = new ResourceUndoContext(domain, testEcoreResource);
-		IUndoableOperation notModified = new AbstractEMFOperation(domain,
-				"notModified") { //$NON-NLS-1$
+		IUndoableOperation notModified = new AbstractEMFOperation(domain, "notModified") { //$NON-NLS-1$
 			@Override
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info) throws ExecutionException {
+			protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 				ecoreRoot.eResource().setModified(true);
 				ecoreRoot.eResource().setModified(false);
 
@@ -602,33 +566,30 @@ public class GMFResourceModificationManagerTests extends BaseTests {
 
 		IUndoableOperation op = createOperation("operation"); //$NON-NLS-1$
 
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> not modified
 		try {
 			history.execute(notModified, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 
 		// execute --> modified
 		try {
 			history.execute(op, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertTrue("Resource should be modified", testEcoreResource.isModified());
+		assertTrue(testEcoreResource.isModified(), "Resource should be modified");
 
 		// undo --> not modified
 		try {
 			history.undo(context, null, null);
 		} catch (ExecutionException e) {
-			fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			Assertions.fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
-		assertFalse("Resource should not be modified", testEcoreResource
-				.isModified());
+		assertFalse(testEcoreResource.isModified(), "Resource should not be modified");
 	}
 }

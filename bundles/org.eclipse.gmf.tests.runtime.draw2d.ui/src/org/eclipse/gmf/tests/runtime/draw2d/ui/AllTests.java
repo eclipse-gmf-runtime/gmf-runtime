@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.draw2d.ui;
@@ -18,35 +18,12 @@ import org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers.LeftRightForestR
 import org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers.RectilinearRouterTest;
 import org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers.TopDownForestRouterTest;
 import org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers.TreeRouterTest;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-public class AllTests extends TestCase {
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite("All Shapes GEF Tests"); //$NON-NLS-1$
-
-        suite.addTestSuite(MapModeUtilTest.class);
-        suite.addTestSuite(LineSegTest.class);
-        suite.addTestSuite(FigureUtilitiesTest.class);
-        suite.addTestSuite(LeftRightForestRouterTest.class);
-        suite.addTestSuite(TopDownForestRouterTest.class);
-        suite.addTestSuite(TreeRouterTest.class);
-        suite.addTestSuite(RectilinearRouterTest.class);
-        suite.addTestSuite(CompositeGraphLayoutTest.class);
-        suite.addTestSuite(AvoidObstructionsRoutingTest.class);
-
-        return suite;
-    }
-
-    public AllTests() {
-        super(""); //$NON-NLS-1$
-    }
+@Suite
+@SelectClasses({ MapModeUtilTest.class, LineSegTest.class, FigureUtilitiesTest.class, LeftRightForestRouterTest.class,
+		TopDownForestRouterTest.class, TreeRouterTest.class, RectilinearRouterTest.class,
+		CompositeGraphLayoutTest.class, AvoidObstructionsRoutingTest.class, })
+public class AllTests {
 }

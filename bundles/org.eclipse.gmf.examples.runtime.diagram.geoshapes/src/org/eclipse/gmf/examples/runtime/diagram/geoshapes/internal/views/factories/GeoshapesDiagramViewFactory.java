@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.views.factories;
@@ -15,14 +15,13 @@ package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.views.factor
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.optimal.StandardDiagramViewFactory;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 
-
-public class GeoshapesDiagramViewFactory
-	extends StandardDiagramViewFactory {
+public class GeoshapesDiagramViewFactory extends StandardDiagramViewFactory {
 
 	/**
-	 * Get the measurement unit to be set in pixels implying that that units
-	 * stored in the notation file are identical to device pixels.
+	 * Get the measurement unit to be set in pixels implying that that units stored
+	 * in the notation file are identical to device pixels.
 	 */
+	@Override
 	protected MeasurementUnit getMeasurementUnit() {
 		return MeasurementUnit.PIXEL_LITERAL;
 	}

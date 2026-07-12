@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
@@ -27,22 +27,20 @@ import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssista
 
 /**
  * Provides modeling assistant services for logic diagrams.
- * 
+ *
  * @author qili, cmahoney
  */
-public class LogicModelingAssistantProvider
-	extends ModelingAssistantProvider {
+public class LogicModelingAssistantProvider extends ModelingAssistantProvider {
 
 	/** List containing the one relationship type -- transition */
-	private static final List wireType = Collections
-		.singletonList(LogicSemanticType.WIRE);
+	private static final List wireType = Collections.singletonList(LogicSemanticType.WIRE);
 
 	/** List containing valid types for the target */
 	private static final List targetTypes = new ArrayList(1);
 	static {
 		targetTypes.add(LogicSemanticType.TERMINAL);
 	}
-	
+
 	/** List containing valid logic shape types for the action bars */
 	private static final List logicShapeTypes = new ArrayList(5);
 	static {
@@ -54,6 +52,7 @@ public class LogicModelingAssistantProvider
 		logicShapeTypes.add(LogicSemanticType.XORGATE);
 	}
 
+	@Override
 	public List getRelTypesOnSource(IAdaptable source) {
 		if (source.getAdapter(ITerminalOwnerEditPart.class) != null) {
 			return wireType;
@@ -61,15 +60,16 @@ public class LogicModelingAssistantProvider
 		return Collections.EMPTY_LIST;
 	}
 
-	public List getRelTypesOnSourceAndTarget(IAdaptable source,
-			IAdaptable target) {
+	@Override
+	public List getRelTypesOnSourceAndTarget(IAdaptable source, IAdaptable target) {
 		if (source.getAdapter(ITerminalOwnerEditPart.class) != null
-			&& target.getAdapter(ITerminalOwnerEditPart.class) != null) {
+				&& target.getAdapter(ITerminalOwnerEditPart.class) != null) {
 			return wireType;
 		}
 		return Collections.EMPTY_LIST;
 	}
 
+	@Override
 	public List getRelTypesOnTarget(IAdaptable target) {
 		if (target.getAdapter(ITerminalOwnerEditPart.class) != null) {
 			return wireType;
@@ -77,19 +77,18 @@ public class LogicModelingAssistantProvider
 		return Collections.EMPTY_LIST;
 	}
 
-	public List getTypesForTarget(IAdaptable source,
-			IElementType relationshipType) {
-		if (source.getAdapter(ITerminalOwnerEditPart.class) != null
-			&& wireType.contains(relationshipType)) {
+	@Override
+	public List getTypesForTarget(IAdaptable source, IElementType relationshipType) {
+		if (source.getAdapter(ITerminalOwnerEditPart.class) != null && wireType.contains(relationshipType)) {
 			return targetTypes;
 		}
 		return Collections.EMPTY_LIST;
 	}
 
+	@Override
 	public List getTypesForPopupBar(IAdaptable host) {
 		Object ep = host.getAdapter(IGraphicalEditPart.class);
-		if (ep instanceof LogicShapeCompartmentEditPart
-			|| ep instanceof LogicFlowCompartmentEditPart) {
+		if (ep instanceof LogicShapeCompartmentEditPart || ep instanceof LogicFlowCompartmentEditPart) {
 			return logicShapeTypes;
 		}
 		return Collections.EMPTY_LIST;

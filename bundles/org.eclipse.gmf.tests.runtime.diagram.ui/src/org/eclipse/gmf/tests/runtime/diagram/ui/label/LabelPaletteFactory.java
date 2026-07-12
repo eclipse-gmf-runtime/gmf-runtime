@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.label;
@@ -19,22 +19,22 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 /**
  * @author crevells
  */
-public class LabelPaletteFactory
-    extends PaletteFactory.Adapter {
+public class LabelPaletteFactory extends PaletteFactory.Adapter {
 
-    public Tool createTool(String toolId) {
+	@Override
+	public Tool createTool(String toolId) {
 
-        if (toolId.equals(LabelConstants.ID_WRAPPINGLABEL)) {
-            return new CreationTool(LabelNotationType.WRAPPINGLABEL_NOTE);
-        } else if (toolId.equals(LabelConstants.ID_GEFLABEL)) {
-            return new CreationTool(LabelNotationType.GEFLABEL_NOTE);
-        } else if (toolId.equals(LabelConstants.ID_WRAPLABEL)) {
-            return new CreationTool(LabelNotationType.WRAPLABEL_NOTE);
-        } else if (toolId.equals(LabelConstants.ID_OLDWRAPLABEL)) {
-            return new CreationTool(LabelNotationType.OLDWRAPLABEL_NOTE);
-        }
+		if (toolId.equals(LabelConstants.ID_WRAPPINGLABEL)) {
+			return new CreationTool(LabelNotationType.WRAPPINGLABEL_NOTE);
+		} else if (toolId.equals(LabelConstants.ID_GEFLABEL)) {
+			return new CreationTool(LabelNotationType.GEFLABEL_NOTE);
+		} else if (toolId.equals(LabelConstants.ID_WRAPLABEL)) {
+			return new CreationTool(LabelNotationType.WRAPLABEL_NOTE);
+		} else if (toolId.equals(LabelConstants.ID_OLDWRAPLABEL)) {
+			return new CreationTool(LabelNotationType.OLDWRAPLABEL_NOTE);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 }

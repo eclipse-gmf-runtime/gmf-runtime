@@ -7,10 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.tests.runtime.common.ui.providers;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies.TestExceptionThrowingIconPolicy;
@@ -18,20 +22,17 @@ import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.provid
 import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers.TestExceptionThrowingPolicyIconProvider;
 import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses.TestAdaptable;
 import org.eclipse.swt.graphics.Image;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the Service infrastructure when used in conjunction with policies and
  * providers that throw exceptions.
- * 
+ *
  * @author wdiu, Wayne Diu
  */
-public class ProviderPolicyExceptionsTest
-	extends TestCase {
+public class ProviderPolicyExceptionsTest {
 
+	@Test
 	public void testExceptionThrowingProvidersAndPolicies() {
 		// the lowest priority provider should return a valid parser,
 		// even when exceptions were thrown by other higher priority
@@ -50,9 +51,5 @@ public class ProviderPolicyExceptionsTest
 		// the low priority provider was executed
 		assertTrue(TestExceptionThrowingIconProvider.providesExecuted);
 	}
-	
-    public static Test suite() {
-        return new TestSuite(ProviderPolicyExceptionsTest.class);
-    }
-	
+
 }

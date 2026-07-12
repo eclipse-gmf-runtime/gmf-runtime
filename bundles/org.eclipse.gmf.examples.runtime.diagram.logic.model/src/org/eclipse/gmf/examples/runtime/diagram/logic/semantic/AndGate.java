@@ -7,15 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>And Gate</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>And
+ * Gate</b></em>'. <!-- end-user-doc -->
  *
  *
  * @see org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage#getAndGate()

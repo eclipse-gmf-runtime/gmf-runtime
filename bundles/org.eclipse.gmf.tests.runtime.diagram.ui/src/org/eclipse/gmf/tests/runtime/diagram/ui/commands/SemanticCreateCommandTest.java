@@ -7,9 +7,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IUndoContext;
@@ -28,31 +33,14 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author ldamus
  */
-public class SemanticCreateCommandTest
-	extends TestCase {
+public class SemanticCreateCommandTest {
 
 	private SemanticCreateCommand fixture;
-
-	public SemanticCreateCommandTest(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(SemanticCreateCommandTest.class);
-	}
 
 	protected SemanticCreateCommand getFixture() {
 		return fixture;
@@ -62,6 +50,7 @@ public class SemanticCreateCommandTest
 		this.fixture = fixture;
 	}
 
+	@Test
 	public void test_wrapCompositeModelCommand() {
 
 		String commandLabel = "test_wrapCompositeModelCommand"; //$NON-NLS-1$
@@ -70,93 +59,91 @@ public class SemanticCreateCommandTest
 		// ICommandProxy(CompositeModelCommand(AbstractCommand2))
 		ICommand command = new AbstractCommand(commandLabel, null) {
 
-			protected CommandResult doExecuteWithResult(
-                    IProgressMonitor progressMonitor, IAdaptable info)
-                throws ExecutionException {
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+					throws ExecutionException {
 
-                return CommandResult.newOKCommandResult();
-            };
-            
-            protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
-                throws ExecutionException {
+				return CommandResult.newOKCommandResult();
+			}
 
-                return null;
-            }
-            
-            protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
-                throws ExecutionException {
+			@Override
+			protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+					throws ExecutionException {
 
-                return null;
-            }
+				return null;
+			}
+
+			@Override
+			protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+					throws ExecutionException {
+
+				return null;
+			}
 		};
 
-        TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE
-            .createEditingDomain();
-		CompositeTransactionalCommand compositeModelCommand = new CompositeTransactionalCommand(editingDomain, 
-			commandLabel);
-        
+		TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain();
+		CompositeTransactionalCommand compositeModelCommand = new CompositeTransactionalCommand(editingDomain,
+				commandLabel);
+
 		compositeModelCommand.compose(command);
-		ICommandProxy proxyCommand = new ICommandProxy(
-			compositeModelCommand);
+		ICommandProxy proxyCommand = new ICommandProxy(compositeModelCommand);
 
 		// Now wrap this in a compound command
 		CompoundCommand compoundCommand = new CompoundCommand();
 		compoundCommand.add(proxyCommand);
 
 		// Create the test fixture
-		CreateElementRequest createRequest = new CreateElementRequest(
-            editingDomain, null, null);
-		CreateElementRequestAdapter requestAdapter = new CreateElementRequestAdapter(
-			createRequest);
-		
+		CreateElementRequest createRequest = new CreateElementRequest(editingDomain, null, null);
+		CreateElementRequestAdapter requestAdapter = new CreateElementRequestAdapter(createRequest);
+
 		setFixture(new SemanticCreateCommand(requestAdapter, compoundCommand));
-		
+
 		// Execute the test fixture
-        try {
-            getFixture().execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-		
+		try {
+			getFixture().execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+
 		CommandResult result = getFixture().getCommandResult();
 		assertTrue(result.getStatus().isOK());
-		
+
 		// Should return the request adapter
 		assertSame(requestAdapter, result.getReturnValue());
 	}
-	
+
 	/**
 	 * Verifies that contexts in the real semantic command are propagated to the
 	 * SemanticCreateCommand wrapper when it is created.
 	 */
+	@Test
 	public void test_contextPropagation_141122() {
 
 		final IUndoContext contextA = new UndoContext();
 		final IUndoContext contextB = new UndoContext();
 		final IUndoContext contextC = new UndoContext();
-		
+
 		// create an ICommand
-		ICommand iCommand = new AbstractCommand(
-				"test_contextPropagation_141122") { //$NON-NLS-1$
-			protected CommandResult doExecuteWithResult(
-					IProgressMonitor progressMonitor, IAdaptable info)
+		ICommand iCommand = new AbstractCommand("test_contextPropagation_141122") { //$NON-NLS-1$
+			@Override
+			protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info)
 					throws ExecutionException {
-				
+
 				// change my contexts
 				removeContext(contextB);
 				addContext(contextC);
-				
+
 				return CommandResult.newOKCommandResult();
 			}
 
-			protected CommandResult doRedoWithResult(
-					IProgressMonitor progressMonitor, IAdaptable info)
+			@Override
+			protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
 					throws ExecutionException {
 				return CommandResult.newOKCommandResult();
 			}
 
-			protected CommandResult doUndoWithResult(
-					IProgressMonitor progressMonitor, IAdaptable info)
+			@Override
+			protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
 					throws ExecutionException {
 				return CommandResult.newOKCommandResult();
 			}
@@ -170,30 +157,27 @@ public class SemanticCreateCommandTest
 		Command command = new ICommandProxy(iCommand);
 
 		// Create the test fixture
-		TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE
-				.createEditingDomain();
+		TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain();
 
-		CreateElementRequest createRequest = new CreateElementRequest(
-				editingDomain, null, null);
+		CreateElementRequest createRequest = new CreateElementRequest(editingDomain, null, null);
 
-		CreateElementRequestAdapter requestAdapter = new CreateElementRequestAdapter(
-				createRequest);
+		CreateElementRequestAdapter requestAdapter = new CreateElementRequestAdapter(createRequest);
 
-		SemanticCreateCommand semanticCreateCommand = new SemanticCreateCommand(
-				requestAdapter, command);
+		SemanticCreateCommand semanticCreateCommand = new SemanticCreateCommand(requestAdapter, command);
 
-		// verify that both contexts have been propagated to the semanticCreateCommand fixture
+		// verify that both contexts have been propagated to the semanticCreateCommand
+		// fixture
 		assertTrue(semanticCreateCommand.hasContext(contextA));
 		assertTrue(semanticCreateCommand.hasContext(contextB));
-		
+
 		// execute removes contextB and adds contextC
 		try {
 			semanticCreateCommand.execute(new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            fail(e.getLocalizedMessage());
-        }
-        
-        assertTrue(semanticCreateCommand.hasContext(contextA));
+		} catch (ExecutionException e) {
+			fail(e.getLocalizedMessage());
+		}
+
+		assertTrue(semanticCreateCommand.hasContext(contextA));
 		assertFalse(semanticCreateCommand.hasContext(contextB));
 		assertTrue(semanticCreateCommand.hasContext(contextC));
 	}

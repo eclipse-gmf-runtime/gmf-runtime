@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.nonactivating;
@@ -23,34 +23,31 @@ import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 
-
 /**
- * @author mmostafa
- * Custom provider that lays out the logic Diagram in a top to down fashion.
+ * @author mmostafa Custom provider that lays out the logic Diagram in a top to
+ *         down fashion.
  */
 
-public class LogicLayoutProvider
-    extends CompositeTopDownProvider {
+public class LogicLayoutProvider extends CompositeTopDownProvider {
 
-    public boolean provides(IOperation operation) {
-        // enable this provider only on logic diagrams
-        if (operation instanceof ILayoutNodeOperation) {
-            Iterator nodes = ((ILayoutNodeOperation) operation)
-                .getLayoutNodes().listIterator();
-            if (nodes.hasNext()) {
-                View node = ((ILayoutNode) nodes.next()).getNode();
-                Diagram container = node.getDiagram();
-                if (container == null
-                    || !(container.getType().equals("logic"))) //$NON-NLS-1$
-                    return false;
-            }
-        } else {
-            return false;
-        }
-        IAdaptable layoutHint = ((ILayoutNodeOperation) operation)
-            .getLayoutHint();
-        String layoutType = (String) layoutHint.getAdapter(String.class);
-        return LayoutType.DEFAULT.equals(layoutType);
-    }
+	@Override
+	public boolean provides(IOperation operation) {
+		// enable this provider only on logic diagrams
+		if (operation instanceof ILayoutNodeOperation) {
+			Iterator nodes = ((ILayoutNodeOperation) operation).getLayoutNodes().listIterator();
+			if (nodes.hasNext()) {
+				View node = ((ILayoutNode) nodes.next()).getNode();
+				Diagram container = node.getDiagram();
+				if (container == null || !(container.getType().equals("logic"))) { //$NON-NLS-1$
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
+		IAdaptable layoutHint = ((ILayoutNodeOperation) operation).getLayoutHint();
+		String layoutType = (String) layoutHint.getAdapter(String.class);
+		return LayoutType.DEFAULT.equals(layoutType);
+	}
 
 }

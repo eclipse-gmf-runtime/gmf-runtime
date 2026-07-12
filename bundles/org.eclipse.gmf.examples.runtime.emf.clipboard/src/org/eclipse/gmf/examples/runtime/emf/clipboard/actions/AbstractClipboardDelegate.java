@@ -7,14 +7,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.emf.clipboard.actions;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -28,14 +27,11 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionDelegate;
 
-
 /**
  * Abstract action delegate for copy/paste actions; provides common behaviours
  * for managing the selection, etc.
  */
-abstract class AbstractClipboardDelegate
-	extends ActionDelegate
-	implements IEditorActionDelegate {
+abstract class AbstractClipboardDelegate extends ActionDelegate implements IEditorActionDelegate {
 
 	/**
 	 * The shell this action is hosted in.
@@ -56,26 +52,26 @@ abstract class AbstractClipboardDelegate
 	 * Selected {@link Resource}s
 	 */
 	private Collection selectedResources = Collections.EMPTY_SET;
-	
+
 	/**
 	 * Initializes me.
 	 */
 	protected AbstractClipboardDelegate() {
 		super();
 	}
-	
+
 	/**
 	 * Retrieves the user's selection.
-	 * 
+	 *
 	 * @return a collection of selected {@link EObject}s
 	 */
 	protected Collection getSelectedObjects() {
 		return selectedEObjects;
 	}
-	
+
 	/**
 	 * Retrieves the user's selected resources.
-	 * 
+	 *
 	 * @return a collection of selected {@link Resouce}s
 	 */
 	protected Collection getSelectedResources() {
@@ -84,40 +80,41 @@ abstract class AbstractClipboardDelegate
 
 	/**
 	 * Obtains the shell to use for opening dialogs.
-	 * 
+	 *
 	 * @return my shell
 	 */
 	protected Shell getShell() {
 		return shell;
 	}
-	
+
 	/**
 	 * Selects the specified <code>objects</code> in the current editor.
-	 * 
+	 *
 	 * @param objects the objects to select (may be empty)
 	 */
 	protected void selectInEditor(Collection objects) {
 		editor.setSelectionToViewer(objects);
 	}
-	
+
 	/**
 	 * Accesses the current editor.
-	 * 
+	 *
 	 * @return the current editor
 	 */
 	protected EXTLibraryEditor getEditor() {
 		return editor;
 	}
-	
+
 	/**
 	 * Template method that delegates to subclasses to run with a clipboard.
 	 */
+	@Override
 	public final void run(IAction action) {
 		Clipboard clipboard = null;
 
 		try {
 			clipboard = new Clipboard(getShell().getDisplay());
-			
+
 			doRun(clipboard);
 		} finally {
 			if (clipboard != null) {
@@ -128,28 +125,27 @@ abstract class AbstractClipboardDelegate
 	}
 
 	/**
-	 * Implemented by sublasses to do their copy or paste to or from the
-	 * specified clipboard.
-	 * 
-	 * @param clipboard the clipboard.  Must not be disposed by the receiver
+	 * Implemented by sublasses to do their copy or paste to or from the specified
+	 * clipboard.
+	 *
+	 * @param clipboard the clipboard. Must not be disposed by the receiver
 	 */
 	protected abstract void doRun(Clipboard clipboard);
 
 	/**
 	 * Gets all of the {@link EObject}s in the current selection, if any.
 	 */
+	@Override
 	public void selectionChanged(IAction action, final ISelection selection) {
 		selectedEObjects = Collections.EMPTY_SET;
 		selectedResources = Collections.EMPTY_SET;
-		
+
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			selectedEObjects = new java.util.ArrayList();
 			selectedResources = new java.util.ArrayList();
-			
-			for (Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
-				Object next = iter.next();
-				
+
+			for (Object next : structuredSelection) {
 				if (next instanceof EObject) {
 					selectedEObjects.add(next);
 				} else if (next instanceof Resource) {
@@ -157,16 +153,17 @@ abstract class AbstractClipboardDelegate
 				}
 			}
 		}
-		
+
 		action.setEnabled(!selectedEObjects.isEmpty());
 	}
 
 	/**
 	 * Get the active library editor and its host shell.
 	 */
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = (EXTLibraryEditor) targetEditor;
-		
+
 		if (targetEditor != null) {
 			this.shell = targetEditor.getSite().getShell();
 		}

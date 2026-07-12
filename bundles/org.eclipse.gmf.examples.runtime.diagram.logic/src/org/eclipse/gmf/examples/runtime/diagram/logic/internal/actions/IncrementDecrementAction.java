@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions;
@@ -22,13 +22,11 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author qili
- * 
- * Action to increment/decrement value for LED figures.
+ *
+ *         Action to increment/decrement value for LED figures.
  */
 
-public class IncrementDecrementAction
-	extends DiagramAction
-	implements LogicActionIds {
+public class IncrementDecrementAction extends DiagramAction implements LogicActionIds {
 
 	private static final String INCREMENT_REQUEST = "Increment", //$NON-NLS-1$
 			DECREMENT_REQUEST = "Decrement"; //$NON-NLS-1$
@@ -43,11 +41,10 @@ public class IncrementDecrementAction
 
 	/**
 	 * Construct a Decompose Action
-	 * 
+	 *
 	 * @param workbenchPage
 	 */
-	public IncrementDecrementAction(IWorkbenchPage workbenchPage,
-			String actionId) {
+	public IncrementDecrementAction(IWorkbenchPage workbenchPage, String actionId) {
 		super(workbenchPage);
 		this.actionId = actionId;
 	}
@@ -55,26 +52,26 @@ public class IncrementDecrementAction
 	/**
 	 * @see org.eclipse.gmf.runtime.common.ui.internal.action.IDisposableAction#init()
 	 */
+	@Override
 	public void init() {
 		super.init();
 		if (actionId.equals(ACTION_INCREMENT_VALUE)) {
 			setId("Increment"); //$NON-NLS-1$
 			setText("Increment"); //$NON-NLS-1$
 			setToolTipText("Increment LED"); //$NON-NLS-1$
-			setImageDescriptor(ImageDescriptor.createFromFile(
-				LogicDiagramPlugin.class, "icons/plus.gif")); //$NON-NLS-1$
+			setImageDescriptor(ImageDescriptor.createFromFile(LogicDiagramPlugin.class, "icons/plus.gif")); //$NON-NLS-1$
 		} else if (actionId.equals(ACTION_DECREMENT_VALUE)) {
 			setId("Decrement"); //$NON-NLS-1$
 			setText("Decrement"); //$NON-NLS-1$
 			setToolTipText("Decrement LED"); //$NON-NLS-1$
-			setImageDescriptor(ImageDescriptor.createFromFile(
-				LogicDiagramPlugin.class, "icons/minus.gif")); //$NON-NLS-1$
+			setImageDescriptor(ImageDescriptor.createFromFile(LogicDiagramPlugin.class, "icons/minus.gif")); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
+	@Override
 	protected Request createTargetRequest() {
 		return new Request(actionMap.get(actionId));
 	}
@@ -82,6 +79,7 @@ public class IncrementDecrementAction
 	/**
 	 * @see org.eclipse.gmf.runtime.common.ui.internal.action.AbstractActionHandler#isSelectionListener()
 	 */
+	@Override
 	protected boolean isSelectionListener() {
 		return true;
 	}

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.diagram.ui;
 
@@ -18,60 +18,62 @@ import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramCreator;
 
-
 /**
  * @author sshaw
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ *         TODO To change the template for this generated type comment go to
+ *         Window - Preferences - Java - Code Style - Code Templates
  */
 public class DiagramTestFixture extends AbstractPresentationTestFixture {
 
-	protected void createDiagram()
-		throws Exception {
-		setDiagram(DiagramCreator.createEmptyDiagram(getPreferencesHint(),
-			getEditingDomain()));
+	@Override
+	protected void createDiagram() throws Exception {
+		setDiagram(DiagramCreator.createEmptyDiagram(getPreferencesHint(), getEditingDomain()));
 	}
 
-	
-	protected void createProject()
-		throws Exception {
+	@Override
+	protected void createProject() throws Exception {
 		// do nothing
 
 	}
-	
-	protected void createShapesAndConnectors()
-		throws Exception {
-		
-		DiagramCreator.createNodes(getDiagram(), getPreferencesHint(),
-			getEditingDomain());
-			
+
+	@Override
+	protected void createShapesAndConnectors() throws Exception {
+
+		DiagramCreator.createNodes(getDiagram(), getPreferencesHint(), getEditingDomain());
+
 		EList children = getDiagram().getChildren();
-		Node node = (Node)children.get(0);
+		Node node = (Node) children.get(0);
 		EList edges = node.getSourceEdges();
-		if (edges.size() > 0)
-			setConnectorView((Edge)edges.get(0));
-		else {
+		if (edges.size() > 0) {
+			setConnectorView((Edge) edges.get(0));
+		} else {
 			edges = node.getTargetEdges();
 			if (edges.size() > 0) {
-				setConnectorView((Edge)edges.get(0));
+				setConnectorView((Edge) edges.get(0));
 			}
 		}
 	}
-	
+
+	@Override
 	public void openDiagram() throws Exception {
 		createDiagram();
 
 		createDiagramEditPart();
 	}
-	
+
+	@Override
 	public boolean closeDiagram() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.util.IPresentationTestFixture#getPreferencesHint()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.util.IPresentationTestFixture#
+	 * getPreferencesHint()
 	 */
+	@Override
 	public PreferencesHint getPreferencesHint() {
 		return PreferencesHint.USE_DEFAULTS;
 	}
