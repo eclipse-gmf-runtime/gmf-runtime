@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2026 IBM Corporation and others.
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -7,12 +7,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal;
 
+import java.lang.ref.Cleaner;
 import java.security.InvalidParameterException;
 
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
@@ -22,128 +22,116 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKe
 import org.eclipse.swt.graphics.Image;
 
 /**
-* Abstract class for RenderedImage interface.
-*  
-* @author sshaw
-*/
-abstract public class AbstractRenderedImage implements RenderedImage {
-	
-	/**
-	 * Constructor for AbstractRenderedImage
-	 * 
-	 * @param buffer
-	 *            byte[] array containing an cached SVG image file.
-	 * @param key
-	 *            ImageKey instance which is unique for the byte array.
-	 */
-	public AbstractRenderedImage(final byte[] buff, RenderedImageKey key) { 
-		if (buff == null || key == null)
-			throw new InvalidParameterException();
+ * Abstract class for RenderedImage interface.
+ * 
+ * @author sshaw
+ */
+public abstract class AbstractRenderedImage implements RenderedImage {
 
-		this.buffer = buff;
-		this.key = key;
-	}
+	private static final Cleaner CLEANER = Cleaner.create();
 
 	private byte[] buffer = null;
 	private RenderedImageKey key = null;
 	private Image img = null;
-	
+	private final ImageCleanup imageCleanup = new ImageCleanup();
+
+	/**
+	 * Constructor for AbstractRenderedImage
+	 *
+	 * @param buffer byte[] array containing an cached SVG image file.
+	 * @param key    ImageKey instance which is unique for the byte array.
+	 */
+	protected AbstractRenderedImage(byte[] buff, RenderedImageKey key) {
+		if (buff == null || key == null) {
+			throw new InvalidParameterException();
+		}
+
+		this.buffer = buff;
+		this.key = key;
+		CLEANER.register(this, this.imageCleanup);
+	}
+
 	/**
 	 * @return Returns the buffer.
 	 */
 	public byte[] getBuffer() {
-		return buffer;
+		return this.buffer;
 	}
-	
+
 	/**
 	 * @return Returns the key.
 	 */
 	public RenderedImageKey getKey() {
-		return new RenderedImageKey(key, key.getChecksum(), key.getExtraData(), key.getURLString());
-	}
-	
-	/**
-	 * Overridden so that image can be disposed.
-	 * 
-	 * @see java.lang.Object#finalize()
-	 */
-	protected void finalize() throws Throwable {
-		if (img != null) {
-			img.dispose();
-			img = null;
-		}
-		key = null;
-
-		super.finalize();
+		return new RenderedImageKey(this.key, this.key.getChecksum(), this.key.getExtraData(), this.key.getURLString());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderedImage#getRenderInfo()
-	 */
+	@Override
 	public RenderInfo getRenderInfo() {
-		return getKey();
-	} 
+		return this.getKey();
+	}
 
 	/**
-     *Implementation of the ResizableImage interface that will allow the SVG
-     * to be re-rendered into a different ImageSize.
-     * @see org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage#getNewRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo)
+	 * Implementation of the ResizableImage interface that will allow the SVG to be
+	 * re-rendered into a different ImageSize.
+	 *
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage#getNewRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo)
 	 */
+	@Override
 	public RenderedImage getNewRenderedImage(RenderInfo info) {
-		if (!getRenderInfo().equals(info)) { 
+		if (!this.getRenderInfo().equals(info)) {
 			RenderedImage rndImg = RenderedImageFactory.getRelatedInstance(this, info);
 			if (rndImg != null) {
 				return rndImg;
 			} else {
-				return RenderedImageFactory.getInstance(getBuffer(), info);
+				return RenderedImageFactory.getInstance(this.getBuffer(), info);
 			}
 		}
 
 		return this;
 	}
 
-	/**
-	 * @return <code>true</code> if image has been fully rendered, <code>false</code> if
-	 * it needs to be rendered.
-	 */
+	@Override
 	public boolean isRendered() {
-		if (img != null)
-			return true;
-		
-		return false;
+		return this.img != null;
 	}
 
-	/**
-     * Accessor for retrieving the default image for the rendered SVG data.
-     * This method will render the image if it doesn't exist yet. This allows
-     * for "on-demand" loading. If no-one accesses the image, then it will not
-     * be rendered.
-     * 
-	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage#getSWTImage()
-	 */
-	final public synchronized Image getSWTImage() {
-		if (img == null) {
-			img = renderImage();
+	@Override
+	public final synchronized Image getSWTImage() {
+		if (this.img == null) {
+			this.img = this.renderImage();
+			this.imageCleanup.setImage(this.img);
 		}
-		return img;
+		return this.img;
 	}
-	
+
 	/**
 	 * @return the new <code>Image</code> rendered to the specification of the
-	 * <code>RenderInfo</code> structure stored with the this <code>RenderedImage</code>
+	 *         <code>RenderInfo</code> structure stored with the this
+	 *         <code>RenderedImage</code>
 	 */
-	abstract protected Image renderImage();
+	protected abstract Image renderImage();
 
-	/* 
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
+	@Override
 	public Object getAdapter(Class adapter) {
 		if (adapter.equals(Image.class)) {
-			return getSWTImage();
+			return this.getSWTImage();
 		}
 		return null;
+	}
+
+	private static final class ImageCleanup implements Runnable {
+		private Image image;
+
+		synchronized void setImage(Image image) {
+			this.image = image;
+		}
+
+		@Override
+		public synchronized void run() {
+			if (this.image != null) {
+				this.image.dispose();
+				this.image = null;
+			}
+		}
 	}
 }
