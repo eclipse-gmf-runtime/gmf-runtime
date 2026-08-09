@@ -13,10 +13,6 @@
       <category name="gmf-runtime"/>
    </feature>
    <feature url="features/org.eclipse.gmf.runtime.thirdparty_1.16.9.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty" version="1.16.9.qualifier" />
-   <feature url="features/org.eclipse.gmf.runtime.thirdparty.source_1.16.9.qualifier.jar" id="org.eclipse.gmf.runtime.thirdparty.source" version="1.16.9.qualifier" />
-   <feature url="features/org.eclipse.gmf.source_1.16.9.qualifier.jar" id="org.eclipse.gmf.source" version="1.16.9.qualifier">
-      <category name="gmf-runtime"/>
-   </feature>
    <feature url="features/org.eclipse.gmf.tests.runtime_1.16.9.qualifier.jar" id="org.eclipse.gmf.tests.runtime" version="1.16.9.qualifier">
       <category name="gmf-runtime"/>
    </feature>
