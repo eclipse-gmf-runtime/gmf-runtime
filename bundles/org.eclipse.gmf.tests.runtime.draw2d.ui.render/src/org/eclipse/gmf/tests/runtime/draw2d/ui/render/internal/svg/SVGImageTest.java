@@ -302,7 +302,7 @@ public class SVGImageTest {
 
 		Display display = Display.getDefault();
 
-		Image image = new Image(display, new Rectangle(0, 0, 500, 500));
+		Image image = new Image(display, 500, 500);
 		GC gc = new GC(image);
 		SWTGraphics swtG = new SWTGraphics(gc);
 
@@ -349,7 +349,7 @@ public class SVGImageTest {
 	public void testRenderMaxSize() {
 		Display display = PlatformUI.getWorkbench().getDisplay();
 
-		Image image = new Image(display, new Rectangle(0, 0, 500, 500));
+		Image image = new Image(display, 500, 500);
 		GC gc = new GC(image);
 		SWTGraphics swtG = new SWTGraphics(gc);
 
