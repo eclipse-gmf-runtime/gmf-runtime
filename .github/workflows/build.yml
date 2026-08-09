@@ -1,0 +1,37 @@
+name: Build and verify with Maven
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ 21, 25 ]
+        os: [ ubuntu-latest, windows-latest ]
+        target: [ 2025-06, 2026-06, canary ]
+    runs-on: ${{ matrix.os }}
+    name: OS ${{ matrix.os }} Target ${{ matrix.target }} Java ${{ matrix.java }} build and verify
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Java ${{ matrix.java }}
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+          cache: 'maven'
+      - name: Build with Maven
+        run: >-
+          ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} ./mvnw -V -B -fae -ntp -Dplatform=${{ matrix.target }} clean verify
+      - name: Upload Test Results for Java-${{ matrix.java }}
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: test-results-${{ matrix.os }}-target-${{ matrix.target }}-java-${{ matrix.java }}
+          if-no-files-found: error
+          path: |
+            ${{ github.workspace }}/**/target/surefire-reports/*.xml

@@ -1,0 +1,43 @@
+name: Generate and ingest SBOM into sbom.eclipse.org
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    outputs:
+      project-version: ${{ steps.build.outputs.PROJECT_VERSION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Java
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          cache: 'maven'
+      - name: Build
+        id: build
+        run: |
+          ./mvnw -B -ntp clean package -Psbom
+          VERSION=$(./mvnw -q help:evaluate -Dexpression=project.version -DforceStdout 2> /dev/null | sed -e 's/-SNAPSHOT//')
+          echo "PROJECT_VERSION=$VERSION" >> $GITHUB_OUTPUT
+          mv releng/org.eclipse.gmf.runtime.repository/target/bom.json bom.json
+      - name: Upload sbom
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sbom
+          path: bom.json
+
+  store-sbom-data: # stores sbom and metadata in a predefined format for otterdog to pick up
+    needs: ['build']
+    uses: eclipse-csi/workflows/.github/workflows/store-sbom-data.yml@main
+    if: ${{ false }}
+    with:
+      projectName: 'GMF Runtime'
+      projectVersion: ${{ needs.build.outputs.project-version }}
+      bomArtifact: 'sbom'
+      bomFilename: 'bom.json'
+      parentProject: 'TBD'
