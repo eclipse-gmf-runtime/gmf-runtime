@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.UUID;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
@@ -88,7 +89,7 @@ public class AbstractModelActionHandlerTest {
 
 		try {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			project = root.getProject("FileModificationApproverTest"); //$NON-NLS-1$
+			project = root.getProject("AbstractModelActionHandlerTest-" + UUID.randomUUID()); //$NON-NLS-1$
 
 			project.create(null);
 			project.open(null);
@@ -105,9 +106,12 @@ public class AbstractModelActionHandlerTest {
 
 	@AfterEach
 	public void tearDown() throws Exception {
-		file.delete(true, new NullProgressMonitor());
-		project.close(new NullProgressMonitor());
-		project.delete(true, true, new NullProgressMonitor());
+		if (file != null && file.exists()) {
+			setReadOnly(false);
+		}
+		if (project != null && project.exists()) {
+			project.delete(true, true, new NullProgressMonitor());
+		}
 		project = null;
 		file = null;
 		site = null;
