@@ -14,9 +14,9 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.parts;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
 
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.RectangleFigure;
@@ -136,30 +136,28 @@ public class ConnectionHandleLocatorTest {
 	 */
 	@Test
 	public void testConnectionHandleLocatorForMemoryLeaks() throws Exception {
-
-		ConnectionHandleLocator objTested = new ConnectionHandleLocator(rectangle, new Point(10, 10));
 		ConnectionHandle handle = new FakeConnectionHandle();
-		objTested.addHandle(handle);
-		objTested.relocate(handle);
+		ReferenceQueue<ConnectionHandleLocator> queue = new ReferenceQueue<>();
+		WeakReference<ConnectionHandleLocator> locator = createLocatorReference(handle, queue);
 
-		ReferenceQueue spy = new ReferenceQueue();
-		PhantomReference refObjTested = new PhantomReference(objTested, spy);
-
-		// Release the reference to object tested.
-		objTested = null;
-
-		System.gc();
-
-		if (!refObjTested.isEnqueued()) {
-			System.runFinalization();
+		boolean collected = false;
+		for (int attempt = 0; attempt < 50; attempt++) {
+			System.gc();
+			if (queue.remove(100) == locator) {
+				collected = true;
+				break;
+			}
 		}
+		Reference.reachabilityFence(handle);
+		assertTrue(collected, "ConnectionHandleLocator was retained after repeated garbage collection");
+	}
 
-		assertTrue(refObjTested.isEnqueued());
-
-		Reference removedRef = spy.remove();
-		if (removedRef != null) {
-			removedRef.clear();
-		}
+	private WeakReference<ConnectionHandleLocator> createLocatorReference(ConnectionHandle handle,
+			ReferenceQueue<ConnectionHandleLocator> queue) {
+		ConnectionHandleLocator locator = new ConnectionHandleLocator(rectangle, new Point(10, 10));
+		locator.addHandle(handle);
+		locator.relocate(handle);
+		return new WeakReference<>(locator, queue);
 	}
 
 }
