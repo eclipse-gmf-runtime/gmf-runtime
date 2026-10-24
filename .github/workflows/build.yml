@@ -13,7 +13,7 @@ jobs:
       matrix:
         java: [ 25 ]
         os: [ ubuntu-latest, windows-latest ]
-        target: [ 2025-06, 2026-06, canary ]
+        target: [ 2025-09, 2026-06, canary ]
     runs-on: ${{ matrix.os }}
     name: OS ${{ matrix.os }} Target ${{ matrix.target }} Java ${{ matrix.java }} build and verify
     steps:
