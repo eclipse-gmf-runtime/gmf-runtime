@@ -15,7 +15,7 @@
 	<cbi-plugins.version>1.5.2</cbi-plugins.version>
     <cyclonedx.version>2.9.2</cyclonedx.version>
 	<antrun-version>3.0.0</antrun-version>
-	<platform>2025-06</platform>
+	<platform>2025-09</platform>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<tycho.scmUrl>scm:git:https://github.com/eclipse-gmf-runtime/gmf-runtime.git</tycho.scmUrl>
     <tycho.sbom.url>https://download.eclipse.org/modeling/gmp/gmf-runtime/updates/releases</tycho.sbom.url>
